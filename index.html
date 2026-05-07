@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+<meta name="theme-color" content="#f6f3ec" />
+<title>MentorX · 简历石沉大海?大厂导师智慧核心联合帮你升级</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+SC:wght@500;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/mobile.css">
+</head>
+<body>
+<div class="page">
+
+  <!-- Brand bar -->
+  <div class="brandbar">
+    <div class="brand">
+      <img src="logo/cropped-cropped-WechatIMG231-1.png" alt="MentorX 蔓藤教育" class="brand-img" />
+    </div>
+    <div class="brand-meta" style="font-size:10px;letter-spacing:.08em;">Version: Beta</div>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero fade-in">
+    <div class="seal"><div class="seal-inner">求职<br/>必胜</div></div>
+    <div class="hero-kicker"><span class="dot"></span> 留学求职专属 · 30 秒诊断</div>
+    <h1>简历石沉大海?<br/><em>大厂导师 × 智慧核心</em><br/>联合帮你<span class="underline">升级</span>简历。</h1>
+    <p class="lede">1,300+ 大厂导师实战经验 × AI 精准分析,30 秒拿到可落地的优化方案。</p>
+  </section>
+
+  <!-- Submit form (核心 CTA) -->
+  <section class="section">
+    <h2 class="section-title">把简历交给大厂导师</h2>
+
+    <form class="card" onsubmit="return submitResume(this)" novalidate>
+      <!-- Resume upload -->
+      <div class="input-group">
+        <label class="input-label">上传简历</label>
+        <label class="file-upload">
+          <input type="file" name="resume" accept=".pdf,.doc,.docx" />
+          <div class="file-upload-icon">📄</div>
+          <div class="file-upload-text">点这里选文件</div>
+          <div class="file-upload-hint">PDF / Word · 仅本次会话使用</div>
+        </label>
+      </div>
+
+      <!-- Target job -->
+      <div class="input-group">
+        <label class="input-label">目标岗位</label>
+        <input class="input" name="job" type="text"
+               placeholder="如:Product Manager / Software Engineer / Data Analyst" />
+        <span class="input-hint">说人话就行</span>
+      </div>
+
+      <!-- JD paste -->
+      <div class="input-group">
+        <label class="input-label">目标岗位 JD <span class="text-mute" style="font-weight:400">(选填)</span></label>
+        <textarea class="textarea" name="jd" rows="5"
+                  placeholder="贴 JD 越完整,诊断越精准…"></textarea>
+        <span class="input-hint">支持 LinkedIn / Indeed / Glassdoor / Handshake 等海外 JD</span>
+      </div>
+
+      <div class="form-error input-error mb-12"></div>
+
+      <button class="btn btn-jade btn-block" type="submit">
+        30 秒生成诊断报告 <span class="btn-icon">→</span>
+      </button>
+    </form>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- MentorX 介绍 -->
+  <section class="section">
+    <h2 class="section-title" style="white-space:nowrap;font-size:clamp(20px,5.6vw,28px);">10 年真实辅导数据,全球独家。</h2>
+    <p class="section-desc">蔓藤教育(MentorX)自 2015 年深耕留学求职——<b style="color:var(--ink);font-weight:700">1,300+</b> 大厂导师、<b style="color:var(--ink);font-weight:700">30,000+</b> 场真实辅导。每条建议都从实战中提炼,不是通用模板。</p>
+
+    <div class="philo">
+      <article class="philo-card">
+        <span class="tag">名企导师</span>
+        <div class="num">01</div>
+        <h3>导师来自顶级企业</h3>
+        <p>Google、Amazon、Goldman Sachs、McKinsey 等全球名企在职导师,覆盖北美、欧洲、中国。</p>
+      </article>
+      <article class="philo-card">
+        <span class="tag">十年数据</span>
+        <div class="num">02</div>
+        <h3>真实辅导数据驱动</h3>
+        <p>每条建议背后是 30,000+ 场真实辅导积累的成功模式,不是 AI 凭空生成。</p>
+      </article>
+      <article class="philo-card">
+        <span class="tag">定制诊断</span>
+        <div class="num">03</div>
+        <h3>精准匹配你的背景</h3>
+        <p>按行业、岗位、背景智能匹配最相关的导师经验,覆盖 CPT/OPT、H-1B 等留学生场景。</p>
+      </article>
+    </div>
+  </section>
+
+  <div class="footnote">
+    Powered by <span>Vibe ID</span> · MentorX × 蔓藤教育<br/>
+    © 2026 · 不会公开你的简历内容,仅本次诊断使用
+  </div>
+
+</div>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

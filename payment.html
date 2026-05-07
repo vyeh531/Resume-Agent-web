@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+<meta name="theme-color" content="#f6f3ec" />
+<title>解锁完整报告 · MentorX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+SC:wght@500;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/mobile.css">
+<style>
+  .pay-card{
+    background: var(--paper-warm);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 24px 22px;
+    text-align: center;
+    margin-top: 8px;
+    box-shadow: var(--shadow-soft);
+  }
+  .pay-summary{
+    background: var(--paper-deep);
+    border-radius: var(--r-md);
+    padding: 14px 16px;
+    margin-bottom: 22px;
+    text-align: left;
+    font-size: 13px;
+  }
+  .pay-summary .label{
+    font-family: var(--mono); font-size: 10px;
+    color: var(--ink-mute); letter-spacing: .12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .pay-summary .item{
+    display: flex; justify-content: space-between;
+    padding: 4px 0;
+    color: var(--ink);
+  }
+  .pay-summary .item.total{
+    border-top: 1px solid var(--line);
+    margin-top: 8px; padding-top: 8px;
+    font-weight: 700;
+  }
+  .pay-price{
+    font-family: var(--serif); font-style: italic;
+    font-weight: 700;
+    color: var(--rose);
+    font-size: 56px; line-height: 1;
+    display: flex; align-items: baseline; justify-content: center;
+    gap: 8px;
+    margin: 4px 0 6px;
+  }
+  .pay-price b{ font-size: 28px; }
+  .pay-was{
+    color: var(--ink-mute);
+    text-decoration: line-through;
+    font-size: 14px;
+    font-family: var(--mono);
+  }
+  .pay-discount{
+    display: inline-block;
+    margin-top: 6px;
+    background: var(--rose); color: #fff;
+    font-size: 11px; font-weight: 600;
+    padding: 4px 10px; border-radius: 999px;
+    font-family: var(--mono); letter-spacing: .04em;
+  }
+  .pay-method{
+    display: flex; align-items: center; gap: 12px;
+    border: 1.5px solid var(--jade);
+    background: var(--jade-soft);
+    border-radius: var(--r-md);
+    padding: 14px 16px;
+    margin: 22px 0 22px;
+    text-align: left;
+  }
+  .pay-method .wx{
+    width: 36px; height: 36px; border-radius: 8px;
+    background: #07c160; color: #fff;
+    display: grid; place-items: center;
+    font-family: var(--serif); font-weight: 700; font-size: 18px;
+    flex-shrink: 0;
+  }
+  .pay-method .text{ flex: 1; }
+  .pay-method .label{
+    font-weight: 700; font-size: 14px;
+  }
+  .pay-method .sub{
+    font-size: 12px; color: var(--ink-soft); margin-top: 2px;
+  }
+  .pay-method .check{
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--jade); color: #fff;
+    display: grid; place-items: center;
+    font-size: 12px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .pay-trust{
+    display: flex; gap: 16px; justify-content: center;
+    margin-top: 16px;
+    font-size: 11px; color: var(--ink-mute);
+    flex-wrap: wrap;
+  }
+  .pay-trust span{ display: inline-flex; align-items: center; gap: 4px; }
+  .pay-foot{
+    text-align: center;
+    font-size: 11px;
+    color: var(--ink-mute);
+    margin-top: 18px;
+    line-height: 1.7;
+  }
+  .pay-foot a{ color: var(--rose); }
+  .pay-back{
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--ink-soft); font-size: 13px;
+    margin-bottom: 12px;
+    text-decoration: none;
+  }
+  .pay-back:hover{ color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="brandbar">
+    <div class="brand">
+      <div class="brand-logo">M</div>
+      <div class="brand-name">Mentor<em>X</em></div>
+    </div>
+    <div class="brand-meta">4 / 5 · 解锁支付</div>
+  </div>
+
+  <a href="result.html" class="pay-back">← 返回诊断报告</a>
+
+  <h1 class="section-title" style="font-size: 22px; margin-top: 8px;">最后一步,解锁完整报告</h1>
+  <p class="section-desc">支付完成后立即可查看 4 位导师全部建议 + Before/After 改写示范。</p>
+
+  <div class="pay-card fade-in">
+
+    <!-- 订单概要 -->
+    <div class="pay-summary">
+      <div class="label">订单内容</div>
+      <div class="item"><span>4 位大厂导师完整建议</span><span class="text-mute">22+ 条</span></div>
+      <div class="item"><span>Before / After 改写示范</span><span class="text-mute">5 组</span></div>
+      <div class="item"><span>报告导出 .md / 复制</span><span class="text-mute">无限次</span></div>
+      <div class="item"><span>客服微信通道</span><span class="text-mute">含</span></div>
+      <div class="item total"><span>合计</span><span>¥ 49.00</span></div>
+    </div>
+
+    <!-- 价格 -->
+    <div class="text-mute" style="font-size: 11px; font-family: var(--mono); letter-spacing: .12em; text-transform: uppercase;">应付金额</div>
+    <div class="pay-price"><b>¥</b>49</div>
+    <div>
+      <span class="pay-was">原价 ¥199</span>
+    </div>
+    <div class="pay-discount">秋招特价 · 限时 75% off</div>
+
+    <!-- QR -->
+    <div style="margin: 26px 0 12px;">
+      <div class="qr"></div>
+    </div>
+    <p class="text-mute" style="font-size: 12px; margin: 0 0 6px;">微信扫码完成支付</p>
+    <p class="text-soft" style="font-size: 12px; margin: 0 0 0;" id="qrTimer">二维码 14:59 后过期</p>
+
+    <!-- Payment method -->
+    <div class="pay-method">
+      <div class="wx">微</div>
+      <div class="text">
+        <div class="label">微信支付</div>
+        <div class="sub">扫上方二维码,在微信中确认</div>
+      </div>
+      <div class="check">✓</div>
+    </div>
+
+    <button class="btn btn-jade btn-block" onclick="mockPayment(this)">
+      我已扫码完成支付
+    </button>
+
+    <div class="pay-trust">
+      <span>🔒 加密交易</span>
+      <span>· 支持开发票</span>
+      <span>· 7 天无理由退款</span>
+    </div>
+
+  </div>
+
+  <div class="pay-foot">
+    支付遇到问题?联系客服 <a>mentorx-zhushou</a><br/>
+    本订单由 蔓藤教育(MentorX) 提供
+  </div>
+
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+  guardSubmitted();
+
+  // 二维码倒计时(纯装饰)
+  let secs = 14 * 60 + 59;
+  const tEl = document.getElementById("qrTimer");
+  setInterval(() => {
+    secs = Math.max(secs - 1, 0);
+    const m = String(Math.floor(secs / 60)).padStart(2, "0");
+    const s = String(secs % 60).padStart(2, "0");
+    tEl.textContent = `二维码 ${m}:${s} 后过期`;
+  }, 1000);
+</script>
+</body>
+</html>

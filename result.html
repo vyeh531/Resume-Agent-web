@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+<meta name="theme-color" content="#f6f3ec" />
+<title>诊断报告 · MentorX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+SC:wght@500;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/mobile.css">
+<style>
+  /* result-only tweaks */
+  .summary-headline{
+    font-family: var(--serif); font-weight: 700;
+    font-size: 22px; line-height: 1.4;
+    margin: 12px 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .summary-headline .num{
+    font-style: italic; color: var(--indigo);
+    font-size: 32px;
+  }
+  .summary-headline .gap{
+    font-style: italic; color: var(--rose);
+    font-weight: 700;
+  }
+  .summary-issue{
+    font-size: 14px; color: var(--ink-soft);
+    line-height: 1.6;
+    border-left: 3px solid var(--apricot);
+    padding: 4px 0 4px 12px;
+    margin-top: 12px;
+  }
+  .student-row{
+    display: flex; flex-wrap: wrap; gap: 8px;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .student-row .who{ font-size: 13px; color: var(--ink-soft); }
+
+  .skill-list{ list-style: none; padding: 0; margin: 0; }
+  .skill-row{
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--line);
+    gap: 10px;
+  }
+  .skill-row:last-child{ border-bottom: none; }
+  .skill-name{ font-size: 14px; font-weight: 500; }
+  .skill-name .priority{
+    font-family: var(--mono); font-size: 10px;
+    color: var(--ink-mute); margin-right: 8px;
+    letter-spacing: 0;
+  }
+
+  .skill-summary{
+    display: flex; gap: 4px;
+    height: 8px; border-radius: 999px;
+    overflow: hidden;
+    margin: 12px 0 12px;
+  }
+  .skill-summary span{ flex: 1; transition: flex 1s ease; }
+  .skill-have{ background: var(--good); }
+  .skill-weak{ background: var(--warn); }
+
+  .skill-legend{
+    display: flex; gap: 14px; flex-wrap: wrap;
+    font-size: 11px; color: var(--ink-soft);
+    margin-bottom: 14px;
+  }
+  .skill-legend span{ display: inline-flex; align-items: center; gap: 5px; }
+  .skill-legend i{
+    width: 8px; height: 8px; border-radius: 50%;
+    display: inline-block;
+  }
+
+  /* Unlock CTA */
+  .unlock-cta{
+    background: linear-gradient(135deg, var(--ink) 0%, var(--indigo-deep) 100%);
+    color: #fff;
+    border-radius: var(--r-lg);
+    padding: 22px;
+    text-align: center;
+    margin-top: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .unlock-cta::before{
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(circle at 80% 20%, rgba(232,160,107,.25) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .unlock-cta > *{ position: relative; }
+  .unlock-cta-title{
+    font-family: var(--serif); font-weight: 700;
+    font-size: 18px; margin: 0 0 8px;
+  }
+  .unlock-cta-price{
+    margin: 12px 0 18px;
+    display: flex; align-items: baseline; justify-content: center; gap: 10px;
+  }
+  .unlock-cta-price .now{
+    font-family: var(--serif); font-style: italic;
+    font-weight: 700; font-size: 40px;
+    color: var(--apricot);
+  }
+  .unlock-cta-price .now b{ font-size: 22px; }
+  .unlock-cta-price .was{
+    color: rgba(255,255,255,.5);
+    font-size: 14px; text-decoration: line-through;
+  }
+  .unlock-cta-perks{
+    list-style: none; padding: 0; margin: 0 0 16px;
+    font-size: 13px;
+    color: rgba(255,255,255,.85);
+    text-align: left;
+    display: inline-flex;
+    flex-direction: column; gap: 6px;
+  }
+  .unlock-cta-perks li{ display: flex; gap: 8px; align-items: flex-start; }
+  .unlock-cta-perks li::before{
+    content: "✓"; color: var(--apricot); font-weight: 700;
+    flex-shrink: 0;
+  }
+  .unlock-cta-foot{
+    font-size: 11px; color: rgba(255,255,255,.5);
+    margin-top: 12px; font-family: var(--mono);
+    letter-spacing: .04em;
+  }
+  .unlock-cta .btn-jade{
+    background: var(--apricot); color: var(--ink);
+    box-shadow: 0 12px 28px -10px rgba(232,160,107,.55);
+    font-weight: 700;
+  }
+  .unlock-cta .btn-jade:hover{ background: #db8e57; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Brand bar (与首页一致) -->
+  <div class="brandbar">
+    <div class="brand">
+      <img src="logo/cropped-cropped-WechatIMG231-1.png" alt="MentorX 蔓藤教育" class="brand-img" />
+    </div>
+    <div class="brand-meta" style="font-size:10px;letter-spacing:.08em;">1 / 2 · 诊断完成</div>
+  </div>
+
+  <!-- Banner -->
+  <div class="banner fade-in">
+    <div class="banner-check">✓</div>
+    <div>诊断完成 · 4 位导师已读完你的简历</div>
+  </div>
+
+  <!-- ============ 1. SUMMARY ============ -->
+  <section class="section" style="margin-top: 0;">
+    <div class="student-row">
+      <span class="who" id="studentInfo">2025届 · Columbia University · Marketing Science</span>
+      <span class="pill pill-mute" id="targetJob">目标:Product Manager</span>
+    </div>
+    <h2 class="summary-headline" id="headline">
+      你的当前简历综合评分 <span class="num">75</span> 分,<br/>
+      离获得大厂 <span class="gap">$200K</span> 薪资仍有差距。
+    </h2>
+    <p class="summary-issue" id="coreIssue"></p>
+  </section>
+
+  <!-- ============ 2. 4 TILES ============ -->
+  <section class="section">
+    <div class="section-num">数据维度</div>
+    <h3 class="section-title" style="font-size: 18px;">从 4 个角度看你的位置</h3>
+    <p class="section-desc">点击展开看详细拆解 →</p>
+
+    <div class="tiles" id="tilesArea">
+      <details class="tile">
+        <summary class="tile-summary">
+          <div class="tile-label"><span>RANKING · 同岗位排名</span><span class="chev">▾</span></div>
+          <div class="tile-value">TOP <span id="rankPct">32%</span></div>
+          <div class="tile-caption">在 3,247 人中</div>
+        </summary>
+        <div class="tile-detail" id="rankDetail"></div>
+      </details>
+
+      <details class="tile">
+        <summary class="tile-summary">
+          <div class="tile-label"><span>ATS 通过率</span><span class="chev">▾</span></div>
+          <div class="tile-value"><span id="atsScore">78</span><span style="font-size: 18px;">%</span></div>
+          <div class="tile-caption">主流系统识别</div>
+        </summary>
+        <div class="tile-detail" id="atsDetail"></div>
+      </details>
+
+      <details class="tile">
+        <summary class="tile-summary">
+          <div class="tile-label"><span>SALARY · 薪资水平</span><span class="chev">▾</span></div>
+          <div class="tile-value" style="font-size: 22px;" id="salaryRange">$120K</div>
+          <div class="tile-caption">顶级线 <span id="salaryTop">$200K</span></div>
+        </summary>
+        <div class="tile-detail" id="salaryDetail"></div>
+      </details>
+
+      <details class="tile">
+        <summary class="tile-summary">
+          <div class="tile-label"><span>岗位竞争</span><span class="chev">▾</span></div>
+          <div class="tile-value" style="font-size: 22px;"><span id="compCount">3,247</span></div>
+          <div class="tile-caption">录取率 <span id="admitRate">2.1</span>%</div>
+        </summary>
+        <div class="tile-detail" id="compDetail"></div>
+      </details>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ============ 3. SKILL GAP (X/10) ============ -->
+  <section class="section">
+    <div class="section-num">技能匹配</div>
+    <div class="row-between mb-12" style="margin-top: 4px;">
+      <h3 class="section-title" style="font-size: 18px; margin: 0;">JD Top 10 技能匹配</h3>
+      <div class="skill-score"><span id="skillHave">4</span><small>/<span id="skillTotal">10</span></small></div>
+    </div>
+
+    <div class="skill-summary" id="skillSummary"></div>
+    <div class="skill-legend">
+      <span><i style="background:var(--good)"></i>已具备</span>
+      <span><i style="background:var(--warn)"></i>待补强</span>
+    </div>
+
+    <div class="card card-tight">
+      <ul class="skill-list" id="skillListTop3"></ul>
+      <button class="skill-expand-toggle" id="skillExpandToggle" type="button">
+        查看全部 Top 10 技能 ↓
+      </button>
+
+      <div class="skill-paywall" id="skillPaywall" hidden>
+        <ul class="skill-list skill-paywall-list" id="skillPaywallList"></ul>
+        <div class="skill-paywall-overlay">
+          <div class="lock">🔒</div>
+          <div class="text">
+            解锁<b style="color:var(--jade);">全部 4 位导师</b> + <b style="color:var(--jade);">完整改写报告</b><br/>
+            <span style="color:var(--ink-soft);font-weight:500;">含完整 Top 10 技能清单</span>
+          </div>
+          <a class="btn btn-jade" href="payment.html">¥ 49 解锁完整诊断</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ============ 4. MENTOR DETAIL (FREE) ============ -->
+  <section class="section">
+    <div class="section-num">导师 1 / 4 · 免费试读</div>
+    <h3 class="section-title" style="font-size: 20px;">导师建议预览</h3>
+
+    <article class="mentor-detail" id="mentorFree"></article>
+  </section>
+
+  <!-- ============ 5. LOCKED MENTORS (3) ============ -->
+  <section class="section">
+    <div class="section-num">导师 2-4 / 4</div>
+    <h3 class="section-title" style="font-size: 20px;">更多导师建议 <span class="text-mute" style="font-size:14px;font-family:var(--sans);font-weight:400;">(付费解锁)</span></h3>
+    <p class="section-desc">每位导师从不同角度给出 P0 必改、P1 建议改、P2 加分项。</p>
+
+    <div class="stack-12" id="lockedMentorsArea"></div>
+
+    <!-- Unlock CTA -->
+    <div class="unlock-cta">
+      <p class="unlock-cta-title">解锁全部 4 位导师 + 完整改写报告</p>
+      <div class="unlock-cta-price">
+        <span class="now"><b>¥</b>49</span>
+        <span class="was">原价 ¥199</span>
+      </div>
+      <ul class="unlock-cta-perks">
+        <li>4 位大厂导师完整建议(P0 / P1 / P2 全分级)</li>
+        <li>完整 Top 10 技能清单 + 补强路径</li>
+        <li>报告导出 .md,直接喂给 ChatGPT / Claude 改简历</li>
+      </ul>
+      <a href="payment.html" class="btn btn-jade btn-block">¥ 49 立即解锁 →</a>
+      <div class="unlock-cta-foot">秋招特价 · 仅限本次</div>
+    </div>
+  </section>
+
+  <div class="footnote">
+    诊断由 4 位真实导师 + AI 联合产出 · 不构成 Offer 承诺<br/>
+    Powered by <span>Vibe ID</span> · MentorX
+  </div>
+
+</div>
+
+<script src="assets/app.js"></script>
+<script src="assets/mock-data.js"></script>
+<script>
+  guardSubmitted();
+
+  const M = window.MOCK;
+  const s = Store.get();
+
+  // ===== Summary =====
+  document.getElementById("targetJob").textContent = "目标:" + (s.jobTitle || M.job.title);
+  document.getElementById("studentInfo").textContent = `${M.student.grade} · ${M.student.school} · ${M.student.major}`;
+  document.getElementById("coreIssue").textContent = M.summary.coreIssue;
+
+  document.getElementById("rankPct").textContent = M.scores.rankingPercentile + "%";
+  document.getElementById("atsScore").textContent = M.scores.ats;
+  document.getElementById("salaryRange").textContent = M.scores.salaryNow;
+  document.getElementById("salaryTop").textContent = M.scores.salaryTop;
+  document.getElementById("compCount").textContent = M.scores.competitorCount.toLocaleString();
+  document.getElementById("admitRate").textContent = M.scores.admitRate;
+
+  function renderRows(arr){
+    return arr.map(r => `
+      <div class="detail-row"><span class="k">${r.k}</span><span class="v">${r.v}</span></div>
+      <div style="font-size: 12px; color: var(--ink-mute); margin: -2px 0 6px; line-height:1.4;">${r.note}</div>
+    `).join("");
+  }
+  document.getElementById("rankDetail").innerHTML   = renderRows(M.rankingBreakdown);
+  document.getElementById("atsDetail").innerHTML    = renderRows(M.atsBreakdown);
+  document.getElementById("salaryDetail").innerHTML = renderRows(M.salaryBreakdown);
+  document.getElementById("compDetail").innerHTML   = renderRows(M.compBreakdown);
+
+  // ===== Skill X/10 =====
+  document.getElementById("skillHave").textContent = M.scores.skillHave;
+  document.getElementById("skillTotal").textContent = M.scores.skillTotal;
+
+  const have = M.skillGap.filter(s => s.status === "have").length;
+  const weak = M.skillGap.filter(s => s.status === "weak").length;
+  document.getElementById("skillSummary").innerHTML = `
+    <span class="skill-have" style="flex: ${have}"></span>
+    <span class="skill-weak" style="flex: ${weak}"></span>
+  `;
+
+  const labelMap = {
+    have: `<span class="pill pill-good"><span class="dot"></span>已具备</span>`,
+    weak: `<span class="pill pill-warn"><span class="dot"></span>待补强</span>`
+  };
+  function renderSkillRow(s){
+    return `
+      <li class="skill-row">
+        <div class="skill-name"><span class="priority">#${s.priority}</span>${s.name}</div>
+        ${labelMap[s.status]}
+      </li>
+    `;
+  }
+  // Top 3 visible
+  document.getElementById("skillListTop3").innerHTML = M.skillGap.slice(0, 3).map(renderSkillRow).join("");
+  // 4-10 in paywall
+  document.getElementById("skillPaywallList").innerHTML = M.skillGap.slice(3).map(renderSkillRow).join("");
+
+  // Toggle paywall
+  const expandBtn = document.getElementById("skillExpandToggle");
+  const paywallEl = document.getElementById("skillPaywall");
+  let paywallOpen = false;
+  expandBtn.addEventListener("click", () => {
+    paywallOpen = !paywallOpen;
+    paywallEl.hidden = !paywallOpen;
+    expandBtn.innerHTML = paywallOpen
+      ? "收起 ↑"
+      : "查看全部 Top 10 技能 ↓";
+  });
+
+  // ===== Free mentor (full detail) =====
+  const free = M.mentors[0];
+  function priorityClass(p){
+    if (p && p.startsWith("P0")) return "";
+    if (p && p.startsWith("P1")) return "priority-tag--p1";
+    if (p && p.startsWith("P2")) return "priority-tag--p2";
+    return "";
+  }
+  document.getElementById("mentorFree").innerHTML = `
+    <header class="mentor-detail-head">
+      <div class="company-logo company-logo--${free.companyKey}">${free.company === "Amazon" ? "amazon" : free.company === "Google" ? "G" : free.company}</div>
+      <div class="info">
+        <div class="company">${free.company}</div>
+        <div class="role">${free.mentorCode} · ${free.position}</div>
+      </div>
+    </header>
+    <div class="cred-pills">
+      ${free.credentials.map(c => `<span class="cred-pill">${c}</span>`).join("")}
+    </div>
+    <div class="career-path"><b>职业路径:</b> ${free.careerPath}</div>
+    <div class="priority-issue">
+      <span class="priority-tag ${priorityClass(free.priority)}">${free.priority}</span>
+      <span class="priority-text">${free.issue}</span>
+    </div>
+    <div class="advice-section">
+      <h4>导师筛选策略</h4>
+      <p>${free.strategy}</p>
+    </div>
+    <div class="advice-section advice-section--plain">
+      <h4>你的现状</h4>
+      <p>${free.current}</p>
+    </div>
+    <div class="advice-section advice-section--plain">
+      <h4>建议</h4>
+      <p>${free.advice}</p>
+    </div>
+    <div class="advice-example">
+      <div class="advice-example-head">
+        <div class="title">
+          <span class="check">✓</span>
+          <span>改写示例</span>
+        </div>
+        <button class="copy-btn" onclick="copyExample(this)" data-content='${escapeAttr(stripHtml(free.example))}'>📋 复制</button>
+      </div>
+      <div class="advice-example-body">
+        <span class="label">改写后的 bullet 示例:</span>
+        ${free.example}
+      </div>
+    </div>
+  `;
+
+  function stripHtml(html){ return String(html).replace(/<br\s*\/?>/g, "\n").replace(/<[^>]+>/g, ""); }
+  function escapeAttr(s){ return s.replace(/'/g, "&apos;").replace(/"/g, "&quot;"); }
+
+  function copyExample(btn){
+    const text = btn.getAttribute("data-content").replace(/&apos;/g, "'").replace(/&quot;/g, '"');
+    if (navigator.clipboard){
+      navigator.clipboard.writeText(text).then(
+        () => { btn.innerHTML = "✓ 已复制"; setTimeout(() => btn.innerHTML = "📋 复制", 2000); }
+      );
+    }
+  }
+  window.copyExample = copyExample;
+
+  // ===== Locked mentors (3) =====
+  const lockedHTML = M.mentors.slice(1).map(m => {
+    const logoText = m.company === "Amazon" ? "amazon"
+                   : m.company === "Google" ? "G"
+                   : m.company;
+    return `
+      <article class="locked-mentor-v2">
+        <header class="head">
+          <div class="company-logo company-logo--${m.companyKey}">${logoText}</div>
+          <div class="info">
+            <div class="company-name">${m.company}</div>
+            <div class="role-line">${m.mentorCode} · ${m.position}</div>
+          </div>
+        </header>
+        <div class="cred-pills">
+          ${m.credentials.map(c => `<span class="cred-pill">${c}</span>`).join("")}
+        </div>
+        <div class="blur-area">
+          <div class="blur-content">${stripHtml(m.strategy).slice(0, 120)}...</div>
+          <div class="lock-cta">
+            <div class="lock-icon">🔒</div>
+            <div class="lock-text">解锁查看完整建议</div>
+          </div>
+        </div>
+      </article>
+    `;
+  }).join("");
+  document.getElementById("lockedMentorsArea").innerHTML = lockedHTML;
+</script>
+</body>
+</html>

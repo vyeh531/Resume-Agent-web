@@ -1,0 +1,54 @@
+/* =====================================================================
+   Mobile-first 已经在 styles.css 完成
+   这里只放 "desktop 上把手机居中显示" 的轻量增强
+   ===================================================================== */
+
+/* Desktop ≥ 720px: 把页面渲染成"手机预览"效果 */
+@media (min-width: 720px){
+  body{
+    background:
+      radial-gradient(circle at 20% 30%, rgba(47,107,79,.05) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(232,160,107,.05) 0%, transparent 40%),
+      var(--paper);
+  }
+  .page{
+    margin: 32px auto;
+    background: var(--paper);
+    border-radius: 28px;
+    box-shadow:
+      0 0 0 1px var(--line),
+      0 60px 120px -40px rgba(24,24,22,.18);
+    padding: 28px 22px 140px;
+    min-height: calc(100vh - 64px);
+  }
+  /* 把 sticky CTA 限制在容器内,不再贴满整个屏幕 */
+  .sticky-cta{
+    position: sticky;
+    bottom: 16px;
+    background: linear-gradient(180deg, transparent 0%, var(--paper) 40%);
+    margin-top: 24px;
+    padding: 16px 0 0;
+  }
+}
+
+/* 大于 1024px 时再加一点视觉余量 */
+@media (min-width: 1024px){
+  .page{ margin: 48px auto; }
+}
+
+/* 极窄屏(< 360px)再压缩一点 */
+@media (max-width: 360px){
+  .page{ padding: 20px 16px 120px; }
+  .hero{ padding: 28px 20px; }
+  .hero h1{ font-size: 26px; }
+  .stat-num{ font-size: 28px; }
+  .tile-value{ font-size: 22px; }
+}
+
+/* 偏好大字(辅助功能) */
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
