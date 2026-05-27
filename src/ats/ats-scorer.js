@@ -276,7 +276,7 @@ const CATEGORY_PHRASES = {
     "process engineering", "finite element analysis", "tolerance analysis",
     "product development", "failure analysis", "design for manufacturability",
     "mechanical design", "electrical design", "circuit design", "signal processing",
-    "control systems", "embedded systems", "firmware development",
+    "embedded systems", "firmware development",
     // Design / UX / Creative
     "wireframing", "prototyping", "usability testing", "user testing",
     "design systems", "typography", "color theory", "visual design",
@@ -980,13 +980,15 @@ function detectRoleFamily(text) {
 }
 
 function scoreByRatio(ratio, scale) {
-  if (ratio >= 0.7) return scale;
-  if (ratio >= 0.6) return Math.round(scale * 0.85);
-  if (ratio >= 0.5) return Math.round(scale * 0.68);
-  if (ratio >= 0.4) return Math.round(scale * 0.5);
-  if (ratio >= 0.3) return Math.round(scale * 0.33);
-  if (ratio >= 0.2) return Math.round(scale * 0.18);
-  if (ratio >= 0.1) return Math.round(scale * 0.08);
+  if (ratio >= 0.90) return scale;
+  if (ratio >= 0.80) return Math.round(scale * 0.83);
+  if (ratio >= 0.70) return Math.round(scale * 0.66);
+  if (ratio >= 0.60) return Math.round(scale * 0.51);
+  if (ratio >= 0.50) return Math.round(scale * 0.36);
+  if (ratio >= 0.40) return Math.round(scale * 0.22);
+  if (ratio >= 0.30) return Math.round(scale * 0.13);
+  if (ratio >= 0.20) return Math.round(scale * 0.07);
+  if (ratio >= 0.10) return Math.round(scale * 0.03);
   return 0;
 }
 
@@ -2054,6 +2056,7 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
       isGmail,
       phoneValid: analyzePhone(normalized).valid,
       hasLinkedIn: /linkedin\.com\/in\/|linkedin/i.test(normalized),
+      hasPortfolio: /\b\w[\w-]*\.(me|dev|io|app|site|co)\b/i.test(normalized) || /github\.io/i.test(normalized),
       hasWillingToRelocate,
       hasSummary,
       isRecentGraduate,
@@ -2140,6 +2143,7 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
         isGmail,
         phoneValid: phoneInfo.valid,
         hasLinkedIn: /linkedin\.com\/in\/|linkedin/i.test(normalized),
+        hasPortfolio: /\b\w[\w-]*\.(me|dev|io|app|site|co)\b/i.test(normalized) || /github\.io/i.test(normalized),
         hasWillingToRelocate,
         hasSummary,
         summaryMentionsRole,
