@@ -120,10 +120,10 @@ async function scoreResumeAPI(resumeText, jobTitle, jdText) {
   console.log("[API] 开始调用 scoreResumeAPI...");
   console.log("[API] 简历长度:", resumeText.length);
   console.log("[API] 目标岗位:", jobTitle);
-  console.log("[API] 请求地址:", `${API_BASE}/api/score-resume`);
+  console.log("[API] 请求地址:", `${API_BASE}/api/v1/ats/rule-local`);
 
   try {
-    const response = await fetch(`${API_BASE}/api/score-resume`, {
+    const response = await fetch(`${API_BASE}/api/v1/ats/rule-local`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -191,17 +191,58 @@ async function loadAnalysisFromServer(sessionId) {
   }
 }
 
+function computeKeywordMatchRatio(keywordMatch) {
+  let total = 0;
+  let matched = 0;
+  Object.values(keywordMatch || {}).forEach((group) => {
+    if (!group || typeof group !== "object") return;
+    total += Number(group.total || 0);
+    matched += Number(group.matched || 0);
+  });
+  return total ? Number(((matched / total) * 100).toFixed(1)) : null;
+}
+
+function normalizeDimensionProblems(dimensions, explicitProblems) {
+  if (explicitProblems && Object.keys(explicitProblems).length) {
+    return explicitProblems;
+  }
+  return Object.fromEntries(
+    Object.entries(dimensions || {}).map(([key, value]) => [
+      key,
+      Array.isArray(value?.problems) ? value.problems : [],
+    ])
+  );
+}
+
 // 格式化 ATS 结果用于显示
 function formatATSResult(atsData) {
+  const dimensions = atsData.dimensions || {};
+  const keywordMatch = atsData.keywordMatch || atsData.metrics?.keywordMatch || {};
+  const jdMatchRatio = atsData.jdMatchRatio ?? atsData.metrics?.jdMatchRatio ?? computeKeywordMatchRatio(keywordMatch);
   return {
-    atsScore: atsData.basicScore || 60,
-    riskLevel: atsData.riskLevel || "中",
-    scoringBasis: atsData.scoringBasis || "通用方向估算",
-    itemScores: atsData.itemScores || {},
-    keyProblems: atsData.keyProblems || [],
+    atsScore: atsData.total ?? atsData.basicScore ?? 60,
+    riskLevel: atsData.risk || atsData.riskLevel || "中",
+    scoringBasis: atsData.scoringBasis || (atsData.source === "local-fallback" ? "ATS System 本地备援评分（无 Claude/OpenAI）" : "ATS System API 评分（无 Claude/OpenAI）"),
+    itemScores: atsData.itemScores || Object.fromEntries(
+      Object.entries(dimensions).map(([key, value]) => [key, value.score])
+    ),
+    keyProblems: atsData.problems || atsData.keyProblems || [],
     suggestions: atsData.suggestions || [],
     improvementExpectation:
-      atsData.improvementExpectation || "基础分 60-70 → 改进后 75-85",
+      atsData.improvement || atsData.improvementExpectation || "基础分 60-70 → 改进后 75-85",
     rawResponse: atsData.rawResponse || "",
+    dimensions,
+    jdMatchRatio,
+    topMissingKw: atsData.topMissingKw || atsData.topMissingKeywords || [],
+    engine: atsData.engine || "ats-system-api",
+    source: atsData.source || "hosted-api",
+    jobTitle: atsData.jobTitle || null,
+    hasJD: Boolean(atsData.hasJD),
+    metrics: atsData.metrics || { keywordMatch },
+    keywordMatch,
+    dimensionProblems: normalizeDimensionProblems(dimensions, atsData.dimensionProblems),
+    formatPenaltyTriggered: Boolean(atsData.formatPenaltyTriggered),
+    formatPenaltyReason: atsData.formatPenaltyReason || [],
+    raw: atsData,
   };
 }

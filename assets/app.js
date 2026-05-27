@@ -45,30 +45,19 @@ async function submitResume(form) {
   const errorBox = form.querySelector(".form-error");
   const btn      = form.querySelector('button[type="submit"]');
   if (!file) { errorBox.textContent = "请先上传你的简历文件"; errorBox.classList.add("show"); return false; }
-  if (!job)  { errorBox.textContent = "目标岗位不能为空"; errorBox.classList.add("show"); return false; }
+  if (!job && !jd) { errorBox.textContent = "请填写目标岗位或粘贴目标岗位 JD，二选一即可"; errorBox.classList.add("show"); return false; }
   errorBox.classList.remove("show");
   isSubmitting = true;
   if (btn) btn.disabled = true;
   try {
     showLoader("准备文件…", "读取简历内容…");
     const resumeText = await readResumeFile(file);
-    showLoader("AI 正在评分…", "分析简历质量中…");
-    const atsRaw    = await scoreResumeAPI(resumeText, job, jd);
+    showLoader("ATS 正在评分…", "使用本地规则引擎分析简历质量，不调用 AI");
+    const targetJob = job || "根据 JD 分析";
+    const atsRaw    = await scoreResumeAPI(resumeText, targetJob, jd);
     const atsResult = formatATSResult(atsRaw);
-    Store.set({ resumeName: file.name, jobTitle: job, jdText: jd, resumeText, atsResult, submittedAt: Date.now(), isPaid: false, mentorAdvice: null });
-    showLoader("大厂导师正在分析你的简历…", "4 位导师读取关键问题中…");
-    try {
-      const r = await fetch(API_BASE + "/api/mentor-advice", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ jobTitle: job, resumeText: resumeText.substring(0, 3000), keyProblems: atsResult.keyProblems || [], atsScore: atsResult.atsScore })
-      });
-      if (r.ok) {
-        const d = await r.json();
-        if (d.mentors && d.mentors.length > 0) Store.set({ mentorAdvice: d.mentors });
-      }
-    } catch(me) { console.warn("[Submit] mentor advice failed:", me.message); }
-    showLoader("诊断完成！", "正在跳转报告页面…");
+    Store.set({ resumeName: file.name, jobTitle: targetJob, targetLabel: targetJob, jdText: jd, resumeText, atsResult, submittedAt: Date.now(), isPaid: false, mentorAdvice: null });
+    showLoader("诊断完成！", "导师建议先使用 mock 数据，正在跳转报告页面…");
     setTimeout(() => { window.location.href = "login.html"; }, 800);
   } catch(err) {
     errorBox.textContent = "❌ " + (err.message || "未知错误");

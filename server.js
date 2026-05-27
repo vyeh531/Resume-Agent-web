@@ -6,12 +6,15 @@ const path = require("path");
 const multer = require("multer");
 const { scoreResumeATS } = require("./ats-scorer");
 const { scoreResumeRuleBased } = require("./ats-rule-scorer");
+const { scoreResumeATS: scoreResumeSystem } = require("./src/ats/ats-scorer");
 const { parsePDF, parseDocx } = require("./file-parser");
 const db = require("./database");
 const Anthropic = require("@anthropic-ai/sdk");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const ATS_API_URL = process.env.ATS_API_URL || "https://ats-system-wec6.onrender.com/api/v1/score";
+const ATS_API_KEY = process.env.ATS_API_KEY;
 
 app.use(cors());
 app.use(bodyParser.json({ limit: "50mb" }));
@@ -327,13 +330,102 @@ async function resolveResumeText(req) {
   throw new Error("請提供 resumeText（文字）或上傳 file（PDF / DOCX / TXT）");
 }
 
-// ── POST /api/v1/ats/rule  （規則評分，不需 API Key） ────────
+// ── POST /api/v1/ats/rule  （ATS System API proxy） ────────
+async function callHostedATS({ resumeText, jobTitle, jdText }) {
+  if (!ATS_API_KEY) {
+    throw new Error("ATS_API_KEY is not configured");
+  }
+
+  const body = { resumeText };
+  if (jobTitle) body.jobTitle = jobTitle;
+  if (jdText) body.jdText = jdText;
+
+  const response = await fetch(ATS_API_URL, {
+    method: "POST",
+    headers: {
+      "X-Api-Key": ATS_API_KEY,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+
+  const text = await response.text();
+  let payload;
+  try {
+    payload = text ? JSON.parse(text) : {};
+  } catch (err) {
+    throw new Error(`ATS API returned non-JSON response (${response.status})`);
+  }
+
+  if (!response.ok || payload.success === false) {
+    throw new Error(payload.error || `ATS API failed with status ${response.status}`);
+  }
+
+  return payload.data || payload;
+}
+
+function localAtsFallback(resumeText, jobTitle, jdText, reason) {
+  console.warn("[ATS-System] Hosted API unavailable, using local fallback:", reason);
+  const data = scoreResumeSystem(resumeText, jobTitle, jdText);
+  return {
+    ...data,
+    engine: data.engine || "ats-system-local-fallback",
+    source: "local-fallback",
+    fallbackReason: reason,
+  };
+}
+
+// POST /api/v1/ats/rule: proxy to ATS System API so the API key stays server-side.
 app.post("/api/v1/ats/rule", upload.single("file"), async (req, res) => {
   try {
     const resumeText = await resolveResumeText(req);
     const { jobTitle, jdText } = req.body;
+    if (!jobTitle && !jdText) {
+      return res.status(400).json({ success: false, error: "jobTitle or jdText is required" });
+    }
+
+    console.log("[ATS-System] Scoring via hosted API:", {
+      textLen: resumeText.length,
+      jobTitle: jobTitle || "N/A",
+      hasJD: !!jdText,
+    });
+
+    try {
+      const data = await callHostedATS({ resumeText, jobTitle, jdText });
+      return res.json({
+        success: true,
+        engine: "ats-system-api",
+        source: "hosted-api",
+        data: {
+          ...data,
+          engine: data.engine || "ats-system-api",
+          source: "hosted-api",
+        },
+        timestamp: new Date().toISOString(),
+      });
+    } catch (apiErr) {
+      const data = localAtsFallback(resumeText, jobTitle, jdText, apiErr.message);
+      return res.json({
+        success: true,
+        engine: data.engine,
+        source: "local-fallback",
+        data,
+        warning: apiErr.message,
+        timestamp: new Date().toISOString(),
+      });
+    }
+  } catch (err) {
+    console.error("[ATS-System] Error:", err.message);
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.post("/api/v1/ats/rule-local", upload.single("file"), async (req, res) => {
+  try {
+    const resumeText = await resolveResumeText(req);
+    const { jobTitle, jdText } = req.body;
     console.log("[ATS-Rule] jobTitle:", jobTitle || "N/A", "| textLen:", resumeText.length);
-    const data = scoreResumeRuleBased(resumeText, jobTitle, jdText);
+    const data = scoreResumeSystem(resumeText, jobTitle, jdText);
     res.json({ success: true, engine: "rule-based", data, timestamp: new Date().toISOString() });
   } catch (err) {
     console.error("[ATS-Rule] Error:", err.message);

@@ -215,12 +215,16 @@
   <!-- ATS 评分详情（如果有） -->
   <section class="section" id="atsDetailSection" hidden>
     <div class="section-num">ATS 诊断</div>
-    <h3 class="section-title" style="font-size: 18px;">AI 智能评分</h3>
+    <h3 class="section-title" style="font-size: 18px;">ATS System 评分</h3>
 
     <div class="card" style="background: linear-gradient(135deg, rgba(168,213,186,.08) 0%, rgba(232,160,107,.06) 100%); border: 1px solid rgba(168,213,186,.2);">
 
       <!-- 分项得分 -->
-      <div id="atsItemScores" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 16px;"></div>
+      <div id="atsItemScores" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(92px, 1fr)); gap: 8px; margin-bottom: 16px;"></div>
+
+      <div id="atsSystemSummary" style="font-size: 13px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 14px;"></div>
+
+      <div id="atsDimensionProblems" style="margin-top: 12px;"></div>
 
       <!-- 关键问题 -->
       <div style="margin-top: 16px;">
@@ -331,14 +335,54 @@
   const s = Store.get();
   const atsResult = s.atsResult || {};
 
+  function atsRiskText(risk) {
+    if (risk === "低") return "低风险";
+    if (risk === "中") return "中风险";
+    if (risk === "高") return "高风险";
+    return risk || "未评级";
+  }
+
+  function dimensionRows(ats) {
+    const dimensions = ats.dimensions || ats.raw?.dimensions || {};
+    return Object.entries(dimensions).map(([key, value]) => ({
+      key,
+      label: value.label || key,
+      score: value.score ?? 0,
+      max: value.max ?? 100,
+      pct: value.max ? Math.round((Number(value.score || 0) / Number(value.max)) * 100) : 0
+    }));
+  }
+
+  function buildAtsTileRows(ats) {
+    const rows = dimensionRows(ats).map((item) => ({
+      k: `${item.key} · ${item.label}`,
+      v: `${item.score}/${item.max}`,
+      note: `${item.pct}% · ${item.pct >= 70 ? "表现较好" : item.pct >= 50 ? "需要优化" : "优先修改"}`
+    }));
+    if (ats.jdMatchRatio !== null && ats.jdMatchRatio !== undefined) {
+      rows.unshift({
+        k: "JD 关键词匹配",
+        v: `${ats.jdMatchRatio}%`,
+        note: (ats.topMissingKw || []).length
+          ? `缺口关键词：${ats.topMissingKw.slice(0, 6).join("、")}`
+          : "未发现明显关键词缺口"
+      });
+    }
+    rows.unshift({
+      k: "总分 / 风险",
+      v: `${ats.atsScore}/100`,
+      note: `${atsRiskText(ats.riskLevel)} · ${ats.scoringBasis || "ATS System 评分"}`
+    });
+    return rows;
+  }
+
   // 如果有 ATS 评分结果，更新显示
   if (atsResult.atsScore) {
     M.scores.ats = atsResult.atsScore;
-    M.summary.coreIssue = atsResult.riskLevel === "低"
-      ? `✓ ATS 兼容性良好（${atsResult.atsScore}/100），简历格式清晰规范。`
-      : atsResult.riskLevel === "中"
-      ? `⚠ ATS 兼容性中等（${atsResult.atsScore}/100），建议优化格式和关键词。`
-      : `❌ ATS 兼容性偏低（${atsResult.atsScore}/100），需要重点修改。`;
+    M.atsBreakdown = buildAtsTileRows(atsResult);
+    M.summary.coreIssue = atsResult.keyProblems && atsResult.keyProblems.length
+      ? atsResult.keyProblems[0]
+      : `ATS ${atsRiskText(atsResult.riskLevel)}（${atsResult.atsScore}/100），请优先查看 ATS 诊断中的分项得分和修改建议。`;
 
     console.log("[Result] ATS 评分已加载:", atsResult);
   }
@@ -636,21 +680,21 @@
     console.log("[Result] 渲染 ATS 评分详情", atsResult);
     document.getElementById("atsDetailSection").removeAttribute("hidden");
 
-    // 分项得分
-    const itemLabels = { A: "格式兼容", B: "完整性", C: "内容质量", D: "关键词", E: "投递度" };
-    const itemMaxScores = { A: 15, B: 10, C: 25, D: 40, E: 10 };
-    const itemScores = atsResult.itemScores || {};
+    const items = dimensionRows(atsResult);
+    const missingKw = atsResult.topMissingKw || atsResult.raw?.topMissingKw || atsResult.raw?.topMissingKeywords || [];
+    const jdMatch = atsResult.jdMatchRatio ?? atsResult.raw?.jdMatchRatio;
 
-    // ── 用真实 itemScores 覆盖 atsDetail 三项指标 ──────────────
+    document.getElementById("atsSystemSummary").innerHTML = `
+      <div><b>评分来源：</b>${atsResult.source || "hosted-api"} · ${atsResult.engine || "ats-system-api"} · 不调用 Claude/OpenAI</div>
+      <div><b>总分：</b>${atsResult.atsScore}/100 · <b>风险等级：</b>${atsRiskText(atsResult.riskLevel)}</div>
+      ${jdMatch !== null && jdMatch !== undefined ? `<div><b>JD 关键词匹配：</b>${jdMatch}%</div>` : ""}
+      ${missingKw.length ? `<div><b>缺口关键词：</b>${missingKw.slice(0, 10).join("、")}</div>` : ""}
+      ${atsResult.formatPenaltyTriggered ? `<div style="color:var(--rose);"><b>格式/资料上限处罚：</b>${(atsResult.formatPenaltyReason || []).join("；")}</div>` : ""}
+    `;
+
+    // 用 ATS System dimensions 覆盖上方 ATS tile
     (function renderAtsDetail() {
-      const A = itemScores.A || 0, B = itemScores.B || 0;
-      const C = itemScores.C || 0, D = itemScores.D || 0;
-
-      const metrics = [
-        { k: "格式可解析",   pct: Math.round((A + B) / 25 * 100) },   // A/15 + B/10 = 25
-        { k: "关键词匹配度", pct: Math.round(D / 40 * 100) },           // D 独立展示，满分 40
-        { k: "内容规范性",   pct: Math.round(C / 25 * 100) }            // C 满分 25
-      ];
+      const metrics = buildAtsTileRows(atsResult);
 
       function barColor(p) {
         return p >= 70 ? "var(--jade, #6abf7b)" : p >= 50 ? "#e9a84c" : "var(--rose, #e07070)";
@@ -660,40 +704,54 @@
         <div style="margin-bottom: 12px;">
           <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
             <span style="font-size:13px; font-weight:600;">${m.k}</span>
-            <span style="font-size:14px; font-weight:700; color:${barColor(m.pct)};">${m.pct}%</span>
+            <span style="font-size:14px; font-weight:700;">${m.v}</span>
           </div>
+          <div style="font-size:12px; color: var(--ink-mute); line-height:1.4;">${m.note}</div>
+          ${m.v.endsWith("%") ? `
           <div style="background:rgba(0,0,0,.08); border-radius:99px; height:6px; overflow:hidden;">
-            <div style="width:${m.pct}%; height:100%; border-radius:99px; background:${barColor(m.pct)}; transition:width .4s;"></div>
+            <div style="width:${parseInt(m.v, 10) || 0}%; height:100%; border-radius:99px; background:${barColor(parseInt(m.v, 10) || 0)}; transition:width .4s;"></div>
           </div>
+          ` : ""}
         </div>
       `).join("");
     })();
 
-    console.log("[Result] itemScores 完整内容:", JSON.stringify(itemScores));
-    console.log("[Result] itemScores 键名:", Object.keys(itemScores));
-    console.log("[Result] atsResult 完整:", JSON.stringify(atsResult));
-
-    // 如果 itemScores 为空，使用默认值
-    let hasScores = Object.keys(itemScores).length > 0;
-    const itemHTML = Object.entries(itemLabels).map(([key, label]) => {
-      const score = itemScores[key] !== null && itemScores[key] !== undefined ? itemScores[key] : "—";
-      const max = itemMaxScores[key];
-      const pct = score !== "—" ? Math.round((score / max) * 100) : 0;
-      console.log(`[Result] ${key}: ${score}/${max} (${pct}%)`);
+    const itemHTML = items.map((item) => {
+      const pct = item.pct;
       return `
         <div style="text-align: center; padding: 8px; background: rgba(255,255,255,.3); border-radius: 6px;">
-          <div style="font-size: 12px; color: var(--ink-soft); margin-bottom: 4px;">${label}</div>
-          <div style="font-size: 16px; font-weight: 600; color: ${pct >= 70 ? "var(--good)" : pct >= 50 ? "var(--warn)" : "var(--rose)"};">${score}/${max}</div>
+          <div style="font-size: 12px; color: var(--ink-soft); margin-bottom: 4px;">${item.key} · ${item.label}</div>
+          <div style="font-size: 16px; font-weight: 600; color: ${pct >= 70 ? "var(--good)" : pct >= 50 ? "var(--warn)" : "var(--rose)"};">${item.score}/${item.max}</div>
         </div>
       `;
     }).join("");
 
-    if (!hasScores) {
-      console.warn("[Result] ⚠️ itemScores 为空，API 可能未返回分项数据");
-    }
-
     document.getElementById("atsItemScores").innerHTML = itemHTML;
-    console.log("[Result] 分项得分已渲染");
+
+    const dimensionProblems = atsResult.dimensionProblems || {};
+    const dimensionProblemHTML = items
+      .map((item) => {
+        const list = dimensionProblems[item.key] || [];
+        if (!list.length) return "";
+        return `
+          <details style="border-top:1px dashed var(--line); padding:8px 0;">
+            <summary style="cursor:pointer; font-size:13px; font-weight:600; color:var(--ink);">
+              ${item.key} · ${item.label} 的具体问题 (${list.length})
+            </summary>
+            <ul style="list-style:none; padding:8px 0 0; margin:0; font-size:12px; color:var(--ink-soft); line-height:1.5;">
+              ${list.slice(0, 8).map((text, index) => `
+                <li style="margin-bottom:6px; padding-left:18px; position:relative;">
+                  <span style="position:absolute; left:0; color:var(--rose);">${index + 1}.</span>${text}
+                </li>
+              `).join("")}
+            </ul>
+          </details>
+        `;
+      })
+      .join("");
+    document.getElementById("atsDimensionProblems").innerHTML = dimensionProblemHTML
+      ? `<h4 style="font-size:13px; font-weight:600; margin:4px 0 6px; color:var(--ink);">各维度具体问题</h4>${dimensionProblemHTML}`
+      : "";
 
     // 关键问题
     console.log("[Result] keyProblems:", atsResult.keyProblems);
