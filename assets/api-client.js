@@ -158,7 +158,13 @@ async function scoreResumeAPI(resumeText, jobTitle, jdText) {
       }
     }
 
-    return result.publicReport || result.data;
+    const publicReport = result.publicReport || result.data || {};
+    return {
+      ...publicReport,
+      premiumMentors: result.premiumMentors || null,
+      reportId: result.reportId || null,
+      reportAccessToken: result.reportAccessToken || null,
+    };
   } catch (error) {
     console.error("[API Error]", error.message);
     throw error;
@@ -249,6 +255,7 @@ function formatATSResult(atsData) {
     dimensionProblems: normalizeDimensionProblems(dimensions, atsData.dimensionProblems),
     formatPenaltyTriggered: Boolean(atsData.formatPenaltyTriggered),
     formatPenaltyReason: atsData.formatPenaltyReason || [],
+    keywordBreakdown: atsData.keywordBreakdown || [],
     raw: atsData,
   };
 }

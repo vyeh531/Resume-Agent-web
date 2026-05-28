@@ -2776,9 +2776,9 @@ function buildProblems(ctx) {
     problems.unshift("格式或基本资料存在严重缺陷，总分已被上限至 54（高风险）。优先修复格式问题。");
   }
   if (ctx.allChina) {
-    problems.push("所有工作经历均在中国，与美国求职市场适配度极低（E 维度扣分 80%）。");
+    problems.push("所有工作经历均在中国，与美国求职市场适配度较低，建议在 Summary 中说明赴美求职意向并突出可迁移技能。");
   } else if (ctx.hasAnyChinaExp) {
-    problems.push("部分工作经历在中国，影响美国市场适配度（E 维度扣分 65%）。");
+    problems.push("部分工作经历在中国，建议优先展示与美国岗位相关的经历，并在 Summary 中加入赴美求职意向说明。");
   }
   if (!ctx.isChronological) {
     problems.push("工作经历未按时间倒序排列（最新在前），需重新排序。");
@@ -2915,11 +2915,11 @@ function buildDimensionProblems(ctx) {
 
   const E = [];
   if (checks.allChina) {
-    E.push("所有工作经历均在中国，美国市场适配度极低（扣分 80%）");
+    E.push("所有工作经历均在中国，美国市场适配度较低");
     E.push("建议在简历中突出可迁移技能，并在 Summary 中说明赴美求职意向");
   } else if (checks.hasAnyChinaExp) {
-    E.push("部分工作经历在中国，影响美国市场适配度（扣分 65%）");
-    E.push("建议优先展示与美国岗位相关的经历和技能");
+    E.push("部分工作经历在中国，建议优先展示与美国岗位相关的经历和技能");
+    E.push("在 Summary 中加入赴美求职意向说明，增强市场适配信号");
   }
   if (!checks.hasWillingToRelocate) {
     E.push('未提及 "Willing to relocate"，建议加入以向 ATS 和招聘官传递明确信号');

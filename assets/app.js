@@ -53,9 +53,9 @@ async function submitResume(form) {
     showLoader("准备文件…", "读取简历内容…");
     const resumeText = await readResumeFile(file);
     showLoader("ATS 正在评分…", "使用本地规则引擎分析简历质量，不调用 AI");
-    const targetJob = job || "根据 JD 分析";
-    const atsRaw    = await scoreResumeAPI(resumeText, targetJob, jd);
+    const atsRaw    = await scoreResumeAPI(resumeText, job || null, jd);
     const atsResult = formatATSResult(atsRaw);
+    const targetJob = job || atsRaw.jobTitle || "目标岗位";
     Store.set({
       resumeName: file.name,
       jobTitle: targetJob,

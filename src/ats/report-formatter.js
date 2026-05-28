@@ -666,7 +666,29 @@ function formatPublicFreeReport(internalAtsResult, freeAdvice, lockedPreview) {
     topProblems: topProblems.map(stripInsight),
     freeMentorAdvice: freeAdvice ? stripFreeAdvice(freeAdvice) : null,
     lockedAdvicePreview: lockedPreview,
+    keywordBreakdown: buildPublicKeywordBreakdown(internalAtsResult),
+    problems: asArray(internalAtsResult.problems).slice(0, 8),
+    suggestions: asArray(internalAtsResult.suggestions).slice(0, 8),
+    improvement: internalAtsResult.improvement || "",
   };
+}
+
+function buildPublicKeywordBreakdown(internalAtsResult) {
+  const cats = internalAtsResult.keywordMatch?.categories || {};
+  const order = ["core_skills", "tools", "domain_keywords"];
+  const labels = { core_skills: "核心技能", tools: "工具 / 技术", domain_keywords: "领域词" };
+  return order
+    .filter((k) => cats[k] && (cats[k].total > 0 || (cats[k].matchedTerms || []).length > 0 || (cats[k].missing || []).length > 0))
+    .map((k) => {
+      const cat = cats[k];
+      return {
+        key: k,
+        label: labels[k] || k,
+        matched: (cat.matchedTerms || []).map((t) => (typeof t === "string" ? t : t.term)).filter(Boolean),
+        missing: (cat.missing || []).filter(Boolean),
+        total: cat.total || 0,
+      };
+    });
 }
 
 function riskToBucket(risk, total) {
@@ -730,14 +752,21 @@ function stripFreeAdvice(item) {
       adviceItems: item.adviceItems.slice(0, 3).map((advice) => ({
         adviceId: advice.adviceId,
         title: advice.title,
-        problemSummary: advice.problemSummary,
-        actionSummary: advice.actionSummary,
+        currentDiagnosis: advice.currentDiagnosis || advice.problemSummary,
+        action: advice.action || advice.actionSummary,
+        mentorLens: advice.mentorLens || "",
+        reason: advice.reason || "",
+        mentorInsight: advice.mentorInsight || "",
+        example: advice.example || "",
+        hrPerspective: advice.hrPerspective || "",
         evidence: asArray(advice.evidence).slice(0, 3),
         targetSection: advice.targetSection || "overall",
         relatedProblemTags: asArray(advice.relatedProblemTags).slice(0, 4),
         priority: advice.priority || "medium",
+        priorityLabel: advice.priorityLabel || (advice.priority === "high" ? "P0 必改" : advice.priority === "medium" ? "P1 建议改" : "P2 加分项"),
         source: advice.source || "db",
       })),
+      careerPathDisplay: item.careerPathDisplay || null,
     };
   }
   return {

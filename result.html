@@ -219,24 +219,32 @@
 
     <div class="card" style="background: linear-gradient(135deg, rgba(168,213,186,.08) 0%, rgba(232,160,107,.06) 100%); border: 1px solid rgba(168,213,186,.2);">
 
-      <!-- 分项得分 -->
-      <div id="atsItemScores" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(92px, 1fr)); gap: 8px; margin-bottom: 16px;"></div>
+      <!-- 六边形雷达图 -->
+      <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:16px;position:relative;">
+        <div id="atsRiskBadge" style="position:absolute;top:0;right:0;padding:4px 10px;border-radius:99px;font-size:12px;font-weight:700;font-family:var(--mono);letter-spacing:.04em;"></div>
+        <div id="atsTotalScore" style="position:absolute;top:0;left:0;font-size:22px;font-weight:800;font-family:var(--mono);line-height:1;"></div>
+        <svg id="atsRadarChart" width="240" height="220" viewBox="0 0 240 220" style="overflow:visible;margin-top:28px;"></svg>
+      </div>
 
       <div id="atsSystemSummary" style="font-size: 13px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 14px;"></div>
 
       <div id="atsDimensionProblems" style="margin-top: 12px;"></div>
 
-      <!-- 关键问题 -->
-      <div style="margin-top: 16px;">
-        <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--rose);">🔍 关键问题</h4>
-        <ul id="atsProblems" style="list-style: none; padding: 0; margin: 0; font-size: 13px;"></ul>
-      </div>
+      <!-- 关键问题（可展开） -->
+      <details id="atsProblemsDetails" style="margin-top: 16px;" open>
+        <summary style="cursor:pointer;font-size:13px;font-weight:700;color:var(--rose);list-style:none;display:flex;align-items:center;gap:6px;padding:4px 0;">
+          <span>🔍 关键问题</span><span id="atsProblemsChev" style="font-size:11px;transition:transform .2s;">▾</span>
+        </summary>
+        <ul id="atsProblems" style="list-style: none; padding: 0; margin: 8px 0 0; font-size: 13px;"></ul>
+      </details>
 
-      <!-- 优先建议 -->
-      <div style="margin-top: 12px;">
-        <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--jade);">✨ 优先建议</h4>
-        <ul id="atsSuggestions" style="list-style: none; padding: 0; margin: 0; font-size: 13px;"></ul>
-      </div>
+      <!-- 优先建议（可展开） -->
+      <details id="atsSuggestionsDetails" style="margin-top: 12px;" open>
+        <summary style="cursor:pointer;font-size:13px;font-weight:700;color:var(--jade);list-style:none;display:flex;align-items:center;gap:6px;padding:4px 0;">
+          <span>✨ 优先建议</span><span id="atsSuggestionsChev" style="font-size:11px;transition:transform .2s;">▾</span>
+        </summary>
+        <ul id="atsSuggestions" style="list-style: none; padding: 0; margin: 8px 0 0; font-size: 13px;"></ul>
+      </details>
 
       <!-- 提分预期 -->
       <div style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line);">
@@ -389,7 +397,55 @@
 
   // ===== Summary =====
   document.getElementById("targetJob").textContent = "目标:" + (s.jobTitle || M.job.title);
-  document.getElementById("studentInfo").textContent = `${M.student.grade} · ${M.student.school} · ${M.student.major}`;
+
+  // Parse real education info from resume text
+  (function setStudentInfo() {
+    const text = s.resumeText || "";
+
+    // School name: handle "University of X at Y", "X University", "X College", etc.
+    // Stop at newline, comma, city-state pattern, or multiple spaces (avoid eating city name)
+    function extractSchool(t) {
+      const patterns = [
+        // "University/College/Institute of X (at Y)?" — institution keyword FIRST
+        /\b((?:University|College|Institute|School)\s+of\s+[A-Z][A-Za-z]+(?:\s+(?:at|in)\s+[A-Z][A-Za-z]+)?)/,
+        // "X University / College / School / Institute" — institution keyword LAST
+        /\b([A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+){0,4}\s+(?:University|College|School|Institute))\b/,
+      ];
+      for (const p of patterns) {
+        const m = t.match(p);
+        if (m) return m[1].trim();
+      }
+      return null;
+    }
+
+    // Graduation year: look for explicit markers first, then fall back to a year near degree keywords
+    function extractYear(t) {
+      const explicit = t.match(/(?:Class of|Expected[:\s]+|Graduation[:\s]+|Graduating[:\s]+)(\b20\d{2}\b)/i);
+      if (explicit) return explicit[1];
+      const nearDegree = t.match(/(?:B\.?S\.?|B\.?A\.?|M\.?S\.?|M\.?A\.?|Bachelor|Master|PhD|Ph\.D)[^\n]{0,80}?\b(20\d{2})\b/i);
+      if (nearDegree) return nearDegree[1];
+      // date range like "Aug 2021 – May 2025" near education
+      const range = t.match(/\b(20\d{2})\s*[-–]\s*(20\d{2}|Present|Current)/i);
+      if (range) return range[2] === "Present" || range[2] === "Current" ? range[1] : range[2];
+      return null;
+    }
+
+    // Major / field of study
+    function extractMajor(t) {
+      const m = t.match(/(?:B\.?S\.?|B\.?A\.?|M\.?S\.?|M\.?A\.?|Bachelor(?:'s)?|Master(?:'s)?|PhD|Ph\.D)[,.\s]+(?:of\s+)?(?:Science|Arts|Engineering|Applied\s+\w+)?\s*(?:in\s+)?([A-Z][A-Za-z &,\-]+?)(?:\n|,(?!\s*[A-Z]{2}\b)|;|  |\(|\d)/);
+      return m ? m[1].trim().replace(/\s+/g, " ").replace(/,\s*$/, "") : null;
+    }
+
+    const school = extractSchool(text);
+    const year   = extractYear(text);
+    const major  = extractMajor(text);
+
+    const parts = [];
+    if (year) parts.push(year + "届");
+    if (school) parts.push(school);
+    if (major && major.length < 50) parts.push(major);
+    document.getElementById("studentInfo").textContent = parts.length ? parts.join(" · ") : (s.resumeName || "已上传简历");
+  })();
   document.getElementById("coreIssue").textContent = M.summary.coreIssue;
 
   // 更新标题中的 ATS 评分
@@ -659,21 +715,73 @@
           <div class="role">${escapeHtml(m.mentorName || "Y 导师")} · ${escapeHtml(m.mentorTitle || "简历策略师")}</div>
         </div>
       </header>
-      <div class="cred-pills" style="margin-top:10px;">
-        ${badges.map(c => `<span class="cred-pill">${escapeHtml(c)}</span>`).join("")}
-      </div>
+      ${m.careerPathDisplay ? `<div style="margin-top:8px;font-size:12px;color:var(--ink-soft);"><span style="color:var(--ink);font-weight:600;font-size:11px;font-family:var(--mono);letter-spacing:.04em;">职业路径</span>　${escapeHtml(m.careerPathDisplay)}</div>` : `<div class="cred-pills" style="margin-top:10px;">${badges.map(c => `<span class="cred-pill">${escapeHtml(c)}</span>`).join("")}</div>`}
     `;
   }
 
+  function renderPriorityBadge(item) {
+    const label = item.priorityLabel || (
+      item.priority === "high" || item.priority === "critical" ? "P0 必改" :
+      item.priority === "medium" ? "P1 建议改" :
+      item.priority === "low" ? "P2 加分项" : "P1 建议改"
+    );
+    const styles = {
+      "P0 必改":    "background:#fdd8d8;color:#b02020;border:1.5px solid #e07070;",
+      "P1 建议改":  "background:#fde8c8;color:#8a4500;border:1.5px solid #e9a84c;",
+      "P2 加分项":  "background:#d4f0de;color:#2d6a46;border:1.5px solid #6abf7b;",
+    };
+    const s = styles[label] || styles["P1 建议改"];
+    return `<span style="${s}padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;font-family:var(--mono);letter-spacing:.04em;flex-shrink:0;">${label}</span>`;
+  }
+
   function renderApiAdviceItem(item, i) {
-    const section = item.targetSection ? `<span class="cred-pill">${escapeHtml(item.targetSection)}</span>` : "";
+    const sectionPill = item.targetSection
+      ? `<span class="cred-pill">${escapeHtml(sectionLabel(item.targetSection))}</span>`
+      : "";
+
+    // New-schema fields (gracefully omit empty sections)
+    const mentorLens = item.mentorLens || "";
+    const currentDiagnosis = item.currentDiagnosis || item.problemSummary || "";
+    const action = item.action || item.actionSummary || "";
+    const reason = item.reason || "";
+    const evidenceChips = (item.evidence || []).length
+      ? `<div class="cred-pills" style="margin-top:8px;">${(item.evidence).map(e => `<span class="cred-pill">${escapeHtml(e)}</span>`).join("")}</div>`
+      : "";
+
+    const mentorLensHtml = mentorLens ? `
+      <div style="margin:10px 0 6px;">
+        <div style="font-size:11px;font-weight:700;color:var(--ink-soft);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;">导师筛选视角</div>
+        <p style="margin:0;color:var(--ink-soft);font-size:13px;line-height:1.65;">${escapeHtml(mentorLens)}</p>
+      </div>` : "";
+
+    const diagnosisHtml = currentDiagnosis ? `
+      <div style="margin:10px 0 6px;">
+        <div style="font-size:11px;font-weight:700;color:var(--ink-soft);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;">你的现状</div>
+        <p style="margin:0;color:var(--ink);font-size:13px;line-height:1.65;">${escapeHtml(currentDiagnosis)}</p>
+        ${evidenceChips}
+      </div>` : "";
+
+    const actionHtml = action ? `
+      <div style="margin:10px 0 6px;padding:10px 12px;background:rgba(168,213,186,.13);border-radius:8px;border-left:3px solid rgba(100,180,130,.5);">
+        <div style="font-size:11px;font-weight:700;color:var(--ink-soft);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;">建议你先做</div>
+        <p style="margin:0;color:var(--ink);font-size:13px;line-height:1.7;font-weight:600;">${escapeHtml(action)}</p>
+      </div>` : "";
+
+    const reasonHtml = reason ? `
+      <div style="margin:10px 0 0;">
+        <div style="font-size:11px;font-weight:700;color:var(--ink-soft);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;">为什么这样改有效？</div>
+        <p style="margin:0;color:var(--ink-soft);font-size:13px;line-height:1.65;">${escapeHtml(reason)}</p>
+      </div>` : "";
+
     return `
       <div class="advice-section advice-section--plain" style="margin-top:14px;">
-        <h4>导师建议 ${i + 1}</h4>
-        <p style="font-weight:650;color:var(--ink);margin-bottom:6px;">${escapeHtml(item.title)}</p>
-        <p>${escapeHtml(item.problemSummary)}</p>
-        <p style="margin-top:8px;">${escapeHtml(item.actionSummary)}</p>
-        ${section ? `<div class="cred-pills" style="margin-top:8px;">${section}</div>` : ""}
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+          ${renderPriorityBadge(item)}
+          <h4 style="margin:0;font-size:15px;font-weight:700;">导师建议 ${i + 1}</h4>
+          ${sectionPill ? `<div class="cred-pills" style="margin-left:auto;">${sectionPill}</div>` : ""}
+        </div>
+        <div style="font-weight:700;font-size:15px;margin-bottom:4px;line-height:1.4;">${escapeHtml(item.title)}</div>
+        ${mentorLensHtml}${diagnosisHtml}${actionHtml}${reasonHtml}
       </div>
     `;
   }
@@ -746,17 +854,9 @@
       : `<div class="company-logo" style="font-size:14px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(168,213,186,.25);font-weight:700;">${escapeHtml((m.company || "M")[0])}</div>`;
     const badges = (m.badges || []).map(b => `<span class="cred-pill">${escapeHtml(b)}</span>`).join("");
     const problemChips = (m.matchedProblems || []).slice(0, 5).map(p => `<span class="cred-pill">${escapeHtml(problemLabel(p))}</span>`).join("");
-    const adviceHtml = (m.adviceItems || []).slice(0, 3).map((item, index) => `
-      <article class="advice-section advice-section--plain" style="margin-top:14px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;">
-          <h4 style="margin:0;">导师建议 ${index + 1}</h4>
-          <span class="cred-pill">${escapeHtml(sectionLabel(item.targetSection))}</span>
-        </div>
-        <div style="font-weight:700;margin-bottom:6px;">${escapeHtml(item.title)}</div>
-        <p style="margin:0 0 8px;color:var(--ink-soft);">${escapeHtml(item.problemSummary)}</p>
-        <p style="margin:0;line-height:1.7;">${escapeHtml(item.actionSummary)}</p>
-      </article>
-    `).join("");
+    const adviceHtml = (m.adviceItems || []).slice(0, 3).map((item, index) =>
+      renderApiAdviceItem(item, index)
+    ).join("");
     document.getElementById("mentorFree").innerHTML = `
       <div style="font-size:12px;color:var(--ink-soft);font-family:var(--mono);margin-bottom:10px;">导师 1 / 4 · 免费试读</div>
       <header class="mentor-detail-head">
@@ -813,13 +913,8 @@
         const logo = m.companyLogo
           ? `<img src="${escapeAttr(m.companyLogo)}" alt="${escapeHtml(m.company || '')}" style="width:44px;height:44px;object-fit:contain;border-radius:8px;background:#fff;padding:5px;">`
           : `<div style="font-size:14px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(168,213,186,.25);font-weight:700;">${escapeHtml((m.company || "M")[0])}</div>`;
-        const badges = (m.badges || []).map(b => `<span class="cred-pill">${escapeHtml(b)}</span>`).join("");
-        const hints = (m.adviceHint || []).map((h, i) => `
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;filter:blur(3.5px);user-select:none;pointer-events:none;">
-            <span class="cred-pill" style="flex-shrink:0;">${escapeHtml(sectionLabel(h.targetSection))}</span>
-            <span style="font-size:13px;font-weight:600;">${escapeHtml(h.title)}</span>
-          </div>
-        `).join("");
+        const topicPills = (m.previewTopics || []).map(t => `<span class="cred-pill">${escapeHtml(t)}</span>`).join("");
+        const adviceCountLabel = m.lockedAdviceCount ? `${m.lockedAdviceCount} 条建议` : "3 条建议";
         return `
           <article class="locked-mentor-v2" style="position:relative;overflow:hidden;">
             <header class="head" style="display:flex;align-items:center;gap:12px;">
@@ -829,9 +924,9 @@
                 <div class="role-line">${escapeHtml(m.mentorName || "导师")} · ${escapeHtml(m.mentorTitle || "简历策略师")}</div>
               </div>
             </header>
-            <div class="cred-pills" style="margin:8px 0 10px;">${badges}</div>
-            <div style="margin-bottom:6px;font-size:12px;font-weight:600;color:var(--ink-soft);font-family:var(--mono);letter-spacing:.04em;">3 条建议预览</div>
-            ${hints}
+            ${m.careerPathDisplay ? `<div style="margin:8px 0 6px;font-size:12px;color:var(--ink-soft);"><span style="color:var(--ink);font-weight:600;font-size:11px;font-family:var(--mono);letter-spacing:.04em;">职业路径</span>　${escapeHtml(m.careerPathDisplay)}</div>` : ""}
+            <div style="margin:8px 0 6px;font-size:12px;font-weight:600;color:var(--ink-soft);font-family:var(--mono);letter-spacing:.04em;">涵盖方向 · ${adviceCountLabel}</div>
+            <div class="cred-pills" style="margin-bottom:10px;">${topicPills}</div>
             <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(246,243,236,.55);backdrop-filter:blur(1px);">
               <div style="text-align:center;">
                 <div style="font-size:20px;margin-bottom:4px;">🔒</div>
@@ -887,13 +982,11 @@
     const missingKw = atsResult.topMissingKw || atsResult.raw?.topMissingKw || atsResult.raw?.topMissingKeywords || [];
     const jdMatch = atsResult.jdMatchRatio ?? atsResult.raw?.jdMatchRatio;
 
-    document.getElementById("atsSystemSummary").innerHTML = `
-      <div><b>评分来源：</b>${atsResult.source || "hosted-api"} · ${atsResult.engine || "ats-system-api"} · 不调用 Claude/OpenAI</div>
-      <div><b>总分：</b>${atsResult.atsScore}/100 · <b>风险等级：</b>${atsRiskText(atsResult.riskLevel)}</div>
-      ${jdMatch !== null && jdMatch !== undefined ? `<div><b>JD 关键词匹配：</b>${jdMatch}%</div>` : ""}
-      ${missingKw.length ? `<div><b>缺口关键词：</b>${missingKw.slice(0, 10).join("、")}</div>` : ""}
-      ${atsResult.formatPenaltyTriggered ? `<div style="color:var(--rose);"><b>格式/资料上限处罚：</b>${(atsResult.formatPenaltyReason || []).join("；")}</div>` : ""}
-    `;
+    document.getElementById("atsSystemSummary").innerHTML = [
+      jdMatch !== null && jdMatch !== undefined ? `<div><b>JD 关键词匹配：</b>${jdMatch}%</div>` : "",
+      missingKw.length ? `<div><b>缺口关键词：</b>${missingKw.slice(0, 10).join("、")}</div>` : "",
+      atsResult.formatPenaltyTriggered ? `<div style="color:var(--rose);"><b>格式处罚：</b>${(atsResult.formatPenaltyReason || []).join("；")}</div>` : "",
+    ].filter(Boolean).join("");
 
     // 用 ATS System dimensions 覆盖上方 ATS tile
     (function renderAtsDetail() {
@@ -919,17 +1012,7 @@
       `).join("");
     })();
 
-    const itemHTML = items.map((item) => {
-      const pct = item.pct;
-      return `
-        <div style="text-align: center; padding: 8px; background: rgba(255,255,255,.3); border-radius: 6px;">
-          <div style="font-size: 12px; color: var(--ink-soft); margin-bottom: 4px;">${item.key} · ${item.label}</div>
-          <div style="font-size: 16px; font-weight: 600; color: ${pct >= 70 ? "var(--good)" : pct >= 50 ? "var(--warn)" : "var(--rose)"};">${item.score}/${item.max}</div>
-        </div>
-      `;
-    }).join("");
-
-    document.getElementById("atsItemScores").innerHTML = itemHTML;
+    // atsItemScores grid replaced by radar chart above
 
     const dimensionProblems = atsResult.dimensionProblems || {};
     const dimensionProblemHTML = items
@@ -956,41 +1039,116 @@
       ? `<h4 style="font-size:13px; font-weight:600; margin:4px 0 6px; color:var(--ink);">各维度具体问题</h4>${dimensionProblemHTML}`
       : "";
 
-    // 关键问题
-    console.log("[Result] keyProblems:", atsResult.keyProblems);
+    // 六边形雷达图
+    (function renderRadar() {
+      const cx = 120, cy = 110, R = 80;
+      const dimKeys = ["A","B","C","D","E","F"];
+      const dimLabels = {
+        A: "格式规范", B: "基本资料", C: "内容质量",
+        D: "JD匹配", E: "市场适配", F: "经验匹配"
+      };
+      const raw = atsResult.raw?.dimensions || atsResult.dimensions || {};
+      const dims = dimKeys.map(k => {
+        const d = raw[k];
+        return d ? { score: d.score, max: d.max, pct: Math.round((d.score / d.max) * 100) } : { score: 0, max: 1, pct: 0 };
+      });
+      const angle = (i) => (Math.PI / 3) * i - Math.PI / 2;
+      const pt = (i, r) => [cx + r * Math.cos(angle(i)), cy + r * Math.sin(angle(i))];
+
+      let svg = "";
+      [0.25, 0.5, 0.75, 1].forEach(frac => {
+        const pts = dimKeys.map((_, i) => pt(i, R * frac).join(",")).join(" ");
+        svg += `<polygon points="${pts}" fill="none" stroke="rgba(0,0,0,.08)" stroke-width="1"/>`;
+      });
+      dimKeys.forEach((_, i) => {
+        const [x, y] = pt(i, R);
+        svg += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(0,0,0,.1)" stroke-width="1"/>`;
+      });
+      const dataPts = dims.map((d, i) => pt(i, R * d.pct / 100).join(",")).join(" ");
+      svg += `<polygon points="${dataPts}" fill="rgba(106,191,123,.25)" stroke="var(--jade,#6abf7b)" stroke-width="2"/>`;
+      dims.forEach((d, i) => {
+        const [dx, dy] = pt(i, R * d.pct / 100);
+        const [lx, ly] = pt(i, R + 22);
+        const anchor = lx < cx - 4 ? "end" : lx > cx + 4 ? "start" : "middle";
+        const color = d.pct >= 70 ? "var(--good,#6abf7b)" : d.pct >= 45 ? "#e9a84c" : "var(--rose,#e07070)";
+        svg += `<circle cx="${dx}" cy="${dy}" r="4" fill="${color}"/>`;
+        svg += `<text x="${lx}" y="${ly}" text-anchor="${anchor}" font-size="10" fill="var(--ink-soft)" font-family="var(--sans)">${dimLabels[dimKeys[i]]}</text>`;
+        svg += `<text x="${lx}" y="${ly + 11}" text-anchor="${anchor}" font-size="10" font-weight="700" fill="${color}" font-family="var(--mono)">${d.score}/${d.max}</text>`;
+      });
+      document.getElementById("atsRadarChart").innerHTML = svg;
+
+      // Total score top-left
+      const totalEl = document.getElementById("atsTotalScore");
+      if (totalEl) {
+        const sc = atsResult.atsScore;
+        const scoreColor = sc >= 75 ? "var(--jade,#6abf7b)" : sc >= 55 ? "#e9a84c" : "var(--rose,#e07070)";
+        totalEl.innerHTML = `<span style="color:${scoreColor};">${sc}</span><span style="font-size:13px;color:var(--ink-soft);font-weight:500;">/100</span>`;
+      }
+
+      // Risk badge with border
+      const risk = atsResult.riskLevel || "";
+      const riskMap = {
+        "低": { label: "低风险", bg: "#d4f0de", color: "#2d7a4a", border: "#2d7a4a" },
+        "中": { label: "中风险", bg: "#fde8c8", color: "#b05e00", border: "#b05e00" },
+        "高": { label: "高风险", bg: "#fdd8d8", color: "#b02020", border: "#b02020" },
+        "low":    { label: "低风险", bg: "#d4f0de", color: "#2d7a4a", border: "#2d7a4a" },
+        "medium": { label: "中风险", bg: "#fde8c8", color: "#b05e00", border: "#b05e00" },
+        "high":   { label: "高风险", bg: "#fdd8d8", color: "#b02020", border: "#b02020" },
+      };
+      const r = riskMap[risk] || riskMap[risk?.toLowerCase()] || { label: risk || "风险未知", bg: "#eee", color: "#666", border: "#999" };
+      const badge = document.getElementById("atsRiskBadge");
+      badge.textContent = r.label;
+      badge.style.background = r.bg;
+      badge.style.color = r.color;
+      badge.style.border = `1.5px solid ${r.border}`;
+    })();
+
+    // 关键问题（前3可见，其余blur+锁）
     if (atsResult.keyProblems && atsResult.keyProblems.length > 0) {
-      const problemHTML = atsResult.keyProblems.slice(0, 6).map((p, i) => {
-        const cleanText = (p || '').trim();
+      const problems = atsResult.keyProblems.slice(0, 6);
+      const problemHTML = problems.map((p, i) => {
+        const blur = i >= 3;
         return `
-          <li style="margin-bottom: 10px; padding-left: 20px; position: relative; line-height: 1.5;">
-            <span style="position: absolute; left: 0; color: var(--rose); font-weight: 600;">●</span>
-            ${cleanText}
-          </li>
-        `;
+          <li style="margin-bottom:10px;padding-left:20px;position:relative;line-height:1.5;${blur ? "filter:blur(4px);user-select:none;pointer-events:none;" : ""}">
+            <span style="position:absolute;left:0;color:var(--rose);font-weight:600;">●</span>
+            ${(p || '').trim()}
+          </li>`;
       }).join("");
-      document.getElementById("atsProblems").innerHTML = problemHTML;
-      console.log("[Result] 关键问题已渲染");
+      const hasLocked = problems.length > 3;
+      document.getElementById("atsProblems").innerHTML = problemHTML
+        + (hasLocked ? `<li style="list-style:none;text-align:center;margin-top:4px;font-size:12px;color:var(--ink-soft);">🔒 解锁查看完整问题列表</li>` : "");
     } else {
-      document.getElementById("atsProblems").innerHTML = '<li style="color: var(--ink-soft);">暂无关键问题记录</li>';
+      document.getElementById("atsProblems").innerHTML = '<li style="color:var(--ink-soft);">暂无关键问题记录</li>';
     }
 
-    // 优先建议
-    console.log("[Result] suggestions:", atsResult.suggestions);
+    // 优先建议（前3可见，其余blur+锁）
     if (atsResult.suggestions && atsResult.suggestions.length > 0) {
-      const suggestionHTML = atsResult.suggestions.slice(0, 6).map((s, i) => {
-        const cleanText = (s || '').trim();
+      const suggs = atsResult.suggestions.slice(0, 6);
+      const suggestionHTML = suggs.map((s, i) => {
+        const blur = i >= 3;
         return `
-          <li style="margin-bottom: 10px; padding-left: 20px; position: relative; line-height: 1.5;">
-            <span style="position: absolute; left: 0; color: var(--jade); font-weight: 600;">✓</span>
-            ${cleanText}
-          </li>
-        `;
+          <li style="margin-bottom:10px;padding-left:20px;position:relative;line-height:1.5;${blur ? "filter:blur(4px);user-select:none;pointer-events:none;" : ""}">
+            <span style="position:absolute;left:0;color:var(--jade);font-weight:600;">✓</span>
+            ${(s || '').trim()}
+          </li>`;
       }).join("");
-      document.getElementById("atsSuggestions").innerHTML = suggestionHTML;
-      console.log("[Result] 优先建议已渲染");
+      const hasLocked = suggs.length > 3;
+      document.getElementById("atsSuggestions").innerHTML = suggestionHTML
+        + (hasLocked ? `<li style="list-style:none;text-align:center;margin-top:4px;font-size:12px;color:var(--ink-soft);">🔒 解锁查看完整建议</li>` : "");
     } else {
-      document.getElementById("atsSuggestions").innerHTML = '<li style="color: var(--ink-soft);">暂无建议</li>';
+      document.getElementById("atsSuggestions").innerHTML = '<li style="color:var(--ink-soft);">暂无建议</li>';
     }
+
+    // Chevron toggle for details
+    ["atsProblemsDetails", "atsSuggestionsDetails"].forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const chevId = id === "atsProblemsDetails" ? "atsProblemsChev" : "atsSuggestionsChev";
+      el.addEventListener("toggle", () => {
+        const chev = document.getElementById(chevId);
+        if (chev) chev.style.transform = el.open ? "rotate(0deg)" : "rotate(-90deg)";
+      });
+    });
 
     // 提分预期
     console.log("[Result] improvementExpectation:", atsResult.improvementExpectation);

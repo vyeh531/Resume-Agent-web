@@ -112,32 +112,32 @@ app.get("/api/recent-analyses", (req, res) => {
   } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
-app.post("/api/resume/:id/mark-paid", (req, res) => {
+app.post("/api/resume/:id/mark-paid", async (req, res) => {
   try {
-    db.markAsPaid(req.params.id, true);
+    await db.markAsPaid(req.params.id, true);
     res.json({ success: true });
   } catch (error) { res.status(500).json({ error: error.message }); }
 });
 
-function fuzzyRow(d, table, cols, jobTitle) {
+async function fuzzyRow(pool, table, cols, jobTitle) {
   const sel = "SELECT " + cols + " FROM " + table;
-  let row = d.prepare(sel + " WHERE LOWER(position_title) = LOWER(?) LIMIT 1").get(jobTitle);
-  if (!row) row = d.prepare(sel + " WHERE LOWER(position_title) LIKE LOWER(?) OR LOWER(?) LIKE LOWER('%' || position_title || '%') LIMIT 1").get("%" + jobTitle + "%", jobTitle);
-  if (!row) {
-    for (const w of jobTitle.split(/\s+/).filter(w => w.length > 2)) {
-      row = d.prepare(sel + " WHERE LOWER(position_title) LIKE LOWER(?) LIMIT 1").get("%" + w + "%");
-      if (row) break;
-    }
+  let r = await pool.query(sel + " WHERE LOWER(position_title) = LOWER($1) LIMIT 1", [jobTitle]);
+  if (r.rows[0]) return r.rows[0];
+  r = await pool.query(sel + " WHERE LOWER(position_title) LIKE LOWER($1) OR LOWER($2) LIKE LOWER('%' || position_title || '%') LIMIT 1", ["%" + jobTitle + "%", jobTitle]);
+  if (r.rows[0]) return r.rows[0];
+  for (const w of jobTitle.split(/\s+/).filter(w => w.length > 2)) {
+    r = await pool.query(sel + " WHERE LOWER(position_title) LIKE LOWER($1) LIMIT 1", ["%" + w + "%"]);
+    if (r.rows[0]) return r.rows[0];
   }
-  return row;
+  return null;
 }
 
-app.get("/api/position-salary", (req, res) => {
+app.get("/api/position-salary", async (req, res) => {
   try {
     const jobTitle = (req.query.jobTitle || "").trim();
     if (!jobTitle) return res.status(400).json({ error: "jobTitle is required" });
-    const d = db.getDB();
-    const row = fuzzyRow(d, "position_skills", "position_title, salary_range", jobTitle);
+    const pool = db.getPool();
+    const row = await fuzzyRow(pool, "position_skills", "position_title, salary_range", jobTitle);
     if (!row) return res.json({ success: true, found: false, salary_range: null });
     console.log("[DB] position salary found:", row.position_title, row.salary_range);
     res.json({ success: true, found: true, position_title: row.position_title, salary_range: row.salary_range });
@@ -147,10 +147,10 @@ app.get("/api/position-salary", (req, res) => {
   }
 });
 
-app.get("/api/positions", (req, res) => {
+app.get("/api/positions", async (req, res) => {
   try {
-    const d = db.getDB();
-    const rows = d.prepare("SELECT position_title FROM position_skills ORDER BY position_title").all();
+    const pool = db.getPool();
+    const { rows } = await pool.query("SELECT position_title FROM position_skills ORDER BY position_title");
     res.json({ success: true, data: rows.map(r => r.position_title) });
   } catch (error) {
     console.error("[DB] positions error:", error.message);
@@ -158,13 +158,13 @@ app.get("/api/positions", (req, res) => {
   }
 });
 
-app.get("/api/position-skills", (req, res) => {
+app.get("/api/position-skills", async (req, res) => {
   try {
     const jobTitle   = (req.query.jobTitle   || "").trim();
     const resumeText = (req.query.resumeText || "").toLowerCase();
     if (!jobTitle) return res.status(400).json({ error: "jobTitle is required" });
-    const d = db.getDB();
-    const row = fuzzyRow(d, "position_skills", "*", jobTitle);
+    const pool = db.getPool();
+    const row = await fuzzyRow(pool, "position_skills", "*", jobTitle);
     if (!row) return res.json({ success: true, found: false, skills: [] });
     const keys = ["top1_skill","top2_skill","top3_skill","top4_skill","top5_skill",
                   "top6_skill","top7_skill","top8_skill","top9_skill","top10_skill"];
@@ -189,36 +189,38 @@ app.get("/api/position-skills", (req, res) => {
 app.post("/api/mentor-advice", async (req, res) => {
   try {
     const { jobTitle, resumeText, keyProblems, atsScore } = req.body;
-    const d = db.getDB();
+    const pool = db.getPool();
     const kw = "%" + (jobTitle || "").toLowerCase() + "%";
 
     // ── 1. Segments (4-tier priority) ──────────────────────────
     let segments = [];
-    const tier1 = d.prepare(
+    const { rows: tier1 } = await pool.query(
       "SELECT * FROM segments WHERE generality='universal' AND (confidence='high' OR confidence IS NULL)" +
-      " AND (LOWER(topic) LIKE ? OR LOWER(L1) LIKE ? OR LOWER(L2) LIKE ?)" +
-      " ORDER BY background_fit DESC LIMIT 6"
-    ).all(kw, kw, kw);
+      " AND (LOWER(topic) LIKE $1 OR LOWER(\"L1\") LIKE $2 OR LOWER(\"L2\") LIKE $3)" +
+      " ORDER BY background_fit DESC LIMIT 6",
+      [kw, kw, kw]
+    );
     segments.push(...tier1);
 
     if (segments.length < 5) {
-      const tier2 = d.prepare(
+      const { rows: tier2 } = await pool.query(
         "SELECT * FROM segments WHERE generality='universal' AND (confidence='high' OR confidence IS NULL)" +
         " ORDER BY background_fit DESC LIMIT 8"
-      ).all();
+      );
       const ids = new Set(segments.map(s => s.id));
       for (const s of tier2) { if (!ids.has(s.id)) segments.push(s); }
     }
 
-    const tier3 = d.prepare(
+    const { rows: tier3 } = await pool.query(
       "SELECT * FROM segments WHERE (generality='industry-specific' OR generality='role-specific')" +
-      " AND (LOWER(topic) LIKE ? OR LOWER(L1) LIKE ? OR LOWER(L2) LIKE ?)" +
-      " ORDER BY industry_fit ASC LIMIT 5"
-    ).all(kw, kw, kw);
+      " AND (LOWER(topic) LIKE $1 OR LOWER(\"L1\") LIKE $2 OR LOWER(\"L2\") LIKE $3)" +
+      " ORDER BY industry_fit ASC LIMIT 5",
+      [kw, kw, kw]
+    );
     { const ids = new Set(segments.map(s => s.id)); for (const s of tier3) { if (!ids.has(s.id)) segments.push(s); } }
 
     if (segments.length < 8) {
-      const tier4 = d.prepare("SELECT * FROM segments ORDER BY background_fit DESC LIMIT 12").all();
+      const { rows: tier4 } = await pool.query("SELECT * FROM segments ORDER BY background_fit DESC LIMIT 12");
       const ids = new Set(segments.map(s => s.id));
       for (const s of tier4) { if (!ids.has(s.id)) segments.push(s); }
     }
@@ -230,14 +232,15 @@ app.post("/api/mentor-advice", async (req, res) => {
       + " " + (jobTitle || "");
     const kwList = problemText.toLowerCase().split(/[\s,\n]+/).filter(w => w.length > 2).slice(0, 8);
     for (const w of kwList) {
-      const found = d.prepare(
-        "SELECT * FROM before_after_pairs WHERE LOWER(issue_tags_json) LIKE ? OR LOWER(\"before\") LIKE ? OR LOWER(reason) LIKE ? LIMIT 3"
-      ).all("%" + w + "%", "%" + w + "%", "%" + w + "%");
+      const { rows: found } = await pool.query(
+        "SELECT * FROM before_after_pairs WHERE LOWER(issue_tags_json) LIKE $1 OR LOWER(\"before\") LIKE $2 OR LOWER(reason) LIKE $3 LIMIT 3",
+        ["%" + w + "%", "%" + w + "%", "%" + w + "%"]
+      );
       pairs.push(...found);
       if (pairs.length >= 12) break;
     }
     if (pairs.length < 6) {
-      const fb = d.prepare("SELECT * FROM before_after_pairs ORDER BY RANDOM() LIMIT 12").all();
+      const { rows: fb } = await pool.query("SELECT * FROM before_after_pairs ORDER BY RANDOM() LIMIT 12");
       const seen = new Set(pairs.map(p => p.id));
       for (const p of fb) { if (!seen.has(p.id)) pairs.push(p); }
     }
@@ -409,7 +412,7 @@ app.post("/api/v1/ats/rule", upload.single("file"), async (req, res) => {
 
     try {
       const data = await callHostedATS({ resumeText, jobTitle, jdText });
-      const report = buildAtsReportPayload({
+      const report = await buildAtsReportPayload({
         ...data,
         engine: data.engine || "ats-system-api",
         source: "hosted-api",
@@ -428,7 +431,7 @@ app.post("/api/v1/ats/rule", upload.single("file"), async (req, res) => {
       return res.json(payload);
     } catch (apiErr) {
       const data = localAtsFallback(resumeText, jobTitle, jdText, apiErr.message);
-      const report = buildAtsReportPayload(data, { resumeText, jobTitle, jdText }, req);
+      const report = await buildAtsReportPayload(data, { resumeText, jobTitle, jdText }, req);
       const payload = {
         success: true,
         engine: data.engine,
@@ -455,7 +458,7 @@ app.post("/api/v1/ats/rule-local", upload.single("file"), async (req, res) => {
     const { jobTitle, jdText } = req.body;
     console.log("[ATS-Rule] jobTitle:", jobTitle || "N/A", "| textLen:", resumeText.length);
     const rawScoreResult = scoreResumeSystem(resumeText, jobTitle, jdText);
-    const report = buildAtsReportPayload(rawScoreResult, { resumeText, jobTitle, jdText }, req);
+    const report = await buildAtsReportPayload(rawScoreResult, { resumeText, jobTitle, jdText }, req);
     const payload = {
       success: true,
       engine: "rule-based",
@@ -473,13 +476,13 @@ app.post("/api/v1/ats/rule-local", upload.single("file"), async (req, res) => {
   }
 });
 
-function buildAtsReportPayload(rawScoreResult, input, req) {
+async function buildAtsReportPayload(rawScoreResult, input, req) {
   const internalAtsResult = formatInternalAtsResult(rawScoreResult, input);
   const retrievalQuery = internalAtsResult.retrievalQuery;
-  const mentorCandidates = retrieveMentorAdvice(retrievalQuery);
+  const mentorCandidates = await retrieveMentorAdvice(retrievalQuery);
   const freeMentorPlan = selectFreeMentorPlan(mentorCandidates, internalAtsResult);
   const premiumMentorPlan = selectPremiumMentorPlan(mentorCandidates, internalAtsResult, freeMentorPlan);
-  const freeAdvice = formatPublicFreeMentorAdvice(freeMentorPlan);
+  const freeAdvice = formatPublicFreeMentorAdvice(freeMentorPlan, internalAtsResult);
   const paidAdvice = premiumMentorPlan.slice(1);
   const premiumMentorReport = formatPremiumMentorReport(premiumMentorPlan, internalAtsResult);
   logRetrievalDebug({
@@ -503,7 +506,7 @@ function buildAtsReportPayload(rawScoreResult, input, req) {
   const reportAccessToken = createReportAccessToken();
   const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 14).toISOString();
 
-  db.saveAtsReport({
+  await db.saveAtsReport({
     reportId,
     reportAccessToken,
     expiresAt,
@@ -591,7 +594,7 @@ app.post("/api/v1/score", upload.single("file"), async (req, res) => {
     }
 
     const rawScoreResult = scoreResumeSystem(resumeText, jobTitle, jdText);
-    const report = buildAtsReportPayload(rawScoreResult, { resumeText, jobTitle, jdText }, req);
+    const report = await buildAtsReportPayload(rawScoreResult, { resumeText, jobTitle, jdText }, req);
 
     const payload = {
       success: true,
@@ -617,9 +620,9 @@ function reportUserFromRequest(req) {
   return req.headers["x-user-id"] ? String(req.headers["x-user-id"]) : null;
 }
 
-app.get("/api/v1/reports/:reportId/public", (req, res) => {
+app.get("/api/v1/reports/:reportId/public", async (req, res) => {
   try {
-    const access = db.validateReportAccess(req.params.reportId, {
+    const access = await db.validateReportAccess(req.params.reportId, {
       token: reportTokenFromRequest(req),
       userId: reportUserFromRequest(req),
     });
@@ -638,9 +641,9 @@ app.get("/api/v1/reports/:reportId/public", (req, res) => {
   }
 });
 
-app.post("/api/v1/reports/:reportId/unlock", (req, res) => {
+app.post("/api/v1/reports/:reportId/unlock", async (req, res) => {
   try {
-    const unlock = db.validateReportUnlock(req.params.reportId, {
+    const unlock = await db.validateReportUnlock(req.params.reportId, {
       token: reportTokenFromRequest(req),
       userId: reportUserFromRequest(req),
     });
@@ -658,13 +661,13 @@ app.post("/api/v1/reports/:reportId/unlock", (req, res) => {
   }
 });
 
-app.get("/api/v1/reports/:reportId/debug", (req, res) => {
+app.get("/api/v1/reports/:reportId/debug", async (req, res) => {
   try {
     const debugAllowed = process.env.NODE_ENV !== "production" ||
       (process.env.DEBUG_REPORT_SECRET && req.headers["x-debug-secret"] === process.env.DEBUG_REPORT_SECRET);
     if (!debugAllowed) return res.status(404).json({ success: false, error: "NOT_FOUND" });
 
-    const report = db.getAtsReport(req.params.reportId);
+    const report = await db.getAtsReport(req.params.reportId);
     if (!report) return res.status(404).json({ success: false, error: "REPORT_NOT_FOUND" });
     res.json({
       success: true,
@@ -732,7 +735,6 @@ function logPublicAtsResponseForTesting(label, payload) {
 }
 
 function redactSensitiveLogPayload(payload) {
-  if (process.env.NODE_ENV !== "production") return payload;
   return {
     ...payload,
     reportAccessToken: payload.reportAccessToken ? "[REDACTED]" : payload.reportAccessToken,
@@ -743,7 +745,17 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log("Resume Fix MVP running at http://localhost:" + PORT);
-  console.log("Database: mentor_kb-v5.db");
+  console.log("Database: Supabase (PostgreSQL)");
+});
+
+server.on("error", (err) => {
+  if (err.code === "EADDRINUSE") {
+    const nextPort = (server.address()?.port || PORT) + 1;
+    console.warn(`[server] Port ${PORT} in use, trying ${nextPort}...`);
+    server.listen(nextPort);
+  } else {
+    throw err;
+  }
 });

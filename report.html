@@ -356,9 +356,28 @@
 
   <hr class="divider" />
 
-  <!-- ============ 2. MENTORS (全部 4 位) ============ -->
+  <!-- ============ 2. ATS 详细分数 ============ -->
+  <section class="section" id="atsDetailSection">
+    <div class="section-num">02 · ATS 诊断</div>
+    <h2 class="section-title" style="font-size: 22px;">系统评分详情</h2>
+
+    <div class="card card-tight">
+      <!-- 六维度分数 grid -->
+      <div id="atsDimGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;"></div>
+
+      <!-- Keyword matching -->
+      <div id="atsKeywordSection" style="margin-bottom:14px;"></div>
+
+      <!-- 关键问题 -->
+      <div id="atsProblemsSection"></div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ============ 3. MENTORS (全部 4 位) ============ -->
   <section class="section" id="mentors">
-    <div class="section-num">02 · 4 位大厂导师建议</div>
+    <div class="section-num">03 · 4 位大厂导师建议</div>
     <h2 class="section-title" style="font-size: 22px;">每个角度都有人帮你看过了</h2>
 
     <div class="stack-16" id="mentorsList"></div>
@@ -480,7 +499,70 @@
   const headlineEl = document.querySelector(".report-headline .num");
   if (headlineEl && atsResult.atsScore) headlineEl.textContent = atsResult.atsScore;
 
-  // ── 2. Skills from DB ──────────────────────────────────────────
+  // ── 2. ATS 详细分数 ───────────────────────────────────────────
+  (function renderAtsDetail() {
+    const raw = atsResult.raw?.dimensions || atsResult.dimensions || {};
+    const dimKeys = ["A","B","C","D","E","F"];
+    const dimLabels = { A:"格式规范", B:"基本资料", C:"内容质量", D:"JD匹配", E:"市场适配", F:"经验匹配" };
+
+    // 六维度 grid
+    const dimHTML = dimKeys.map(k => {
+      const d = raw[k]; if (!d) return "";
+      const pct = Math.round((d.score / d.max) * 100);
+      const color = pct >= 70 ? "var(--good,#6abf7b)" : pct >= 45 ? "#e9a84c" : "var(--rose,#e07070)";
+      return `
+        <div style="background:rgba(255,255,255,.5);border-radius:8px;padding:10px 8px;text-align:center;">
+          <div style="font-size:11px;color:var(--ink-soft);margin-bottom:4px;">${k} · ${dimLabels[k]}</div>
+          <div style="font-size:17px;font-weight:700;color:${color};font-family:var(--mono);">${d.score}<span style="font-size:11px;color:var(--ink-mute);">/${d.max}</span></div>
+          <div style="height:4px;border-radius:99px;background:rgba(0,0,0,.08);margin-top:6px;overflow:hidden;">
+            <div style="width:${pct}%;height:100%;background:${color};border-radius:99px;"></div>
+          </div>
+        </div>`;
+    }).join("");
+    document.getElementById("atsDimGrid").innerHTML = dimHTML;
+
+    // Keyword matching — use structured keywordBreakdown if available
+    const jdMatch = atsResult.jdMatchRatio ?? atsResult.raw?.scores?.jdMatch?.score;
+    const breakdown = atsResult.keywordBreakdown || [];
+    let kwHTML = `<div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed var(--line);">关键词对比${jdMatch != null ? ` <span style="color:${jdMatch>=60?"var(--good)":jdMatch>=40?"#e9a84c":"var(--rose)"};font-family:var(--mono);font-size:13px;"> · JD 匹配度 ${jdMatch}%</span>` : ""}</div>`;
+
+    if (breakdown.length) {
+      // Rich per-category breakdown
+      kwHTML += breakdown.map(cat => {
+        const matchedPills = cat.matched.slice(0,15).map(k=>`<span style="display:inline-block;padding:3px 8px;border-radius:99px;background:rgba(106,191,123,.15);color:#2d7a4a;font-size:12px;font-weight:500;margin:2px;">${escapeHtml(k)}</span>`).join("");
+        const missingPills = cat.missing.slice(0,15).map(k=>`<span style="display:inline-block;padding:3px 8px;border-radius:99px;background:rgba(224,112,112,.12);color:#b02020;font-size:12px;font-weight:500;margin:2px;">${escapeHtml(k)}</span>`).join("");
+        const total = cat.total || (cat.matched.length + cat.missing.length);
+        const pct = total ? Math.round((cat.matched.length / total) * 100) : 0;
+        const pctColor = pct>=70?"var(--good)":pct>=40?"#e9a84c":"var(--rose)";
+        return `
+          <div style="margin-bottom:14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+              <span style="font-size:12px;font-weight:700;color:var(--ink);font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase;">${escapeHtml(cat.label)}</span>
+              <span style="font-size:12px;font-weight:700;font-family:var(--mono);color:${pctColor};">${cat.matched.length}/${total}</span>
+            </div>
+            ${matchedPills ? `<div style="margin-bottom:4px;"><span style="font-size:10px;color:var(--ink-mute);font-family:var(--mono);letter-spacing:.03em;">✓ 已命中</span><div style="margin-top:3px;">${matchedPills}</div></div>` : ""}
+            ${missingPills ? `<div><span style="font-size:10px;color:var(--ink-mute);font-family:var(--mono);letter-spacing:.03em;">✗ 未命中</span><div style="margin-top:3px;">${missingPills}</div></div>` : ""}
+          </div>`;
+      }).join("");
+    } else {
+      // Legacy fallback using topMissingKw + topMissingKeywords
+      const missingKw = atsResult.topMissingKw || atsResult.raw?.topMissingKw || atsResult.raw?.topMissingKeywords || [];
+      if (missingKw.length) kwHTML += `<div><div style="font-size:11px;color:var(--ink-soft);font-family:var(--mono);letter-spacing:.04em;margin-bottom:4px;">缺口关键词</div><div style="display:flex;flex-wrap:wrap;gap:4px;">${missingKw.slice(0,15).map(k=>`<span style="display:inline-block;padding:3px 8px;border-radius:99px;background:rgba(224,112,112,.12);color:#b02020;font-size:12px;">${escapeHtml(k)}</span>`).join("")}</div></div>`;
+    }
+    document.getElementById("atsKeywordSection").innerHTML = kwHTML;
+
+    // 关键问题
+    const problems = atsResult.keyProblems || [];
+    if (problems.length) {
+      document.getElementById("atsProblemsSection").innerHTML = `
+        <div style="font-size:13px;font-weight:600;color:var(--rose);margin-bottom:8px;">🔍 关键问题</div>
+        <ul style="list-style:none;padding:0;margin:0;font-size:13px;">
+          ${problems.slice(0,6).map(p=>`<li style="margin-bottom:8px;padding-left:18px;position:relative;line-height:1.5;"><span style="position:absolute;left:0;color:var(--rose);">●</span>${escapeHtml(p)}</li>`).join("")}
+        </ul>`;
+    }
+  })();
+
+  // ── 3. Skills from DB ──────────────────────────────────────────
   const labelMap = {
     have: `<span class="pill pill-good"><span class="dot"></span>已具备</span>`,
     weak: `<span class="pill pill-warn"><span class="dot"></span>待补强</span>`
@@ -581,7 +663,7 @@
             ${m.mentorSubtitle?`<div style="font-size:12px;color:var(--ink-soft);margin-top:2px;">${escapeHtml(m.mentorSubtitle)}</div>`:""}
           </div>
         </header>
-        <div class="cred-pills" style="margin-top:10px;">${badges}</div>
+        ${m.careerPathDisplay ? `<div style="margin-top:8px;font-size:12px;color:var(--ink-soft);"><span style="color:var(--ink);font-weight:600;font-size:11px;font-family:var(--mono);letter-spacing:.04em;">职业路径</span>　${escapeHtml(m.careerPathDisplay)}</div>` : `<div class="cred-pills" style="margin-top:10px;">${badges}</div>`}
         ${advice}
       </article>
     `;
