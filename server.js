@@ -4,8 +4,6 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const path = require("path");
 const multer = require("multer");
-const { scoreResumeATS } = require("./ats-scorer");
-const { scoreResumeRuleBased } = require("./ats-rule-scorer");
 const { scoreResumeATS: scoreResumeSystem } = require("./src/ats/ats-scorer");
 const {
   createReportAccessToken,
@@ -84,8 +82,8 @@ app.post("/api/score-resume", async (req, res) => {
   try {
     const { resumeText, jobTitle, jdText } = req.body;
     if (!resumeText) return res.status(400).json({ error: "resumeText is required" });
-    console.log("[ATS] Scoring resume:", { resumeLength: resumeText.length, jobTitle: jobTitle || "N/A", hasJD: !!jdText });
-    const result = await scoreResumeATS(resumeText, jobTitle, jdText);
+    console.log("[ATS-System] Scoring resume:", { resumeLength: resumeText.length, jobTitle: jobTitle || "N/A", hasJD: !!jdText });
+    const result = scoreResumeSystem(resumeText, jobTitle, jdText);
     let sessionId = null;
     try { sessionId = db.saveAnalysis({ jobTitle, resumeText, jdText, result }); }
     catch (dbErr) { console.error("[DB] Save failed (non-blocking):", dbErr.message); }
@@ -325,7 +323,7 @@ app.post("/api/mentor-advice", async (req, res) => {
 });
 // ══════════════════════════════════════════════════════════════
 //  ATS Public API  —  /api/v1/ats/*
-//  兩個引擎，相同請求格式，方便同事測試比較
+//  Uses the ATS System rule engine as the single scoring source.
 //
 //  請求（application/json）：
 //    { resumeText, jobTitle?, jdText? }
@@ -680,48 +678,12 @@ app.get("/api/v1/reports/:reportId/debug", async (req, res) => {
   }
 });
 
-// ── POST /api/v1/ats/ai  （Claude AI 評分，需 ANTHROPIC_API_KEY） ──
-app.post("/api/v1/ats/ai", upload.single("file"), async (req, res) => {
-  try {
-    if (!process.env.ANTHROPIC_API_KEY)
-      return res.status(503).json({ success: false, error: "Server has no ANTHROPIC_API_KEY configured" });
-    const resumeText = await resolveResumeText(req);
-    const { jobTitle, jdText } = req.body;
-    console.log("[ATS-AI] jobTitle:", jobTitle || "N/A", "| textLen:", resumeText.length);
-    const result = await scoreResumeATS(resumeText, jobTitle, jdText);
-    // 統一包裝回傳格式
-    const data = {
-      engine:     "claude-ai",
-      jobTitle:   jobTitle || null,
-      hasJD:      !!jdText,
-      total:      result.basicScore,
-      risk:       result.riskLevel,
-      dimensions: {
-        A: { score: result.itemScores?.A ?? null, max: 15, label: "格式兼容性" },
-        B: { score: result.itemScores?.B ?? null, max: 10, label: "資訊完整性" },
-        C: { score: result.itemScores?.C ?? null, max: 25, label: "內容品質"   },
-        D: { score: result.itemScores?.D ?? null, max: 40, label: "JD關鍵字匹配（核心）" },
-        E: { score: result.itemScores?.E ?? null, max: 10, label: "投遞完成度" },
-      },
-      problems:    result.keyProblems,
-      suggestions: result.suggestions,
-      improvement: result.improvementExpectation,
-      rawResponse: result.rawResponse,
-    };
-    res.json({ success: true, engine: "claude-ai", data, timestamp: new Date().toISOString() });
-  } catch (err) {
-    console.error("[ATS-AI] Error:", err.message);
-    res.status(500).json({ success: false, error: err.message });
-  }
-});
-
 // ── GET /api/v1/ats/health  （確認 server + API key 狀態） ───
 app.get("/api/v1/ats/health", (req, res) => {
   res.json({
     success:   true,
     server:    "ok",
     ruleEngine: "ready",
-    aiEngine:   process.env.ANTHROPIC_API_KEY ? "ready" : "no-key",
     timestamp: new Date().toISOString(),
   });
 });

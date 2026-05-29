@@ -755,7 +755,7 @@ function priorityLabel(priority) {
   return "P2 加分项";
 }
 
-function generateUserDiagnosis(relatedProblemTags = [], targetProblemTags = [], internalAtsResult = {}) {
+function generateUserDiagnosis(relatedProblemTags = [], targetProblemTags = [], internalAtsResult = {}, usedDiagnosisTags = new Set()) {
   const dims = internalAtsResult.dimensions || {};
   const missingKw = (internalAtsResult.topMissingKeywords || internalAtsResult.topMissingKw || []).slice(0, 3);
   const jobTitle = internalAtsResult.jobTitle || "目标岗位";
@@ -786,8 +786,13 @@ function generateUserDiagnosis(relatedProblemTags = [], targetProblemTags = [], 
       `简历内容与目标 JD 的针对性不足，未能体现对"${jobTitle}"关键词和要求的专项对应。`,
   };
 
-  for (const tag of relatedProblemTags) {
-    if (diagnoses[tag]) return diagnoses[tag]();
+  const unusedTags = relatedProblemTags.filter(t => diagnoses[t] && !usedDiagnosisTags.has(t));
+  const tagPool = unusedTags.length ? unusedTags : relatedProblemTags;
+  for (const tag of tagPool) {
+    if (diagnoses[tag]) {
+      usedDiagnosisTags.add(tag);
+      return diagnoses[tag]();
+    }
   }
 
   // Generic fallback: point to weakest dimension
@@ -827,12 +832,12 @@ function relatedTagsForCard(card = {}, targetProblemTags = []) {
   return [...new Set(tags)].slice(0, 3);
 }
 
-function toAdviceItem(card = {}, targetProblemTags = [], index = 0, includePremiumFields = false, internalAtsResult = {}) {
+function toAdviceItem(card = {}, targetProblemTags = [], index = 0, includePremiumFields = false, internalAtsResult = {}, usedDiagnosisTags = new Set()) {
   const relatedProblemTags = card.relatedProblemTags || relatedTagsForCard(card, targetProblemTags);
   const defaultAction = "优先把目标岗位关键词、相关技能和经历证据放到 Summary、Skills 和 Experience 中。";
 
   // Always generate diagnosis from the CURRENT user's ATS data, not the original DB user's problem summary
-  const currentDiagnosis = generateUserDiagnosis(relatedProblemTags, targetProblemTags, internalAtsResult);
+  const currentDiagnosis = generateUserDiagnosis(relatedProblemTags, targetProblemTags, internalAtsResult, usedDiagnosisTags);
   const action = cleanAndTruncate(
     card.action || card.actionSummary || defaultAction,
     280, defaultAction
@@ -1069,22 +1074,23 @@ function adviceSelectionScore(card, targetProblemTags, coveredTags, selectedCard
   const roleFitScore = Math.max(0, 1 - (card.roleMismatchPenalty || 0));
   const diversityBonus = selectedCards.some((item) => item.topic === card.topic || item.adviceIntent === card.adviceIntent) ? 0 : 1;
   return (
-    0.35 * (card.retrieval_score || 0) +
-    0.25 * Math.min(1, uncovered.length / 2) +
+    0.25 * (card.retrieval_score || 0) +
+    0.35 * Math.min(1, uncovered.length / 2) +
     0.15 * Math.min(1, severity) +
     0.10 * roleFitScore +
-    0.10 * 0.6 +
-    0.05 * diversityBonus
+    0.05 * 0.6 +
+    0.10 * diversityBonus
   );
 }
 
 function selectTopAdviceForMentor(mentorBucket, targetProblemTags, count, coveredTags = new Set(), internalAtsResult = {}) {
   const selected = [];
   const cards = [...(mentorBucket.cards || [])];
+  const usedDiagnosisTags = new Set();
   while (selected.length < count && cards.length) {
     cards.sort((a, b) => adviceSelectionScore(b, targetProblemTags, coveredTags, selected) - adviceSelectionScore(a, targetProblemTags, coveredTags, selected));
     const card = cards.shift();
-    const item = toAdviceItem(card, targetProblemTags, selected.length, true, internalAtsResult);
+    const item = toAdviceItem(card, targetProblemTags, selected.length, true, internalAtsResult, usedDiagnosisTags);
     selected.push(item);
     item.relatedProblemTags.forEach((tag) => coveredTags.add(tag));
   }

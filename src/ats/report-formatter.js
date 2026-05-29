@@ -667,9 +667,8 @@ function formatPublicFreeReport(internalAtsResult, freeAdvice, lockedPreview) {
     freeMentorAdvice: freeAdvice ? stripFreeAdvice(freeAdvice) : null,
     lockedAdvicePreview: lockedPreview,
     keywordBreakdown: buildPublicKeywordBreakdown(internalAtsResult),
-    problems: asArray(internalAtsResult.problems).slice(0, 8),
-    suggestions: asArray(internalAtsResult.suggestions).slice(0, 8),
-    improvement: internalAtsResult.improvement || "",
+    problems: asArray(internalAtsResult.problems).slice(0, 3),
+    suggestions: asArray(internalAtsResult.suggestions).slice(0, 3),
   };
 }
 

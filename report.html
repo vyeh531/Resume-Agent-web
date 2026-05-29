@@ -279,6 +279,22 @@
     color: var(--ink-mute); margin-right: 8px;
   }
 
+  /* ═══ Mentor Card v2 ═══════════════════════════════════════════ */
+  .mentor-card-v2 {
+    background: #FFFDF6;
+    border: 1px solid #EDE9DC;
+    border-radius: 22px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .mcv2-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
   /* PDF export: hide UI chrome during export */
   body.exporting .banner,
   body.exporting .export-card,
@@ -612,15 +628,16 @@
     if(p==="medium"||p==="P1") return "medium";
     return "low";
   }
+  // ── Priority pill (redesigned) ──
   function priorityBadge(p){
     const lv = priorityLabel(p);
-    const styles = {
-      high:  "background:rgba(224,112,112,.12);color:#c0392b;",
-      medium:"background:rgba(233,168,76,.12);color:#b7830a;",
-      low:   "background:rgba(100,191,123,.12);color:#2f6b4f;"
+    const cfg = {
+      high:   { dot:"#EF4444", bg:"#FEF2F2", color:"#B91C1C", border:"#FECACA", label:"P0 必改" },
+      medium: { dot:"#F97316", bg:"#FFF7ED", color:"#C2410C", border:"#FED7AA", label:"P1 建议优化" },
+      low:    { dot:"#3B82F6", bg:"#EFF6FF", color:"#1D4ED8", border:"#BFDBFE", label:"P2 可加分" },
     };
-    const labels = { high:"P0 必改", medium:"P1 建议改", low:"P2 加分" };
-    return `<span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;${styles[lv]}">${labels[lv]}</span>`;
+    const c = cfg[lv] || cfg.medium;
+    return `<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:${c.bg};color:${c.color};border:1px solid ${c.border};"><span style="width:6px;height:6px;border-radius:50%;background:${c.dot};flex-shrink:0;"></span>${c.label}</span>`;
   }
 
   // ── One advice item (new DB format) ──
@@ -628,43 +645,72 @@
     const insight = item.mentorInsight || "";
     const example = item.example || "";
     const hrPerspective = item.hrPerspective || "";
+    const divider = idx > 0
+      ? `<div style="height:1px;background:linear-gradient(to right,transparent,#DDD6CA,transparent);margin:24px 0;"></div>`
+      : "";
     return `
-      <div style="margin-top:${idx>0?'18px':'14px'};">
-        ${idx>0?'<hr style="border:none;border-top:1px dashed var(--line);margin:0 0 18px;">':''}
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <div style="margin-top:${idx>0?'0':'12px'};">
+        ${divider}
+        <!-- badge + label -->
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
           ${priorityBadge(item.priority)}
-          <span style="font-size:13px;font-weight:700;color:var(--ink);">${escapeHtml(item.title)}</span>
-          <span class="cred-pill" style="margin-left:auto;flex-shrink:0;">${escapeHtml(sectionLabel(item.targetSection))}</span>
+          <span style="font-size:11px;color:#9CA3AF;font-weight:500;">导师建议 ${idx+1}</span>
+          <span style="margin-left:auto;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE;flex-shrink:0;">${escapeHtml(sectionLabel(item.targetSection))}</span>
         </div>
-        <p style="margin:0 0 8px;font-size:13px;color:var(--ink-soft);line-height:1.6;">${escapeHtml(item.problemSummary)}</p>
-        <p style="margin:0;font-size:14px;line-height:1.7;">${escapeHtml(item.actionSummary)}</p>
-        ${insight ? `<div class="advice-section" style="margin-top:10px;"><h4>导师洞察</h4><p>${escapeHtml(insight)}</p></div>` : ""}
+        <!-- problem title -->
+        <h4 style="margin:0 0 14px;font-size:16px;font-weight:700;color:#111827;line-height:1.4;">${escapeHtml(item.title)}</h4>
+        <!-- 你的现状 box -->
+        ${item.problemSummary ? `<div style="display:flex;gap:10px;background:#F8F7F4;border-left:3px solid #D1C9B8;border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:10px;"><span style="font-size:15px;flex-shrink:0;margin-top:1px;">💡</span><div><div style="font-size:11px;font-weight:700;color:#78350F;margin-bottom:4px;">你的现状</div><p style="margin:0;font-size:13px;line-height:1.65;color:#44403C;">${escapeHtml(item.problemSummary)}</p></div></div>` : ""}
+        <!-- 建议你先做 box -->
+        ${item.actionSummary ? `<div style="display:flex;gap:10px;background:#F0FDF4;border-left:3px solid #4ADE80;border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:10px;"><span style="font-size:15px;flex-shrink:0;margin-top:1px;">⚡</span><div><div style="font-size:11px;font-weight:700;color:#15803D;margin-bottom:4px;">建议你先做</div><p style="margin:0;font-size:13px;line-height:1.65;color:#166534;">${escapeHtml(item.actionSummary)}</p></div></div>` : ""}
+        <!-- 导师洞察 box -->
+        ${insight ? `<div style="background:#F5F3FF;border-left:3px solid #C4B5FD;border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:10px;"><div style="font-size:11px;font-weight:700;color:#6D28D9;margin-bottom:4px;">导师视角</div><p style="margin:0;font-size:13px;line-height:1.65;color:#4C1D95;">${escapeHtml(insight)}</p></div>` : ""}
+        <!-- 改写示例 -->
         ${example ? `<div class="advice-example"><div class="advice-example-head"><div class="title"><span class="check">✓</span><span>改写示例</span></div><button class="copy-btn" onclick="copyMentorExample(this)" data-content='${escapeAttr(example)}'>📋 复制</button></div><div class="advice-example-body"><span style="font-size:13px;font-weight:500;line-height:1.6;font-family:var(--mono,monospace);">${escapeHtml(example)}</span></div></div>` : ""}
-        ${hrPerspective ? `<div class="advice-section advice-section--plain" style="margin-top:8px;"><h4>HR 视角</h4><p>${escapeHtml(hrPerspective)}</p></div>` : ""}
+        <!-- HR 视角 -->
+        ${hrPerspective ? `<div style="background:#F5F3FF;border-left:3px solid #C4B5FD;border-radius:0 10px 10px 0;padding:12px 14px;margin-top:8px;"><div style="font-size:11px;font-weight:700;color:#6D28D9;margin-bottom:4px;">HR 视角</div><p style="margin:0;font-size:13px;line-height:1.65;color:#4C1D95;">${escapeHtml(hrPerspective)}</p></div>` : ""}
       </div>
     `;
+  }
+
+  // ── Avatar circle with initial ──
+  function avatarCircle(company, size) {
+    const colors = ["#6366F1","#10B981","#F59E0B","#EF4444","#8B5CF6","#0EA5E9","#F97316","#EC4899"];
+    const idx = (company||"M").charCodeAt(0) % colors.length;
+    const initial = (company||"M")[0].toUpperCase();
+    return `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${colors[idx]};display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:${size*0.35}px;flex-shrink:0;">${initial}</div>`;
   }
 
   // ── Full premium mentor card (new DB format with logo) ──
   function renderPremiumMentorCard(m, idx) {
     const logo = m.companyLogo
-      ? `<img src="${escapeAttr(m.companyLogo)}" alt="${escapeHtml(m.company||'')}" style="width:44px;height:44px;object-fit:contain;border-radius:8px;background:#fff;padding:5px;">`
-      : `<div style="font-size:14px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(168,213,186,.25);font-weight:700;">${escapeHtml((m.company||"M")[0])}</div>`;
-    const badges = (m.badges||[]).map(b=>`<span class="cred-pill">${escapeHtml(b)}</span>`).join("");
+      ? `<img src="${escapeAttr(m.companyLogo)}" alt="${escapeHtml(m.company||'')}" style="width:48px;height:48px;object-fit:contain;border-radius:10px;background:#fff;padding:5px;border:1px solid #EDE9DC;">`
+      : avatarCircle(m.company, 48);
+    const firstTag = (m.badges||[])[0] || "";
+    const restTags = (m.badges||[]).slice(1);
     const advice = (m.adviceItems||[]).slice(0,3).map((item,i)=>renderAdviceItem(item,i)).join("");
+    const allTags = (m.badges||[]);
     return `
-      <article class="mentor-detail">
-        <div style="font-size:11px;color:var(--ink-mute);font-family:var(--mono);letter-spacing:.04em;margin-bottom:8px;">导师 ${idx+1} / 4</div>
-        <header class="mentor-detail-head">
-          ${logo}
-          <div class="info">
-            <div class="company">${escapeHtml(m.company||"")}</div>
-            <div class="role">${escapeHtml(m.mentorName||"导师")} · ${escapeHtml(m.mentorTitle||"")}</div>
-            ${m.mentorSubtitle?`<div style="font-size:12px;color:var(--ink-soft);margin-top:2px;">${escapeHtml(m.mentorSubtitle)}</div>`:""}
+      <article class="mentor-card-v2">
+        <!-- Header -->
+        <div class="mcv2-header">
+          <div style="display:flex;align-items:flex-start;gap:14px;flex:1;min-width:0;">
+            ${logo}
+            <div style="flex:1;min-width:0;">
+              <div style="font-weight:700;font-size:14px;color:#111827;line-height:1.3;">${escapeHtml(m.company||"")}</div>
+              <div style="font-size:13px;color:#6B7280;margin-top:2px;">${escapeHtml(m.mentorName||"导师")} · ${escapeHtml(m.mentorTitle||"")}</div>
+              ${m.careerPathDisplay ? `<div style="font-size:11px;color:#9CA3AF;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(m.careerPathDisplay)}</div>` : ""}
+              ${restTags.length ? `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;">${restTags.map(t=>`<span style="font-size:11px;padding:2px 8px;border-radius:99px;background:#F0F7F2;color:#2A6041;border:1px solid #D1E7D9;">${escapeHtml(t)}</span>`).join("")}</div>` : ""}
+            </div>
           </div>
-        </header>
-        ${m.careerPathDisplay ? `<div style="margin-top:8px;font-size:12px;color:var(--ink-soft);"><span style="color:var(--ink);font-weight:600;font-size:11px;font-family:var(--mono);letter-spacing:.04em;">职业路径</span>　${escapeHtml(m.careerPathDisplay)}</div>` : `<div class="cred-pills" style="margin-top:10px;">${badges}</div>`}
-        ${advice}
+          ${firstTag ? `<span style="flex-shrink:0;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE;">${escapeHtml(firstTag)}</span>` : ""}
+        </div>
+        <!-- Hairline -->
+        <div style="height:1px;background:#EDE9DC;margin:0 0 20px;"></div>
+        <!-- Advice items -->
+        <div>${advice}</div>
+        <!-- Footer tags -->
+        ${allTags.length ? `<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-top:1px solid #EDE9DC;margin-top:20px;padding-top:14px;"><div style="display:flex;flex-wrap:wrap;gap:6px;">${allTags.map(t=>`<span style="font-size:11px;padding:2px 9px;border-radius:99px;background:#F3F4F6;color:#6B7280;">${escapeHtml(t)}</span>`).join("")}</div><span style="font-size:12px;color:#9CA3AF;font-weight:500;">导师 ${idx+1} / 4</span></div>` : `<div style="text-align:right;padding-top:12px;border-top:1px solid #EDE9DC;margin-top:16px;font-size:12px;color:#9CA3AF;">导师 ${idx+1} / 4</div>`}
       </article>
     `;
   }
@@ -672,36 +718,47 @@
   // ── Legacy format (old Claude AI mentors) ──
   function renderLegacyMentorCard(m, idx) {
     const creds = Array.isArray(m.credentials) ? m.credentials : (m.tag ? [m.tag] : []);
-    const logo = m.avatar || (m.company && m.company[0]) || "M";
+    const logo = avatarCircle(m.company || m.name, 48);
     const adviceList = Array.isArray(m.adviceList) && m.adviceList.length > 0
       ? m.adviceList
       : [{ priority: m.priority, issue: m.issue, strategy: m.strategy, current: m.current, advice: m.advice, beforeAfter: m.beforeAfter || {} }];
     const groups = adviceList.map((item, i) => {
       const ba = item.beforeAfter || {};
-      const divider = i > 0 ? `<hr style="border:none;border-top:1px dashed var(--line);margin:20px 0 4px;">` : "";
+      const lv = item.priority && item.priority.startsWith("P1") ? "medium" : item.priority && item.priority.startsWith("P2") ? "low" : "high";
+      const divider = i > 0 ? `<div style="height:1px;background:linear-gradient(to right,transparent,#DDD6CA,transparent);margin:24px 0;"></div>` : "";
       return divider + `
-        <div class="priority-issue" style="margin-top:14px;">
-          <span class="priority-tag ${item.priority&&item.priority.startsWith('P1')?'priority-tag--p1':item.priority&&item.priority.startsWith('P2')?'priority-tag--p2':''}">${item.priority||"P0 必改"}</span>
-          <span class="priority-text">${item.issue||""}</span>
+        <div style="margin-top:${i>0?'0':'12px'};">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+            ${priorityBadge(lv==='high'?'P0':lv==='medium'?'P1':'P2')}
+            <span style="font-size:11px;color:#9CA3AF;font-weight:500;">导师建议 ${i+1}</span>
+          </div>
+          <h4 style="margin:0 0 14px;font-size:16px;font-weight:700;color:#111827;line-height:1.4;">${escapeHtml(item.issue||"")}</h4>
+          ${item.strategy ? `<div style="display:flex;gap:10px;background:#F5F3FF;border-left:3px solid #C4B5FD;border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:10px;"><span style="font-size:15px;flex-shrink:0;margin-top:1px;">🎯</span><div><div style="font-size:11px;font-weight:700;color:#6D28D9;margin-bottom:4px;">导师视角</div><p style="margin:0;font-size:13px;line-height:1.65;color:#4C1D95;">${highlightFake(item.strategy)}</p></div></div>` : ""}
+          ${item.current ? `<div style="display:flex;gap:10px;background:#F8F7F4;border-left:3px solid #D1C9B8;border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:10px;"><span style="font-size:15px;flex-shrink:0;margin-top:1px;">💡</span><div><div style="font-size:11px;font-weight:700;color:#78350F;margin-bottom:4px;">你的现状</div><p style="margin:0;font-size:13px;line-height:1.65;color:#44403C;">${highlightFake(item.current)}</p></div></div>` : ""}
+          ${item.advice ? `<div style="display:flex;gap:10px;background:#F0FDF4;border-left:3px solid #4ADE80;border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:10px;"><span style="font-size:15px;flex-shrink:0;margin-top:1px;">⚡</span><div><div style="font-size:11px;font-weight:700;color:#15803D;margin-bottom:4px;">建议你先做</div><div style="font-size:13px;line-height:1.65;color:#166534;">${formatAdvice(item.advice)}</div></div></div>` : ""}
+          ${ba.after ? `<div class="advice-example"><div class="advice-example-head"><div class="title"><span class="check">✓</span><span>改写示例</span></div><button class="copy-btn" onclick="copyMentorExample(this)" data-content='${escapeAttr(ba.after)}'>📋 复制</button></div><div class="advice-example-body">${ba.before?`<div style="margin-bottom:8px;"><span class="label" style="color:var(--rose);">改写前：</span><br/><span style="font-size:13px;color:var(--ink-soft);font-family:var(--mono);">${ba.before}</span></div>`:""}<div><span class="label">改写后：</span><br/><span style="font-size:13px;font-weight:500;line-height:1.6;font-family:var(--mono);">${highlightFake(ba.after)}</span></div></div></div>` : ""}
         </div>
-        ${item.strategy?`<div class="advice-section" style="margin-top:12px;"><h4>导师筛选策略</h4><p>${highlightFake(item.strategy)}</p></div>`:""}
-        ${item.current?`<div class="advice-section advice-section--plain"><h4>你的现状</h4><p>${highlightFake(item.current)}</p></div>`:""}
-        <div class="advice-section advice-section--plain"><h4>建议</h4><div style="font-size:14px;line-height:1.7;">${formatAdvice(item.advice||"")}</div></div>
-        ${ba.after?`<div class="advice-example"><div class="advice-example-head"><div class="title"><span class="check">✓</span><span>改写示例</span></div><button class="copy-btn" onclick="copyMentorExample(this)" data-content='${escapeAttr(ba.after)}'>📋 复制</button></div><div class="advice-example-body">${ba.before?`<div style="margin-bottom:8px;"><span class="label" style="color:var(--rose);">改写前：</span><br/><span style="font-size:13px;color:var(--ink-soft);font-family:var(--mono);">${ba.before}</span></div>`:""}<div><span class="label">改写后：</span><br/><span style="font-size:13px;font-weight:500;line-height:1.6;font-family:var(--mono);">${highlightFake(ba.after)}</span></div></div></div>`:""}
       `;
     }).join("");
+    const firstCred = creds[0] || "";
+    const restCreds = creds.slice(1);
     return `
-      <article class="mentor-detail">
-        <header class="mentor-detail-head">
-          <div class="company-logo" style="font-size:${m.avatar?'22px':'14px'};width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(168,213,186,.25);font-weight:700;">${logo}</div>
-          <div class="info">
-            <div class="company">导师 ${idx+1} · ${m.company||""}</div>
-            <div class="role">${formatMentorName(m.name)} · ${m.role||""}</div>
+      <article class="mentor-card-v2">
+        <div class="mcv2-header">
+          <div style="display:flex;align-items:flex-start;gap:14px;flex:1;min-width:0;">
+            ${logo}
+            <div style="flex:1;min-width:0;">
+              <div style="font-weight:700;font-size:14px;color:#111827;line-height:1.3;">${escapeHtml(m.company||"")}</div>
+              <div style="font-size:13px;color:#6B7280;margin-top:2px;">${escapeHtml(formatMentorName(m.name))} · ${escapeHtml(m.role||"")}</div>
+              ${m.career_path ? `<div style="font-size:11px;color:#9CA3AF;margin-top:4px;">${escapeHtml(m.career_path)}</div>` : ""}
+              ${restCreds.length ? `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;">${restCreds.map(c=>`<span style="font-size:11px;padding:2px 8px;border-radius:99px;background:#F0F7F2;color:#2A6041;border:1px solid #D1E7D9;">${escapeHtml(c)}</span>`).join("")}</div>` : ""}
+            </div>
           </div>
-        </header>
-        <div class="cred-pills" style="margin-top:10px;">${creds.map(c=>`<span class="cred-pill">${c}</span>`).join("")}</div>
-        ${m.career_path?`<div style="margin-top:8px;margin-bottom:4px;font-size:12px;color:var(--ink-soft);"><b style="color:var(--ink);font-size:11px;font-family:var(--mono);letter-spacing:.04em;">职业路径</b>　${m.career_path}</div>`:""}
-        ${groups}
+          ${firstCred ? `<span style="flex-shrink:0;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE;">${escapeHtml(firstCred)}</span>` : ""}
+        </div>
+        <div style="height:1px;background:#EDE9DC;margin:0 0 20px;"></div>
+        <div>${groups}</div>
+        <div style="text-align:right;padding-top:12px;border-top:1px solid #EDE9DC;margin-top:16px;font-size:12px;color:#9CA3AF;">导师 ${idx+1} / 4</div>
       </article>
     `;
   }
@@ -730,7 +787,7 @@
       image: { type: 'jpeg', quality: 0.95 },
       html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#f6f3ec', windowWidth: 480 },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['css', 'legacy'], avoid: '.section, .mentor-detail, .advice-example, .service-card' }
+      pagebreak: { mode: ['css', 'legacy'], avoid: '.section, .mentor-detail, .mentor-card-v2, .advice-example, .service-card' }
     };
     html2pdf().set(opt).from(document.querySelector('.page')).save()
       .then(() => { document.body.classList.remove('exporting'); btn.disabled=false; btn.innerHTML=orig; toast("PDF 已下载"); })

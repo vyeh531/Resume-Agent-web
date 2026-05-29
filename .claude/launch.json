@@ -6,6 +6,12 @@
       "runtimeExecutable": "node",
       "runtimeArgs": ["server.js"],
       "port": 3000
+    },
+    {
+      "name": "vibe_offer",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["start-vibe-offer.js"],
+      "port": 3001
     }
   ]
 }
