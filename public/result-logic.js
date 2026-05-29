@@ -29,34 +29,57 @@ function escapeAttr(str) { return String(str).replace(/'/g,"&apos;").replace(/"/
 // ── 1. Student info ──────────────────────────────────────────────
 (function setStudentInfo() {
   const text = s.resumeText || "";
-  function extractSchool(t) {
-    const patterns = [
-      /\b((?:University|College|Institute|School)\s+of\s+[A-Z][A-Za-z]+(?:\s+(?:at|in)\s+[A-Z][A-Za-z]+)?)/,
-      /\b([A-Z][A-Za-z]+(?:\s+[A-Z][A-Za-z]+){0,4}\s+(?:University|College|School|Institute))\b/,
-    ];
-    for (const p of patterns) { const m = t.match(p); if (m) return m[1].trim(); }
-    return null;
+
+  // 找 EDUCATION 段落
+  const eduMatch = text.match(
+    /(?:^|\n)[ \t]*EDUCATION[ \t]*\n([\s\S]{0,2500}?)(?=\n[ \t]*(?:EXPERIENCE|WORK EXPERIENCE|SKILLS|PROJECTS|CERTIFICATIONS|AWARDS|PUBLICATIONS|SUMMARY|PROFILE|OBJECTIVE|ACTIVITIES|LEADERSHIP)\b)/i
+  );
+  const eduText = eduMatch ? eduMatch[1] : text.slice(0, 3000);
+
+  // 逐行掃描，找出所有 education 條目
+  const lines = eduText.split(/\n/).map(l => l.trim()).filter(Boolean);
+  const SCHOOL_RE = /(?:University|College|School|Institute)\b/i;
+  const DEGREE_RE = /\b(?:B\.?S\.?|B\.?A\.?|M\.?S\.?|M\.?A\.?|Ph\.?D\.?|Bachelor|Master|Doctor|MBA|M\.Eng|B\.Eng)\b/i;
+  const NOISE_RE  = /^(linkedin|education|gpa|grade|activities|honors|awards|dean|cum laude)/i;
+
+  const entries = [];
+  let cur = null;
+
+  for (const line of lines) {
+    if (NOISE_RE.test(line)) continue;
+    const yearMatches = [...line.matchAll(/\b(20\d{2})\b/g)].map(m => parseInt(m[1]));
+
+    if (SCHOOL_RE.test(line)) {
+      // 去掉 "LinkedIn EDUCATION" 等前綴，只保留從大寫學校名開始的部分
+      let school = line.replace(/^[\w\s]*?((?:[A-Z][A-Za-z]+\s+)*(?:University|College|School|Institute)(?:\s+of\s+[A-Za-z\s]+)?)/,'$1').trim();
+      cur = { school, year: null, degree: null };
+      entries.push(cur);
+    }
+
+    if (cur) {
+      if (yearMatches.length) {
+        const yr = Math.max(...yearMatches);
+        if (!cur.year || yr > cur.year) cur.year = yr;
+      }
+      if (DEGREE_RE.test(line) && !cur.degree) {
+        // 抓完整 degree 名，例如 "M.A. in Mathematics of Finance"
+        const dm = line.match(
+          /\b((?:B\.?S\.?|B\.?A\.?|M\.?S\.?|M\.?A\.?|Ph\.?D\.?|Bachelor(?:'s)?|Master(?:'s)?|Doctor(?:ate)?|MBA|M\.Eng|B\.Eng)[\w.,\s]*?(?:in|of)\s+[A-Z][A-Za-z ,&\-]{2,60}?)(?:\s*[,\(]|\s*\d{4}|$)/i
+        );
+        cur.degree = dm ? dm[1].trim().replace(/\s+/g, ' ') : line.slice(0, 60).trim();
+      }
+    }
   }
-  function extractYear(t) {
-    const explicit = t.match(/(?:Class of|Expected[:\s]+|Graduation[:\s]+|Graduating[:\s]+)(\b20\d{2}\b)/i);
-    if (explicit) return explicit[1];
-    const nearDegree = t.match(/(?:B\.?S\.?|B\.?A\.?|M\.?S\.?|M\.?A\.?|Bachelor|Master|PhD|Ph\.D)[^\n]{0,80}?\b(20\d{2})\b/i);
-    if (nearDegree) return nearDegree[1];
-    const range = t.match(/\b(20\d{2})\s*[-–]\s*(20\d{2}|Present|Current)/i);
-    if (range) return range[2] === "Present" || range[2] === "Current" ? range[1] : range[2];
-    return null;
-  }
-  function extractMajor(t) {
-    const m = t.match(/(?:B\.?S\.?|B\.?A\.?|M\.?S\.?|M\.?A\.?|Bachelor(?:'s)?|Master(?:'s)?|PhD|Ph\.D)[,.\s]+(?:of\s+)?(?:Science|Arts|Engineering|Applied\s+\w+)?\s*(?:in\s+)?([A-Z][A-Za-z &,\-]+?)(?:\n|,(?!\s*[A-Z]{2}\b)|;|  |\(|\d)/);
-    return m ? m[1].trim().replace(/\s+/g, " ").replace(/,\s*$/, "") : null;
-  }
-  const school = extractSchool(text);
-  const year = extractYear(text);
-  const major = extractMajor(text);
+
+  // 取年份最大的條目（最新學歷）
+  let best = entries.reduce((a, b) => ((b.year || 0) > (a.year || 0) ? b : a), entries[0] || null);
+
   const parts = [];
-  if (year) parts.push(year + "届");
-  if (school) parts.push(school);
-  if (major && major.length < 50) parts.push(major);
+  if (best) {
+    if (best.year)   parts.push(best.year + "届");
+    if (best.school) parts.push(best.school);
+    if (best.degree && best.degree.length < 60) parts.push(best.degree);
+  }
   const el = document.getElementById("studentInfo");
   if (el) el.textContent = parts.length ? parts.join(" · ") : (s.resumeName || "已上传简历");
 })();
