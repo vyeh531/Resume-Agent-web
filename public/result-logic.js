@@ -50,9 +50,13 @@ function escapeAttr(str) { return String(str).replace(/'/g,"&apos;").replace(/"/
     const yearMatches = [...line.matchAll(/\b(20\d{2})\b/g)].map(m => parseInt(m[1]));
 
     if (SCHOOL_RE.test(line)) {
-      // 去掉 "LinkedIn EDUCATION" 等前綴，只保留從大寫學校名開始的部分
-      let school = line.replace(/^[\w\s]*?((?:[A-Z][A-Za-z]+\s+)*(?:University|College|School|Institute)(?:\s+of\s+[A-Za-z\s]+)?)/,'$1').trim();
-      cur = { school, year: null, degree: null };
+      // 1. 先用 " | " 分割，取日期前面的部分
+      let schoolPart = line.split(/\s+\|\s+/)[0];
+      // 2. 去掉末尾 "City, ST" 或 "City ST" 格式的地址
+      schoolPart = schoolPart.replace(/\s+[A-Z][a-zA-Z.\s]*,\s*[A-Z]{2}\b.*$/, '').trim();
+      // 3. 去掉 "LinkedIn EDUCATION" 等全大寫前綴雜訊
+      schoolPart = schoolPart.replace(/^(?:[A-Z]{2,}\s+)+(?=[A-Z][a-z])/, '').trim();
+      cur = { school: schoolPart, year: null, degree: null };
       entries.push(cur);
     }
 
@@ -62,11 +66,12 @@ function escapeAttr(str) { return String(str).replace(/'/g,"&apos;").replace(/"/
         if (!cur.year || yr > cur.year) cur.year = yr;
       }
       if (DEGREE_RE.test(line) && !cur.degree) {
-        // 抓完整 degree 名，例如 "M.A. in Mathematics of Finance"
-        const dm = line.match(
+        // 抓完整 degree 名，停在 " | " 或 GPA 之前
+        const cleanLine = line.split(/\s+\|\s+/)[0].split(/\bGPA\b/)[0].trim();
+        const dm = cleanLine.match(
           /\b((?:B\.?S\.?|B\.?A\.?|M\.?S\.?|M\.?A\.?|Ph\.?D\.?|Bachelor(?:'s)?|Master(?:'s)?|Doctor(?:ate)?|MBA|M\.Eng|B\.Eng)[\w.,\s]*?(?:in|of)\s+[A-Z][A-Za-z ,&\-]{2,60}?)(?:\s*[,\(]|\s*\d{4}|$)/i
         );
-        cur.degree = dm ? dm[1].trim().replace(/\s+/g, ' ') : line.slice(0, 60).trim();
+        cur.degree = dm ? dm[1].trim().replace(/\s+/g, ' ') : cleanLine.slice(0, 60).trim();
       }
     }
   }
@@ -292,7 +297,6 @@ function renderApiAdviceItem(item, i) {
       ${diagnosis ? `<div style="display:flex;gap:10px;background:#F8F7F4;border-left:3px solid #D1C9B8;border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:10px;"><span style="font-size:15px;flex-shrink:0;">💡</span><div><div style="font-size:11px;font-weight:700;color:#78350F;margin-bottom:4px;">你的现状</div><p style="margin:0;font-size:13px;line-height:1.65;color:#44403C;">${escapeHtml(diagnosis)}</p>${evidenceChips}</div></div>` : ""}
       ${action ? `<div style="display:flex;gap:10px;background:#F0FDF4;border-left:3px solid #4ADE80;border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:10px;"><span style="font-size:15px;flex-shrink:0;">⚡</span><div><div style="font-size:11px;font-weight:700;color:#15803D;margin-bottom:4px;">建议你先做</div><p style="margin:0;font-size:13px;line-height:1.65;color:#166534;font-weight:600;">${escapeHtml(action)}</p></div></div>` : ""}
       ${insight ? `<div style="background:#F5F3FF;border-left:3px solid #C4B5FD;border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:10px;"><div style="font-size:11px;font-weight:700;color:#6D28D9;margin-bottom:4px;">导师视角</div><p style="margin:0;font-size:13px;line-height:1.65;color:#4C1D95;">${escapeHtml(insight)}</p></div>` : ""}
-      ${example ? `<div class="advice-example"><div class="advice-example-head"><div class="title"><span class="check">✓</span><span>改写示例</span></div><button class="copy-btn" onclick="copyExample(this)" data-content='${escapeAttr(example)}'>📋 复制</button></div><div class="advice-example-body"><span style="font-size:13px;line-height:1.6;font-family:var(--mono);">${escapeHtml(example)}</span></div></div>` : ""}
       ${hrPov ? `<div style="background:#FFF7ED;border-left:3px solid #FED7AA;border-radius:0 10px 10px 0;padding:10px 14px;margin-top:8px;"><div style="font-size:11px;font-weight:700;color:#C2410C;margin-bottom:3px;">HR 视角</div><p style="margin:0;font-size:12px;line-height:1.6;color:#9A3412;">${escapeHtml(hrPov)}</p></div>` : ""}
     </div>`;
 }
