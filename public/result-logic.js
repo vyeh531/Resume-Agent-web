@@ -29,64 +29,50 @@ function escapeAttr(str) { return String(str).replace(/'/g,"&apos;").replace(/"/
 // ── 1. Student info ──────────────────────────────────────────────
 (function setStudentInfo() {
   const text = s.resumeText || "";
+  const el = document.getElementById("studentInfo");
 
-  // 找 EDUCATION 段落
+  // 1. 找 EDUCATION 段落：停在下一個全大寫 section header（如 PROFESSIONAL EXPERIENCE）
   const eduMatch = text.match(
-    /(?:^|\n)[ \t]*EDUCATION[ \t]*\n([\s\S]{0,2500}?)(?=\n[ \t]*(?:EXPERIENCE|WORK EXPERIENCE|SKILLS|PROJECTS|CERTIFICATIONS|AWARDS|PUBLICATIONS|SUMMARY|PROFILE|OBJECTIVE|ACTIVITIES|LEADERSHIP)\b)/i
+    /\bEDUCATION\b[^\n]*\n([\s\S]{0,2500}?)(?=\n[A-Z]{3}[A-Z\s&,/]{2,}\n|$)/
   );
-  const eduText = eduMatch ? eduMatch[1] : text.slice(0, 3000);
+  const eduText = eduMatch ? eduMatch[1] : text.slice(0, 2000);
 
-  // 逐行掃描，找出所有 education 條目
-  const lines = eduText.split(/\n/).map(l => l.trim()).filter(Boolean);
-  const SCHOOL_RE = /(?:University|College|School|Institute)\b/i;
-  const DEGREE_RE = /\b(?:B\.?S\.?|B\.?A\.?|M\.?S\.?|M\.?A\.?|Ph\.?D\.?|Bachelor|Master|Doctor|MBA|M\.Eng|B\.Eng)\b/i;
-  const NOISE_RE  = /^(linkedin|education|gpa|grade|activities|honors|awards|dean|cum laude)/i;
+  // 2. 直接找 "School... | ...– EndYear\nDegree" 格式的條目
+  // 每個條目：含 University/College 的行 + " | " + 日期（包含結束年份）
+  //           下一行是 degree 名
+  const entryRE = /^(.+?(?:University|College|School|Institute)[^|\n]*)\|[^|\n]*?[-–]\s*(?:[A-Z][a-z]*\s+)?(\d{4})[^\n]*\n([^\n]+)/gm;
 
   const entries = [];
-  let cur = null;
+  let m;
+  while ((m = entryRE.exec(eduText)) !== null) {
+    // 學校名：去掉 "City, ST" 地址後綴
+    let school = m[1]
+      .replace(/\s+[A-Z][a-zA-Z.\s]*,\s*[A-Z]{2}\b.*$/, '')  // "New York, NY"
+      .replace(/\s+[A-Z][a-z]+,\s*[A-Z]{2}.*$/, '')           // "Stillwater, OK"
+      .replace(/^(?:[A-Z]{2,}\s+)+(?=[A-Z][a-z])/, '')        // "LINKEDIN EDUCATION" 前綴
+      .trim();
 
-  for (const line of lines) {
-    if (NOISE_RE.test(line)) continue;
-    const yearMatches = [...line.matchAll(/\b(20\d{2})\b/g)].map(m => parseInt(m[1]));
+    const endYear = parseInt(m[2]);
 
-    if (SCHOOL_RE.test(line)) {
-      // 1. 先用 " | " 分割，取日期前面的部分
-      let schoolPart = line.split(/\s+\|\s+/)[0];
-      // 2. 去掉末尾 "City, ST" 或 "City ST" 格式的地址
-      schoolPart = schoolPart.replace(/\s+[A-Z][a-zA-Z.\s]*,\s*[A-Z]{2}\b.*$/, '').trim();
-      // 3. 去掉 "LinkedIn EDUCATION" 等全大寫前綴雜訊
-      schoolPart = schoolPart.replace(/^(?:[A-Z]{2,}\s+)+(?=[A-Z][a-z])/, '').trim();
-      cur = { school: schoolPart, year: null, degree: null };
-      entries.push(cur);
-    }
+    // degree：取 " | " 之前、GPA 之前的部分
+    let degree = m[3].split(/\s*\|\s*/)[0].replace(/\bGPA\b.*/i, '').trim();
+    if (degree.length > 70) degree = degree.slice(0, 70);
 
-    if (cur) {
-      if (yearMatches.length) {
-        const yr = Math.max(...yearMatches);
-        if (!cur.year || yr > cur.year) cur.year = yr;
-      }
-      if (DEGREE_RE.test(line) && !cur.degree) {
-        // 抓完整 degree 名，停在 " | " 或 GPA 之前
-        const cleanLine = line.split(/\s+\|\s+/)[0].split(/\bGPA\b/)[0].trim();
-        const dm = cleanLine.match(
-          /\b((?:B\.?S\.?|B\.?A\.?|M\.?S\.?|M\.?A\.?|Ph\.?D\.?|Bachelor(?:'s)?|Master(?:'s)?|Doctor(?:ate)?|MBA|M\.Eng|B\.Eng)[\w.,\s]*?(?:in|of)\s+[A-Z][A-Za-z ,&\-]{2,60}?)(?:\s*[,\(]|\s*\d{4}|$)/i
-        );
-        cur.degree = dm ? dm[1].trim().replace(/\s+/g, ' ') : cleanLine.slice(0, 60).trim();
-      }
-    }
+    if (school && endYear) entries.push({ school, endYear, degree });
   }
 
-  // 取年份最大的條目（最新學歷）
-  let best = entries.reduce((a, b) => ((b.year || 0) > (a.year || 0) ? b : a), entries[0] || null);
+  // 3. 取 endYear 最大的條目（最新學歷）
+  if (!entries.length) {
+    if (el) el.textContent = s.resumeName || "已上传简历";
+    return;
+  }
+  const best = entries.reduce((a, b) => b.endYear > a.endYear ? b : a);
 
   const parts = [];
-  if (best) {
-    if (best.year)   parts.push(best.year + "届");
-    if (best.school) parts.push(best.school);
-    if (best.degree && best.degree.length < 60) parts.push(best.degree);
-  }
-  const el = document.getElementById("studentInfo");
-  if (el) el.textContent = parts.length ? parts.join(" · ") : (s.resumeName || "已上传简历");
+  if (best.endYear) parts.push(best.endYear + "届");
+  if (best.school)  parts.push(best.school);
+  if (best.degree)  parts.push(best.degree);
+  if (el) el.textContent = parts.join(" · ");
 })();
 
 // 目标岗位 pill
