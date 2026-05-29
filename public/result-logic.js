@@ -290,21 +290,19 @@ function renderApiAdviceItem(item, i) {
 function renderFreeMentor(m) {
   const mentorFreeEl = document.getElementById("mentorFree");
   if (!mentorFreeEl || !m) return;
-  const logo = m.companyLogo
-    ? `<img src="${escapeAttr(m.companyLogo)}" alt="" style="width:44px;height:44px;object-fit:contain;border-radius:8px;background:#fff;padding:5px;border:1px solid #EDE9DC;">`
-    : `<div style="width:44px;height:44px;border-radius:50%;background:rgba(168,213,186,.25);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;">${escapeHtml((m.company || "M")[0])}</div>`;
   const badges = (m.badges || []).map(b => `<span class="cred-pill">${escapeHtml(b)}</span>`).join("");
   const adviceHtml = (m.adviceItems || []).slice(0, 3).map(renderApiAdviceItem).join("");
+  const companyMeta = [m.company, m.mentorTitle].filter(Boolean).join(" · ");
   mentorFreeEl.innerHTML = `
-    <header class="mentor-detail-head">
-      ${logo}
-      <div class="info">
-        <div class="company">${escapeHtml(m.company || "")}</div>
-        <div class="role">${escapeHtml(m.mentorName || "导师")} · ${escapeHtml(m.mentorTitle || "")}</div>
+    <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+      <div class="mentor-avatar-placeholder" style="width:48px;height:48px;border-radius:50%;background:var(--paper-deep);border:1px solid var(--line);flex-shrink:0;"></div>
+      <div style="flex:1;min-width:0;">
+      <div style="font-size:20px;font-weight:700;color:var(--ink);line-height:1.2;">${escapeHtml(m.mentorName || "导师")}</div>
+      ${companyMeta ? `<div style="font-size:12px;color:var(--ink-mute);margin-top:3px;">${escapeHtml(companyMeta)}</div>` : ""}
+      ${m.careerPathDisplay ? `<div style="font-size:12px;color:var(--ink-soft);margin-top:4px;"><b style="font-size:11px;font-family:var(--mono);color:var(--ink-soft);">职业路径</b>　${escapeHtml(m.careerPathDisplay)}</div>` : ""}
       </div>
-    </header>
-    ${m.careerPathDisplay ? `<div style="margin-top:8px;font-size:12px;color:var(--ink-soft);"><b style="font-size:11px;font-family:var(--mono);color:var(--ink);">职业路径</b>　${escapeHtml(m.careerPathDisplay)}</div>` : ""}
-    <div class="cred-pills" style="margin-top:10px;">${badges}</div>
+    </div>
+    <div style="height:1px;background:var(--line);margin:0 0 16px;"></div>
     ${adviceHtml}`;
 }
 
@@ -314,19 +312,15 @@ function renderLockedAdvicePreview(preview) {
   const lockedMentors = preview.lockedMentors || [];
   if (lockedMentors.length > 0) {
     areaEl.innerHTML = lockedMentors.map(m => {
-      const logo = m.companyLogo
-        ? `<img src="${escapeAttr(m.companyLogo)}" alt="" style="width:44px;height:44px;object-fit:contain;border-radius:8px;background:#fff;padding:5px;">`
-        : `<div style="width:44px;height:44px;border-radius:50%;background:rgba(168,213,186,.25);display:flex;align-items:center;justify-content:center;font-weight:700;">${escapeHtml((m.company || "M")[0])}</div>`;
       const topics = (m.previewTopics || []).map(t => `<span class="cred-pill">${escapeHtml(t)}</span>`).join("");
+      const companyMeta = [m.company, m.mentorTitle].filter(Boolean).join(" · ");
       return `<article class="locked-mentor-v2" style="position:relative;overflow:hidden;">
-        <header class="head" style="display:flex;align-items:center;gap:12px;">${logo}
-          <div class="info">
-            <div class="company-name">${escapeHtml(m.company || "")}</div>
-            <div class="role-line">${escapeHtml(m.mentorName || "导师")} · ${escapeHtml(m.mentorTitle || "")}</div>
-          </div>
-        </header>
-        ${m.careerPathDisplay ? `<div style="margin:8px 0 6px;font-size:12px;color:var(--ink-soft);">${escapeHtml(m.careerPathDisplay)}</div>` : ""}
-        <div style="font-size:12px;font-weight:600;color:var(--ink-soft);font-family:var(--mono);margin:8px 0 6px;">${m.lockedAdviceCount || 3} 条建议</div>
+        <div style="margin-bottom:8px;">
+          <div style="font-size:17px;font-weight:700;color:var(--ink);line-height:1.2;">${escapeHtml(m.mentorName || "导师")}</div>
+          ${companyMeta ? `<div style="font-size:12px;color:var(--ink-mute);margin-top:3px;">${escapeHtml(companyMeta)}</div>` : ""}
+          ${m.careerPathDisplay ? `<div style="font-size:12px;color:var(--ink-soft);margin-top:3px;">${escapeHtml(m.careerPathDisplay)}</div>` : ""}
+        </div>
+        <div style="font-size:12px;font-weight:600;color:var(--ink-soft);font-family:var(--mono);margin:6px 0 6px;">${m.lockedAdviceCount || 3} 条建议</div>
         <div class="cred-pills" style="margin-bottom:10px;">${topics}</div>
         <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(246,243,236,.6);backdrop-filter:blur(2px);">
           <div style="text-align:center;"><div style="font-size:22px;margin-bottom:4px;">🔒</div><div style="font-size:12px;font-weight:600;">解锁查看完整建议</div></div>

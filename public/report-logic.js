@@ -218,31 +218,22 @@ function avatarCircle(company, size) {
 }
 
 function renderPremiumMentorCard(m, idx) {
-  const logo = m.companyLogo
-    ? `<img src="${escapeAttr(m.companyLogo)}" alt="${escapeHtml(m.company||'')}" style="width:48px;height:48px;object-fit:contain;border-radius:10px;background:#fff;padding:5px;border:1px solid #EDE9DC;">`
-    : avatarCircle(m.company, 48);
-  const firstTag = (m.badges||[])[0] || "";
-  const restTags = (m.badges||[]).slice(1);
   const allTags = (m.badges||[]);
   const advice = (m.adviceItems||[]).slice(0,3).map((item,i)=>renderAdviceItem(item,i)).join("");
+  const companyMeta = [m.company, m.mentorTitle].filter(Boolean).join(" · ");
   return `
     <article style="background:#FFFDF6;border:1px solid #EDE9DC;border-radius:22px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:16px;">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:18px;">
-        <div style="display:flex;align-items:flex-start;gap:14px;flex:1;min-width:0;">
-          ${logo}
-          <div style="flex:1;min-width:0;">
-            <div style="font-weight:700;font-size:14px;color:#111827;line-height:1.3;">${escapeHtml(m.company||"")}</div>
-            <div style="font-size:13px;color:#6B7280;margin-top:2px;">${escapeHtml(m.mentorName||"导师")} · ${escapeHtml(m.mentorTitle||"")}</div>
-            ${m.careerPathDisplay ? `<div style="font-size:11px;color:#9CA3AF;margin-top:4px;">${escapeHtml(m.careerPathDisplay)}</div>` : ""}
-            ${restTags.length ? `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;">${restTags.map(t=>`<span style="font-size:11px;padding:2px 8px;border-radius:99px;background:#F0F7F2;color:#2A6041;border:1px solid #D1E7D9;">${escapeHtml(t)}</span>`).join("")}</div>` : ""}
-          </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:18px;">
+        <div class="mentor-avatar-placeholder" style="width:48px;height:48px;border-radius:50%;background:#F3F4F6;border:1px solid #EDE9DC;flex-shrink:0;"></div>
+        <div style="flex:1;min-width:0;">
+        <div style="font-weight:700;font-size:18px;color:#111827;line-height:1.2;">${escapeHtml(m.mentorName||"导师")}</div>
+        ${companyMeta ? `<div style="font-size:12px;color:#9CA3AF;margin-top:4px;">${escapeHtml(companyMeta)}</div>` : ""}
+        ${m.careerPathDisplay ? `<div style="font-size:12px;color:#9CA3AF;margin-top:2px;">${escapeHtml(m.careerPathDisplay)}</div>` : ""}
         </div>
-        ${firstTag ? `<span style="flex-shrink:0;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE;">${escapeHtml(firstTag)}</span>` : ""}
       </div>
       <div style="height:1px;background:#EDE9DC;margin:0 0 20px;"></div>
       <div>${advice}</div>
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-top:1px solid #EDE9DC;margin-top:20px;padding-top:14px;">
-        <div style="display:flex;flex-wrap:wrap;gap:6px;">${allTags.map(t=>`<span style="font-size:11px;padding:2px 9px;border-radius:99px;background:#F3F4F6;color:#6B7280;">${escapeHtml(t)}</span>`).join("")}</div>
         <span style="font-size:12px;color:#9CA3AF;font-weight:500;">导师 ${idx+1} / 4</span>
       </div>
     </article>

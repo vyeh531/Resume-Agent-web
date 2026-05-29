@@ -1073,13 +1073,13 @@ function adviceSelectionScore(card, targetProblemTags, coveredTags, selectedCard
     .reduce((sum, item) => sum + severityWeight(item.severity), 0);
   const roleFitScore = Math.max(0, 1 - (card.roleMismatchPenalty || 0));
   const diversityBonus = selectedCards.some((item) => item.topic === card.topic || item.adviceIntent === card.adviceIntent) ? 0 : 1;
+  // 覆蓋未處理問題的權重提升為最高優先（0.50），確保每條建議都在解決新問題
   return (
-    0.25 * (card.retrieval_score || 0) +
-    0.35 * Math.min(1, uncovered.length / 2) +
-    0.15 * Math.min(1, severity) +
-    0.10 * roleFitScore +
-    0.05 * 0.6 +
-    0.10 * diversityBonus
+    0.15 * (card.retrieval_score || 0) +
+    0.50 * Math.min(1, uncovered.length / 2) +  // 未覆蓋問題數量
+    0.20 * Math.min(1, severity) +               // 問題嚴重程度
+    0.05 * roleFitScore +
+    0.10 * diversityBonus                        // 話題多樣性
   );
 }
 
@@ -1125,13 +1125,13 @@ function mentorMatchScore(bucket, targetProblemTags, targetRoleFamily = "") {
     score += card.retrieval_score || 0;
     relatedTagsForCard(card, targetProblemTags).forEach((tag) => covered.add(tag));
   }
-  const brandBonus = BIG_TECH_COMPANIES.has(bucket.company) ? 0.5 : 0;
-  // +1 bonus if mentor's role_family overlaps with user's target role (or mentor has "universal" content)
+  // 不再給大廠加分，純粹以問題覆蓋率和相關性排名
   const bucketFamilies = bucket.roleFamilies || [];
   const normalized = normalizeTerm(targetRoleFamily || "");
   const roleFamilyBonus =
     bucketFamilies.includes("universal") || (normalized && bucketFamilies.includes(normalized)) ? 1.0 : 0;
-  return score + covered.size * 0.35 + brandBonus + roleFamilyBonus;
+  // 問題覆蓋率權重提高到 0.6（最重要的指標）
+  return score + covered.size * 0.6 + roleFamilyBonus;
 }
 
 function selectDiverseMentors(mentorBuckets, targetCount, targetProblemTags = [], targetRoleFamily = "") {
@@ -1224,12 +1224,8 @@ function selectFreeMentorPlan(candidates, internalAtsResult) {
   const roleSafeBuckets = buckets.filter((b) => isBucketRoleSafe(b, roleFamily));
   const candidateBuckets = roleSafeBuckets.length > 0 ? roleSafeBuckets : buckets;
 
-  // For free plan: guarantee first mentor comes from a recognizable company when possible
-  const sortedBuckets = [...candidateBuckets].sort((a, b) =>
-    mentorMatchScore(b, targetProblemTags, roleFamily) - mentorMatchScore(a, targetProblemTags, roleFamily)
-  );
-  const bigTechBucket = sortedBuckets.find((b) => BIG_TECH_COMPANIES.has(b.company));
-  const bucket = bigTechBucket || selectDiverseMentors(candidateBuckets, 1, targetProblemTags, roleFamily)[0];
+  // 純粹以問題相關性選出最匹配的導師（不優先大廠）
+  const bucket = selectDiverseMentors(candidateBuckets, 1, targetProblemTags, roleFamily)[0];
   let plan;
   if (!bucket) {
     plan = fallbackMentor(0, internalAtsResult);
@@ -1290,6 +1286,36 @@ function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan =
 
   while (mentors.length < 4) {
     mentors.push(fallbackMentor(mentors.length, internalAtsResult, coveredTags));
+  }
+
+  // ── 補漏：確保所有 problem tags 至少被一條建議覆蓋 ──────────────
+  const allAdviceItems = mentors.flatMap((m) => m.adviceItems || []);
+  const allCovered = calculateAdviceCoverage(allAdviceItems, targetProblemTags);
+  const uncoveredTags = targetProblemTags.filter((p) => !allCovered.has(p.tag));
+
+  if (uncoveredTags.length > 0) {
+    // 找出還有空間的導師（adviceItems < 3 的不存在，所以替換最低分那條）
+    // 策略：在每個導師的 candidates 池裡找能覆蓋 uncoveredTags 的建議，替換得分最低的
+    for (const problem of uncoveredTags) {
+      const tag = problem.tag;
+      if (allCovered.has(tag)) continue;
+      // 找能覆蓋這個 tag 的候選
+      const coverCandidate = candidates
+        .filter((card) => !allAdviceItems.some((a) => a.adviceId === card.adviceId))
+        .find((card) => relatedTagsForCard(card, targetProblemTags).includes(tag));
+      if (!coverCandidate) continue;
+      // 找最合適的導師（優先選和這個 card 同一個 mentorName 的，或最後一個導師）
+      const targetMentor = mentors.find((m) => m.mentorName === coverCandidate.mentorName) || mentors[mentors.length - 1];
+      if (!targetMentor || !targetMentor.adviceItems) continue;
+      // 把這個 mentor 的最低優先級建議換掉
+      const toReplace = targetMentor.adviceItems.reduce((a, b) =>
+        (severityWeight(a.priority) < severityWeight(b.priority) ? a : b)
+      );
+      const newItem = toAdviceItem(coverCandidate, targetProblemTags, targetMentor.adviceItems.indexOf(toReplace), true, internalAtsResult, new Set());
+      const idx = targetMentor.adviceItems.indexOf(toReplace);
+      if (idx !== -1) targetMentor.adviceItems[idx] = newItem;
+      allCovered.add(tag);
+    }
   }
 
   return mentors.slice(0, 4).map((mentor) => ({
