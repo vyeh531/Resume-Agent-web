@@ -68,7 +68,6 @@ export default function AnalyzingPage() {
         </div>
       </div>
 
-      <Script src="/assets/app.js" strategy="beforeInteractive" />
       <Script id="analyzing-logic" strategy="afterInteractive">{`
         guardSubmitted();
         const totalSeconds = 16;

@@ -52,7 +52,7 @@ export default function LoginPage() {
             <span className="pill pill-jade"><span className="dot"></span>已分析</span>
           </div>
 
-          <button className="btn btn-jade btn-block" onClick="mockLogin(this)">
+          <button className="btn btn-jade btn-block" onClick={(e) => window.mockLogin && window.mockLogin(e.currentTarget)}>
             <span style={{fontSize:'18px'}}>微</span> 微信一键登录
           </button>
 
@@ -68,7 +68,6 @@ export default function LoginPage() {
         </div>
       </div>
 
-      <Script src="/assets/app.js" strategy="beforeInteractive" />
       <Script id="login-logic" strategy="afterInteractive">{`
         (function(){
           const s = JSON.parse(localStorage.getItem("resumeFixMVP") || "{}");

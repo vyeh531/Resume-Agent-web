@@ -22,9 +22,6 @@ export default function ReportPage() {
         </div>
       </div>
 
-      <Script src="/assets/api-client.js" strategy="beforeInteractive" />
-      <Script src="/assets/app.js" strategy="beforeInteractive" />
-      <Script src="/assets/mock-data.js" strategy="beforeInteractive" />
       <Script src="/report-logic.js" strategy="afterInteractive" />
     </>
   );

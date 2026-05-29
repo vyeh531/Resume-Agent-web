@@ -18,7 +18,12 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Script src="/assets/api-client.js" strategy="afterInteractive" />
+        <Script src="/assets/app.js" strategy="afterInteractive" />
+        <Script src="/assets/mock-data.js" strategy="afterInteractive" />
+      </body>
     </html>
   );
 }

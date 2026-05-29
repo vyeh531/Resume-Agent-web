@@ -70,7 +70,7 @@ export default function PaymentPage() {
             <div className="check">✓</div>
           </div>
 
-          <button className="btn btn-jade btn-block" onClick="mockPayment(this)">我已扫码完成支付</button>
+          <button className="btn btn-jade btn-block" onClick={(e) => window.mockPayment && window.mockPayment(e.currentTarget)}>我已扫码完成支付</button>
 
           <div className="pay-trust">
             <span>🔒 加密交易</span>
@@ -85,7 +85,6 @@ export default function PaymentPage() {
         </div>
       </div>
 
-      <Script src="/assets/app.js" strategy="beforeInteractive" />
       <Script id="payment-logic" strategy="afterInteractive">{`
         guardSubmitted();
         let timer = 14 * 60 + 59;

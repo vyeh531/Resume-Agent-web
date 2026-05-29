@@ -21,7 +21,7 @@ export default function HomePage() {
 
         <section className="section">
           <h2 className="section-title">把简历交给大厂导师</h2>
-          <form className="card" onSubmit="event.preventDefault(); submitResume(this);" noValidate>
+          <form className="card" onSubmit={(e) => { e.preventDefault(); if (window.submitResume) window.submitResume(e.currentTarget); }} noValidate>
             <div className="input-group">
               <label className="input-label">上传简历</label>
               <label className="file-upload" id="fileUploadLabel">
@@ -96,8 +96,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      <Script src="/assets/api-client.js" strategy="beforeInteractive" />
-      <Script src="/assets/app.js" strategy="beforeInteractive" />
       <Script id="load-positions" strategy="afterInteractive">{`
         (async function loadPositions() {
           const sel  = document.getElementById("jobSelect");
