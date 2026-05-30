@@ -571,6 +571,10 @@ function isAdviceRoleSafe(row, targetRole, roleFamily) {
 }
 
 function calculateRoleMismatchPenalty(row, retrievalQuery = {}) {
+  // Universal advice (by content) should never be penalized regardless of
+  // which student's session it came from — the tag reflects the student, not the advice.
+  if (row.generality === "universal") return 0;
+
   const queryFamilies = queryRoleFamilies(retrievalQuery);
   const rowFamilies = splitCsv(row.role_family);
   const rowTargets = splitCsv(row.target_roles);

@@ -211,6 +211,18 @@ def retrieve_advice(
         )
         params.append(rf)
 
+    # Pre-filter by target_role to prevent over-represented roles (e.g. DA at
+    # 32.8%) from flooding results for unrelated users.
+    # Keep: exact match on target_role, 'general', or no target_role set.
+    tr_raw = (query.get("targetRole") or "").strip()
+    if tr_raw:
+        where_parts.append(
+            "(LOWER(COALESCE(target_role,'')) = LOWER(?)"
+            " OR LOWER(COALESCE(target_role,'')) = 'general'"
+            " OR target_role IS NULL OR target_role = '')"
+        )
+        params.append(tr_raw)
+
     where_sql = ("WHERE " + " AND ".join(where_parts)) if where_parts else ""
     fields_sql = ", ".join(_RETURN_FIELDS)
     sql = f"SELECT {fields_sql} FROM segments {where_sql}"
@@ -231,7 +243,31 @@ def retrieve_advice(
         scored.append(seg)
 
     scored.sort(key=lambda x: x["retrieval_score"], reverse=True)
-    return scored[:effective_limit]
+
+    # Diversity cap: prevent any single target_role from taking more than half
+    # the result slots (guards against residual imbalance after pre-filter).
+    cap = max(1, effective_limit // 2)
+    role_counts: dict[str, int] = {}
+    diverse: list[dict] = []
+    for seg in scored:
+        role = (seg.get("target_role") or "general").lower()
+        if role_counts.get(role, 0) >= cap:
+            continue
+        role_counts[role] = role_counts.get(role, 0) + 1
+        diverse.append(seg)
+        if len(diverse) >= effective_limit:
+            break
+
+    # If cap was too strict and we got fewer than requested, top-up from remainder
+    if len(diverse) < effective_limit:
+        seen_ids = {s.get("chunk_id") for s in diverse}
+        for seg in scored:
+            if seg.get("chunk_id") not in seen_ids:
+                diverse.append(seg)
+                if len(diverse) >= effective_limit:
+                    break
+
+    return diverse
 
 
 # ---------------------------------------------------------------------------

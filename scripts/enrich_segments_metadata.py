@@ -607,8 +607,11 @@ def infer_unlock_tier(row: dict) -> str:
     gen = (row.get("generality") or "").lower()
     if gen == "universal":
         return "free"
-    if row.get("E_example") and row.get("A_action"):
-        return "paid"
+    # industry-specific / role-specific → paid if advice has substance
+    # (removed E_example dependency: strategic advice never has examples by nature)
+    if gen in ("industry-specific", "role-specific"):
+        if row.get("A_action") and row.get("I_insight"):
+            return "paid"
     return "free"
 
 
@@ -716,8 +719,15 @@ def calculate_mentor_quality_score(row: dict) -> float:
         score += 0.05
     if row.get("A_action"):
         score += 0.10
-    if row.get("E_example"):
-        score += 0.10
+    # E_example only meaningful for operational advice types; strategic advice
+    # (方向聚焦 etc.) naturally has no examples — use I_insight depth instead
+    _OPERATIONAL = {"结构调整", "格式优化", "项目包装", "量化成果", "关键词匹配", "技能补强"}
+    if (row.get("advice_type") or "") in _OPERATIONAL:
+        if row.get("E_example"):
+            score += 0.10
+    else:
+        if row.get("I_insight"):
+            score += 0.05
     if row.get("HR_os"):
         score += 0.10
     if row.get("I_insight"):
