@@ -1,0 +1,151 @@
+[
+  {
+    "id": 5938,
+    "retrieval_scope": "resume_edit",
+    "role_family": "{\"administration\",\"education\"}",
+    "target_roles": "{\"administration\",\"education_consulting\"}",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation",
+    "topic": "补充创业/副业经历填补时间线",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "advice_card_title": "求职者有一段教育咨询创业/合伙人经历未写入简历",
+    "user_problem_summary": "求职者有一段教育咨询创业/合伙人经历未写入简历，导致简历上显示最近工作在国内，造成表面上的履历断档印象。",
+    "A_action": "将教育咨询公司的合伙人/counseling director经历补充进简历，列明职责（学生升学规划、家长沟通、教师协调等），以填补时间空白并体现持续的administration相关能力。",
+    "action_summary": "将教育咨询公司的合伙人/counseling director经历补充进简历，",
+    "next": {
+      "id": 5938,
+      "role_family": "administration,education",
+      "target_roles": "administration,education_consulting"
+    }
+  },
+  {
+    "id": 5939,
+    "retrieval_scope": "resume_edit",
+    "role_family": "universal",
+    "target_roles": "universal",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "advice_card_title": "简历要清晰展示你的目标岗位",
+    "user_problem_summary": "求职者三年前有medical device行业经验，",
+    "A_action": "以近期教育及administration经历为主要卖点投递相关岗位；若仍希望回归medical device/医疗领域，需在简历中特别强化该段经历的关键成果，或考虑补充相关近期项目。",
+    "action_summary": "以近期教育及administration经历为主要卖点投递相关岗位；",
+    "next": {
+      "id": 5939,
+      "role_family": "administration,education",
+      "target_roles": "administration,education_consulting"
+    }
+  },
+  {
+    "id": 6640,
+    "retrieval_scope": "resume_edit",
+    "role_family": "universal",
+    "target_roles": "universal",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "advice_card_title": "求职者简历原版侧重corporate transa...",
+    "user_problem_summary": "求职者简历原版侧重corporate transaction方向，",
+    "A_action": "保留与entertainment law最相关的IP/软性知识产权经历（如Trademark相关），新增一段持续深耕该领域的经历以证明行业积累；同时精简原版中着重强调corporate transaction的bullet point，如Baker McGinty第一项、Vega Adventure第一段各缩减为一段。",
+    "action_summary": "保留与entertainment law最相关的IP/软性知识产权经历（如Trademark相关），",
+    "next": {
+      "id": 6640,
+      "role_family": "legal",
+      "target_roles": "entertainment_law"
+    }
+  },
+  {
+    "id": 8701,
+    "retrieval_scope": "resume_edit",
+    "role_family": "universal",
+    "target_roles": "universal",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation",
+    "topic": "多版本简历策略",
+    "L1": "简历内容",
+    "L2": "简历版本规划",
+    "advice_card_title": "不要一份简历投所有岗位",
+    "user_problem_summary": "求职者目前使用同一版本简历投递不同职位，未根据职位需求调整侧重点，降低了简历的针对性和竞争力。",
+    "A_action": "根据所投职位的不同，调整简历中的经历描述和技能侧重点，确保每个版本都能对应目标岗位的核心要求，尤其是临床相关职位需突出临床经历。",
+    "action_summary": "根据所投职位的不同，调整简历中的经历描述和技能侧重点，确保每个版本都能对应目标岗位的核心要求，尤其是临床相关职位需突出临床经历。",
+    "next": {
+      "id": 8701,
+      "role_family": "healthcare",
+      "target_roles": "clinical"
+    }
+  },
+  {
+    "id": 12650,
+    "retrieval_scope": "resume_edit",
+    "role_family": "universal",
+    "target_roles": "universal",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "advice_card_title": "求职者目前简历大部分经历与目标IT/IE岗位关联度低",
+    "user_problem_summary": "求职者目前简历大部分经历与目标IT/IE岗位关联度低，经历未针对性突出，且求职方向过于分散，缺乏聚焦。",
+    "A_action": "选定2到3个求职方向，分别制作对应版本的简历，针对每份简历突出与该方向相关的实习经历和成果，做到有的放矢。",
+    "action_summary": "选定2到3个求职方向，分别制作对应版本的简历，针对每份简历突出与该方向相关的实习经历和成果，做到有的放矢。",
+    "next": {
+      "id": 12650,
+      "role_family": "ops",
+      "target_roles": "industrial_engineering,process_improvement"
+    }
+  },
+  {
+    "id": 9948,
+    "retrieval_scope": "resume_edit",
+    "role_family": "universal",
+    "target_roles": "universal",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "advice_card_title": "求职者因该机会是part-time而忽视其价值",
+    "user_problem_summary": "求职者因该机会是part-time而忽视其价值，",
+    "A_action": "将part-time实习经历写入简历，认真对待面试机会；后续获得面试后可向导师申请mock interview以了解该公司面试风格。",
+    "action_summary": "将part-time实习经历写入简历，认真对待面试机会；后续获得面试后可向导师申请mock interview以了解该公司面试风格。",
+    "next": {
+      "id": 9948,
+      "retrieval_scope": "interview"
+    }
+  },
+  {
+    "id": 15592,
+    "retrieval_scope": "resume_edit",
+    "role_family": "universal",
+    "target_roles": "universal",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "advice_card_title": "求职者担忧实习公司规模或质量",
+    "user_problem_summary": "求职者担忧实习公司规模或质量，但忽视了任何有实质学习价值的实习经历对后续全职求职都有正面作用，关键在于岗位相关性和项目内容。",
+    "A_action": "积极投递实习职位，无论公司大小，只要岗位能带来学习和成长；拿到offer就去，并注重在实习期间积累可量化的项目经历，为full time求职打好基础。",
+    "action_summary": "积极投递实习职位，无论公司大小，只要岗位能带来学习和成长；",
+    "next": {
+      "id": 15592,
+      "retrieval_scope": "job_search"
+    }
+  },
+  {
+    "id": 17930,
+    "retrieval_scope": "resume_edit",
+    "role_family": "universal",
+    "target_roles": "universal",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills,weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "advice_card_title": "求职者简历存在旧版本内容夸大或不熟悉的问题",
+    "user_problem_summary": "求职者简历存在旧版本内容夸大或不熟悉的问题，面试官通常会重点追问最新一段经历，若候选人无法流畅阐述旧版本内容，辅导效果也会打折扣。",
+    "A_action": "聚焦最新版本简历进行辅导，确保求职者能熟悉并自信阐述最新经历中使用的工具、具体过程、成果和impact；若旧经历面试邀约成功，再针对性突击旧版本内容。",
+    "action_summary": "聚焦最新版本简历进行辅导，确保求职者能熟悉并自信阐述最新经历中使用的工具、具体过程、成果和impact；",
+    "next": {
+      "id": 17930,
+      "retrieval_scope": "interview"
+    }
+  }
+]

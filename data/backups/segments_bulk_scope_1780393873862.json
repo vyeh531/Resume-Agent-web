@@ -1,0 +1,3362 @@
+[
+  {
+    "id": 108,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "求职综合策略",
+    "L1": "求职策略",
+    "L2": "澳大利亚市场",
+    "sample": "Student treating all electives as academic; mentor pointed out that certain elective courses place students directly with companies and have led to full-time employment and visa sponsorship."
+  },
+  {
+    "id": 116,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "课程规划",
+    "sample": "Student with liberal arts master's had been defaulting to soft electives; mentor reframed course selection as a resume-building tool for the remaining semesters."
+  },
+  {
+    "id": 164,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "求职综合策略",
+    "L1": "求职策略",
+    "L2": "方向选择",
+    "sample": "候选人在方向选择上缺乏清晰判断，Tiffany Zhang认为有Dell采购经验的候选人不应纠结于logistics方向，procurement岗位数量更多且更匹配其背景，是明显更优的主攻方向。"
+  },
+  {
+    "id": 236,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "求职综合策略",
+    "L1": "求职策略",
+    "L2": "作品集策略",
+    "sample": "候选人有大量作品但不知道如何在求职中展示；导师判断作品集的核心是讲创作故事，只展示结果而不讲思路和过程是最常见的表达短板，无法让面试官了解创作能力。"
+  },
+  {
+    "id": 237,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "求职综合策略",
+    "L1": "求职策略",
+    "L2": "作品集策略",
+    "sample": "候选人急于展示尽可能多的作品，认为数量越多越有说服力；导师判断质量远优于数量，2-3个完整深入的强作品比十个半成品更有说服力，质量是作品集的唯一核心。"
+  },
+  {
+    "id": 345,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "技术方向定位",
+    "sample": "学生简历覆盖前后端和多种技术栈，但毕业头1-2年应先确定一个主攻方向，而非全面开花"
+  },
+  {
+    "id": 470,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "求职综合策略",
+    "L1": "求职策略",
+    "L2": "方向选择与竞争力评估",
+    "sample": "本科学电子/电气工程、研究生转方向导致硬件实践中断的求职者"
+  },
+  {
+    "id": 695,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "求职综合策略",
+    "L1": "求职策略",
+    "L2": "岗位差异分析",
+    "sample": "Crystal建议刘昱清基于现有简历的实际情况诚实评估：IB入门门槛极高，竞争激烈，现有经历支撑度不足；相比之下，equity research和AM一级市场（PE/VC）是更现实且有竞争力的方向；要把精力集中在简历能strong support的方向，而不是分散地申请所有方向"
+  },
+  {
+    "id": 718,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "学生方向未定，导师无法有针对性地修改简历"
+  },
+  {
+    "id": 834,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "求职综合策略",
+    "L1": "求职策略",
+    "L2": "岗位研究",
+    "sample": "大型艺术机构有in-house PR部门，每年参加art fair时需要大量press支持"
+  },
+  {
+    "id": 883,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "求职综合策略",
+    "L1": "求职策略",
+    "L2": "心态管理",
+    "sample": "候选人对简历内容不充实感到焦虑"
+  },
+  {
+    "id": 1019,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者同时涵盖表演艺术和视觉艺术背景，简历没有明确focus，针对画廊等当代艺术机构投递时缺乏相关经历，会被直接筛掉"
+  },
+  {
+    "id": 1206,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者目标是数字芯片方向，但当前课程包含嵌入式，导师认为嵌入式与真正电路设计关联不大，建议聚焦模拟电路和计算机架构两门含金量更高的课程。"
+  },
+  {
+    "id": 1207,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者目前专注于芯片方向，但导师预判4年后毕业时AI将更加普及，建议在完成核心课程后补充AI相关课程，以增加竞争力。"
+  },
+  {
+    "id": 1225,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者联系朋友的猎头时，不知道如何定位自己的求职方向，过于细化可能导致猎头认为不匹配而放弃推荐。"
+  },
+  {
+    "id": 1289,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "学生简历同时混杂performing arts和visual arts经历，没有明确focus，导致在任何一个细分方向上都显得竞争力不足。"
+  },
+  {
+    "id": 1388,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者目前课程以嵌入式为主，与数字芯片设计岗位相关性低，需优先补强模拟电路和计算机架构两门含金量最高的核心课程。"
+  },
+  {
+    "id": 1493,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者技术硬实力（Python、SQL、Power BI、ML基础）在同类求职者中属于较强水平，但当前阻碍在于简历质量不足，导致无法获得足够面试机会。"
+  },
+  {
+    "id": 1870,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "学生对求职方向不明确，无法有针对性地修改简历；简历内容必须与目标岗位适配度挂钩，方向未定则简历无从下笔。"
+  },
+  {
+    "id": 1898,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者为PhD，从2022年至今已读四年，申请汽车行业偏执行类工程岗位时容易被HR判定为overqualified，尤其是该类公司普遍招募应届graduate而非博士毕业生。"
+  },
+  {
+    "id": 2040,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "学生认为专业课（经济学理论、会计）无法体现在简历上，不知道该学什么。导师指出面试真正考核的是目标岗位的基础专业术语，与学校课程无关，需单独自学。"
+  },
+  {
+    "id": 2212,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "证书资质规划",
+    "L1": "技能提升",
+    "L2": "证书资质",
+    "sample": "求职者下学期若有选课空间，应优先选修与目标岗位强相关的Finance、Accounting或Data类课程，而非软性文科课程，以强化简历的技术含量与岗位匹配度。"
+  },
+  {
+    "id": 2310,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者目前简历上没有任何实际经验，且现阶段课程均为通识课，缺乏与Motorsports或Mechanical Engineering相关的专业内容，难以在大二时投递实习。"
+  },
+  {
+    "id": 2623,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者简历尚未整理完善就急于开始求职，导师建议先把简历改完再投递，并根据实际收到的岗位反馈再针对性准备面试。"
+  },
+  {
+    "id": 2873,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者表示什么分析师都可以，导致简历方向分散，无法针对特定岗位优化，广撒网反而降低竞争力，每类analyst所需准备方向差异明显。"
+  },
+  {
+    "id": 2903,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者对DE（Data Engineer）与DA（Data Analyst）岗位的数量差异认知不清，可能导致投递方向选择失误，实际市场中DA岗位远多于DE。"
+  },
+  {
+    "id": 2974,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者在新简历完成前已用旧简历投递部分公司，若未区分记录，面试时可能出现简历内容与口述不一致的风险，影响面试表现的可信度。"
+  },
+  {
+    "id": 3066,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者简历偏数据分析方向，缺乏云服务（AWS/GCP/Azure）及前后端Web技术，而Solution Engineer岗位核心要求是能快速搭建环境、集成企业级解决方案，现有技能栈区分度不足。"
+  },
+  {
+    "id": 3123,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者认为SQL/Python是DA岗位的核心竞争力，但导师指出在AI普及背景下，技术工具已成基础门槛，商业思维、数据洞察力和沟通能力才是真正的差异化能力。"
+  },
+  {
+    "id": 3324,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者口头说求职方向是数据分析，但简历内容却全部聚焦在modeling方向，导致简历定位与目标岗位不一致，HR和ATS难以将其与数据分析岗位匹配。"
+  },
+  {
+    "id": 3532,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者心理学背景出身，对数据分析岗位所需能力认知模糊，误以为技术技能是最核心要求，忽视了沟通能力和商业知识的重要性。"
+  },
+  {
+    "id": 3543,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "学生简历已基本就绪，但不确定下一步应先补充知识备考，还是直接投递后根据反馈准备面试，缺乏清晰的求职推进节奏。"
+  },
+  {
+    "id": 3708,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者因毕业时间和行程安排而犹豫何时开始投递，导师指出应立即开始投递并积累面试经验，同时对成功率要有合理预期"
+  },
+  {
+    "id": 4022,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "证书资质规划",
+    "L1": "技能提升",
+    "L2": "证书资质",
+    "sample": "求职者金融背景薄弱，担心面试中被问及专业知识，但学业负担重、时间有限，需要一个系统性但灵活的补课方案。"
+  },
+  {
+    "id": 4424,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者只有模糊的大方向（STEM），没有明确的求职时间节点、目标岗位和具体需求，导致辅导无法聚焦，简历修改方向不清晰。"
+  },
+  {
+    "id": 4583,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者攻读地产相关研究生但课程偏金融方向，缺乏对地产行业核心工具CoStar的实操经验，入行后会直接用到该软件做市场分析。"
+  },
+  {
+    "id": 5039,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者是转学生、大四上学期，年底毕业，简历上只有finance相关实习，缺乏目标方向（marketing）的相关经历，导师需先判断毕业时间线以评估求职紧迫程度和可利用的实习窗口。"
+  },
+  {
+    "id": 5334,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "软技能发展",
+    "L1": "技能提升",
+    "L2": "软技能",
+    "sample": "Marketing Analyst不只服务于marketing团队，还需响应sales等非数据背景同事的需求；这些stakeholder往往需求不清晰，且无法理解数据化语言，沟通能力成为重要软技能缺口。"
+  },
+  {
+    "id": 5449,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者以非正式身份参与审计项目，可能未充分利用导师分享的真实客户资料（PBC、workpaper、财报等），导致对业务流程理解不深，也难以在简历和面试中展现实质性的业务洞察。"
+  },
+  {
+    "id": 5522,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "10月底已接近年末，12月面试官因年假集中休假（黑五至元旦）且公司普遍进入coding freeze，求职者今年实际可操作的求职窗口已基本关闭。"
+  },
+  {
+    "id": 5534,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者R语言较强但Python较弱，SQL刚开始学且尚未刷题，若目标为Data/AI相关岗位，基础技能储备不足，面试时会被问到相关知识点"
+  },
+  {
+    "id": 5556,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者在制作自我介绍视频时不知道该突出哪个项目，背景不够聚焦；导师认为应优先展示具体技能而非背景，Python数据分析和可视化项目最具说服力。"
+  },
+  {
+    "id": 5600,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "应届毕业生若年底求职未成功，简历会出现空白期，影响后续求职竞争力。"
+  },
+  {
+    "id": 5835,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "在校一年级学生误以为高GPA等于求职竞争力，实际上课程知识、面试技能、实习工作是三个完全不相关的知识体系，时间分配严重失衡。"
+  },
+  {
+    "id": 6128,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者同时准备Python和C++，精力分散，而C++岗位多为底层GPU开发，职业迁移性差，性价比低，导致无法聚焦核心竞争力。"
+  },
+  {
+    "id": 6174,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者询问不在学校选课的情况下如何补充数据分析相关知识，导师指出Coursera是可用的校外学习资源。"
+  },
+  {
+    "id": 6232,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "General SDE岗位竞争极为激烈，而移动端开发（Android/iOS）岗位数量虽少，但面试难度相对较低，对有一定移动开发基础的候选人是相对可行的差异化方向。"
+  },
+  {
+    "id": 6240,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "系统编程（C/C++，操作系统方向）岗位长期缺人，但课程难度高、学习体验枯燥，需结合个人兴趣决定是否投入，不适合纯以就业为目的强行选择。"
+  },
+  {
+    "id": 6290,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者大量研究一亩三分地的面试题，但该平台的内容几乎只来自大型互联网公司，若大公司尚未主动给出面试机会，研究这些题目的实际价值十分有限。"
+  },
+  {
+    "id": 6361,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者技术背景薄弱，担心难以胜任数据分析或信息系统相关岗位，导师指出foundation级CS课程足以覆盖入门岗位所需的核心技术知识，不必过度焦虑。"
+  },
+  {
+    "id": 6432,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者当前简历内容不足、项目深度偏浅，在简历未系统修改完成、项目经验未补充之前就大量投递，投递效率极低，相当于浪费宝贵的申请机会窗口。"
+  },
+  {
+    "id": 6435,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "学生已毕业，求职方向涉及数据相关岗位，导师计划通过简历修改和技能摸底来判断当前水平，再制定优先提升计划"
+  },
+  {
+    "id": 6533,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者对金融咨询各细分方向（估值、ERP系统、财务尽调）所需技能不清晰，需要针对性补强方向指引"
+  },
+  {
+    "id": 7058,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "很多候选人不了解咨询行业对多元背景的偏好，认为专一的单一专业背景更有竞争力，实际上咨询公司更青睐跨学科、有多元经历的候选人。"
+  },
+  {
+    "id": 7063,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者有国内宝马等大品牌实习经历，但缺乏美国本地英语环境的实习经历，在美国校招中竞争力不足。"
+  },
+  {
+    "id": 7155,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者缺乏PM基本知识（如产品路线图制定逻辑），在没有经过系统培训的情况下投递PM岗位成功率极低，连面试中的基本问题都难以回答。"
+  },
+  {
+    "id": 7221,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者同时考虑biomedical和mechanical design两个方向，导师建议先聚焦biomedical和robotics systems engineer方向，若3月前未获足够面试反馈再扩展搜索范围至electrical design等岗位。"
+  },
+  {
+    "id": 7463,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者有量化/机器学习兴趣但缺乏端到端的实战项目经验，简历上没有能在面试中支撑的具体量化策略开发案例"
+  },
+  {
+    "id": 7565,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者已毕业尚未获得full time offer，若继续撒网投递不匹配的供应链岗位，会消耗有限的求职资源却收效甚微；应将精力集中在回应率更高、背景更匹配的方向。"
+  },
+  {
+    "id": 7587,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者在筛选LinkedIn校友时缺乏策略，未优先锁定最有可能回复且最具参考价值的目标人群，导致网络效率低。"
+  },
+  {
+    "id": 7789,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者简历同时呈现精算和数据两个方向，导致定位不聚焦，HR可能认为候选人经验不够专业，ATS筛选阶段也可能因关键词分散而失分"
+  },
+  {
+    "id": 7960,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "学生投递简历仅约10个，且以\"还行\"模糊描述投递状态，缺乏数据思维。投递量严重不足，且有选择性投递的倾向，可能错过更多机会。"
+  },
+  {
+    "id": 8079,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "school_application",
+    "reason": "school_application_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "美国H1B政策存在潜在立法风险，未来可能要求求职方向与所学专业强相关。若专业名称较为specific，目标岗位若偏离专业领域，将面临签证合规风险。"
+  },
+  {
+    "id": 8157,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "school_application",
+    "reason": "school_application_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "学生当前技能水平与实际面试要求存在较大差距，学校课程所讲内容与面试考察内容脱节，需要系统性补强基础技能。"
+  },
+  {
+    "id": 8171,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者即将毕业但只有一段实习经历，求职准备不足，导师需通过查阅简历判断其适合哪些求职方向"
+  },
+  {
+    "id": 8190,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "当前秋招已近尾声，大量岗位已关闭，求职者若继续拖延将错失剩余机会；需在简历修改完成后立即开始投递，同时并行准备面试。"
+  },
+  {
+    "id": 8240,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "多版本简历策略",
+    "L1": "求职策略",
+    "L2": "简历版本规划",
+    "sample": "求职者针对不同细分行业（药企、化工厂、CRO）投递同一份简历，未根据各领域侧重技能差异进行定制，降低简历与岗位的匹配度。"
+  },
+  {
+    "id": 8243,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者希望进入Pharma/Biotech的marketing、pipeline或access岗位，但导师指出这类职位几乎不提供签证sponsor，即使有3年OPT也难以获得面试机会，需重新考量目标方向。"
+  },
+  {
+    "id": 8246,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者可能低估了Pharma行业对国际学生签证sponsor的限制，导师明确指出这并非近期现象，而是Pharma行业一贯如此，需提前纳入求职规划考量。"
+  },
+  {
+    "id": 8262,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者考虑进入大药厂（big pharma），但大药厂在market access、pipeline等部门对中国留学生的sponsorship比例极低，而咨询公司（如IQVIA、Trinity）sponsorship比例相对较高，求职者需重新评估目标公司类型。"
+  },
+  {
+    "id": 8721,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者所在学校基础课程缺乏将需求转化为图标或体验设计的相关培训，该能力是设计师核心技能"
+  },
+  {
+    "id": 8856,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者希望转型至MLE岗位，但目前尚未系统学习过机器学习相关内容，缺乏必要的技术基础，不知道如何提升。"
+  },
+  {
+    "id": 9223,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者临近毕业，投递节奏不清晰，未区分暑期实习与new grad两条时间线，存在错过关键窗口期的风险。"
+  },
+  {
+    "id": 9230,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者今年初才开始投递，错过了岗位最多的秋招窗口期，中间还有大段空档，目前投的是实习而非全职，求职节奏严重滞后于市场规律。"
+  },
+  {
+    "id": 9281,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "国际学生需将OPT有效期纳入求职规划，本科OPT仅1年时间紧迫，STEM硕士OPT有3年窗口期，直接影响可接受的岗位类型与求职节奏。"
+  },
+  {
+    "id": 9377,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者投递方向不够聚焦，可能分散精力投递移动端、QA等非目标岗位，降低整体求职效率"
+  },
+  {
+    "id": 9407,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者简历同时涵盖Full Stack Web、Mobile App、后端数据库、算法四个方向，定位过于分散，HR难以判断候选人的核心竞争力和目标岗位。"
+  },
+  {
+    "id": 9439,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者OPT将于2025年2月到期，时间紧迫，需了解美国金融行业招聘节奏以抓住最佳投递窗口。"
+  },
+  {
+    "id": 9573,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "许多国际学生赴美求职面临签证担忧，加拿大公民身份在这一方面相比F1签证持有者具有明显优势。"
+  },
+  {
+    "id": 9676,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者处于DA转型阶段，缺乏数据相关项目经验且编程基础薄弱，同时需要在技能提升的同时保持持续投递，容易因为细枝末节分散注意力。"
+  },
+  {
+    "id": 9684,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者倾向于将自己限定在某一两个方向，未充分利用无身份限制的优势，缩小了机会面。"
+  },
+  {
+    "id": 9817,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者简历呈现的技能和经历过于多元，招聘经理无法判断其最适合的职位类型，软件工程方向下细分岗位众多，缺乏聚焦会让雇主难以匹配。"
+  },
+  {
+    "id": 9874,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "当前就业市场竞争激烈，高经验候选人（7-8年）与低经验候选人（4年）争抢同一职位，即使技术面过了也可能因经验差距落选，因此必须通过大量投递来提高成功率。"
+  },
+  {
+    "id": 10021,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者误以为招聘要求中的experience必须是正式工作经历，对自己只有学校项目经验感到自卑，不敢投递有年限要求的岗位。"
+  },
+  {
+    "id": 10274,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "国际生若专注金融方向，open position少、竞争激烈且雇主倾向招有身份的候选人，H1B sponsorship也难找；相比之下，数据方向岗位更多，本地人竞争意愿低，国际生更有优势。"
+  },
+  {
+    "id": 10309,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者持有签证身份存在风险，目前依附于一家管理混乱的小公司实习，虽有return offer机会，但导师判断应更积极地对外寻找全职机会，不应过度依赖该offer。"
+  },
+  {
+    "id": 10327,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者希望了解数字营销各渠道知识，但市面上课程普遍过长（20+小时），学习效率低，不适合求职准备阶段快速补充知识点。"
+  },
+  {
+    "id": 10339,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者剩余3节课但需补充的内容涵盖基础知识（SEO、paid media、social、email marketing、campaign）和简历面试准备，时间分配需要权衡"
+  },
+  {
+    "id": 10404,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "学校课程与工业界实际需求脱节，学生若不主动了解市场所需核心技能（如SQL、AB测试），面试时容易被直接淘汰；大二阶段提前行动是难得优势。"
+  },
+  {
+    "id": 10422,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者缺乏可展示的数据分析实操项目经验，简历项目部分薄弱，在面试中难以体现数据科学实际能力"
+  },
+  {
+    "id": 10452,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者因简历未修改完成而迟迟未开始投递，未意识到5月实习开始前需预留CPT办理时间，存在错过招聘窗口的风险。"
+  },
+  {
+    "id": 10462,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者因简历未修改完成而迟迟未开始投递，但距离5月实习开始时间已不多，且还需办理CPT，存在时间紧迫风险。"
+  },
+  {
+    "id": 10465,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者可能过度依赖单一导师的简历反馈，不同审阅者的偏好差异可能造成困惑，导致简历方向摇摆。"
+  },
+  {
+    "id": 10480,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者需在选修课中做出选择，导师指出Clinical Trials课程与药厂工作及AB testing高度相关，Causal Inference方向则是CS背景候选人暂时难以覆盖的差异化优势领域。"
+  },
+  {
+    "id": 10484,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者需要选修课程方向，导师指出causal inference是CS背景候选人尚未熟练掌握的方向，可形成差异化竞争力，且在Tech公司实际工作中有实用价值。"
+  },
+  {
+    "id": 10505,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者及部分雇主误以为CPT工作需要雇主办理复杂手续，导致雇主望而却步，实际上CPT只是学生与学校之间的身份文件处理，雇主操作极简。"
+  },
+  {
+    "id": 10832,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者有统计背景并具备Python及强化学习知识，但不确定自身技能与哪类金融岗位更匹配，误以为只能考虑投行方向。"
+  },
+  {
+    "id": 10870,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者可能误以为marketing招聘像consulting/tech一样有固定校招季，实际上marketing岗位招聘是随时缺人随时招，节奏完全不同，需要持续关注投递机会。"
+  },
+  {
+    "id": 10877,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "国际学生在投递岗位时容易浪费时间在不提供H1B签证担保的公司上，导致求职效率低下。"
+  },
+  {
+    "id": 11031,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者目前技能侧重finance定性分析，缺乏quantitative finance所需的financial modeling与统计学基础，难以竞争偏technical的quant/data类岗位。"
+  },
+  {
+    "id": 11141,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者目前口语能力偏弱、缺乏行业证书、networking主动性不足，三方面同时制约求职竞争力"
+  },
+  {
+    "id": 11195,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者简历直接由申请学校的版本改写而来，不够专业，可能在ATS机筛阶段即被淘汰；同时因缺乏信心导致投递量极少，形成恶性循环。"
+  },
+  {
+    "id": 11253,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者无绿卡需要sponsorship，但GIS领域私人咨询公司和地方政府部门大多不愿提供sponsorship，只有进入大型公司才有机会，这是一个必须提前认知的重大挑战。"
+  },
+  {
+    "id": 11301,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者目标为明年夏季实习，但不清楚具体投递截止时间节点，存在时间规划模糊的问题，可能导致准备不足或错过投递窗口。"
+  },
+  {
+    "id": 11304,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者因看到网上他人作品而感到差距悬殊，倾向于通过进修art school提升后再找工作，但实际上其已具备基础技能，缺乏的是作品集包装与自我推销，而非技能本身。"
+  },
+  {
+    "id": 11308,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者因看到他人作品而产生自我怀疑，考虑先去art school进修再求职。导师认为若已具备基础技能，当前阶段更重要的是包装自己、做出demo和作品集网站，而非花时间进修。"
+  },
+  {
+    "id": 11397,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者机器学习基础薄弱，仅了解regression，面试中tree-based model、classification等常见考点准备不足，可能影响通过率。"
+  },
+  {
+    "id": 11574,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "证书资质规划",
+    "L1": "技能提升",
+    "L2": "证书资质",
+    "sample": "求职者正在准备CFA一级考试，但仅写'CFA level one candidate'在简历上对申请帮助有限；只有通过全部三级考试取得CFA charter才对简历有显著加分效果。"
+  },
+  {
+    "id": 11585,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者对Business Analytics和Data Analytics两类岗位所需技能栈认知不清，未能针对性补强相应工具技能，导致申请方向不聚焦。"
+  },
+  {
+    "id": 11590,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "证书资质规划",
+    "L1": "技能提升",
+    "L2": "证书资质",
+    "sample": "求职者目标ESG方向，但缺乏相关证书背书；SCR（Sustainability and Climate Risk）证书仅需一级考试即可获取，且与ESG岗位直接相关，是短期内提升简历竞争力的有效手段。"
+  },
+  {
+    "id": 11625,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者技能栈不完整，Excel、SQL、Tableau、Power BI、Python均需补强，且自我介绍中声称Python proficient但实际水平未必匹配，存在诚信风险。"
+  },
+  {
+    "id": 11689,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者的个人陈述草稿空洞无力，缺乏真实动机支撑，未能将自身移民身份与申请公共服务职位的兴趣有机结合，说服力不足。"
+  },
+  {
+    "id": 11691,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者的个人陈述缺乏说服力，未能清晰呈现真正对公共服务感兴趣的原因，需要从自身移民身份出发，结合对社会现象的观察，构建真实可信的动机叙事。"
+  },
+  {
+    "id": 11933,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者本科CS、硕士Analytics，有软件工程工作经历，但目标岗位为Data相关职位，简历目前偏Software Engineer方向，与目标岗位存在定位不一致的问题。"
+  },
+  {
+    "id": 11937,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "ATS机筛策略",
+    "L1": "求职策略",
+    "L2": "ATS机筛机制",
+    "sample": "求职者意识到时间紧迫性不足，实际上许多公司9月开始招聘intern，11月前后已基本确定人选，当前时间节点已较晚"
+  },
+  {
+    "id": 12133,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者目前简历方向过于笼统，未聚焦到具体的UI/UX细分方向，在与业内人士交流或投递时难以给人留下清晰印象。"
+  },
+  {
+    "id": 12135,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者方向定位模糊，自我介绍时无法给行业从业者留下深刻印象，导致networking时错失被推荐或refer的机会。"
+  },
+  {
+    "id": 12152,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者将portfolio视为静态作品集，担心项目数量不足，未意识到portfolio是可以随时补充完善的动态文件。"
+  },
+  {
+    "id": 12159,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者认为投递范围广可以增加机会，但导师指出广撒网虽然可投岗位多，却因缺乏专精度导致被选中概率反而降低，雇主更倾向选择方向明确、技能精专的候选人。"
+  },
+  {
+    "id": 12240,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者有能力但不确定是否应聚焦特定方向，导师认为广撒网策略更适合当前情况，可提高拿到offer的概率"
+  },
+  {
+    "id": 12320,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者在Python基础编码题中，面对不允许import任何库的限制时无法独立写出计数function，只知道依赖Counter等库，说明对Python基础逻辑掌握不扎实，影响技术面试表现。"
+  },
+  {
+    "id": 12345,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者简历中大量经历偏金融方向，导致简历整体定位过窄，数据分析师、商业分析师岗位本可跨行业投递，但过度金融标签会使其他行业（科技、保险等）的HR不予考虑。"
+  },
+  {
+    "id": 12571,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者已有多个e-commerce相关项目和经验，但简历和作品集未针对性聚焦该方向，导致投递时竞争力分散、定位不清晰"
+  },
+  {
+    "id": 12572,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者已积累多个电商相关项目经验，但简历与作品集未突出电商专业方向，导致优势分散、定位模糊，难以在电商岗位竞争中脱颖而出。"
+  },
+  {
+    "id": 12584,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者2026年5月毕业，担心现在（7-10月）投递大公司是否过早。导师指出大公司招聘越早越好，但需注意筛选明确标注'26届new grad'的岗位，避免误投当年即需入职的岗位。"
+  },
+  {
+    "id": 12598,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者将线性规划（linear optimization）误认为data analytics中的机器学习模型，两者在数据分析岗位的简历或面试中有本质区别，混淆会影响专业形象。"
+  },
+  {
+    "id": 12599,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "国际学生若申请偏business的FA类岗位（如富途），该类职位极少招募国际学生，且部分岗位仅对公民开放，导致申请成功率极低。"
+  },
+  {
+    "id": 12704,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者需要了解生统就业市场的薪资梯队结构，以便制定合理的目标岗位优先级。"
+  },
+  {
+    "id": 12777,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者同时面临两个层面的问题：一是收到的面试邀请数量少（漏斗顶部不足），二是即使收到面试也难以进入下一轮（转化率低），说明简历筛选和面试表现均需改进。"
+  },
+  {
+    "id": 12836,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者有等备考完毕再投简历的倾向，但过晚开始投递会错过招聘窗口期，简历准备与刷题投递应并行推进。"
+  },
+  {
+    "id": 12963,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者担心签证sponsor状态会对求职产生负面影响，但导师认为其实际影响有限，企业只会在最终阶段通过明确的filter筛掉，不会造成额外扣分。"
+  },
+  {
+    "id": 13032,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者的实习经历缺乏任何建模、编程或量化分析，分析方式仅靠肉眼观察关键词频率，没有硬核技术底子，简历无法体现数据分析或产品经理所需的技术能力。"
+  },
+  {
+    "id": 13038,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "证书资质规划",
+    "L1": "技能提升",
+    "L2": "证书资质",
+    "sample": "求职者研究生课程中完全没有machine learning相关课程，在当前AI时代背景下，科技行业PM对ML知识的空白将成为明显竞争劣势。"
+  },
+  {
+    "id": 13040,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者（DS背景，目标PM/DS岗位）缺乏对工程实现复杂度的基本判断力，若在提出feature时异想天开、不考虑工程量，会被engineering团队认定为lousy PM，严重影响可信度。"
+  },
+  {
+    "id": 13072,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者尚未投递，导师建议先完成简历修改再投递，收到面试邀约后再针对具体JD进行面试辅导和故事准备，避免过早准备方向不明确的面试内容。"
+  },
+  {
+    "id": 13220,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者大量乱投简历，没有系统梳理目标行业和公司类型，导致收到面试邀请时已记不清投过哪家公司，浪费每一次投递和面试机会。"
+  },
+  {
+    "id": 13250,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者技能与目标岗位仍有一定差距，若等技能完全补齐再投递会错过时机，需边投边提升。"
+  },
+  {
+    "id": 13387,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "国际学生求职时发现DA岗位数量多于BA岗位，导师指出这与sponsor政策相关：数据行业外籍人才多，雇主更愿意提供DA岗位的签证担保，而BA岗位在sponsor方面条件更苛刻。"
+  },
+  {
+    "id": 13394,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者只聚焦于Finance和Tech两类行业，竞争激烈，未考虑快消等竞争较低的行业，缺乏系统化的目标公司清单，无法有针对性地做准备。"
+  },
+  {
+    "id": 13443,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "许多大公司的manager并非不愿意sponsor，而是从未接触过国际学生签证流程，对OPT/H1B概念完全陌生，导致求职者因此错失机会。"
+  },
+  {
+    "id": 13446,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "国际学生在面试中被问到是否需要sponsor时，往往不知道如何回应，容易让雇主产生顾虑，导致失去机会。"
+  },
+  {
+    "id": 13713,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者采用广撒网投法，但缺乏精细化的专长定位，导致投递效率低下。导师指出投递数量与专长精准度成反比关系。"
+  },
+  {
+    "id": 13722,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者每天只投递约3个职位，投递量严重不足，导致面试机会少，误以为是简历或其他问题，实际核心问题是投递数量太少。"
+  },
+  {
+    "id": 13748,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者将AB testing与ad optimization混淆，认为两者平级，实际上AB testing只是实现广告优化目标的工具手段，需厘清概念层级关系。"
+  },
+  {
+    "id": 13763,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者数据分析相关硬技能不全，Excel、Tableau、SQL掌握程度参差不齐，在竞争激烈的美国就业市场中申请面窄，降低获得面试机会的概率"
+  },
+  {
+    "id": 13776,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者等待时机才开始准备材料，导致机会出现时无法第一时间响应。简历、自我介绍、英语沟通等若未提前就绪，即使职位放出也无法有效抢占。"
+  },
+  {
+    "id": 13884,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者对Research Intern的工作内容和转正路径不清晰，Research Intern产出偏学术、不直接接触业务，但可作为转正为AI Engineer的重要跳板。"
+  },
+  {
+    "id": 14037,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "ATS机筛策略",
+    "L1": "求职策略",
+    "L2": "ATS机筛机制",
+    "sample": "求职者通过网申投递大量简历但回应寥寥，原因是企业将简历分池管理，网申池优先级最低，内推池优先级最高，导致网申成功率极低。"
+  },
+  {
+    "id": 14056,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "临近年底大公司entry-level校招名额陆续冻结，求职者若继续只盯大厂会错过当前窗口期；同时春招规模虽小于秋招但仍有机会，需提前规划"
+  },
+  {
+    "id": 14089,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者简历内容过于偏向pharmaceutical方向，导致投递范围被严重限制，即使在伊利诺伊州也有能源等多种方向的公司可以考虑，过于聚焦单一行业会降低求职成功率。"
+  },
+  {
+    "id": 14094,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者尚未开始投递简历，但若目标是6月入职夏季实习，从申请到面试到拿offer再到入职paperwork至少需要一个月，时间已较紧迫。"
+  },
+  {
+    "id": 14153,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者目标为Marketing Analytics方向，但SQL基本为零，Excel仅掌握加减乘除等基础操作，高级函数未接触，Tableau等数据可视化工具也无使用经验，数据技能存在明显缺口。"
+  },
+  {
+    "id": 14215,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "证书资质规划",
+    "L1": "技能提升",
+    "L2": "证书资质",
+    "sample": "求职者目前在读master，技能储备中digital marketing和实用数据工具（SQL、Excel）相对薄弱，需通过选修课补强相关知识。"
+  },
+  {
+    "id": 14255,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者对自身兴趣方向不明确，不确定想做什么领域，导致难以聚焦投递目标"
+  },
+  {
+    "id": 14396,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者距毕业仅剩数月，夏季实习申请窗口已接近尾声，简历尚未完善，导致投递时间被进一步压缩"
+  },
+  {
+    "id": 14476,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者为PhD level，同时准备AI和SDE两份简历，方向分散。导师判断其背景更适合AI方向，不应分散精力投递普通软件开发岗位。"
+  },
+  {
+    "id": 14479,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "秋招已开始，career fair最早9月3日即将举行，求职者简历尚未修改完成，存在错过早期投递窗口的风险。"
+  },
+  {
+    "id": 14767,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "持OPT身份的求职者常因HR对sponsorship概念不熟悉而被误认为需要公司担保，实际上OPT EAD与绿卡EAD对公司而言均不占H1B名额，需主动向HR澄清。"
+  },
+  {
+    "id": 14871,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "证书资质规划",
+    "L1": "技能提升",
+    "L2": "证书资质",
+    "sample": "求职者缺乏行业认可的专业认证，在供应链/PM方向竞争力不足，难以通过简历筛选进入面试环节。"
+  },
+  {
+    "id": 14903,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者以留美身份为主要考量，需优先筛选愿意sponsor工作签证的雇主和岗位类型，避免浪费时间在不sponsor的公司上。"
+  },
+  {
+    "id": 15082,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者因SQL课程尚未开始、面试故事未准备好而迟迟不投简历，陷入「等我准备好再投」的误区，导致错失早期机会窗口。"
+  },
+  {
+    "id": 15192,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "school_application",
+    "reason": "school_application_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "Master申请大药厂统计师面临PhD偏好趋势，需同时满足学校排名（前20）、强相关实习（药厂/healthcare方向）、有效内推三个条件，缺一不可。"
+  },
+  {
+    "id": 15300,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者有电商平台（eshop）运营及recommendation相关经验，但未意识到该经验对TikTok电商、Amazon等大型电商公司具有高度吸引力，未能针对性地定位和包装。"
+  },
+  {
+    "id": 15360,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者尚未建立清晰的行动优先级，需要明确的时间线指引，避免同时推进所有事项导致效率低下"
+  },
+  {
+    "id": 15361,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者仍把精力集中在暑期实习，但美国暑期实习招募早在去年8-9月已启动，现已基本结束，继续主攻暑期实习性价比极低"
+  },
+  {
+    "id": 15496,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者目前只做个股交易，未涉及options，缺乏Delta、Gamma、Theta等期权Greeks知识，若目标投资分析师方向且偏options，这些知识存在明显GAP"
+  },
+  {
+    "id": 15587,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者对北美marketing channel体系、各渠道performance metrics评估方法，以及customer journey、top/bottom funnel等核心概念掌握不足，是当前最主要的知识GAP。"
+  },
+  {
+    "id": 15644,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "学生不了解哪些金融机构会给量化/数据岗位提供visa sponsorship，导师指出政策随时间变化，但整体上量化、建模、数据科学类岗位因美国本地人难以胜任，相对更容易获得sponsorship，而投行前台岗位则普遍不给。"
+  },
+  {
+    "id": 15669,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "学生急于在本科阶段学习AI课程，但所在学校AI相关课程师资质量差，导致可能基础不牢、只会调包而无法真正深入研究模型。"
+  },
+  {
+    "id": 15678,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者本科选课方向不明确，面对众多CS课程不知道优先选哪些，导师认为基础课程比追热门AI课程更重要，尤其是系统类和算法类课程对日后求职和转型都有关键作用。"
+  },
+  {
+    "id": 15790,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "当前就业市场竞争极为激烈，科技公司招聘收缩导致高质量候选人涌入生物医药等领域，一个实习岗位可收到2000封简历，求职者大概率被淘汰，若过早锁定单一方向会大幅降低成功概率。"
+  },
+  {
+    "id": 15895,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者倾向于将简历完善与面试准备视为严格顺序执行的两件事，导致准备周期被拉长，错过早期投递窗口。"
+  },
+  {
+    "id": 15897,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者倾向于先完全搞定简历再开始投递，导致时间浪费；实际上简历优化与面试准备、投递可以并行推进，互不冲突。"
+  },
+  {
+    "id": 15966,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者Python和SQL基础较弱，需要系统性在线课程辅助提升，仅靠刷题可能不够，需先建立知识体系。"
+  },
+  {
+    "id": 16039,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者同时准备了Data Science、Machine Learning Engineer、SDE三份简历，方向分散，主要意向为LLM/ML相关岗位，但不确定哪个方向投递更适合自身背景"
+  },
+  {
+    "id": 16075,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者简历混合了data engineer、machine learning engineer、software engineer三个方向，导致简历无法精准匹配任何一个岗位，投递大量简历但有效投递比例极低，严重拉低求职效率。"
+  },
+  {
+    "id": 16145,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "留学生在付费广告投流、SEO、SEM方向不占优势，但influencer marketing和livestreaming方向竞争者少，且当前中资企业需求旺盛，求职者若有相关经验应重点包装。"
+  },
+  {
+    "id": 16189,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者背景以DS为主，缺乏system design和MLE部署经验，需判断是否值得专门准备一版MLE简历及投递MLE岗位"
+  },
+  {
+    "id": 16217,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者即将申请OPT，面临毕业后失业期身份断档风险，同时当前实习公司可能无full time名额，需要规划身份衔接与持续投递的双线策略。"
+  },
+  {
+    "id": 16239,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者有多段实习经历，但各段经历定位模糊，未能有策略地区分包装以覆盖Accounting、FP&A、Financial Analysis、Investment等不同方向岗位。"
+  },
+  {
+    "id": 16295,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "当前金融公司招聘市场不乐观，许多岗位挂出来不一定实际在招，求职者过度聚焦单一岗位（Quant Research）导致机会受限。"
+  },
+  {
+    "id": 16361,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "当前就业市场不理想，大公司招聘名额有限，求职者需调整心态，专注于可控因素如简历和面试准备"
+  },
+  {
+    "id": 16433,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "现已9月底，intern招募季高峰期即将结束，11月后intern职位数量明显减少，求职者需抓住10月的黄金投递窗口"
+  },
+  {
+    "id": 16559,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者倾向在面试或简历中主动强调自身不足，导致面试官注意力被引导至弱点，真正的闪光点反而被忽视。这种过度谦虚的心态（常见于亚裔学生）削弱了自我展示的效果。"
+  },
+  {
+    "id": 16567,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者因曾在学生项目中因提及某技能而被迫承担不擅长任务，从而担心在简历上列出Unreal Engine等技能会导致雇主强制安排其做3D/程序工作，但实际上正规公司招聘是按岗位分工的。"
+  },
+  {
+    "id": 16686,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者为国际学生，Security相关岗位通常倾向于招募美国公民，且需进行高级别背景调查，身份问题是拿到Security面试但无法转化的核心障碍。"
+  },
+  {
+    "id": 16996,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "当前美国就业市场竞争激烈，大厂裁员导致资深人员降级竞争entry level职位，留学生在身份限制和收入压力下处境更难"
+  },
+  {
+    "id": 17139,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "国际生不清楚政府部门岗位是否接受H1B签证持有者，容易盲目投递或错失机会。大多数政策性质政府岗位要求绿卡及以上身份，但发布在LinkedIn上的政府岗位存在例外可能。"
+  },
+  {
+    "id": 17383,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者非DS/CS专业，未系统修读ML专业课，虽有项目经验但对算法底层原理（如back propagation、tree model调参）的掌握深度存疑，可能成为DS技术面试的短板。"
+  },
+  {
+    "id": 17390,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者目前简历投递数量为零，且当前求职时间节点已偏晚，市场竞争激烈、岗位数量有限，需尽快调整策略，扩大目标岗位范围以增加成功概率。"
+  },
+  {
+    "id": 17579,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "当前就业市场充满不确定性，许多学生求职半年至一年仍无结果，问题往往并非来自求职者本身，而是公司内部reorg、offer撤回等外部因素，求职者需提前做好心理和策略准备。"
+  },
+  {
+    "id": 17593,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者在AI/ML方向需要补强课程，但不清楚应优先选择哪类课程，导师指出应优先选GNAI相关核心课，而非应用类课程。"
+  },
+  {
+    "id": 17603,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "学生因兴趣驱动选课，但市场需求方向（如NLP）与学校课程存在滞后，需主动取舍，放弃水课优先选修就业相关技术课程。"
+  },
+  {
+    "id": 17620,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者实习期间缺乏系统培训，做完任务不知目的和质量反馈，处于信息孤岛状态，影响实习收获和简历素材积累。"
+  },
+  {
+    "id": 17623,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者实习任务以重复性数据录入为主（PDF转Excel、科目分类），未接触核心财务业务，导致简历内容含金量低，且若强行写上却答不出细节会在面试中造成负面印象。"
+  },
+  {
+    "id": 17648,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "QA岗位虽然每家公司都有，但每年招聘名额极少，求职者需了解该方向竞争特性，结合自身情况判断是否适合定位QA方向"
+  },
+  {
+    "id": 17730,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者在就业市场不确定性极高的环境下容易焦虑，将找工作视为身家性命，导致心态失衡；而许多外部因素（裁员、reorg、政策变化）并非个人能控制。"
+  },
+  {
+    "id": 17731,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "留学生在漫长求职过程中OPT时钟持续消耗，若无工作经历挂靠则可能影响身份维持，需要灵活手段保持STEM OPT计时点有效。"
+  },
+  {
+    "id": 17736,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者面对大量拒信容易丧失信心，心态崩溃。导师指出求职者需调整认知框架，理解求职与申请学校本质相同：无论收多少拒信，只要一个offer就成功，上限受运气影响，下限由自身能力决定。"
+  },
+  {
+    "id": 17807,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者不了解美国企业招聘节奏与财年周期的关联，错过最佳投递时机"
+  },
+  {
+    "id": 17932,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者Excel基础薄弱，Tableau、SQL、Python及Machine Learning尚未达到面试要求水平，需系统性补齐基础技能缺口。"
+  },
+  {
+    "id": 18073,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者容易将networking与眼前的暑期实习绑定，忽略其长期价值；应将networking定位为为2026年毕业时手握full-time offer做铺垫。"
+  },
+  {
+    "id": 18078,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者时间窗口仅两个月，若毫无章法随意投递，会大量浪费时间且成功率低，需要有计划、有优先级地推进求职"
+  },
+  {
+    "id": 18221,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者对目标岗位方向模糊，申请数量少导致回复率低，尚未明确是专注数据分析类岗位还是量化方向，缺乏清晰的求职规划。"
+  },
+  {
+    "id": 18336,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "传播学等文科专业课程偏理论，职场中实用性有限，求职者需主动补充marketing实用知识，尤其是北美数字营销相关课程。"
+  },
+  {
+    "id": 18342,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "Communication学科偏理论（传媒理论、人格培养），在职场中实用性有限，求职者的Marketing实务知识（渠道操作、工具使用）基础薄弱，需主动补强。"
+  },
+  {
+    "id": 18493,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "网络安全岗位普遍要求安全背景审查（clearance）或美国公民/绿卡身份，国际学生申请此类职位面临结构性障碍，部分公司不愿为候选人办理clearance手续。"
+  },
+  {
+    "id": 18496,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者目前只有一份简历，内容偏向网络安全方向，投递SWE/SDE或AI岗位时匹配度不足，导致投递效果差"
+  },
+  {
+    "id": 18543,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者已获得五六次OA但均未通过进入真人面试，说明瓶颈在于简历质量和投递方法，而非后续面试环节的准备。"
+  },
+  {
+    "id": 18568,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者方向较分散，未做竞争难度分层，导致资源未能合理分配；高竞争方向（research/asset management）需配合强简历与面试能力，风控方向对中国人相对友好，可作为保底。"
+  },
+  {
+    "id": 18591,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者当前简历尚未修改完成，不应同步投递，需按顺序：先完成简历修改→按修改后版本投递→再准备BQ和技术面试题，避免用未优化简历浪费投递机会。"
+  },
+  {
+    "id": 18614,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者进入Risk方向需要掌握不同资产类别的风险指标体系，包括股票的Beta和波动率、固收产品的DV01（Duration）、以及期权的Delta/Vega/Theta，这些是Risk岗位日常工作的核心语言。"
+  },
+  {
+    "id": 18637,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "学生简历尚未经过专业修改，缺乏系统性求职策略；导师计划先改简历，再出GAP报告，制定整体求职路径。"
+  },
+  {
+    "id": 18644,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "证书资质规划",
+    "L1": "技能提升",
+    "L2": "证书资质",
+    "sample": "求职者尚未选修USC知名金融教授的核心课程，该课程对想进入投资银行的学生具有重要影响力，可能影响技术能力和人脉积累"
+  },
+  {
+    "id": 18800,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者将时间花在系统学SQL课程上，但导师指出面试考查的SQL知识点与课程内容不完全匹配，若目标纯粹是找工作，花时间重修课程性价比较低。"
+  },
+  {
+    "id": 18856,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者尚未拿到面试邀约，当前阶段过多纠结简历细节打磨，而非优先提升投递数量以获取面试机会"
+  },
+  {
+    "id": 18914,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者目前在实习中，假期无明确求职行动计划，导师提醒1–2月春招重启是暑期实习投递的关键窗口期，需提前准备"
+  },
+  {
+    "id": 18992,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者有gap year且期间从事的工作与目标岗位（计算机/机器学习）关联性弱，国内HR面试时经常会追问gap year期间的经历，若无法合理解释会影响求职成功率。"
+  },
+  {
+    "id": 19040,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "证书资质规划",
+    "L1": "技能提升",
+    "L2": "证书资质",
+    "sample": "求职者目标岗位为manufacturing engineer，缺乏Six Sigma相关认证或课程背景，而该证书对制造工程相关岗位具有重要竞争力加分作用。"
+  },
+  {
+    "id": 19124,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者持有绿卡而非OPT，身份限制少，不必局限于analytics等特定领域，可扩大求职方向范围。"
+  },
+  {
+    "id": 19130,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者同时投递供应链、机场维修、销售等差异较大的岗位，缺乏方向聚焦，简历经验与目标岗位匹配度不足，影响HR主动联系的概率。"
+  },
+  {
+    "id": 19190,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "使用OPT身份的求职者需确保从事的工作与所学专业具有相关性，否则OPT资格存在风险，这对求职方向选择有硬性约束"
+  },
+  {
+    "id": 19199,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者缺乏具体的实战项目可供简历展示和面试讲述，不知道如何在没有正式工作机会的情况下主动积累经验。"
+  },
+  {
+    "id": 19206,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者简历及沟通中未能体现解决问题的能力和克服实际困难后取得成果的经历，面试官无法感受到其实战能力。"
+  },
+  {
+    "id": 19353,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者简历未针对不同目标岗位（sales analysis、investment analysis、business analysis）进行差异化版本规划，一份简历难以覆盖多个方向。"
+  },
+  {
+    "id": 19400,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者生物工程/生物医学背景但无数据分析课程或实习经验，担心无法申请分析方向岗位"
+  },
+  {
+    "id": 19496,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者技能和学习方面基本已到位，主要缺口在于面试训练不足、技术部分需要复盘，以及networking尚未启动。"
+  },
+  {
+    "id": 19516,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者对自身广告数据分析经历的定位模糊，不确定是否属于marketing范畴，导致投递方向不够宽泛"
+  },
+  {
+    "id": 19579,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "应届生通常误以为Senior职位有硬性年限门槛而不敢投递，实际上并非硬性标准，关键在于匹配度和个人心态"
+  },
+  {
+    "id": 19684,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者目标marketing analyst/data-driven marketing岗位，当前最大硬技能缺口为：SQL、Excel，以及Tableau/Power BI等Business Intelligence报表工具，这三类是岗位必备技能。"
+  },
+  {
+    "id": 19712,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者尚未毕业，倾向于等毕业后再正式求职，导致面试经验积累滞后；应提前投递以增长实战经验并获取市场反馈。"
+  },
+  {
+    "id": 19718,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者在项目中使用原始变量（如日期、电话号码、身份证号）时未做feature split处理，导致模型无法提取有效信息，也无法在面试中举出有说服力的例子"
+  },
+  {
+    "id": 19826,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者需了解大模型对齐（RLHF）领域的技术演进，旧方法（reward modeling + PPO）已逐渐被淘汰，市场上更多公司要求掌握DPO、KTO等更新效率更高的对齐算法。"
+  },
+  {
+    "id": 19900,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者将求职目标局限于「找到工作」本身，未意识到整个求职过程中简历梳理、storytelling提升、networking锻炼等附加价值。"
+  },
+  {
+    "id": 19947,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者有accounting经历但不想做纯会计岗，导师指出其accounting背景在银行Reporting Analyst、FP&A等岗位上具有竞争优势，建议不应只投自己感兴趣的岗位"
+  },
+  {
+    "id": 20027,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者缺乏金融分析实操技能，询问如何通过在线课程补充，导师给出两条路径：由导师直接教授，或通过YouTube/Coursera自学"
+  },
+  {
+    "id": 20056,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者倾向于等简历项目全部补充完毕后再投递，导致投递时机延误。"
+  },
+  {
+    "id": 20181,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者担心准备不足，导师判断其现有简历内容经润色和整理后已具备投递实习岗位的基本条件，无需等待。"
+  },
+  {
+    "id": 20184,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者在AI岗和Game Designer岗之间犹豫，导师判断其现有背景针对Game Designer方向已有六七成准备，简历润色后即可投递实习，无需大量额外准备。"
+  },
+  {
+    "id": 20278,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者有游泳运动背景，但只考虑了主流白领岗位，未充分利用体育特长开辟兼职收入渠道；同时两条路径所需简历内容完全不同，需分别准备。"
+  },
+  {
+    "id": 20466,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者有marketing背景和实习经验，但导师判断marketing方向在当前市场不好找工作，需重新评估目标岗位方向。"
+  },
+  {
+    "id": 20518,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者为本科生，且无美国本地工作经历，简历竞争力偏弱，需通过投递数量弥补背景劣势"
+  },
+  {
+    "id": 20646,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "当前纯软件岗位市场竞争激烈，但硬件方向（CPE/嵌入式）常年缺人、门槛相对较低，拥有硬件背景的求职者应考虑针对该方向额外制作一份简历"
+  },
+  {
+    "id": 20688,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者对北美（尤其美国）招聘时间节点不够了解，可能错过春招最大批次的投递窗口"
+  },
+  {
+    "id": 20705,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "ATS机筛策略",
+    "L1": "求职策略",
+    "L2": "ATS机筛机制",
+    "sample": "求职者认为投了100多封简历已经不少，但导师指出大量简历根本不会被看到（仅约3%被阅读），原因是招聘为Rolling base模式，后来投递者极易被跳过，100封实际曝光量极低。"
+  },
+  {
+    "id": 20766,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者担心自己缺乏marketing背景会影响marketing analysis岗位的竞争力，导师指出该类岗位核心看marketing背景，但若岗位实际职责以数据支持sales为主而非深度行业知识，则背景要求可适当放宽。"
+  },
+  {
+    "id": 20787,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "学生当前处于1月份，距离春招主窗口（2-3月）时间有限，已错过秋招最佳批次，需在有限时间内快速准备并开始投递。"
+  },
+  {
+    "id": 20791,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者下学期课程选择方向不明确，不清楚数据库与Web开发哪个对求职更重要。数据库虽然实际工作中每天使用，但新人面试通常不考，因此优先级低于Web开发。"
+  },
+  {
+    "id": 20833,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者纠结学iOS还是Android开发，导师指出iOS生态过窄（仅限macOS/Apple设备），Android覆盖范围更广，可投岗位更多"
+  },
+  {
+    "id": 20839,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者当前阶段需同步推进多项任务：刷算法题、修改简历、投递简历，三者缺一不可，其中刷题被导师特别强调为非常重要。"
+  },
+  {
+    "id": 20867,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者不知道如何开始搭建portfolio，缺乏系统性的起步框架，导致无从下手"
+  },
+  {
+    "id": 20956,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者英语非母语且需要visa sponsorship，IBD等前台岗位竞争激烈且sponsorship意愿低，导致求职者在这类岗位上竞争力不足，需要调整目标方向，转向更愿意提供sponsorship的岗位类型。"
+  },
+  {
+    "id": 20968,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者希望进入金融前台（quant方向），但缺乏量化金融所需的编程能力和数学统计背景，且与目标岗位竞争者相比教育背景差距明显"
+  },
+  {
+    "id": 20972,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者对银行中台岗位的认知过于狭窄，不清楚中台岗位种类繁多，涵盖数据分析、风险、财务控制、压力测试等方向，导致目标范围过窄、求职方向模糊。"
+  },
+  {
+    "id": 20984,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者在CPT/OPT身份、开学课业安排等问题上过度预想，导致迟迟未开始投递简历和面试，以'不确定因素'为由阻碍实际行动。"
+  },
+  {
+    "id": 21220,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者认为只需掌握SQL和Tableau就能胜任数据分析类岗位，但市场上想做更多presentation和insights工作的岗位，招聘方在面试中仍会考察Python和R，即使实际日常工作未必用到。"
+  },
+  {
+    "id": 21538,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "26届毕业生面临秋招窗口即将开启，需在9月前完善简历并开始投递；同时需厘清是否投Intern还是New Grad，以及OPT/CPT身份使用问题。"
+  },
+  {
+    "id": 21686,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者对求职时间节点没有概念，不了解公司招聘并非全年开放，而是集中在春季和秋季两次大规模headcount释放，错过时间窗口会影响投递效果。"
+  },
+  {
+    "id": 21689,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者完全没有主动搜集面试材料，依赖机构发放，缺乏自驱力；找工作归根结底是自己的事，等别人喂材料会错失关键备考时间。"
+  },
+  {
+    "id": 21825,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "学生正在修数据结构与算法课程，导师确认该课程内容直接适用于技术面试，可将其列于简历技能栏以申请相关职位。"
+  },
+  {
+    "id": 21826,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "学生目前缺乏机器学习、LLM、生成式AI或计算机视觉相关课程背景，在AI/ML岗位竞争中存在明显短板。"
+  },
+  {
+    "id": 21842,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者的RAG项目只使用LangChain等现成框架搭建，未深入理解底层原理和问题，面试官一追问即露馅，难以通过技术面试。"
+  },
+  {
+    "id": 21958,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者刷题量仅30题刚起步，但简历即将修改完成，导师判断不应等刷题充分后再投递，应同步推进。"
+  },
+  {
+    "id": 21966,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者认为自己没有正式市场营销相关实习或项目经历，因此在自我介绍时无从开口，陷入被动局面，缺乏将学校项目或课外经历转化为求职素材的意识。"
+  },
+  {
+    "id": 22042,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者对各类EE岗位（IC design、embedded等）的市场开放度和竞争难度缺乏量化认知，不清楚哪个方向对应届生更友好。"
+  },
+  {
+    "id": 22333,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者计划暑假回国找能源相关实习，但不清楚需要准备什么技能；导师指出实习招聘方主要考察学校课程中的相关项目经历"
+  },
+  {
+    "id": 22446,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "学校课程更新缓慢，与工业界实际技术需求存在严重脱节，尤其是CS/ML领域变化极快，仅靠课堂学习难以通过面试"
+  },
+  {
+    "id": 22458,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者背景偏数据/理工，项目与实习经历均以coding和数据分析为主，但目标岗位为global market、market analyst、risk management、资产管理等偏Finance/Marketing方向，两者存在明显的背景与目标不匹配感。"
+  },
+  {
+    "id": 22713,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者面对多个潜在岗位方向，未明确优先级，容易分散精力，需要先确定第一、第二优先级方向，再针对性补强技能。"
+  },
+  {
+    "id": 22720,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "学生不清楚如何选课，导师指出应以目标岗位所需技能与自身现有技能之间的差距为依据，针对性选择能弥补差距的课程。"
+  },
+  {
+    "id": 22803,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者混淆DS与DA岗位要求，DS岗位不只要求SQL和基础统计，还需体现在不同场景下指导产品决策的能力，包括何时建模、何时做AB test等高阶判断力。"
+  },
+  {
+    "id": 22809,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者倾向ML/SDE方向但担心成功率，导师建议不必在DA/DS方向花大量准备时间，而是用双份简历平行投递，将核心精力集中在真正想做的ML/SDE方向"
+  },
+  {
+    "id": 22814,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者在MLE和DA/DS方向之间犹豫，若只专注一个方向可能错失机会，同时裸面其他方向岗位又缺乏针对性准备。"
+  },
+  {
+    "id": 22826,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者同时追求DA/DS和SDE/ML Engineer两个方向，精力分散，导致哪个方向都无法深入准备，最终可能两边都不够竞争力。"
+  },
+  {
+    "id": 22956,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者Python熟练但SQL刚入门，R等语言久未使用已遗忘，简历上语言种类多但实际能立即上手的只有Python，存在技能虚报风险。"
+  },
+  {
+    "id": 23062,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "当前H1B政策动荡（改为按工资抽签、境外返美需公司承担10万美金费用），留美概率难以量化，求职者容易因不确定性产生焦虑，缺乏正确心态框架"
+  },
+  {
+    "id": 23071,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者目标岗位技术含量不明确，导师需先判断技术倾向程度，再决定是否需要补充GitHub等技术展示渠道。"
+  },
+  {
+    "id": 23112,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者目标市场为美国，但需了解美国与中国面试风格的差异，美国侧重算法考察和简历内推，中国侧重八股文，简历写法也不同，需针对目标市场调整策略。"
+  },
+  {
+    "id": 23159,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者混淆了「让简历被看到」和「简历质量足够好」两个环节，没有分步骤拆解求职流程，导致问题归因不清晰、优化方向模糊。"
+  },
+  {
+    "id": 23420,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者简历目前偏向FA/Equity Research方向，若后续实习仍局限此方向，则投DA/BA岗位时缺乏匹配经历，形成结构性短板。"
+  },
+  {
+    "id": 23428,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者在金融、数据、经济研究三个方向上犹豫是否应集中精力专攻一个，导师认为应保持多方向并行，同时结合课业压力合理规划时间资源。"
+  },
+  {
+    "id": 23487,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者为本科生，目标是DA/数据分析方向，但简历中大量体现OpenCV、图像处理等DS/ML内容，最近实习也偏Data Scientist方向，导致简历方向与求职目标不一致，反而降低竞争力。"
+  },
+  {
+    "id": 23626,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者简历各项指标均处于六七十分水平，无明显短板但也无突出亮点，在竞争激烈的市场中难以脱颖而出，单靠投简历无法获得面试机会。"
+  },
+  {
+    "id": 23646,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者因无美国工作身份（无OPT/CPT支持），大厂政策收缩且竞争激烈，导致投递大厂回应率极低，已有offer因身份问题被取消。"
+  },
+  {
+    "id": 23679,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "学生课业负担较重，若将一对一辅导时间用于刷题讲解，性价比低；刷题可自行完成，一对一时间应聚焦在如何利用技术能力找工作这一核心策略上。"
+  },
+  {
+    "id": 23758,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者课业繁重，每天剩余时间有限，容易拖延刷题和简历修改进度，影响投递节奏。"
+  },
+  {
+    "id": 23785,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者担心非商科背景会影响marketing求职竞争力，对entry level岗位的技能要求认知不清晰"
+  },
+  {
+    "id": 23815,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者正在学习硬件加速相关课程，导师判断该方向人才稀缺、门槛较高，但对应岗位需求真实存在，建议将此方向与目标公司结合。"
+  },
+  {
+    "id": 23819,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者正在学习CUDA/OpenGL等parallel computing课程但不清楚其求职价值，导致可能错失对口的硬件/GPU公司实习机会"
+  },
+  {
+    "id": 23944,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者就读哥大SIPA项目，该项目校招资源偏向公共部门/政府方向，与其目标金融岗位存在方向错配，导致校园招聘渠道利用率低"
+  },
+  {
+    "id": 23965,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者在学校期间难以兼顾学习与求职，离校后时间更充裕，可利用免费在线资源快速建立财务/会计知识体系，应对entry level面试"
+  },
+  {
+    "id": 24012,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者有两段金融实习背景，但本科偏business analysis，不确定是否走金融方向。导师指出两段实习都非常金融化，加上在纽约哥大就读，地理优势明显，建议顺势走金融方向更容易上岸。"
+  },
+  {
+    "id": 24184,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者对校招时间线认知不清，冬季实习机会已过，若不提前规划，可能错过明年春季全职校招的黄金投递窗口。"
+  },
+  {
+    "id": 24218,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者在选择方向时可能倾向于追求热门方向而忽视自身已有优势，导致竞争力分散、求职效率低"
+  },
+  {
+    "id": 24221,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者想往新方向转型，但未充分利用自身已有优势，可能降低求职成功率和薪资竞争力"
+  },
+  {
+    "id": 24294,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者在做股票数据处理时未说明moving average窗口期的选择依据，面试官可能追问，需要有理有据地解释技术参数选择。"
+  },
+  {
+    "id": 24348,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者纠结于Applied Biostatistics还是Biomedical Programming方向，担心方向选择影响求职结果。导师指出Master级别雇主（药厂/Biotech）对专业方向区分度不高，关键在于简历中统计模型相关内容和实习经历。"
+  },
+  {
+    "id": 24393,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "证书资质规划",
+    "L1": "技能提升",
+    "L2": "证书资质",
+    "sample": "求职者简历偏向business analysis和tech方向，缺乏金融基础知识（如财务三张报表、EBIT、EBITDA），若目标转向finance岗位，尤其是investment banking，现有知识储备不足以应对技术面试。"
+  },
+  {
+    "id": 24465,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者在UI UX方面的实际经验不足，而目标岗位考察优化学习者参与度的UI UX能力，需在秋招前加强相关经验积累。"
+  },
+  {
+    "id": 24481,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者背景以独立或小团队项目为主，缺乏与SME、PM等跨职能协作的复杂项目经验，与eLearning Designer岗位要求存在差距。"
+  },
+  {
+    "id": 24496,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者需要明确EdTech赛道内适合的细分方向和目标公司，包括游戏化学习、语言学习平台（如Duolingo）、K12教育公司，同时需了解哪些公司应避雷，集中资源在秋招上发力。"
+  },
+  {
+    "id": 24587,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "嵌入式方向求职者缺乏算法刷题准备，好公司（如谷歌）招聘嵌入式岗位竞争激烈，候选人背景相近时会以编程题区分，不刷题难以获得好职位"
+  },
+  {
+    "id": 24591,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者尚未接触刷题，但好公司嵌入式岗位竞争激烈，候选人嵌入式经验和学校背景相近时，企业会以编程题区分候选人，不刷题将直接在筛选环节被淘汰。"
+  },
+  {
+    "id": 24595,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者背景为嵌入式方向，但对该岗位面试的核心技术考察范围不清晰，需要补强相关基础知识才能通过专业技术面试。"
+  },
+  {
+    "id": 24600,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者背景为EE，目标嵌入式方向，但缺乏操作系统内核、任务调度、中断、芯片通讯接口等嵌入式核心知识，需系统补足才能通过技术面试。"
+  },
+  {
+    "id": 24601,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者即将开始研究生学习，若想争取明年summer intern，时间节点紧迫，需同步推进选课、简历准备和面试题准备，不能分阶段处理。"
+  },
+  {
+    "id": 24667,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者SAS、R、Python等三大统计软件熟练度偏低（多处于1-2级之间），未达到数据分析岗位可独立完成任务的基本要求，需重点补强。"
+  },
+  {
+    "id": 24683,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "证书资质规划",
+    "L1": "技能提升",
+    "L2": "证书资质",
+    "sample": "求职者课程选择未能针对目标岗位（药厂）做精准规划，导师指出8140和8144两门课对药厂面试及简历核心课程展示至关重要，而8142相对价值较低。"
+  },
+  {
+    "id": 24685,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "证书资质规划",
+    "L1": "技能提升",
+    "L2": "证书资质",
+    "sample": "学生若想高效掌握制药统计所需技能，不必选难度更高的综合统计课，应聚焦行业实际用到的课程组合"
+  },
+  {
+    "id": 24724,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "当前时间节点（9月底至10月）是秋招旺季，企业HR专注于面试招聘；一旦进入10月底holiday season，招聘活动大幅缩减，错过窗口将导致求职周期拉长。"
+  },
+  {
+    "id": 24725,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者拖延至10月底则进入holiday season，招聘活动大幅减少，10月是秋招面试旺季，必须集中火力把握窗口期。"
+  },
+  {
+    "id": 24787,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "应届生求职竞争激烈，仅投简历不够，需同步保持高强度刷题备战技术面试，建议每天将刷题与投简历作为核心任务。"
+  },
+  {
+    "id": 24828,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者倾向于只专注单一方向，导致可投递职位有限，面试基数不足，最终难以通过漏斗筛选获得offer。"
+  },
+  {
+    "id": 24904,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者当前时间节点不佳：明年暑期intern招募基本已接近尾声，若想在一二月前拿到offer，时间窗口非常紧张，简历修改后需立即行动投递。"
+  },
+  {
+    "id": 24954,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者对marketing方向准备时间短、相关经历不足，缺乏竞争力。导师指出marketing赛道竞争激烈，企业直接看重过往相关经验，建议以下一段实习的结果来决定是否继续坚持marketing方向。"
+  },
+  {
+    "id": 25066,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者目前不具备Business Analyst岗位所需的SQL和可视化工具（Tableau/Power BI）技能，但这些技能门槛相对较低，短时间内可以自学补齐。"
+  },
+  {
+    "id": 25096,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者的portfolio内容过于宽泛，未聚焦某一具体方向，对不同公司招聘需求的针对性不足，导致竞争力分散。"
+  },
+  {
+    "id": 25105,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "ATS机筛策略",
+    "L1": "求职策略",
+    "L2": "ATS机筛机制",
+    "sample": "留学生（F1身份）投递大公司时，系统会在申请流程中筛除无绿卡/公民身份者，导致简历根本无法到达HR手中，形成大量投递零回音的困境。"
+  },
+  {
+    "id": 25113,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者面临OPT身份时限压力，需权衡contract岗位的入职门槛低、可积累经验与不提供身份担保、薪资压价之间的风险收益。"
+  },
+  {
+    "id": 25167,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者目标方向为 strategy/management consulting，偏好 technology 和 manufacturing 行业，导师需在明确方向后才能针对性地调整简历内容，使经历与目标岗位匹配。"
+  },
+  {
+    "id": 25481,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者在DA、BA、DS三个方向之间犹豫不决，方向不明确会导致简历定位模糊、准备分散，影响投递效果。"
+  },
+  {
+    "id": 25618,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "school_application",
+    "reason": "school_application_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者面对众多金融岗位方向缺乏系统性规划，尚未像升学那样做梯队分层，导致简历修改和申请策略无从聚焦"
+  },
+  {
+    "id": 25625,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者欲进入金融领域，需掌握portfolio construction逻辑、bond pricing、duration、discount、stock Beta、option Greeks、credit spread等基础金融产品知识，以通过面试考察。"
+  },
+  {
+    "id": 25745,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者SQL技能需要加强，建议学习更偏向实践实现（implement）层面的SQL进阶数据分析课程，以提升数据分析岗位竞争力。"
+  },
+  {
+    "id": 25751,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者大三尚未开始系统投递，对美国咨询行业招聘时间线不清晰，秋招已过、春招作用有限，需提前规划下一个黄金窗口。"
+  },
+  {
+    "id": 25826,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者即将进行金融相关实习，但目前缺乏Excel、SQL及revenue/business model等实用技能，需在实习开始前补足这些基础能力。"
+  },
+  {
+    "id": 25831,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者目标方向在consulting与strategy之间摇摆，两个方向均有竞争压力，OPT时长也影响录取概率，需要同步准备两份简历并行投递。"
+  },
+  {
+    "id": 25877,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者简历中包含Android/Mobile相关经历，但导师指出mobile方向不适合作为Java后端职位的主打方向，可能分散职位定位焦点。"
+  },
+  {
+    "id": 26085,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者对目标岗位的具体技能要求不够清晰，缺乏系统研究JD的习惯，导致方向模糊、准备不足。"
+  },
+  {
+    "id": 26169,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者已毕业但项目尚未完成，简历内容不够充实，机构催要简历，时间紧迫，无法等项目完成后再投递"
+  },
+  {
+    "id": 26315,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者已获得GIS领域头部公司实习机会，但可能未充分意识到该实习的战略价值——表现优秀可获return offer，且该公司稳定、偏好GS+CS背景人才。"
+  },
+  {
+    "id": 26410,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "学生背景信息尚未系统梳理，导师需先摸清求职者的背景、目标岗位、投递现状，再针对性给出简历改进和能力提升建议。"
+  },
+  {
+    "id": 26446,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者缺乏正式工作经验，直接投大公司金融中后台实习难度极高，因为大公司要么需要有社会经验，要么只从暑期项目招应届毕业生，竞争门槛高。"
+  },
+  {
+    "id": 26457,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "job_search",
+    "reason": "job_search_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "sample": "求职者简历内容单薄，缺乏相关数据项目和实习经历，数学背景偏理论，研究生毕业前必须先落实暑期实习，否则毕业后难以找到工作。"
+  },
+  {
+    "id": 26458,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "interview",
+    "reason": "interview_terms",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "sample": "求职者不清楚data analytics岗位的核心技能要求，导师诊断其需要补充business sense（产品/业务逻辑思维）和SQL等技术技能，否则无法通过面试考核。"
+  },
+  {
+    "id": 26593,
+    "retrieval_scope": "resume_edit",
+    "next_scope": "career_strategy",
+    "reason": "career_strategy_terms",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "sample": "求职者在校六年，简历仍停留在学生思维，个人品牌与定位未能与工作身份切换，需要整体重新包装内容以符合职场期待。"
+  }
+]

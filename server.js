@@ -393,6 +393,24 @@ function localAtsFallback(resumeText, jobTitle, jdText, reason) {
   };
 }
 
+async function scoreWithHostedFirst(resumeText, jobTitle, jdText) {
+  try {
+    const { scoreWithHostedAtsSystem } = await import("./app/lib/hostedAtsSystem.mjs");
+    const hosted = await scoreWithHostedAtsSystem({ resumeText, jobTitle, jdText });
+    return {
+      rawScoreResult: hosted.rawScoreResult,
+      source: "hosted-api",
+      warning: null,
+    };
+  } catch (err) {
+    return {
+      rawScoreResult: localAtsFallback(resumeText, jobTitle, jdText, err.message),
+      source: "local-fallback",
+      warning: err.message,
+    };
+  }
+}
+
 // POST /api/v1/ats/rule: proxy to ATS System API so the API key stays server-side.
 app.post("/api/v1/ats/rule", upload.single("file"), async (req, res) => {
   try {
@@ -591,14 +609,17 @@ app.post("/api/v1/score", upload.single("file"), async (req, res) => {
       return res.status(400).json({ success: false, error: "jobTitle or jdText is required" });
     }
 
-    const rawScoreResult = scoreResumeSystem(resumeText, jobTitle, jdText);
+    const scoreResult = await scoreWithHostedFirst(resumeText, jobTitle, jdText);
+    const rawScoreResult = scoreResult.rawScoreResult;
     const report = await buildAtsReportPayload(rawScoreResult, { resumeText, jobTitle, jdText }, req);
 
     const payload = {
       success: true,
+      source: scoreResult.source,
       reportId: report.reportId,
       reportAccessToken: report.reportAccessToken,
       publicReport: report.publicReport,
+      warning: scoreResult.warning || undefined,
       timestamp: new Date().toISOString(),
     };
     logPublicAtsResponseForTesting("score", payload);

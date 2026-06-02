@@ -1,0 +1,194 @@
+[
+  {
+    "id": 1456,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "low_jd_keyword_match",
+    "ats_dimensions": "C_content_quality,D_keyword_match,F_role_fit",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 1985,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "low_hard_skill_match",
+    "ats_dimensions": "C_content_quality,D_keyword_match",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 2255,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "low_soft_skill_match,weak_action_verbs,weak_result_orientation,low_measurable_results,low_hard_skill_match",
+    "ats_dimensions": "B_contact,D_keyword_match",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 3485,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills,weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "ats_dimensions": "D_keyword_match,C_content_quality",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 4628,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills,weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "ats_dimensions": "D_keyword_match,C_content_quality",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 4895,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills,weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "ats_dimensions": "D_keyword_match,C_content_quality",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 7023,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills,weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "ats_dimensions": "D_keyword_match,C_content_quality",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 8566,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,weak_experience_keyword_evidence,weak_result_orientation",
+    "ats_dimensions": "D_keyword_match,F_role_fit,C_content_quality",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 9575,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "ats_dimensions": "D_keyword_match,F_role_fit,C_content_quality",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 11760,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills,weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "ats_dimensions": "D_keyword_match,C_content_quality",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 12306,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "low_soft_skill_match,missing_priority_keywords,low_jd_keyword_match",
+    "ats_dimensions": "D_keyword_match",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 13892,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,weak_experience_keyword_evidence,weak_result_orientation",
+    "ats_dimensions": "D_keyword_match,F_role_fit,C_content_quality",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 15139,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills,weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "ats_dimensions": "D_keyword_match,C_content_quality",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 17252,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "low_hard_skill_match,low_measurable_results",
+    "ats_dimensions": "C_content_quality",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 17322,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills,weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "ats_dimensions": "D_keyword_match,C_content_quality",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 18094,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "weak_summary_role_alignment,low_role_specificity,weak_target_role_alignment,low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd",
+    "ats_dimensions": "B_contact,F_role_fit,D_keyword_match",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 19140,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills,weak_experience_keyword_evidence,weak_result_orientation",
+    "ats_dimensions": "D_keyword_match,C_content_quality,F_role_fit",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 19323,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills,weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "ats_dimensions": "D_keyword_match,C_content_quality",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 20684,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "missing_priority_keywords,missing_code_review_documentation",
+    "ats_dimensions": "B_contact,D_keyword_match",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 20817,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "low_hard_skill_match",
+    "ats_dimensions": "C_content_quality",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 22928,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,weak_experience_keyword_evidence,weak_result_orientation",
+    "ats_dimensions": "D_keyword_match,F_role_fit,C_content_quality",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 23403,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,low_hard_skill_match,education_details_missing",
+    "ats_dimensions": "C_content_quality",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 23914,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "resume_not_tailored_to_jd,weak_result_orientation,weak_action_verbs,low_measurable_results,formatting_penalty_triggered,education_details_missing",
+    "ats_dimensions": "A_format,F_role_fit",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  },
+  {
+    "id": 24076,
+    "reason": "keyword_to_experience_project",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,low_jd_keyword_match",
+    "ats_dimensions": "C_content_quality,D_keyword_match",
+    "next_problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "next_ats_dimensions": "C_content_quality,F_role_fit"
+  }
+]

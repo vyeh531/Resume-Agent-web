@@ -89,7 +89,7 @@ async function submitResume(form) {
     showLoader("准备文件…", "读取简历内容…");
     const resumeText = await readResumeFile(file);
     showLoader("正在分析简历…", "导师正在读取你的简历内容", true);
-    const atsRaw    = await scoreResumeAPI(resumeText, job || null, jd);
+    const atsRaw    = await scoreResumeAPI(resumeText, job || null, jd, file);
     const atsResult = formatATSResult(atsRaw);
     const targetJob = job || atsRaw.jobTitle || "";
     window.Store.set({
@@ -190,6 +190,9 @@ function mockPayment(btn) {
         paidAt: Date.now(),
         premiumMentors: premiumReport.mentors || null,
         premiumAdviceItems: premiumReport.allAdviceItems || null,
+        premiumKeywordBreakdown: premiumReport.keywordBreakdown || null,
+        missingKeywordChecklist: premiumReport.missingKeywordChecklist || null,
+        sectionFixPlan: premiumReport.sectionFixPlan || null,
         mentorLogoPool: premiumReport.mentorLogoPool || s.mentorLogoPool || null,
       });
       window.location.href = "/report";

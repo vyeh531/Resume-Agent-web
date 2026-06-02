@@ -77,26 +77,49 @@ export function normalizeHostedAtsScoreResult(payload) {
   };
 }
 
-export async function callHostedAtsSystem({ resumeText, jobTitle, jdText, fileName } = {}, config = getHostedAtsConfig()) {
+function contentTypeForFileName(fileName = '') {
+  const lower = String(fileName || '').toLowerCase();
+  if (lower.endsWith('.pdf')) return 'application/pdf';
+  if (lower.endsWith('.docx')) return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+  if (lower.endsWith('.doc')) return 'application/msword';
+  if (lower.endsWith('.txt')) return 'text/plain';
+  return 'application/octet-stream';
+}
+
+export async function callHostedAtsSystem({ resumeText, jobTitle, jdText, fileName, fileBuffer } = {}, config = getHostedAtsConfig()) {
   if (!config.apiUrl) throw new Error('ATS_API_URL is not configured');
   if (!config.apiKey) throw new Error('ATS_API_KEY is not configured');
-  if (!resumeText) throw new Error('resumeText is required');
+  if (!resumeText && !fileBuffer) throw new Error('resumeText or fileBuffer is required');
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), config.timeoutMs);
-  const body = { resumeText };
-  if (jobTitle) body.jobTitle = jobTitle;
-  if (jdText) body.jdText = jdText;
-  if (fileName) body.fileName = fileName;
+  let body;
+  let headers = { 'X-Api-Key': config.apiKey };
+
+  if (fileBuffer) {
+    body = new FormData();
+    const blob = new Blob([fileBuffer], { type: contentTypeForFileName(fileName) });
+    body.append('resume', blob, fileName || 'resume.pdf');
+    if (jobTitle) body.append('jobTitle', jobTitle);
+    if (jdText) body.append('jdText', jdText);
+    if (fileName) body.append('fileName', fileName);
+  } else {
+    body = { resumeText };
+    if (jobTitle) body.jobTitle = jobTitle;
+    if (jdText) body.jdText = jdText;
+    if (fileName) body.fileName = fileName;
+    headers = {
+      ...headers,
+      'Content-Type': 'application/json',
+    };
+    body = JSON.stringify(body);
+  }
 
   try {
     const response = await fetch(config.apiUrl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Api-Key': config.apiKey,
-      },
-      body: JSON.stringify(body),
+      headers,
+      body,
       signal: controller.signal,
     });
     const text = await response.text();

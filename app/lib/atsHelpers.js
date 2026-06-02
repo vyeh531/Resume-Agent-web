@@ -1,4 +1,4 @@
-import { scoreResumeATS as scoreResumeSystem } from '../../src/ats/ats-scorer';
+import { scoreWithHostedAtsSystem } from './hostedAtsSystem.mjs';
 import {
   createReportAccessToken,
   createReportId,
@@ -153,5 +153,14 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
     freeAdvice: freeMentorPlan,
     paidAdvice,
     premiumReport,
+  };
+}
+
+export async function scoreWithHostedFirst(input = {}) {
+  const hosted = await scoreWithHostedAtsSystem(input);
+  return {
+    rawScoreResult: hosted.rawScoreResult,
+    source: 'hosted-api',
+    warning: null,
   };
 }

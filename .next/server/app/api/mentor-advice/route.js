@@ -34,9 +34,9 @@ Rules for the 4 mentors:
 - career_path: realistic career progression e.g. "咨询公司 → 快消品牌 → 科技公司（Amazon）"
 
 Rules for adviceList (3 items per mentor, ALL different angles):
-  item 0: priority="P0 必改" — the single most critical fix
-  item 1: priority="P1 重要" — important improvement
-  item 2: priority="P2 建议" — bonus differentiator
+  item 0: priority="必改" — the single most critical fix
+  item 1: priority="建议改" — important improvement
+  item 2: priority="补充" — bonus differentiator
   Each item:
   - issue: 20-40 chars, core problem headline
   - strategy: 70-120 chars, start with "[Company]在筛选[role]时," + screening philosophy from KB

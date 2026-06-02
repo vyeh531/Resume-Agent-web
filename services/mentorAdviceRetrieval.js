@@ -173,8 +173,12 @@ const ML_UNSAFE_BUSINESS_KEYWORDS = [
   "quickbooks", "gaap", "accounts payable", "accounts receivable",
   "procurement", "logistic", "logistics", "supply chain",
   "ux designer", "ui/ux designer", "graphic designer", "visual designer",
+  "product designer", "uiux", "portfolio", "animation", "animator",
+  "2d animation", "storyboarding", "concept design", "hardware engineer",
+  "hardware", "adc comparator", "tape out", "broadcom", "superseed studios",
   "data analyst", "actuarial",
-  "会计", "投资分析", "金融公司", "数据分析岗位", "精算"
+  "会计", "投资分析", "金融公司", "数据分析岗位", "精算",
+  "作品集", "设计师", "動畫", "硬件", "硬體"
 ];
 const ACCOUNTING_FINANCE_TERMS = [
   "accounting", "finance", "audit", "bookkeeping", "financial reporting",
@@ -188,7 +192,7 @@ function containsUnsafeKeyword(text, keyword) {
 }
 const RESUME_SCOPE_PATTERN = /简历|resume|ats|jd|keyword|关键词|投递|summary|skills|experience|bullet|岗位匹配|岗位定位|targeted resume|resume version/i;
 const INTERVIEW_SCOPE_PATTERN = /面试|interview|behavioral|favorite course|课程|mock interview|star|tell me about yourself|自我介绍|stock answer|答案/i;
-const NON_RESUME_ADVICE_PATTERN = /申研|升学|录取侧重|录取标准|admission|申请文书|推荐信|硬件.*onsite|硬件.*on-site|lab相关|实验室岗位|投递窗口|窗口期|10月份|十月份|春季\/暑期|实习作为entry point|追加约?\d+|先追加|投递量不足|丧失信心|full-time job offer|internship顺利完成|面试穿帮|判断简历效果|后续行动计划/i;
+const NON_RESUME_ADVICE_PATTERN = /申研|升学|录取侧重|录取标准|admission|申请文书|推荐信|硬件.*onsite|硬件.*on-site|lab相关|实验室岗位|投递窗口|窗口期|10月份|十月份|春季\/暑期|实习作为entry point|追加约?\d+|先追加|投递量不足|丧失信心|full-time job offer|internship顺利完成|面试穿帮|判断简历效果|后续行动计划|岗位消失|岗位下线|快速约面|快速联系|约面邀请|收到约面|急需人才|公司急招|好兆头|放平心态|积极应对|候选人已足够|投递后.*约面|目标岗位是\s*analytics|analytics[（(]?.*而非\s*ds|analytics岗位和ds|机器学习不需要学得很透彻|把精力放在\s*sql|sql、统计和业务理解/i;
 const NON_RESUME_TOPIC_PATTERN = /面试|interview|behavioral|technical interview|mock interview|投递渠道|求职渠道|内推|networking|职业方向选择|职业规划|求职时间规划|时间规划|市场竞争分析|竞争分析|背景差距分析|gap分析|申请学校|申研|升学|录取|申请文书|推荐信/i;
 const RESUME_EDIT_ACTION_PATTERN = /summary|skills?|experience|projects?|education|coursework|relevant coursework|word|ruler|tab|bullet|jd|ats|keyword|keywords|关键词|简历|履历|改写|重写|精修|量化|成果|格式|版块|板块|岗位原词|目标岗位|portfolio|github|linkedin|课程|排版|段落|行距|页边距|对齐|日期右对齐|展示|体现|列出|补充|加入|写入|写进|删除|删掉|删去|移除|替换|添加|强调|说明|明确说明|细化|展开|重新框架|重构|保留/i;
 const ATS_PROBLEM_TAGS = new Set([
@@ -311,8 +315,23 @@ function rowText(row) {
     row.E_example, row.HR_os, row.keywords, row.retrieval_text, row.advice_card_title,
     row.user_problem_summary, row.action_summary, row.role_family, row.target_roles,
     row.title, row.problemSummary, row.actionSummary, row.currentDiagnosis, row.action,
-    row.mentorInsight, row.example, row.hrPerspective, row.roleFamily, row.targetRoles
+    row.mentorInsight, row.example, row.hrPerspective, row.roleFamily, row.targetRoles,
+    row.mentorName, row.mentor_name, row.company, row.mentor_company, row.mentorTitle,
+    row.mentor_title
   ].filter(Boolean).join(" ").toLowerCase();
+}
+
+function hasWrongMlTargetAdvice(row) {
+  const text = rowText(row);
+  return /目标岗位是\s*analytics|analytics[（(]?.*而非\s*ds|analytics岗位和ds|data analytics.*而非.*data scientist|机器学习不需要学得很透彻|把精力放在\s*sql|sql、统计和业务理解|基础统计和sql|业务理解上/i.test(text);
+}
+
+function hasExperienceSectionTitleOnlyAdvice(row) {
+  const text = rowText(row);
+  return /internship/.test(text) &&
+    /professional experience|experience/.test(text) &&
+    /标题|栏|section|header|heading|版块|板块/.test(text) &&
+    !/jd|ats|keyword|关键词|machine learning|mle|image generation|stable diffusion|sdxl|flux|comfyui/i.test(text);
 }
 
 function inferAdviceScope(row) {
@@ -559,7 +578,7 @@ function generateAdviceExplanationMetadata(card, userProfile = {}) {
 const ROLE_GROUP_KEYWORDS = [
   ["accounting",  ["accounting", "accountant", "account", "audit", "tax", "bookkeep", "cpa", "controller", "accounts payable", "accounts receivable", "gaap"]],
   ["finance",     ["finance", "financial analyst", "investment", "equity", "bank", "wealth", "actuar", "fp&a", "fpa", "treasury", "credit risk", "valuation"]],
-  ["machine_learning", ["machine learning engineer", "ml engineer", "mle", "deep learning engineer", "computer vision engineer", "model deployment", "ml pipeline"]],
+  ["machine_learning", ["machine learning", "ml ", "ml engineer", "mle", "deep learning", "computer vision", "model deployment", "ml pipeline"]],
   ["ai_engineer", ["ai engineer", "artificial intelligence engineer", "llm engineer", "generative ai engineer", "prompt engineer", "rag engineer"]],
   ["data_scientist", ["data scientist", "statistician", "biostatistician", "statistical modeling", "experiment design"]],
   ["data_analyst", ["data analyst", "data analytics", "data and analytics", "business analyst", "business intelligence", "analytics analyst", "bi analyst"]],
@@ -573,7 +592,9 @@ const ROLE_GROUP_KEYWORDS = [
   ["sales",       ["sales", "account executive", "business development", "customer success", "solution consultant"]],
   ["hr",          ["human resource", "people ops", "recruit", "talent acquisition", "hrbp"]],
   ["ops",         ["operations", "supply chain", "logistics", "procurement"]],
-  ["legal",       ["legal", "attorney", "paralegal", "compliance", "counsel"]],
+  ["education",   ["education", "teacher", "teaching", "school", "admission", "counseling", "student affairs"]],
+  ["administration", ["administration", "admin", "office assistant", "office coordinator"]],
+  ["legal",       ["legal", "law", "attorney", "paralegal", "compliance", "counsel"]],
   ["healthcare",  ["nurse", "clinical", "pharma", "medical", "healthcare"]],
 ];
 
@@ -590,8 +611,12 @@ function roleGroupOf(str) {
 function isEligibleForAtsResumeReport(row) {
   const dbScope = normalizeTerm(row.retrieval_scope || row.retrievalScope || "");
   if (dbScope) {
-    if (NON_RESUME_ADVICE_PATTERN.test(rowText(row))) return false;
-    return dbScope === "resume_edit";
+    const text = rowText(row);
+    const actionText = [row.A_action, row.action_summary, row.action, row.actionSummary].filter(Boolean).join(" ").toLowerCase();
+    if (dbScope !== "resume_edit") return false;
+    if (NON_RESUME_ADVICE_PATTERN.test(text)) return false;
+    if (!RESUME_EDIT_ACTION_PATTERN.test(actionText)) return false;
+    return true;
   }
 
   const scope = inferAdviceScope(row);
@@ -675,11 +700,19 @@ function isAdviceRoleSafe(row, targetRole, roleFamily) {
   if (hasConflictingRoleExamples(row, retrievalQuery)) return false;
 
   const technicalFamilies = ["software_engineer", "ai_engineer", "machine_learning", "data_scientist"];
+  const userGroup = roleGroupOf(normalizedFamily) || roleGroupOf(normalizedRole);
+  const rowGroups = [
+    ...splitCsv(row.roleFamily || row.role_family).filter((term) => term !== "universal"),
+    ...splitCsv(row.targetRoles || row.target_roles).filter((term) => term !== "universal"),
+  ].map(roleGroupOf).filter(Boolean);
+  if (userGroup && rowGroups.length && !rowGroups.includes(userGroup)) return false;
+
   const nonTechnical = !technicalFamilies.includes(normalizedFamily);
   if (nonTechnical && CONFLICTING_TECH_KEYWORDS.some((keyword) => text.includes(keyword))) return false;
   const normalizedRoleWords = normalizedRole.replace(/_/g, " ");
   if (technicalFamilies.includes(normalizedFamily) || /\b(machine learning|mle|ml engineer|ai engineer)\b/.test(normalizedRoleWords)) {
     if (ML_UNSAFE_BUSINESS_KEYWORDS.some((keyword) => containsUnsafeKeyword(text, keyword))) return false;
+    if (hasWrongMlTargetAdvice(row)) return false;
   }
   if (normalizedFamily === "accounting" || normalizedFamily === "finance" || /account/.test(normalizedRole)) {
     if (ACCOUNTING_UNSAFE_KEYWORDS.some((keyword) => text.includes(keyword))) return false;
@@ -1329,9 +1362,21 @@ function hasFileSubmissionFormatWarning(card = {}) {
   return /\bword\b|\.docx?\b|pdf格式|pdf 格式|一页pdf|一頁pdf|submit.*pdf|提交.*pdf|word文档|word 文件|word檔|word档/.test(text);
 }
 
+function hasGpaSpecificWarning(card = {}) {
+  const text = [
+    card.title,
+    card.problemSummary,
+    card.actionSummary,
+    card.currentDiagnosis,
+    card.action,
+  ].filter(Boolean).join(" ").toLowerCase();
+  return /\bgpa\s*[:：]?\s*[3-4](?:\.\d+)?\b|gpa[^0-9]{0,16}[3-4](?:\.\d+)?|gpa\s*3\.8/i.test(text);
+}
+
 function isCardAlignedWithTargetProblems(card = {}, targetProblemTags = []) {
   const tags = targetProblemTags.map((item) => item.tag || item).filter(Boolean);
   if (!tags.length) return true;
+  const related = relatedTagsForCard(card, targetProblemTags);
   const text = [
     card.title,
     card.problemSummary,
@@ -1346,11 +1391,15 @@ function isCardAlignedWithTargetProblems(card = {}, targetProblemTags = []) {
   if (hasFileSubmissionFormatWarning(card) && !tags.includes("uploaded_non_pdf_format") && !tags.includes("file_naming_issue")) {
     return false;
   }
-  if (/\bgpa\s*[:：]?\s*[3-4](?:\.\d+)?\b|gpa\s*[3-4](?:\.\d+)?|gpa\s*3\.8/i.test(text) &&
+  if (hasExperienceSectionTitleOnlyAdvice(card) &&
+      !tags.some((tag) => /section_title|experience_header|formatting_penalty|resume_structure|section_order/.test(tag))) {
+    return false;
+  }
+  if (hasGpaSpecificWarning(card) &&
       !tags.some((tag) => /gpa|education_details_missing|education/.test(tag))) {
     return false;
   }
-  if (tags.includes("education_details_missing") && /\bgpa\s*[:：]?\s*[3-4](?:\.\d+)?\b|gpa\s*[3-4](?:\.\d+)?|gpa\s*3\.8/i.test(text)) {
+  if (tags.includes("education_details_missing") && hasGpaSpecificWarning(card)) {
     return false;
   }
   if (tags.some((tag) => /jd|keyword|hard_skill|priority_keyword/.test(tag))) {
@@ -1362,7 +1411,7 @@ function isCardAlignedWithTargetProblems(card = {}, targetProblemTags = []) {
   if (tags.some((tag) => /exact_job_title|target_role|summary|role_alignment/.test(tag))) {
     if (!/title|summary|岗位|职位|role|position|定位/.test(text)) return false;
   }
-  return true;
+  return related.length > 0;
 }
 
 // Returns true if the card's own problem summary is topically aligned with its advice
@@ -1380,7 +1429,7 @@ function cardHasOwnDiagnosis(card) {
   const adviceWords = adviceText.split(/\W+/).filter(w => w.length > 3);
   const summaryWords = new Set(summaryText.split(/\W+/).filter(w => w.length > 3));
   const overlap = adviceWords.filter(w => summaryWords.has(w)).length;
-  return overlap >= 2 || summary.length > 40;
+  return overlap >= 2;
 }
 
 function toAdviceItem(card = {}, targetProblemTags = [], index = 0, includePremiumFields = false, internalAtsResult = {}, usedDiagnosisTags = new Set()) {
@@ -1569,7 +1618,7 @@ function fallbackAdviceItems(internalAtsResult = {}, count = 3, usedTags = new S
     financial_analyst: { name: "Financial Analyst",  keywords: "financial modeling、Excel、variance analysis、budgeting、forecasting、KPI tracking 或 reporting",                                    evidence: "说明你分析了什么数据、提交了什么报告、支持了什么业务决策。" },
     software_engineer: { name: "Software Engineer",  keywords: "distributed systems、microservices、APIs、CI/CD、AWS、TypeScript、Java、Python 或 system design",                                    evidence: "说明你设计或实现了什么服务、API 或系统模块，并补充规模、性能或可靠性结果。" },
     ai_engineer:       { name: "AI / ML Engineer",   keywords: "Python、PyTorch、TensorFlow、LLM、fine-tuning、model deployment、RAG、vector DB 或 ML pipeline",                                    evidence: "说明你训练或部署了什么模型，并补充准确率、延迟或业务影响。" },
-    machine_learning:  { name: "Machine Learning",   keywords: "Python、scikit-learn、PyTorch、feature engineering、model evaluation、A/B testing 或 data pipeline",                               evidence: "说明你解决了什么 ML 问题、使用了什么方法、取得了什么指标结果。" },
+    machine_learning:  { name: "Machine Learning",   keywords: "Python、PyTorch、Stable Diffusion/SDXL、Flux、ComfyUI、prompt-to-image、image generation、model evaluation、inference optimization、debugging 或 data pipeline", evidence: "说明你做过什么生成式 AI / 视觉模型项目、如何训练、微调或集成模型、如何评估质量或优化推理，并补充指标、延迟或产出。" },
     data_scientist:    { name: "Data Scientist",     keywords: "Python、R、SQL、statistical modeling、A/B testing、machine learning、visualization 或 experimentation",                            evidence: "说明你做了什么分析、使用了什么方法、输出了什么洞察或业务建议。" },
     data_analyst:      { name: "Data Analyst",       keywords: "SQL、Excel、Tableau、Power BI、data cleaning、KPI reporting、dashboards 或 business insights",                                     evidence: "说明你清洗了什么数据、搭建了什么 dashboard、追踪了什么 KPI，并补充业务洞察或结果。" },
     product_manager:   { name: "Product Manager",    keywords: "product roadmap、user research、A/B testing、PRD、stakeholder management、OKR、go-to-market 或 cross-functional",                  evidence: "说明你负责了什么产品或功能、如何推动跨团队协作、取得了什么可量化结果。" },
@@ -1967,7 +2016,8 @@ function selectFreeMentorPlan(candidates, internalAtsResult) {
     (card.unlockTier === "free" || card.safeToShowFree) &&
     FREE_HIGH_RISK_INTENTS.has(card.adviceIntent) &&
     card.adviceIntent !== "application_timing" &&
-    !["interview_prep", "behavioral_interview"].includes(card.adviceScope)
+    !["interview_prep", "behavioral_interview"].includes(card.adviceScope) &&
+    (!card.retrievalScope || card.retrievalScope === "resume_edit")
   ).filter((card) => {
     const safe = isAdviceRoleSafe(card, internalAtsResult.jobTitle || profile.targetRole, roleFamily);
     if (!safe) roleSafeRejected += 1;
@@ -2106,6 +2156,7 @@ function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan =
   const eligibleCandidates = candidates.filter((card) =>
     FREE_HIGH_RISK_INTENTS.has(card.adviceIntent) &&
     !["interview_prep", "behavioral_interview"].includes(card.adviceScope) &&
+    (!card.retrievalScope || card.retrievalScope === "resume_edit") &&
     isAdviceRoleSafe(card, internalAtsResult.jobTitle || profile.targetRole, roleFamily)
   ).filter((card) => isCardAlignedWithTargetProblems(card, targetProblemTags));
 
@@ -2398,6 +2449,7 @@ module.exports = {
   ROLE_SENSITIVITY_BY_PROBLEM_TAG,
   isEligibleForAtsResumeReport,
   isAdviceRoleSafe,
+  isCardAlignedWithTargetProblems,
   hasConflictingRoleExamples,
   calculateRoleMismatchPenalty,
   calculateRetrievalScore,

@@ -1,0 +1,142 @@
+[
+  {
+    "id": 2884,
+    "old_I_insight": "因为现在这样的一个一封简历很难过得了面试官，因为我自己就是一个面试，就是一个这个 line manager，就是你这个简历过了调这样的一个机器筛选和 HR 才能到我手里；然后只为了这个事情做出来这个什么，比如说做成 IPO 有什么影响",
+    "new_I_insight": "联系方式、所在地和身份相关信息会影响 HR 对沟通成本、地域灵活性和用工风险的判断。简历顶部信息应简洁、准确，并避免让招聘方产生不必要的顾虑。",
+    "topic": "工作经历描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,formatting_penalty_triggered"
+  },
+  {
+    "id": 3790,
+    "old_I_insight": "那他们可能会用英文去问，就是这些都会比较重要；然后我们来看下一段这个 Microsoft 这个经历，我你可以稍微再往下滑一下，因为我现在只看到这个AI",
+    "new_I_insight": "HR 快速扫简历时更容易记住具体动作和可验证结果。每条 bullet 都应尽量说明你做了什么、用了什么方法，以及带来了什么结果。",
+    "topic": "工作经历描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,low_soft_skill_match"
+  },
+  {
+    "id": 5216,
+    "old_I_insight": "就是说你这些东西相当于是最重要这一句话，最重要的就是这里，是吧；就是因为我们当时要做就是XR，它的就是应用的一些厂商，然后我就是调查这些厂，就是有调查很多大公司，他们都把 XR 技术应用在哪些方面，然后他们这个 XR 技术是什么",
+    "new_I_insight": "HR 快速扫简历时更容易记住具体动作和可验证结果。每条 bullet 都应尽量说明你做了什么、用了什么方法，以及带来了什么结果。",
+    "topic": "工作经历描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results"
+  },
+  {
+    "id": 6453,
+    "old_I_insight": "那老师，我觉得前面那个我完全可以加上与人沟通，因为当时确实是以小组的模式去做的，然后还有包括跟主管的沟通，跟老板的沟通，其实都有；然后还有我是因为去实地，去工作，对，去北卡实地工作",
+    "new_I_insight": "HR 快速扫简历时更容易记住具体动作和可验证结果。每条 bullet 都应尽量说明你做了什么、用了什么方法，以及带来了什么结果。",
+    "topic": "工作经历描述",
+    "problem_tags": "low_soft_skill_match"
+  },
+  {
+    "id": 7073,
+    "old_I_insight": "我觉得你现在这个阶段对你一个最重要的training；Yeah, take some conference designing Powerpoint to.show，因为其实你也没有什么展示的，对吧",
+    "new_I_insight": "HR 快速扫简历时更容易记住具体动作和可验证结果。每条 bullet 都应尽量说明你做了什么、用了什么方法，以及带来了什么结果。",
+    "topic": "工作经历描述",
+    "problem_tags": "low_soft_skill_match,weak_result_orientation,weak_action_verbs,low_measurable_results"
+  },
+  {
+    "id": 7091,
+    "old_I_insight": "然后还有个就是说最重要的一个，行；因为我知道加州可能留学生很多，但是尽可能地就是跟外国人组队，这样就给你一种",
+    "new_I_insight": "HR 快速扫简历时更容易记住具体动作和可验证结果。每条 bullet 都应尽量说明你做了什么、用了什么方法，以及带来了什么结果。",
+    "topic": "工作经历描述",
+    "problem_tags": "low_soft_skill_match,weak_action_verbs,weak_result_orientation,low_measurable_results"
+  },
+  {
+    "id": 9103,
+    "old_I_insight": "因为其实这个其实更多，就或者你可以写 art and design 这样的话，那 game portfolio， art and design 就很清楚，我在这里就能看出来说，OK，你这个是你的game，这是你的game；She does very good. So for modeling, okay, basic knowledge for modeling. So.其实这些 skills 你",
+    "new_I_insight": "招聘方和 ATS 会优先扫描目标岗位相关关键词，以及这些关键词是否出现在经历和项目证据中。把技能放到对应经历里，比只在 Skills 栏罗列更有说服力。",
+    "topic": "技能栏优化",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills"
+  },
+  {
+    "id": 9119,
+    "old_I_insight": "这个的话其实做得不久，这像这个的流程可能就只有 20 分钟，这个流程 20 分钟的可能我就做了个一周，当时是因为还在上学，就业余时间做一周两周的样子就做完了；我因为我不是 game designer，所以我不知道你做这个的时，用时是算快的还是算慢的",
+    "new_I_insight": "链接和联系方式是招聘方验证能力与推进沟通的入口。相关链接应清晰、可点击，并放在容易被看到的位置。",
+    "topic": "项目经历描述",
+    "problem_tags": "missing_portfolio"
+  },
+  {
+    "id": 10201,
+    "old_I_insight": "所以 financial grow free 的话，我们可以下面只就是只是去做一个 forecasting 而已，这个要看你面试的这个工作，如果面试的工作是需要 valuation 的，比方说需要 DCF 什么的，那我们可以到时候要把 DCF 再过一下 discount cash for，但因为我们简历里面没有写到DCF，所以应该不，他应该不会问这个问题",
+    "new_I_insight": "HR 快速扫简历时更容易记住具体动作和可验证结果。每条 bullet 都应尽量说明你做了什么、用了什么方法，以及带来了什么结果。",
+    "topic": "工作经历描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results"
+  },
+  {
+    "id": 11219,
+    "old_I_insight": "我找一下，目前因为我现在存在手机上，我能发出来的，我看一眼，我应该之前好像有过word，我给你，我给您找一下；因为很多公司去，比如说去招聘的话，如果他们不提供 relocation 的话，一看你住Colorado，他们可能面试都不会面试",
+    "new_I_insight": "联系方式、所在地和身份相关信息会影响 HR 对沟通成本、地域灵活性和用工风险的判断。简历顶部信息应简洁、准确，并避免让招聘方产生不必要的顾虑。",
+    "topic": "工作经历描述",
+    "problem_tags": "missing_relocation_signal"
+  },
+  {
+    "id": 14503,
+    "old_I_insight": "第二刚听过你讲了以后，因为我们要从一个，因为我们现在投简历，对吧；用完了以后的效果怎么就我感觉你的 res- resume 就比如这一段写的有点像是那种 project 了，就是 school project 了，不像是那种公真的工作，因为你没有一第一，因为我像我这么像，比如说这一句话我会怎么改呢",
+    "new_I_insight": "HR 快速扫简历时更容易记住具体动作和可验证结果。每条 bullet 都应尽量说明你做了什么、用了什么方法，以及带来了什么结果。",
+    "topic": "工作经历描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results"
+  },
+  {
+    "id": 16478,
+    "old_I_insight": "就是我，我不知道有什么关系，主要是因为你没有加；他只能说明这个项目的规模，他其实说明不了我自己做了什么，直接导致这个，嗯，我换个写法，嗯",
+    "new_I_insight": "HR 快速扫简历时更容易记住具体动作和可验证结果。每条 bullet 都应尽量说明你做了什么、用了什么方法，以及带来了什么结果。",
+    "topic": "项目经历描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence"
+  },
+  {
+    "id": 16896,
+    "old_I_insight": "然后你有空的话可以看一下这个，我写的这个 internship 华泰期货，然后我现在在改后面的一个内容，因为时间会比较紧，然后这个内容比较多，所以我尽快去在这节课内帮你去完成这样的一个东西；对，这他说的高大上，项目，但我感觉它本质就是个作业",
+    "new_I_insight": "课程作业如果直接以作业口吻呈现，招聘方很难判断其实际价值。改成项目经历语言，说明背景、方法、产出和结果，会更接近真实招聘筛选方式。",
+    "topic": "项目经历描述",
+    "problem_tags": "education_details_missing"
+  },
+  {
+    "id": 19055,
+    "old_I_insight": "我们需要的是就关键字就是；咱们要把它改成一个，就是非常一个饱满的，整个的一样一个简历，在搜索关键字的时候，也对，会会，也会对你有帮助啊",
+    "new_I_insight": "招聘方和 ATS 会优先扫描目标岗位相关关键词，以及这些关键词是否出现在经历和项目证据中。把技能放到对应经历里，比只在 Skills 栏罗列更有说服力。",
+    "topic": "项目经历描述",
+    "problem_tags": "missing_priority_keywords,low_jd_keyword_match"
+  },
+  {
+    "id": 21737,
+    "old_I_insight": "还是就是OK，好，因为我其实你的每一个部位朋友我都会帮你精简到一点，对，嘿嘿嘿，对对，这个是肯定要的",
+    "new_I_insight": "HR 快速扫简历时更容易记住具体动作和可验证结果。每条 bullet 都应尽量说明你做了什么、用了什么方法，以及带来了什么结果。",
+    "topic": "工作经历描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results"
+  },
+  {
+    "id": 22471,
+    "old_I_insight": "对，然后这样你写在你的这个所谓的，因为还是会挺看，像我们招 new graph 的话还是会挺看 relevant courses，就比如说你想休，你想未来做 management 或risk，那你起码就休一门，对吧；对，然后因为你有过这个经验的话，他 new grass 他的面试不会特别难",
+    "new_I_insight": "HR 快速扫简历时更容易记住具体动作和可验证结果。每条 bullet 都应尽量说明你做了什么、用了什么方法，以及带来了什么结果。",
+    "topic": "项目经历描述",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills,weak_result_orientation,weak_action_verbs,low_measurable_results"
+  },
+  {
+    "id": 23037,
+    "old_I_insight": "因为他没有做完，因为我参与到一半是我那个日时间就结束了，但是后面的存在就完成这个项目；可能就是因为当时可能他们有个什么线上的这种APP，然后很多老人家就需要开通这种APP，我可能帮他们开通一下",
+    "new_I_insight": "招聘方和 ATS 会优先扫描目标岗位相关关键词，以及这些关键词是否出现在经历和项目证据中。把技能放到对应经历里，比只在 Skills 栏罗列更有说服力。",
+    "topic": "ATS机筛策略",
+    "problem_tags": "low_jd_keyword_match"
+  },
+  {
+    "id": 24779,
+    "old_I_insight": "对，因为他，因为就是说都是，就是这个是正常的，对吧；因为都是这些 block pressure，什么什么level，然后这个 hard rate 这种，所以说你是可以说啊",
+    "new_I_insight": "HR 快速扫简历时更容易记住具体动作和可验证结果。每条 bullet 都应尽量说明你做了什么、用了什么方法，以及带来了什么结果。",
+    "topic": "项目经历描述",
+    "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,weak_result_orientation,weak_action_verbs,low_measurable_results"
+  },
+  {
+    "id": 25460,
+    "old_I_insight": "因为我这个是自己找的 n 配的 Intern 就等于是挂靠OPT；因为在美国这边一般毕业之后你不应该还是一个 intern 的一个title，不太好，不太就是正规吧",
+    "new_I_insight": "简历需要让招聘方在第一眼就判断出你的目标方向。标题、Summary、技能顺序和前几条经历应共同服务于同一个岗位定位。",
+    "topic": "工作经历描述",
+    "problem_tags": "missing_exact_job_title"
+  },
+  {
+    "id": 25955,
+    "old_I_insight": "因为咱们可以说是 3 ~ 5 个bullet，如果你中间有内容的话，其实还可以再写一个，还有什么内容咱们漏掉；也没有必要非得要求五个，就是说如果都差不多就可以写，然后这个的下一步就是因为现在 AI 的话， AI 它其的确是一个非常 powerful 的tool，我个人不是很反对，就是我个人不是很反对用 AI 去写简历，但是我很反对让 AI 帮你写简历",
+    "new_I_insight": "HR 快速扫简历时更容易记住具体动作和可验证结果。每条 bullet 都应尽量说明你做了什么、用了什么方法，以及带来了什么结果。",
+    "topic": "工作经历描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results"
+  }
+]

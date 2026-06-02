@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { normalizeHostedAtsScoreResult } from '../app/lib/hostedAtsSystem.mjs';
+import { callHostedAtsSystem, normalizeHostedAtsScoreResult } from '../app/lib/hostedAtsSystem.mjs';
 
 const hostedPayload = {
   success: true,
@@ -47,5 +47,37 @@ assert.equal(normalized.metrics.keywordMatch.summary.hardSkillCoverage, 0.25);
 assert.equal(normalized.problemTags[0].tag, 'keyword_gap_major');
 assert.equal(normalized.topMissingKeywords.length, 4);
 assert.equal(normalized.hostedAtsResponse.retrievalQuery.problemTags[0], 'keyword_gap_major');
+
+const originalFetch = globalThis.fetch;
+let capturedRequest = null;
+globalThis.fetch = async (url, options) => {
+  capturedRequest = { url, options };
+  return new Response(JSON.stringify(hostedPayload), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' },
+  });
+};
+
+await callHostedAtsSystem({
+  fileBuffer: Buffer.from('resume pdf bytes'),
+  fileName: 'Terry_Resume.pdf',
+  resumeText: 'fallback text',
+  jobTitle: 'Machine Learning Engineer Intern (MLE)',
+  jdText: 'JD text',
+}, {
+  apiUrl: 'https://ats.example.test/api/v1/score',
+  apiKey: 'test-key',
+  timeoutMs: 1000,
+});
+
+assert.equal(capturedRequest.url, 'https://ats.example.test/api/v1/score');
+assert.equal(capturedRequest.options.headers['X-Api-Key'], 'test-key');
+assert.equal(capturedRequest.options.headers['Content-Type'], undefined);
+assert.ok(capturedRequest.options.body instanceof FormData);
+assert.equal(capturedRequest.options.body.get('jobTitle'), 'Machine Learning Engineer Intern (MLE)');
+assert.equal(capturedRequest.options.body.get('jdText'), 'JD text');
+assert.equal(capturedRequest.options.body.get('fileName'), 'Terry_Resume.pdf');
+assert.ok(capturedRequest.options.body.get('resume') instanceof Blob);
+globalThis.fetch = originalFetch;
 
 console.log('hosted ATS mapping tests passed');

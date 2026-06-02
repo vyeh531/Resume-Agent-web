@@ -111,12 +111,25 @@ async function uploadAndParseDocx(file) {
 }
 
 // 调用 ATS 评分 API
-async function scoreResumeAPI(resumeText, jobTitle, jdText) {
-  const payload = {
-    resumeText: resumeText,
-    jobTitle: jobTitle || null,
-    jdText: jdText || null,
-  };
+async function scoreResumeAPI(resumeText, jobTitle, jdText, resumeFile) {
+  const useMultipart = Boolean(resumeFile);
+  let requestBody;
+  let requestHeaders;
+
+  if (useMultipart) {
+    requestBody = new FormData();
+    requestBody.append("file", resumeFile);
+    if (resumeText) requestBody.append("resumeText", resumeText);
+    if (jobTitle) requestBody.append("jobTitle", jobTitle);
+    if (jdText) requestBody.append("jdText", jdText);
+  } else {
+    requestHeaders = { "Content-Type": "application/json" };
+    requestBody = JSON.stringify({
+      resumeText: resumeText,
+      jobTitle: jobTitle || null,
+      jdText: jdText || null,
+    });
+  }
 
   console.log("[API] 开始调用 scoreResumeAPI...");
   console.log("[API] 简历长度:", resumeText.length);
@@ -126,10 +139,8 @@ async function scoreResumeAPI(resumeText, jobTitle, jdText) {
   try {
     const response = await fetch(`${API_BASE}/api/v1/score`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
+      headers: requestHeaders,
+      body: requestBody,
     });
 
     console.log("[API] 响应状态:", response.status);
@@ -214,6 +225,13 @@ function computeKeywordMatchRatio(keywordMatch) {
   return total ? Number(((matched / total) * 100).toFixed(1)) : null;
 }
 
+function normalizeRatioPercent(value) {
+  if (value === null || value === undefined || value === "") return null;
+  const number = Number(value);
+  if (!Number.isFinite(number)) return null;
+  return number > 0 && number <= 1 ? Number((number * 100).toFixed(1)) : number;
+}
+
 function normalizeDimensionProblems(dimensions, explicitProblems) {
   if (explicitProblems && Object.keys(explicitProblems).length) {
     return explicitProblems;
@@ -230,7 +248,9 @@ function normalizeDimensionProblems(dimensions, explicitProblems) {
 function formatATSResult(atsData) {
   const dimensions = atsData.dimensions || {};
   const keywordMatch = atsData.keywordMatch || atsData.metrics?.keywordMatch || {};
-  const jdMatchRatio = atsData.jdMatchRatio ?? atsData.metrics?.jdMatchRatio ?? computeKeywordMatchRatio(keywordMatch);
+  const jdMatchRatio = normalizeRatioPercent(
+    atsData.jdMatchRatio ?? atsData.metrics?.jdMatchRatio ?? computeKeywordMatchRatio(keywordMatch)
+  );
   return {
     atsScore: atsData.total ?? atsData.basicScore ?? 60,
     riskLevel: atsData.risk || atsData.riskLevel || "中",
@@ -246,6 +266,7 @@ function formatATSResult(atsData) {
     dimensions,
     jdMatchRatio,
     topMissingKw: atsData.topMissingKw || atsData.topMissingKeywords || [],
+    keywordMatchCount: atsData.keywordMatchCount || null,
     engine: atsData.engine || "ats-system-api",
     source: atsData.source || "hosted-api",
     jobTitle: atsData.jobTitle || null,

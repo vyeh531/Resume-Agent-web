@@ -1,0 +1,26 @@
+[
+  {
+    "id": 7706,
+    "from_scope": "resume_edit",
+    "to_scope": "job_search",
+    "reason": "job_target_timing_filter_not_resume_edit",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "tags": "low_soft_skill_match,missing_relocation_signal",
+    "title": "求职者处于大量海投阶段",
+    "action": "梳理自身可用时间窗口，针对时间要求与自身日程匹配的职位优先投递；对于时间冲突的岗位，提前在沟通中明确说明可入职时间，避免进入流程后因时间问题中断"
+  },
+  {
+    "id": 14919,
+    "from_scope": "resume_edit",
+    "to_scope": "career_strategy",
+    "reason": "networking_accent_practice_not_resume_edit",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "title": "求职者担心口音较重会在networking时留下不...",
+    "action": "口音较重时可适当加快语速，避免过度强调发音困难的字，或适度模糊某些音节，以减少口音的显著程度；同时坚持日常口语练习"
+  }
+]

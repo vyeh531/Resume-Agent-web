@@ -1,0 +1,61 @@
+[
+  {
+    "id": 1118,
+    "retrieval_scope": "resume_edit",
+    "role_family": "data_analyst",
+    "target_roles": "data_analyst",
+    "advice_card_title": "学生用偏DS风格的简历投DA岗位",
+    "user_problem_summary": "学生用偏DS风格的简历投DA岗位，缺乏SQL、Python、Excel、Tableau等DA核心关键词，HR会直接跳过",
+    "A_action": "在DA简历的实习/项目描述中明确体现SQL、Python、Excel、Tableau或Power BI，以及跨部门协作经验",
+    "action_summary": "在DA简历的实习/项目描述中明确体现SQL、Python、Excel、Tableau或Power BI，以及跨部门协作经验",
+    "next": {
+      "id": 1118,
+      "role_family": "data_analyst",
+      "target_roles": "data_analyst"
+    }
+  },
+  {
+    "id": 13320,
+    "retrieval_scope": "resume_edit",
+    "role_family": "ops",
+    "target_roles": "industrial_engineering,process_improvement",
+    "advice_card_title": "找实习时求职者常泛泛展示背景，未能精准对应招聘方的具体需求点",
+    "user_problem_summary": "找实习时求职者常泛泛展示背景，未能精准对应招聘方的具体需求点。实习生招聘看重的是能否在某一具体小范围内直接上手，而非全面能力。",
+    "A_action": "研究目标岗位的具体工作内容和工具需求，将简历中的项目经历精准对应其核心需求点。主动挖掘并突出与岗位scope高度吻合的经历，哪怕只是一个小方向的经验。",
+    "action_summary": "研究目标岗位的具体工作内容和工具需求，将简历中的项目经历精准对应其核心需求点。",
+    "next": {
+      "id": 13320,
+      "role_family": "ops",
+      "target_roles": "industrial_engineering,process_improvement"
+    }
+  },
+  {
+    "id": 24644,
+    "retrieval_scope": "job_search",
+    "role_family": "universal",
+    "target_roles": "universal",
+    "advice_card_title": "求职者在筛选实习机会时可能不加甄别地接受所有offer",
+    "user_problem_summary": "求职者在筛选实习机会时可能不加甄别地接受所有offer，但小型初创公司实习的核心价值在于能否学到技能、能否写进简历，而非薪资多少。",
+    "A_action": "筛选实习时优先评估：该公司做的方向是否与目标实习岗位相关、是否能积累可写进简历的实际成果；薪资高低不应作为主要筛选标准，项目内容和技能获取才是关键。",
+    "action_summary": "筛选实习时优先评估：该公司做的方向是否与目标实习岗位相关、是否能积累可写进简历的实际成果；",
+    "next": {
+      "id": 24644,
+      "retrieval_scope": "job_search"
+    }
+  },
+  {
+    "id": 5690,
+    "retrieval_scope": "resume_edit",
+    "role_family": "universal",
+    "target_roles": "universal",
+    "advice_card_title": "简历超过一页",
+    "user_problem_summary": "简历超过一页，课程内容（coursework）和部分经历占用空间，需通过删减非核心内容及调整格式将简历压缩至一页",
+    "A_action": "删除coursework板块，评估各段经历与目标岗位（PM）的相关性，删去相关性最低的经历，同时调整margin和空行间距以节省空间",
+    "action_summary": "删除coursework板块，",
+    "next": {
+      "id": 5690,
+      "role_family": "product",
+      "target_roles": "product_manager"
+    }
+  }
+]

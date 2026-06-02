@@ -113,7 +113,32 @@ const STATIC_MENTOR_COMPANY_LOGOS = [
 ];
 function getJdMatchRatio(ats) {
   const value = ats?.jdMatchRatio ?? ats?.raw?.jdMatchRatio ?? ats?.raw?.metrics?.jdMatchRatio ?? ats?.metrics?.jdMatchRatio;
-  return value !== null && value !== undefined && value !== "" ? Math.round(Number(value)) : null;
+  if (value === null || value === undefined || value === "") return null;
+  const number = Number(value);
+  if (!Number.isFinite(number)) return null;
+  return Math.round(number > 0 && number <= 1 ? number * 100 : number);
+}
+function getKeywordBreakdown() {
+  return atsResult.keywordBreakdown || atsResult.raw?.keywordBreakdown || [];
+}
+function getJdKeywordCount(ats) {
+  const explicit = ats?.keywordMatchCount || ats?.raw?.keywordMatchCount;
+  if (explicit && Number.isFinite(Number(explicit.total)) && Number(explicit.total) > 0) {
+    return { matched: Number(explicit.matched || 0), total: Number(explicit.total) };
+  }
+  const count = getKeywordBreakdown().reduce((acc, cat = {}) => {
+    const matched = Array.isArray(cat.matched) ? cat.matched.length : Number(cat.matched || 0);
+    const missing = Array.isArray(cat.missing) ? cat.missing.length : 0;
+    const total = Number(cat.total || matched + missing);
+    acc.matched += matched;
+    acc.total += total;
+    return acc;
+  }, { matched: 0, total: 0 });
+  return count.total > 0 ? count : null;
+}
+function formatJdKeywordCount(ats) {
+  const count = getJdKeywordCount(ats);
+  return count ? `${count.matched}/${count.total}` : "--";
 }
 function getTargetJobTitle() {
   const candidates = [s.jobTitle, atsResult.jobTitle, atsResult.raw && atsResult.raw.jobTitle];
@@ -330,7 +355,7 @@ const atsDetailEl = document.getElementById("atsDetail");
 if (atsDetailEl && atsScore) {
   atsDetailEl.innerHTML = renderRows([
     { k:"ATS 总分", v: atsScore + "/100", note: atsRiskText(atsResult.riskLevel) },
-    { k:"JD 匹配度", v: (getJdMatchRatio(atsResult) ?? "--") + "%", note:"关键词覆盖率" },
+    { k:"JD 匹配度", v: formatJdKeywordCount(atsResult), note:"已命中 / JD 关键词总数" },
     { k:"简历质量", v: (atsResult.dimensions?.C?.score ?? "--") + "/" + (atsResult.dimensions?.C?.max ?? 12), note:"内容质量与成果表达" },
   ]);
 }
@@ -384,10 +409,24 @@ function renderSkillRow(sk) {
     ${labelMap[sk.status] || ""}
   </li>`;
 }
-function renderSkillSection(skills) {
-  const have  = skills.filter(sk => sk.status === "have").length;
-  const weak  = skills.filter(sk => sk.status === "weak").length;
+function getJdSkillDisplayCount(skills) {
+  const count = getJdKeywordCount(atsResult);
+  if (count) {
+    return {
+      have: count.matched,
+      total: count.total,
+      weak: Math.max(count.total - count.matched, 0),
+    };
+  }
+  const have = skills.filter(sk => sk.status === "have").length;
   const total = skills.length;
+  return { have, total, weak: Math.max(total - have, 0) };
+}
+function renderSkillSection(skills) {
+  const counts = getJdSkillDisplayCount(skills);
+  const have  = counts.have;
+  const weak  = counts.weak;
+  const total = counts.total;
   const skillHaveEl    = document.getElementById("skillHave");
   const skillTotalEl   = document.getElementById("skillTotal");
   const skillSummaryEl = document.getElementById("skillSummary");
@@ -412,7 +451,7 @@ function renderSkillSection(skills) {
 
 // Build skills from JD keyword analysis already in atsResult (client-side, no extra API call needed)
 function buildSkillsFromJD(resumeTextLower) {
-  const breakdown = (atsResult.keywordBreakdown || (atsResult.raw && atsResult.raw.keywordBreakdown) || []);
+  const breakdown = getKeywordBreakdown();
   const seen = new Set();
   const skills = [];
   for (const cat of breakdown) {
@@ -429,46 +468,19 @@ function buildSkillsFromJD(resumeTextLower) {
       skills.push({ name, status: 'weak' });
     }
   }
-  // Also check topMissingKw
-  for (const term of (atsResult.topMissingKw || [])) {
-    const name = String(term).trim();
-    if (!name || seen.has(name.toLowerCase())) continue;
-    seen.add(name.toLowerCase());
-    skills.push({ name, status: 'weak' });
-  }
   return { skills, seen };
 }
 
 (async function loadSkills() {
   const resumeTextLower = (s.resumeText || "").toLowerCase();
-  const jobTitle = s.jobTitle || atsResult.jobTitle || (atsResult.raw && atsResult.raw.jobTitle) || "";
 
-  // Step 1: build from JD analysis (instant, no API call)
-  const { skills: jdSkills, seen } = buildSkillsFromJD(resumeTextLower);
+  const { skills: jdSkills } = buildSkillsFromJD(resumeTextLower);
 
-  // Step 2: supplement from DB (async, only for skills not already in JD list)
-  let dbSkills = [];
-  if (jobTitle) {
-    try {
-      const url = `/api/position-skills?jobTitle=${encodeURIComponent(jobTitle)}&resumeText=${encodeURIComponent(resumeTextLower.substring(0, 3000))}`;
-      const resp = await fetch(url);
-      if (resp.ok) {
-        const data = await resp.json();
-        if (data.found && data.skills) {
-          dbSkills = data.skills.filter(function(sk) {
-            return sk.name && !seen.has(sk.name.toLowerCase());
-          });
-        }
-      }
-    } catch(e) { console.warn("[Skills DB]", e.message); }
-  }
-
-  // Step 3: merge — JD skills first (most relevant), then DB supplements
-  const merged = [...jdSkills, ...dbSkills].map(function(sk, i) {
+  const merged = jdSkills.map(function(sk, i) {
     return { priority: i + 1, name: sk.name, status: sk.status };
   });
 
-  if (merged.length === 0) return;
+  if (merged.length === 0 && !getJdKeywordCount(atsResult)) return;
   renderSkillSection(merged);
 })();
 
@@ -701,10 +713,10 @@ if (atsResult && atsResult.atsScore) {
   // ATS system summary
   const sysSummaryEl = document.getElementById("atsSystemSummary");
   if (sysSummaryEl) {
-    const jdMatch = getJdMatchRatio(atsResult);
+    const jdKeywordCount = formatJdKeywordCount(atsResult);
     const missingKw = atsResult.topMissingKw || atsResult.raw?.topMissingKw || [];
     sysSummaryEl.innerHTML = [
-      jdMatch != null ? `<div><b>JD 关键词匹配：</b>${jdMatch}%</div>` : "",
+      jdKeywordCount !== "--" ? `<div><b>JD 关键词匹配：</b>${jdKeywordCount}</div>` : "",
       missingKw.length ? `<div><b>缺口关键词：</b>${missingKw.slice(0, 10).join("、")}</div>` : "",
       atsResult.formatPenaltyTriggered ? `<div style="color:var(--rose);"><b>格式处罚：</b>${(atsResult.formatPenaltyReason || []).join("；")}</div>` : "",
     ].filter(Boolean).join("");
@@ -802,6 +814,6 @@ if (atsResult && atsResult.atsScore) {
   // ATS tile detail（覆盖前面的预设）
   if (atsDetailEl) atsDetailEl.innerHTML = renderRows([
     { k:"ATS 总分", v:`${atsResult.atsScore}/100`, note: atsRiskText(atsResult.riskLevel) },
-    { k:"JD 关键词匹配", v:`${getJdMatchRatio(atsResult) ?? "--"}%`, note:"与目标岗位 JD 的匹配程度" },
+    { k:"JD 关键词匹配", v: formatJdKeywordCount(atsResult), note:"已命中 / JD 关键词总数" },
   ]);
 }

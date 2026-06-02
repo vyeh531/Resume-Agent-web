@@ -770,6 +770,10 @@ function formatPublicFreeReport(internalAtsResult, freeAdvice, lockedPreview) {
     : internalAtsResult.topInsights.slice(0, riskBucket === "medium" ? 2 : 3);
   const freeSuggestions = asArray(internalAtsResult.suggestions).slice(0, 3);
   const freeMissingKeywords = asArray(internalAtsResult.topMissingKeywords).slice(0, 3);
+  const publicProblems = topProblems
+    .map((item) => item.message || item.title)
+    .filter(Boolean)
+    .slice(0, 3);
 
   return {
     engine: internalAtsResult.engine,
@@ -789,11 +793,23 @@ function formatPublicFreeReport(internalAtsResult, freeAdvice, lockedPreview) {
     freeMentorAdvice: freeAdvice ? stripFreeAdvice(freeAdvice) : null,
     lockedAdvicePreview: lockedPreview,
     keywordBreakdown: buildPublicKeywordBreakdown(internalAtsResult, 3),
+    keywordMatchCount: buildKeywordMatchCount(internalAtsResult),
     topMissingKw: freeMissingKeywords,
     topMissingKeywords: freeMissingKeywords,
-    problems: asArray(internalAtsResult.problems).slice(0, 3),
+    problems: publicProblems,
     suggestions: freeSuggestions,
   };
+}
+
+function buildKeywordMatchCount(internalAtsResult) {
+  const cats = internalAtsResult.keywordMatch?.categories || {};
+  return Object.values(cats).reduce((acc, cat = {}) => {
+    const total = Number(cat.total || 0);
+    const matched = Number(cat.matched || (cat.matchedTerms || []).length || 0);
+    acc.total += total;
+    acc.matched += matched;
+    return acc;
+  }, { matched: 0, total: 0 });
 }
 
 function buildPublicKeywordBreakdown(internalAtsResult, visibleLimit = 3) {
@@ -925,6 +941,7 @@ function formatPremiumUnlockedReport(internalAtsResult, paidAdviceOrMentorReport
     projects: internalAtsResult.structuredSuggestions.filter((item) => item.targetSection === "projects"),
     education: internalAtsResult.structuredSuggestions.filter((item) => item.targetSection === "education"),
   };
+  const premiumKeywordBreakdown = buildPremiumKeywordBreakdown(internalAtsResult);
 
   const mentorReport = Array.isArray(paidAdviceOrMentorReport) && paidAdviceOrMentorReport.some((item) => Array.isArray(item.adviceItems))
     ? { mentors: paidAdviceOrMentorReport }
@@ -982,6 +999,7 @@ function formatPremiumUnlockedReport(internalAtsResult, paidAdviceOrMentorReport
         coveredProblemTags: [],
         uncoveredProblemTags: [],
       },
+      keywordBreakdown: premiumKeywordBreakdown,
       missingKeywordChecklist: checklist,
       sectionFixPlan,
     };
@@ -1000,9 +1018,37 @@ function formatPremiumUnlockedReport(internalAtsResult, paidAdviceOrMentorReport
       topic: item.topic,
     })),
     missingKeywordChecklist: checklist,
+    keywordBreakdown: premiumKeywordBreakdown,
     sectionFixPlan,
     detailedSuggestions: internalAtsResult.structuredSuggestions,
   };
+}
+
+function buildPremiumKeywordBreakdown(internalAtsResult) {
+  const cats = internalAtsResult.keywordMatch?.categories || {};
+  const order = ["core_skills", "tools", "domain_keywords", "action_verbs", "nice_to_have"];
+  const labels = {
+    core_skills: "\u6838\u5fc3\u6280\u80fd",
+    tools: "\u5de5\u5177 / \u6280\u672f",
+    domain_keywords: "\u9886\u57df\u8bcd",
+    action_verbs: "\u52a8\u4f5c\u8bcd",
+    nice_to_have: "\u52a0\u5206\u9879",
+  };
+  return order
+    .filter((key) => cats[key])
+    .map((key) => {
+      const cat = cats[key] || {};
+      const matched = (cat.matchedTerms || []).map((term) => (typeof term === "string" ? term : term.term)).filter(Boolean);
+      const missing = (cat.missing || []).filter(Boolean);
+      return {
+        key,
+        label: labels[key] || key,
+        matched,
+        missing,
+        total: cat.total || matched.length + missing.length,
+      };
+    })
+    .filter((cat) => cat.total || cat.matched.length || cat.missing.length);
 }
 
 function formatDebugReport(internalAtsResult, mentorCandidates = []) {

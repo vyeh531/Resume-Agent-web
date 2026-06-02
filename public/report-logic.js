@@ -31,7 +31,10 @@ function escapeHtml(s){
 }
 function getJdMatchRatio(ats) {
   const value = ats?.jdMatchRatio ?? ats?.raw?.jdMatchRatio ?? ats?.raw?.metrics?.jdMatchRatio ?? ats?.metrics?.jdMatchRatio;
-  return value !== null && value !== undefined && value !== "" ? Math.round(Number(value)) : null;
+  if (value === null || value === undefined || value === "") return null;
+  const number = Number(value);
+  if (!Number.isFinite(number)) return null;
+  return Math.round(number > 0 && number <= 1 ? number * 100 : number);
 }
 function uniqueList(items) {
   const seen = new Set();
@@ -41,6 +44,31 @@ function uniqueList(items) {
     seen.add(key);
     return true;
   });
+}
+function getKeywordBreakdown() {
+  return atsResult.keywordBreakdown || atsResult.raw?.keywordBreakdown || [];
+}
+function getMissingKeywordChecklist() {
+  return Array.isArray(s.missingKeywordChecklist) ? s.missingKeywordChecklist : [];
+}
+function getJdKeywordCount(ats) {
+  const explicit = ats?.keywordMatchCount || ats?.raw?.keywordMatchCount;
+  if (explicit && Number.isFinite(Number(explicit.total)) && Number(explicit.total) > 0) {
+    return { matched: Number(explicit.matched || 0), total: Number(explicit.total) };
+  }
+  const count = getKeywordBreakdown().reduce((acc, cat = {}) => {
+    const matched = Array.isArray(cat.matched) ? cat.matched.length : Number(cat.matched || 0);
+    const missing = Array.isArray(cat.missing) ? cat.missing.length : 0;
+    const total = Number(cat.total || matched + missing);
+    acc.matched += matched;
+    acc.total += total;
+    return acc;
+  }, { matched: 0, total: 0 });
+  return count.total > 0 ? count : null;
+}
+function formatJdKeywordCount(ats) {
+  const count = getJdKeywordCount(ats);
+  return count ? `${count.matched}/${count.total}` : "--";
 }
 function getTargetJobTitle() {
   const candidates = [s.jobTitle, atsResult.jobTitle, atsResult.raw && atsResult.raw.jobTitle];
@@ -98,7 +126,7 @@ function renderAtsSuggestionItem(text) {
   return `<li style="margin-bottom:10px;padding-left:20px;position:relative;line-height:1.5;"><span style="position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--jade);"></span>${escapeHtml(text)}</li>`;
 }
 function buildSkillsFromJD() {
-  const breakdown = atsResult.keywordBreakdown || atsResult.raw?.keywordBreakdown || [];
+  const breakdown = getKeywordBreakdown();
   const seen = new Set();
   const skills = [];
   for (const cat of breakdown) {
@@ -116,18 +144,6 @@ function buildSkillsFromJD() {
       seen.add(key);
       skills.push({ name, status: "weak" });
     }
-  }
-  for (const term of [
-    ...(atsResult.topMissingKw || []),
-    ...(atsResult.topMissingKeywords || []),
-    ...(atsResult.raw?.topMissingKw || []),
-    ...(atsResult.raw?.topMissingKeywords || []),
-  ]) {
-    const name = String(term).trim();
-    const key = name.toLowerCase();
-    if (!name || seen.has(key)) continue;
-    seen.add(key);
-    skills.push({ name, status: "weak" });
   }
   return { skills, seen };
 }
@@ -206,9 +222,9 @@ if (headlineEl && atsResult.atsScore) headlineEl.textContent = atsResult.atsScor
   const dimGrid = document.getElementById("atsDimGrid");
   if (dimGrid) dimGrid.innerHTML = dimHTML;
 
-  const jdMatch = getJdMatchRatio(atsResult);
-  const breakdown = atsResult.keywordBreakdown || atsResult.raw?.keywordBreakdown || [];
-  let kwHTML = `<div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed var(--line);">JD 关键词覆盖${jdMatch != null ? ` <span style="color:${jdMatch>=60?"var(--good)":jdMatch>=40?"#e9a84c":"var(--rose)"};font-family:var(--mono);font-size:13px;"> · 覆盖率 ${jdMatch}%</span>` : ""}</div>`;
+  const breakdown = getKeywordBreakdown();
+  const jdKeywordCount = formatJdKeywordCount(atsResult);
+  let kwHTML = `<div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed var(--line);">JD 关键词覆盖${jdKeywordCount !== "--" ? ` <span style="color:var(--ink);font-family:var(--mono);font-size:13px;"> · 已命中 ${jdKeywordCount}</span>` : ""}</div>`;
 
   if (breakdown.length) {
     kwHTML += breakdown.map(cat => {
@@ -228,7 +244,11 @@ if (headlineEl && atsResult.atsScore) headlineEl.textContent = atsResult.atsScor
         </div>`;
     }).join("");
   } else {
-    const missingKw = atsResult.topMissingKw || atsResult.raw?.topMissingKw || [];
+    const missingKw = uniqueList([
+      ...(atsResult.topMissingKw || []),
+      ...(atsResult.raw?.topMissingKw || []),
+      ...getMissingKeywordChecklist().map(item => item.term || item.name),
+    ]);
     if (missingKw.length) kwHTML += `<div><div style="font-size:11px;color:var(--ink-soft);font-family:var(--mono);letter-spacing:.04em;margin-bottom:4px;">缺口关键词</div><div style="display:flex;flex-wrap:wrap;gap:4px;">${missingKw.map(k=>`<span style="display:inline-block;padding:3px 8px;border-radius:99px;background:rgba(224,112,112,.12);color:#b02020;font-size:12px;">${escapeHtml(k)}</span>`).join("")}</div></div>`;
   }
   const kwSection = document.getElementById("atsKeywordSection");
@@ -264,31 +284,21 @@ function renderSkillList(skills){
       ${labelMap[sk.status] || ""}
     </li>
   `).join("");
+  const jdCount = getJdKeywordCount(atsResult);
+  if (jdCount) {
+    skills = Array.from({ length: jdCount.total }, (_, i) => ({
+      status: i < jdCount.matched ? "have" : "weak"
+    }));
+  }
   const have = skills.filter(sk => sk.status === "have").length;
   const weak = skills.filter(sk => sk.status === "weak").length;
   const insightEl = document.querySelector(".ai-insight-diagnosis");
   if (insightEl) insightEl.innerHTML = `<span class="ico">💡</span>你已掌握 <b>${have}/${skills.length}</b> 项 JD 技能关键词，还有 <b>${weak} 项</b>待补强。${weak > 0 ? "招聘官会优先看简历是否使用岗位语言，建议把缺失关键词写进 Summary、Skills 和相关经历证据里。" : "技能覆盖率良好，建议进一步量化成果。"}`;
 }
 (async function loadSkills(){
-  const jobTitle = s.jobTitle || atsResult.jobTitle || (atsResult.raw && atsResult.raw.jobTitle) || "";
-  const resumeText = s.resumeText || "";
-  const { skills: jdSkills, seen } = buildSkillsFromJD();
-  let dbSkills = [];
-  try {
-    if (jobTitle) {
-      const url = "/api/position-skills?jobTitle=" + encodeURIComponent(jobTitle)
-                  + "&resumeText=" + encodeURIComponent(resumeText.substring(0, 3000));
-      const resp = await fetch(url);
-      if (resp.ok) {
-        const data = await resp.json();
-        if (data.found && data.skills) {
-          dbSkills = data.skills.filter(sk => sk.name && !seen.has(sk.name.toLowerCase()));
-        }
-      }
-    }
-  } catch(e){ console.warn("[Skills]", e.message); }
-  const merged = [...jdSkills, ...dbSkills].map((sk, i) => ({ priority: i + 1, name: sk.name, status: sk.status }));
-  if (merged.length > 0) renderSkillList(merged);
+  const { skills: jdSkills } = buildSkillsFromJD();
+  const merged = jdSkills.map((sk, i) => ({ priority: i + 1, name: sk.name, status: sk.status }));
+  if (merged.length > 0 || getJdKeywordCount(atsResult)) renderSkillList(merged);
 })();
 
 // ── 4. Mentors ──
@@ -296,9 +306,9 @@ function renderSkillList(skills){
 (function renderFullAtsLists() {
   const kwSection = document.getElementById("atsKeywordSection");
   if (kwSection) {
-    const jdMatch = getJdMatchRatio(atsResult);
-    const breakdown = atsResult.keywordBreakdown || atsResult.raw?.keywordBreakdown || [];
-    let kwHTML = `<div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed var(--line);">JD 关键词覆盖${jdMatch != null ? ` <span style="color:${jdMatch>=60?"var(--good)":jdMatch>=40?"#e9a84c":"var(--rose)"};font-family:var(--mono);font-size:13px;"> · 覆盖率 ${jdMatch}%</span>` : ""}</div>`;
+    const breakdown = getKeywordBreakdown();
+    const jdKeywordCount = formatJdKeywordCount(atsResult);
+    let kwHTML = `<div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed var(--line);">JD 关键词覆盖${jdKeywordCount !== "--" ? ` <span style="color:var(--ink);font-family:var(--mono);font-size:13px;"> · 已命中 ${jdKeywordCount}</span>` : ""}</div>`;
     if (breakdown.length) {
       kwHTML += breakdown.map(cat => {
         const matched = cat.matched || [];
@@ -318,7 +328,11 @@ function renderSkillList(skills){
         </div>`;
       }).join("");
     } else {
-      const missingKw = uniqueList([...(atsResult.topMissingKw || []), ...(atsResult.raw?.topMissingKw || [])]);
+      const missingKw = uniqueList([
+        ...(atsResult.topMissingKw || []),
+        ...(atsResult.raw?.topMissingKw || []),
+        ...getMissingKeywordChecklist().map(item => item.term || item.name),
+      ]);
       if (missingKw.length) {
         kwHTML += `<div><div style="font-size:11px;color:var(--ink-soft);font-family:var(--mono);letter-spacing:.04em;margin-bottom:4px;">缺口关键词</div><div style="display:flex;flex-wrap:wrap;gap:4px;">${missingKw.map(k=>`<span style="display:inline-block;padding:3px 8px;border-radius:99px;background:rgba(224,112,112,.12);color:#b02020;font-size:12px;">${escapeHtml(k)}</span>`).join("")}</div></div>`;
       }

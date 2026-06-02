@@ -1,5 +1,4 @@
-import { resolveResumeText, buildAtsReportPayload, logPublicAtsResponseForTesting } from '../../../lib/atsHelpers';
-import { scoreResumeATS as scoreResumeSystem } from '../../../../src/ats/ats-scorer';
+import { resolveResumeText, buildAtsReportPayload, logPublicAtsResponseForTesting, scoreWithHostedFirst } from '../../../lib/atsHelpers';
 
 export async function POST(request) {
   try {
@@ -24,21 +23,36 @@ export async function POST(request) {
       return Response.json({ success: false, error: 'jobTitle or jdText is required' }, { status: 400 });
     }
 
+    const hostedFileBuffer = file ? Buffer.from(await file.arrayBuffer()) : null;
     const resolvedText = await resolveResumeText(file, resumeText);
-    const rawScoreResult = scoreResumeSystem(resolvedText, jobTitle, jdText);
+    const scoreResult = await scoreWithHostedFirst({
+      resumeText: resolvedText,
+      jobTitle,
+      jdText,
+      fileName: file?.name || '',
+      fileBuffer: hostedFileBuffer,
+    });
+    const rawScoreResult = scoreResult.rawScoreResult;
     const report = await buildAtsReportPayload(rawScoreResult, { resumeText: resolvedText, jobTitle, jdText }, userId);
 
     const payload = {
       success: true,
+      source: scoreResult.source,
       reportId: report.reportId,
       reportAccessToken: report.reportAccessToken,
       publicReport: report.publicReport,
+      warning: scoreResult.warning || undefined,
       timestamp: new Date().toISOString(),
     };
     logPublicAtsResponseForTesting('score', payload);
     return Response.json(payload);
   } catch (err) {
     console.error('[ATS-Report] Error:', err.message);
-    return Response.json({ success: false, error: err.message }, { status: 400 });
+    const isHostedAtsError = /hosted|ats api|ats_api|ATS system/i.test(err.message || '');
+    return Response.json({
+      success: false,
+      source: 'hosted-api',
+      error: err.message,
+    }, { status: isHostedAtsError ? 502 : 400 });
   }
 }
