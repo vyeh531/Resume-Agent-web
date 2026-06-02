@@ -1,6 +1,6 @@
 "use strict";
 
-const { findRoleDictionaryEntry, roleToProfile } = require("./role-dictionary");
+const { findRoleDictionaryEntry, inferCanonicalRoleFamily, roleToProfile } = require("./role-dictionary");
 
 const STOP_WORDS = new Set([
   "the", "a", "an", "and", "or", "of", "in", "to", "for", "is", "are", "be",
@@ -142,8 +142,6 @@ const ROLE_DISPLAY_NAMES = {
   logistics_operations: "物流运营",
   accounting:           "会计",
   software_engineer:    "软件工程师",
-  machine_learning_engineer: "机器学习工程师",
-  ai_engineer:          "AI 工程师",
   data_analyst:         "数据分析师",
   data_scientist:       "数据科学家",
   product_manager:      "产品经理",
@@ -154,17 +152,6 @@ const ROLE_DISPLAY_NAMES = {
 
 function formatRole(roleId) {
   return ROLE_DISPLAY_NAMES[roleId] || roleId.replace(/_/g, " ");
-}
-
-function formatTargetJobDisplay(jobTitle, fallbackRole) {
-  const cleaned = String(jobTitle || "")
-    .replace(/\([^)]*\)/g, "")
-    .replace(/\b(internship|intern|co-op|coop)\b/gi, "")
-    .replace(/\s+/g, " ")
-    .trim();
-  if (/\bmachine learning engineer\b/i.test(cleaned)) return "Machine Learning Engineer";
-  if (cleaned && !/^(unknown|general|根据\s*jd\s*分析|依\s*jd\s*自动识别)$/i.test(cleaned)) return cleaned;
-  return fallbackRole;
 }
 
 const WEAK_PHRASES = [
@@ -199,11 +186,12 @@ const SOFT_SKILL_KEYWORDS = new Set([
 const ROLE_FAMILIES = [
   { role: "logistics_operations", terms: ["揽收", "调度", "物流", "仓库", "库管", "司机", "客服", "运营", "末端", "配送", "异常", "卡量", "时效", "完结率", "pickup", "dispatch", "logistics", "warehouse", "last-mile", "parcel"] },
   { role: "accounting", terms: ["accountant", "staff accountant", "accounting", "bookkeeping", "payroll", "tax preparation", "quickbooks", "financial statements", "reconciliation"] },
-  { role: "machine_learning_engineer", terms: ["machine learning engineer", "ml engineer", "mle", "deep learning engineer", "model deployment", "ml pipeline", "pytorch", "tensorflow"] },
-  { role: "ai_engineer", terms: ["ai engineer", "artificial intelligence engineer", "llm engineer", "generative ai engineer", "rag", "fine-tuning", "langchain"] },
+  { role: "machine_learning", terms: ["machine learning engineer", "ml engineer", "mle", "machine learning", "deep learning", "computer vision", "model training", "model deployment", "pytorch", "tensorflow"] },
+  { role: "ai_engineer", terms: ["ai engineer", "artificial intelligence engineer", "llm engineer", "generative ai", "prompt engineering", "rag", "vector database", "langchain"] },
+  { role: "design_creative", terms: ["graphic designer", "visual designer", "ui/ux designer", "ux designer", "ui designer", "product designer", "brand designer", "portfolio", "figma", "adobe"] },
   { role: "software_engineer", terms: ["software engineer", "swe", "backend", "frontend", "full stack", "full-stack", "api", "microservice", "react", "node", "java", "python"] },
   { role: "data_analyst", terms: ["data analyst", "business analyst", "analytics", "sql", "tableau", "power bi", "excel", "dashboard"] },
-  { role: "data_scientist", terms: ["data scientist", "statistical modeling", "experimentation", "experiment design", "statistics", "python", "pandas"] },
+  { role: "data_scientist", terms: ["data scientist", "machine learning", "ml", "modeling", "experiment", "statistics", "python", "pandas"] },
   { role: "product_manager", terms: ["product manager", "pm", "roadmap", "user research", "stakeholder", "metrics", "launch"] },
   { role: "financial_analyst", terms: ["financial analyst", "finance", "valuation", "forecast", "investment", "portfolio", "excel"] },
   { role: "marketing", terms: ["marketing", "campaign", "brand", "content", "seo", "growth", "social media"] }
@@ -2184,12 +2172,14 @@ const PROBLEM_TAG_DEFS = {
   inconsistent_date_format:  { dimension: "A", topic: "format",                severity: "low",      retrievalWeight: 0.2  },
   missing_section_dates:     { dimension: "A", topic: "format",                severity: "low",      retrievalWeight: 0.2  },
   file_naming_issue:         { dimension: "A", topic: "format",                severity: "low",      retrievalWeight: 0.15 },
-  uploaded_non_pdf_format:   { dimension: "A", topic: "format",                severity: "medium",   retrievalWeight: 0.45 },
   // B
   missing_summary:           { dimension: "B", topic: "resume_structure",      severity: "high",     retrievalWeight: 0.6  },
   missing_gpa:               { dimension: "B", topic: "education_completeness", severity: "medium",  retrievalWeight: 0.4  },
   missing_coursework:        { dimension: "B", topic: "education_completeness", severity: "medium",  retrievalWeight: 0.35 },
   missing_contact_info:      { dimension: "B", topic: "searchability",         severity: "high",     retrievalWeight: 0.5  },
+  missing_linkedin:          { dimension: "B", topic: "searchability",         severity: "low",      retrievalWeight: 0.3  },
+  missing_portfolio:         { dimension: "B", topic: "portfolio_links",      severity: "high",     retrievalWeight: 0.65 },
+  missing_github_link:       { dimension: "B", topic: "code_links",           severity: "medium",   retrievalWeight: 0.55 },
   missing_exp_location:      { dimension: "B", topic: "searchability",         severity: "low",      retrievalWeight: 0.25 },
   // C
   insufficient_quantification: { dimension: "C", topic: "content_quality",    severity: "high",     retrievalWeight: 0.7  },
@@ -2223,9 +2213,8 @@ function makeTag(tagKey) {
 function buildProblemTags({
   resumeOutdated, isChronological, inconsistentDates, inconsistentMonthStyle,
   educationHasDates, projectsHasDates, fileNameIssues,
-  uploadedNonPdfFormat,
   hasSummary, isRecentGraduate, hasEducation, hasGPA, hasCoursework,
-  emailValid, phoneValid, expLocationResult,
+  emailValid, phoneValid, hasLinkedIn, hasPortfolio, hasGithub, portfolioExpected, githubExpected, expLocationResult,
   quantifiedCount, weakPhraseCount, writeGoodResult, repetitiveVerbResult,
   coreSkillBulletCoverage, shortTenures,
   hasJD, jdMatchRatio, keywordMatch,
@@ -2241,13 +2230,15 @@ function buildProblemTags({
   if (inconsistentDates || inconsistentMonthStyle) push("inconsistent_date_format");
   if ((hasEducation && !educationHasDates) || !projectsHasDates) push("missing_section_dates");
   if (fileNameIssues && fileNameIssues.length) push("file_naming_issue");
-  if (uploadedNonPdfFormat) push("uploaded_non_pdf_format");
 
   // B
   if (!hasSummary && !isRecentGraduate) push("missing_summary");
   if (hasEducation && !hasGPA) push("missing_gpa");
   if (hasEducation && !hasCoursework) push("missing_coursework");
   if (!emailValid || !phoneValid) push("missing_contact_info");
+  if (!hasLinkedIn) push("missing_linkedin");
+  if (portfolioExpected && !hasPortfolio) push("missing_portfolio");
+  if (githubExpected && !hasGithub) push("missing_github_link");
   if (expLocationResult && !expLocationResult.allHaveLocation) push("missing_exp_location");
 
   // C
@@ -2395,6 +2386,22 @@ function buildPriorityMissingKeywords(keywordMatch, targetRole) {
   return result.sort((a, b) => (order[a.priority] ?? 9) - (order[b.priority] ?? 9)).slice(0, 10);
 }
 
+function roleNeedsPortfolio(role) {
+  return ["design_creative"].includes(role?.role || role);
+}
+
+function roleNeedsGithub(role) {
+  return ["software_engineer", "machine_learning", "ai_engineer", "data_scientist", "data_engineer"].includes(role?.role || role);
+}
+
+function hasPortfolioLink(text) {
+  return /\b(behance\.net|dribbble\.com|portfolio|personal\s+(site|website)|\w[\w-]*\.(me|dev|io|app|site|co))\b/i.test(text || "");
+}
+
+function hasGithubLink(text) {
+  return /\b(github\.com|gitlab\.com|bitbucket\.org|github\.io)\b/i.test(text || "");
+}
+
 function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
   const normalized = normalizeText(resumeText);
   if (!normalized.trim()) throw new Error("resumeText is required");
@@ -2432,7 +2439,6 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
   else if (normalized.length < 400) A -= 2;
   else if (normalized.length > 9000) A -= 1;
   const fileNameResult = analyzeFileName(options.fileName);
-  const uploadedNonPdfFormat = /\.(docx?|txt)$/i.test(String(options.fileName || ""));
   A += fileNameResult.score;
   if (hasInconsistentDateFormat(normalized)) A -= 1;
   if (inconsistentMonthStyle) A -= 0.5;
@@ -2446,12 +2452,15 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
   const emailValid = hasEmail && /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i.test(normalized);
   const isGmail = hasEmail && /@gmail\.com\b/i.test(normalized);
   const phoneInfo = analyzePhone(normalized);
+  const hasLinkedIn = /linkedin\.com\/in\/|linkedin/i.test(normalized);
+  const hasPortfolio = hasPortfolioLink(normalized);
+  const hasGithub = hasGithubLink(normalized);
   const hasWillingToRelocate = /willing\s+to\s+(re)?locate|open\s+to\s+(re)?locat|\brelocate\b|\brelocation\b/i.test(normalized);
   if (hasEmail && emailValid) B += isGmail ? 2.5 : 2;
   else if (hasEmail && !emailValid) B -= 0.5;
   if (phoneInfo.valid) B += 1;
   else if (phoneInfo.present) B -= 0.5;
-  if (/linkedin\.com\/in\/|linkedin/i.test(normalized)) B += 2;
+  if (hasLinkedIn) B += 2;
   // "Willing to relocate" is scored in E dimension only — no duplicate here
   const hasSummary = Boolean((sections.summary || "").trim());
 
@@ -2615,9 +2624,9 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
   const problemTagsInput = {
     resumeOutdated, isChronological, inconsistentDates, inconsistentMonthStyle,
     educationHasDates, projectsHasDates, fileNameIssues: fileNameResult.issues,
-    uploadedNonPdfFormat,
     hasSummary, isRecentGraduate, hasEducation, hasGPA, hasCoursework,
-    emailValid, phoneValid: phoneInfo.valid, expLocationResult,
+    emailValid, phoneValid: phoneInfo.valid, hasLinkedIn, hasPortfolio, hasGithub,
+    portfolioExpected: roleNeedsPortfolio(targetRole), githubExpected: roleNeedsGithub(targetRole), expLocationResult,
     quantifiedCount, weakPhraseCount, writeGoodResult, repetitiveVerbResult,
     coreSkillBulletCoverage: coreBulletSignal.coverage, shortTenures,
     hasJD, jdMatchRatio, keywordMatch,
@@ -2628,8 +2637,8 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
 
   const diagnostics = buildDiagnostics({
     emailValid, phoneValid: phoneInfo.valid,
-    hasLinkedIn: /linkedin\.com\/in\/|linkedin/i.test(normalized),
-    hasPortfolio: /\b\w[\w-]*\.(me|dev|io|app|site|co)\b/i.test(normalized) || /github\.io/i.test(normalized),
+    hasLinkedIn,
+    hasPortfolio,
     hasSummary, hasEducation, hasExperience,
     inconsistentDates, inconsistentMonthStyle,
     wordCount, exactJobTitle, jobTitle, quantifiedCount
@@ -2641,7 +2650,7 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
     hasEmail, hasJD, jdMatchRatio, quantifiedCount, strongVerbCount, impactCount,
     bulletCount: bulletLines.length, missingKeywords, keywordMatch, targetRole, resumeRole,
     allChina, hasAnyChinaExp, formatPenaltyTriggered, isChronological, shortTenures,
-    exactJobTitle, scoreCaps, jobTitle
+    exactJobTitle, scoreCaps
   });
   const suggestions = buildSuggestions({
     hasJD, missingKeywords, keywordMatch, quantifiedCount, strongVerbCount, impactCount,
@@ -2658,8 +2667,8 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
       emailValid,
       isGmail,
       phoneValid: analyzePhone(normalized).valid,
-      hasLinkedIn: /linkedin\.com\/in\/|linkedin/i.test(normalized),
-      hasPortfolio: /\b\w[\w-]*\.(me|dev|io|app|site|co)\b/i.test(normalized) || /github\.io/i.test(normalized),
+      hasLinkedIn,
+      hasPortfolio,
       hasWillingToRelocate,
       hasSummary,
       isRecentGraduate,
@@ -2746,8 +2755,11 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
         emailValid,
         isGmail,
         phoneValid: phoneInfo.valid,
-        hasLinkedIn: /linkedin\.com\/in\/|linkedin/i.test(normalized),
-        hasPortfolio: /\b\w[\w-]*\.(me|dev|io|app|site|co)\b/i.test(normalized) || /github\.io/i.test(normalized),
+        hasLinkedIn,
+        hasPortfolio,
+        hasGithub,
+        portfolioExpected: roleNeedsPortfolio(targetRole),
+        githubExpected: roleNeedsGithub(targetRole),
         hasWillingToRelocate,
         hasSummary,
         summaryMentionsRole,
@@ -2796,9 +2808,9 @@ function buildProblems(ctx) {
     problems.unshift("格式或基本资料存在严重缺陷，总分已被上限至 54（高风险）。优先修复格式问题。");
   }
   if (ctx.allChina) {
-    problems.push("所有工作经历均在中国，与美国求职市场适配度较低，建议在 Summary 中说明赴美求职意向并突出可迁移技能。");
+    problems.push("所有工作经历均在中国，与美国求职市场适配度极低（E 维度扣分 80%）。");
   } else if (ctx.hasAnyChinaExp) {
-    problems.push("部分工作经历在中国，建议优先展示与美国岗位相关的经历，并在 Summary 中加入赴美求职意向说明。");
+    problems.push("部分工作经历在中国，影响美国市场适配度（E 维度扣分 65%）。");
   }
   if (!ctx.isChronological) {
     problems.push("工作经历未按时间倒序排列（最新在前），需重新排序。");
@@ -2826,8 +2838,7 @@ function buildProblems(ctx) {
     problems.push("未检测到标准 email，联系方式完整性存在风险。");
   }
   if (ctx.targetRole.role !== "general" && ctx.resumeRole.role !== ctx.targetRole.role) {
-    const targetDisplay = formatTargetJobDisplay(ctx.jobTitle, ctx.targetRole.display || formatRole(ctx.targetRole.role));
-    problems.push(`目标岗位是「${targetDisplay}」，但简历定位更接近「${formatRole(ctx.resumeRole.role)}」，岗位信号不够一致。`);
+    problems.push(`目标岗位像是「${formatRole(ctx.targetRole.role)}」，但简历定位更接近「${formatRole(ctx.resumeRole.role)}」，岗位信号不够一致。`);
   }
   if (problems.length === 0) {
     problems.push("基础结构良好，下一步应继续提升 JD 关键词覆盖率和成果量化密度。");
@@ -2936,11 +2947,11 @@ function buildDimensionProblems(ctx) {
 
   const E = [];
   if (checks.allChina) {
-    E.push("所有工作经历均在中国，美国市场适配度较低");
+    E.push("所有工作经历均在中国，美国市场适配度极低（扣分 80%）");
     E.push("建议在简历中突出可迁移技能，并在 Summary 中说明赴美求职意向");
   } else if (checks.hasAnyChinaExp) {
-    E.push("部分工作经历在中国，建议优先展示与美国岗位相关的经历和技能");
-    E.push("在 Summary 中加入赴美求职意向说明，增强市场适配信号");
+    E.push("部分工作经历在中国，影响美国市场适配度（扣分 65%）");
+    E.push("建议优先展示与美国岗位相关的经历和技能");
   }
   if (!checks.hasWillingToRelocate) {
     E.push('未提及 "Willing to relocate"，建议加入以向 ATS 和招聘官传递明确信号');

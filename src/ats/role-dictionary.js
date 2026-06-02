@@ -10,7 +10,7 @@ function loadRoleDictionary() {
     // require() is used so Vercel's bundler automatically includes the JSON
     // in the serverless function package (fs.readFileSync with a dynamic path
     // is not reliably bundled in serverless environments).
-    cachedDictionary = require("../../data/ats/ats_role_dictionary.json").roles || [];
+    cachedDictionary = require("../public/ats_role_dictionary.json").roles || [];
   } catch {
     cachedDictionary = [];
   }
@@ -75,6 +75,27 @@ function roleToProfile(role) {
   };
 }
 
+function inferCanonicalRoleFamily(jobTitle = "", jdText = "") {
+  const text = normalize(`${jobTitle} ${jdText}`);
+  if (!text) return null;
+
+  const rules = [
+    { family: "machine_learning", pattern: /\b(machine learning engineer|ml engineer|mle|deep learning engineer|computer vision engineer)\b/ },
+    { family: "ai_engineer", pattern: /\b(ai engineer|artificial intelligence engineer|llm engineer|generative ai engineer|prompt engineer)\b/ },
+    { family: "data_scientist", pattern: /\b(data scientist|decision scientist|applied scientist)\b/ },
+    { family: "data_engineer", pattern: /\b(data engineer|etl developer|analytics engineer)\b/ },
+    { family: "data_analyst", pattern: /\b(data analyst|business intelligence analyst|bi analyst|analytics analyst)\b/ },
+    { family: "software_engineer", pattern: /\b(software development engineer|software engineer|software developer|sde|swe|backend engineer|frontend engineer|full stack engineer|full-stack engineer|web developer)\b/ },
+    { family: "design_creative", pattern: /\b(graphic designer|visual designer|ui\/ux designer|ux designer|ui designer|product designer|brand designer|motion designer|creative designer)\b/ },
+    { family: "product_manager", pattern: /\b(product manager|associate product manager|technical product manager|program manager)\b/ },
+    { family: "accounting", pattern: /\b(accountant|accounting|bookkeeper|bookkeeping|audit associate|tax associate|controller|cpa|accounts payable|accounts receivable)\b/ },
+    { family: "financial_analyst", pattern: /\b(financial analyst|finance analyst|investment analyst|fp&a|valuation analyst|treasury analyst|risk analyst)\b/ },
+    { family: "marketing", pattern: /\b(marketing|growth marketer|campaign manager|seo specialist|content strategist|brand manager)\b/ },
+  ];
+
+  return (rules.find((rule) => rule.pattern.test(text)) || {}).family || null;
+}
+
 function normalize(value) {
   return String(value || "")
     .toLowerCase()
@@ -99,5 +120,6 @@ function unique(items) {
 
 module.exports = {
   findRoleDictionaryEntry,
+  inferCanonicalRoleFamily,
   roleToProfile
 };
