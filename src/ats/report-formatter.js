@@ -483,8 +483,11 @@ function normalizeProblemTag(item) {
   const mapping = {
     keyword_gap_critical: "low_jd_keyword_match",
     keyword_gap_major: "low_jd_keyword_match",
+    keyword_gap_minor: "low_jd_keyword_match",
     insufficient_quantification: "low_measurable_results",
     weak_verbs: "weak_action_verbs",
+    missing_tools: "low_hard_skill_match",
+    low_bullet_coverage: "weak_experience_keyword_evidence",
     missing_summary: "weak_summary_role_alignment",
     no_relocate_signal: "missing_relocation_signal",
     short_tenure_unexplained: "short_tenure_unclear",
@@ -729,6 +732,7 @@ function buildInternalAtsResult(rawScoreResult, input = {}) {
   };
 
   result.scoreCaps = buildScoreCaps(rawScoreResult, result.scores);
+  result.keywordMatchCount = buildKeywordMatchCount(result);
   result.problemTags = buildProblemTags(result);
   result.topProblems = buildTopProblems(result);
   result.topInsights = buildTopInsights(result);

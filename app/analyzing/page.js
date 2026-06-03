@@ -69,8 +69,16 @@ export default function AnalyzingPage() {
       </div>
 
       <Script id="analyzing-logic" strategy="afterInteractive">{`
-        guardSubmitted();
-        const totalSeconds = 16;
+        if (typeof guardSubmitted === "function") {
+          guardSubmitted();
+        } else {
+          try {
+            const store = JSON.parse(localStorage.getItem("resumeFixMVP") || "{}");
+            if (!store.resumeName && !store.reportId) window.location.href = "/";
+          } catch {
+            window.location.href = "/";
+          }
+        }
         const startedAt = Date.now();
         const pctEl = document.getElementById("pct");
         const fillEl = document.getElementById("progressFill");
@@ -85,9 +93,80 @@ export default function AnalyzingPage() {
           { from: 92, text: "即将完成…" }
         ];
         const stepBoundaries = [25, 55, 80, 100];
+        let visualPct = 8;
+        let lastKnownJob = null;
+        function applyProgress(pct) {
+          pctEl.textContent = pct;
+          fillEl.style.width = pct + "%";
+          elapsedEl.textContent = Math.floor((Date.now() - startedAt) / 1000);
+          for (let i = subStatuses.length - 1; i >= 0; i--){
+            if (pct >= subStatuses[i].from){ subStatusEl.textContent = subStatuses[i].text; break; }
+          }
+          stepEls.forEach((li, idx) => {
+            const myEnd = stepBoundaries[idx];
+            const prevEnd = idx === 0 ? 0 : stepBoundaries[idx - 1];
+            const status = li.querySelector(".step-status");
+            if (pct >= myEnd){ li.dataset.state = "done"; status.textContent = "å®Œæˆ"; }
+            else if (pct >= prevEnd){ li.dataset.state = "active"; status.textContent = "è¿›è¡Œä¸­â€¦"; }
+            else { li.dataset.state = "pending"; status.textContent = "ç­‰å¾…"; }
+          });
+        }
+        function storeCompletedReport(result) {
+          const publicReport = result.publicReport || result.data || {};
+          const atsResult = typeof formatATSResult === "function"
+            ? formatATSResult({ ...publicReport, reportId: result.reportId, reportAccessToken: result.reportAccessToken })
+            : publicReport;
+          Store.set({
+            reportId: result.reportId || publicReport.reportId || null,
+            sessionId: result.reportId || publicReport.reportId || null,
+            reportAccessToken: result.reportAccessToken || null,
+            atsResult,
+            freeMentorAdvice: publicReport.freeMentorAdvice || null,
+            lockedAdvicePreview: publicReport.lockedAdvicePreview || null,
+            mentorLogoPool: publicReport.lockedAdvicePreview?.mentorLogoPool || publicReport.freeMentorAdvice?.mentorLogoPool || null,
+            analysisJobStatus: "completed",
+            analysisCompletedAt: Date.now(),
+          });
+        }
+        async function pollJob() {
+          if (typeof Store === "undefined" || typeof getAnalysisJobAPI !== "function") {
+            setTimeout(pollJob, 300);
+            return;
+          }
+          const store = Store.get();
+          if (!store.analysisJobId) {
+            if (store.reportId && store.atsResult) window.location.href = "/result";
+            return;
+          }
+          try {
+            const job = await getAnalysisJobAPI(store.analysisJobId);
+            lastKnownJob = job;
+            Store.set({ analysisJobStatus: job.status, analysisJobStage: job.stage });
+            if (job.status === "completed" && job.result) {
+              visualPct = 100;
+              applyProgress(visualPct);
+              storeCompletedReport(job.result);
+              setTimeout(() => { window.location.href = "/result"; }, 500);
+              return;
+            }
+            if (job.status === "failed") {
+              subStatusEl.textContent = "åˆ†æžå¤±è´¥ï¼Œè¯·è¿”å›žé¦–é¡µé‡è¯•";
+              Store.set({ analysisJobError: job.error || "analysis failed" });
+              return;
+            }
+            visualPct = Math.max(visualPct, Math.min(94, Number(job.progress || 10)));
+            applyProgress(Math.floor(visualPct));
+            setTimeout(pollJob, 1200);
+          } catch (error) {
+            console.warn("[Analysis Job] poll failed", error.message);
+            setTimeout(pollJob, 1800);
+          }
+        }
         const tick = setInterval(() => {
           const elapsed = (Date.now() - startedAt) / 1000;
-          const pct = Math.min(100, Math.floor((elapsed / totalSeconds) * 100));
+          const cap = lastKnownJob?.status === "completed" ? 100 : 94;
+          const pct = Math.min(cap, Math.max(visualPct, Math.floor(12 + elapsed * 3)));
+          visualPct = pct;
           pctEl.textContent = pct;
           fillEl.style.width = pct + "%";
           elapsedEl.textContent = Math.floor(elapsed);
@@ -103,7 +182,8 @@ export default function AnalyzingPage() {
             else { li.dataset.state = "pending"; status.textContent = "等待"; }
           });
           if (pct >= 100){ clearInterval(tick); setTimeout(() => { window.location.href = "/result"; }, 700); }
-        }, 200);
+        }, 500);
+        pollJob();
       `}</Script>
     </>
   );

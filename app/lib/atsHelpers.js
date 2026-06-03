@@ -19,6 +19,7 @@ import { parsePDF, parseDocx } from '../../file-parser';
 import db from '../../database';
 
 export async function resolveResumeText(file, bodyResumeText) {
+  if (bodyResumeText) return bodyResumeText;
   if (file) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
@@ -28,7 +29,6 @@ export async function resolveResumeText(file, bodyResumeText) {
     if (ext === 'txt') return buffer.toString('utf-8');
     throw new Error('不支援的檔案格式：' + ext);
   }
-  if (bodyResumeText) return bodyResumeText;
   throw new Error('請提供 resumeText 或上傳 file');
 }
 
@@ -91,14 +91,21 @@ export function logPublicAtsResponseForTesting(label, payload) {
 }
 
 export async function buildAtsReportPayload(rawScoreResult, input, userId = null) {
+  const startedAt = Date.now();
+  const timings = [];
+  const mark = (label) => timings.push([label, Date.now() - startedAt]);
   const internalAtsResult = formatInternalAtsResult(rawScoreResult, input);
+  mark('format_internal_ats');
   const retrievalQuery = internalAtsResult.retrievalQuery;
   const mentorCandidates = await retrieveMentorAdvice(retrievalQuery);
+  mark('retrieve_mentor_advice');
   const freeMentorPlan = selectFreeMentorPlan(mentorCandidates, internalAtsResult);
   const premiumMentorPlan = selectPremiumMentorPlan(mentorCandidates, internalAtsResult, freeMentorPlan);
+  mark('select_mentor_plan');
   const freeAdvice = formatPublicFreeMentorAdvice(freeMentorPlan, internalAtsResult);
   const paidAdvice = premiumMentorPlan.slice(1);
   const premiumMentorReport = formatPremiumMentorReport(premiumMentorPlan, internalAtsResult);
+  mark('format_reports');
   logRetrievalDebug({
     reportContext: input?.jobTitle || rawScoreResult.jobTitle || 'unknown',
     mentorCandidateCount: mentorCandidates.length,
@@ -115,6 +122,7 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
   const lockedPreview = buildLockedAdvicePreview(premiumMentorPlan, internalAtsResult);
   const publicReport = formatPublicFreeReport(internalAtsResult, freeAdvice, lockedPreview);
   const premiumReport = formatPremiumUnlockedReport(internalAtsResult, premiumMentorReport);
+  mark('format_public_premium');
   logAdvicePlan(freeMentorPlan, premiumMentorPlan, premiumReport.coverageSummary);
   const reportId = createReportId();
   const reportAccessToken = createReportAccessToken();
@@ -143,6 +151,14 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
     resumeText,
     resumeBullets,
   });
+  mark('save_report');
+
+  console.log('[ATS Report Build Timing]', JSON.stringify({
+    totalMs: Date.now() - startedAt,
+    timings: Object.fromEntries(timings),
+    candidateCount: mentorCandidates.length,
+    reportContext: input?.jobTitle || rawScoreResult.jobTitle || 'unknown',
+  }));
 
   return {
     reportId,

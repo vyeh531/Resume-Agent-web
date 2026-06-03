@@ -44,10 +44,16 @@ export default function ResultPage() {
         .mentor-logo-chip img{max-width:100%;max-height:100%;object-fit:contain}
         .mentor-logo-intro{margin:4px 0 14px}
         .mentor-logo-copy{font-size:12.5px;line-height:1.55;color:var(--ink-soft);margin:0 0 8px}
-        .paywall-more{position:relative;margin-top:8px;border-radius:10px;overflow:hidden;border:1px dashed var(--line);background:#fffdf8}
+        .paywall-more{position:relative;margin-top:8px;min-height:170px;border-radius:10px;overflow:hidden;border:1px dashed var(--line);background:#fffdf8}
         .paywall-more-list{filter:blur(4px);user-select:none;pointer-events:none;padding:10px 12px}
         .paywall-more-list div{font-size:13px;line-height:1.5;margin:0 0 8px;padding-left:18px;position:relative;color:var(--ink-soft)}
-        .paywall-more-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(246,243,236,.62);backdrop-filter:blur(1px);font-size:12px;font-weight:700;color:var(--ink)}
+        .paywall-more-overlay,.locked-preview-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-start;flex-direction:column;background:linear-gradient(180deg,rgba(251,250,243,.54) 0%,rgba(251,250,243,.96) 56%);backdrop-filter:blur(1px);padding:14px 18px 18px;text-align:center;box-sizing:border-box}
+        .result-lock-cta{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;color:var(--ink);width:fit-content;max-width:100%;margin:0 auto;box-sizing:border-box}
+        .result-lock-cta .lock{width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--paper-warm);display:grid;place-items:center;font-size:15px;box-shadow:0 8px 20px -8px rgba(24,24,22,.4)}
+        .result-lock-cta .text{font-size:12.5px;font-weight:600;line-height:1.45;color:var(--ink)}
+        .result-lock-cta .text b{color:var(--jade)}
+        .result-lock-cta .text span{color:var(--ink-soft);font-weight:500}
+        .result-lock-cta .btn{font-size:13px;padding:9px 18px;min-height:auto}
         .ats-preview-details .paywall-more{display:none}
         .ats-preview-details.is-expanded .paywall-more{display:block}
         @keyframes logo-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}

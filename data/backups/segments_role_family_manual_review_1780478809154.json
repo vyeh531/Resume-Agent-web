@@ -1,0 +1,141 @@
+[
+  {
+    "current": {
+      "id": 340,
+      "retrieval_scope": "resume_edit",
+      "role_family": "universal",
+      "target_roles": "universal",
+      "problem_tags": "weak_summary_role_alignment,low_role_specificity,weak_target_role_alignment,low_hard_skill_match,keywords_only_in_skills",
+      "ats_dimensions": "B_contact,F_role_fit,D_keyword_match",
+      "advice_card_title": "学生简历只写了SolidWorks和3D打印等少量硬技能",
+      "user_problem_summary": "学生简历只写了SolidWorks和3D打印等少量硬技能，大量版面空白，内容单薄",
+      "A_action": "将所有相关技能（project management、软件工具、软技能等）都写入简历；若内容不足以填满一页，可添加professional summary作为补充",
+      "action_summary": "将所有相关技能（project management、软件工具、软技能等）都写入简历；"
+    },
+    "next": {
+      "id": 340,
+      "role_family": "mechanical_engineering",
+      "target_roles": "mechanical_engineer",
+      "note": "User reviewed: Mechanical Engineer-specific resume content expansion"
+    }
+  },
+  {
+    "current": {
+      "id": 355,
+      "retrieval_scope": "resume_edit",
+      "role_family": "universal",
+      "target_roles": "universal",
+      "problem_tags": "low_jd_keyword_match,generic_resume_positioning,low_role_specificity,universal_resume_problem",
+      "ats_dimensions": "D_keyword_match,F_role_fit",
+      "advice_card_title": "学生只有一份通用简历",
+      "user_problem_summary": "学生只有一份通用简历，对所有岗位一份发到底，缺乏针对性",
+      "A_action": "根据目标岗位类别（如analog IC、数字IC、硬件测试等）准备2-3个微调版本，每个版本突出与该类岗位最相关的项目和技能",
+      "action_summary": "根据目标岗位类别（如analog IC、数字IC、硬件测试等）准备2-3个微调版本，每个版本突出与该类岗位最相关的项目和技能"
+    },
+    "next": {
+      "id": 355,
+      "role_family": "hardware_electrical",
+      "target_roles": "hardware_engineer,analog_ic_engineer,digital_ic_engineer,hardware_test_engineer",
+      "note": "User reviewed: hardware resume versioning"
+    }
+  },
+  {
+    "current": {
+      "id": 4874,
+      "retrieval_scope": "resume_edit",
+      "role_family": "universal",
+      "target_roles": "universal",
+      "problem_tags": "weak_summary_role_alignment,missing_exact_job_title,weak_target_role_alignment",
+      "ats_dimensions": "D_keyword_match",
+      "advice_card_title": "求职者简历Summary未突出差异化亮点",
+      "user_problem_summary": "求职者简历Summary未突出差异化亮点，HR无法快速形成印象并产生继续阅读项目经历的动力。",
+      "A_action": "在Summary中明确列出3个核心能力关键词（如label design、gameplay mechanics、player psychology/flow），让HR在阅读Summary后能主动去项目经历中寻找对应佐证，形成阅读引导链路。",
+      "action_summary": "在Summary中明确列出3个核心能力关键词（如label design、gameplay mechanics、player..."
+    },
+    "next": {
+      "id": 4874,
+      "role_family": "design_creative",
+      "target_roles": "game_designer",
+      "note": "User reviewed: game design Summary keywords"
+    }
+  },
+  {
+    "current": {
+      "id": 5991,
+      "retrieval_scope": "resume_edit",
+      "role_family": "universal",
+      "target_roles": "universal",
+      "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation",
+      "ats_dimensions": "C_content_quality,F_role_fit",
+      "advice_card_title": "求职者将餐厅自营经验视为与财务岗位无关的经历",
+      "user_problem_summary": "求职者将餐厅自营经验视为与财务岗位无关的经历，未能提炼其中的business acumen价值，导致简历中最有力的差异化卖点被埋没。",
+      "A_action": "在简历和面试中将餐厅经营经验重新定位为\"business acumen\"的来源，强调全局经营视角（整体看公司运作、实现长期盈利），并与IBM财务实习经验形成组合叙事，展示\"宏观视野+财务技能\"的双重优势。",
+      "action_summary": "在简历和面试中将餐厅经营经验重新定位为\"business acumen\"的来源，"
+    },
+    "next": {
+      "id": 5991,
+      "retrieval_scope": "other_non_resume",
+      "role_family": "finance",
+      "target_roles": "financial_advisor,financial_analyst",
+      "note": "User reviewed: too case-specific and mixes resume/interview restaurant business acumen story"
+    }
+  },
+  {
+    "current": {
+      "id": 18160,
+      "retrieval_scope": "resume_edit",
+      "role_family": "product_manager,data_analyst",
+      "target_roles": "business_analyst,data_analyst",
+      "problem_tags": "missing_priority_keywords,generic_resume_positioning",
+      "ats_dimensions": "D_keyword_match,F_role_fit",
+      "advice_card_title": "求职者尚未针对目标岗位（BA/DA）做关键词匹配优化",
+      "user_problem_summary": "求职者尚未针对目标岗位（BA/DA）做关键词匹配优化，通用简历无法有效通过 ATS 筛选，需系统性提取高频关键词。",
+      "A_action": "第一步先完成通用版简历框架；第二步在 Google 上搜集至少 10 份目标岗位（如 BA）的 job description，提取高频关键词，按频次优先级融入简历对应 bullet point。",
+      "action_summary": "第一步先完成通用版简历框架；"
+    },
+    "next": {
+      "id": 18160,
+      "role_family": "data_analyst,business_analysis",
+      "target_roles": "business_analyst,data_analyst,analytics_analyst",
+      "note": "User reviewed: remove product_manager; BA/DA keyword matching"
+    }
+  },
+  {
+    "current": {
+      "id": 22618,
+      "retrieval_scope": "resume_edit",
+      "role_family": "machine_learning,data_analyst",
+      "target_roles": "machine_learning_engineer,business_analyst,data_analyst",
+      "problem_tags": "low_hard_skill_match,generic_resume_positioning,low_role_specificity",
+      "ats_dimensions": "D_keyword_match,F_role_fit",
+      "advice_card_title": "不要一份简历投所有岗位",
+      "user_problem_summary": "求职者需要同时投递DS/ML方向和DA/BA方向岗位，单一版本简历无法有效匹配两类不同职位的要求，需制定多版本策略。",
+      "A_action": "准备两个版本的简历：一个偏DS/Machine Learning Engineer方向，一个偏DA/BA方向；在DA/BA基础版本之上，针对具体投递岗位的JD进行进一步微调，突出与岗位最相关的经验。",
+      "action_summary": "准备两个版本的简历：一个偏DS/Machine Learning Engineer方向，一个偏DA/BA方向；"
+    },
+    "next": {
+      "id": 22618,
+      "retrieval_scope": "career_strategy",
+      "note": "User reviewed: multi-resume strategy not suitable for one resume plus one JD input"
+    }
+  },
+  {
+    "current": {
+      "id": 22876,
+      "retrieval_scope": "resume_edit",
+      "role_family": "universal",
+      "target_roles": "universal",
+      "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,low_hard_skill_match,keywords_only_in_skills",
+      "ats_dimensions": "D_keyword_match,F_role_fit",
+      "advice_card_title": "求职者简历按时间线排列",
+      "user_problem_summary": "求职者简历按时间线排列，",
+      "A_action": "将简历中的 skills 和相关工具模块调整到靠前位置，paper 和 patent 移至后面；同时可在教育经历下补充与目标岗位相关的重要课程名称，以增强匹配度。",
+      "action_summary": "将简历中的 skills 和相关工具模块调整到靠前位置，paper 和 patent 移至后面；"
+    },
+    "next": {
+      "id": 22876,
+      "retrieval_scope": "conditional_resume_edit",
+      "note": "User reviewed: only usable when section existence and ordering problem are evidenced"
+    }
+  }
+]

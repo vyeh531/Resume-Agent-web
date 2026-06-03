@@ -1,0 +1,243 @@
+[
+  {
+    "current": {
+      "id": 340,
+      "retrieval_scope": "resume_edit",
+      "role_family": "universal",
+      "target_roles": "universal",
+      "problem_tags": "weak_summary_role_alignment,low_role_specificity,weak_target_role_alignment,low_hard_skill_match,keywords_only_in_skills",
+      "ats_dimensions": "B_contact,F_role_fit,D_keyword_match",
+      "keywords": "job search strategy",
+      "advice_card_title": "学生简历只写了SolidWorks和3D打印等少量硬技能",
+      "user_problem_summary": "学生简历只写了SolidWorks和3D打印等少量硬技能，大量版面空白，内容单薄",
+      "A_action": "将所有相关技能（project management、软件工具、软技能等）都写入简历；若内容不足以填满一页，可添加professional summary作为补充",
+      "action_summary": "将所有相关技能（project management、软件工具、软技能等）都写入简历；",
+      "I_insight": "简历需要让招聘方在第一眼就判断出你的目标方向。标题、Summary、技能顺序和前几条经历应共同服务于同一个岗位定位。"
+    },
+    "next": null
+  },
+  {
+    "current": {
+      "id": 355,
+      "retrieval_scope": "resume_edit",
+      "role_family": "universal",
+      "target_roles": "universal",
+      "problem_tags": "low_jd_keyword_match,generic_resume_positioning,low_role_specificity,universal_resume_problem",
+      "ats_dimensions": "D_keyword_match,F_role_fit",
+      "keywords": "keyword match,resume version",
+      "advice_card_title": "学生只有一份通用简历",
+      "user_problem_summary": "学生只有一份通用简历，对所有岗位一份发到底，缺乏针对性",
+      "A_action": "根据目标岗位类别（如analog IC、数字IC、硬件测试等）准备2-3个微调版本，每个版本突出与该类岗位最相关的项目和技能",
+      "action_summary": "根据目标岗位类别（如analog IC、数字IC、硬件测试等）准备2-3个微调版本，每个版本突出与该类岗位最相关的项目和技能",
+      "I_insight": "一份通用简历面对所有岗位是最轻松但匹配度最低的策略；针对岗位微调可显著提高通过简历筛选的概率"
+    },
+    "next": null
+  },
+  {
+    "current": {
+      "id": 2571,
+      "retrieval_scope": "resume_edit",
+      "role_family": "data_analyst,product_manager",
+      "target_roles": "data_analyst",
+      "problem_tags": "low_hard_skill_match,low_soft_skill_match,missing_priority_keywords,keywords_only_in_skills,low_jd_keyword_match",
+      "ats_dimensions": "C_content_quality,D_keyword_match",
+      "keywords": "ATS,data analyst",
+      "advice_card_title": "求职者简历中软技能描述不够具体",
+      "user_problem_summary": "求职者简历中软技能描述不够具体，缺乏数据分析岗位常见的关键词，如复杂数据集分析能力、细心程度、洞察传达给利益相关方等表述。",
+      "A_action": "在简历技能或个人总结部分补充以下关键词和表述：'Strong ability to analyze complex and ambiguous data sets'、'Attention to detail'、'Organizational skills'、'Communicate insights to stakeholders'，以匹配数据分析岗位JD要求。",
+      "action_summary": "在简历技能或个人总结部分补充以下关键词和表述：'Strong ability to analyze complex and a...",
+      "I_insight": "数据分析师岗位除技术硬技能外，HR也关注候选人是否具备将复杂数据转化为可执行洞察并有效传达给业务方的能力，这类软技能关键词同样影响ATS匹配率。"
+    },
+    "next": {
+      "role_family": "data_analyst,business_analysis",
+      "target_roles": "data_analyst,business_analyst,analytics_analyst",
+      "reason": "content points to DA/BA/Analytics"
+    }
+  },
+  {
+    "current": {
+      "id": 4874,
+      "retrieval_scope": "resume_edit",
+      "role_family": "universal",
+      "target_roles": "universal",
+      "problem_tags": "weak_summary_role_alignment,missing_exact_job_title,weak_target_role_alignment",
+      "ats_dimensions": "D_keyword_match",
+      "keywords": "targeted resume,keyword match",
+      "advice_card_title": "求职者简历Summary未突出差异化亮点",
+      "user_problem_summary": "求职者简历Summary未突出差异化亮点，HR无法快速形成印象并产生继续阅读项目经历的动力。",
+      "A_action": "在Summary中明确列出3个核心能力关键词（如label design、gameplay mechanics、player psychology/flow），让HR在阅读Summary后能主动去项目经历中寻找对应佐证，形成阅读引导链路。",
+      "action_summary": "在Summary中明确列出3个核心能力关键词（如label design、gameplay mechanics、player...",
+      "I_insight": "HR扫描简历时，Summary相当于一个profile，能为HR建立初步印象。若Summary中提到的能力关键词与后续项目经历呼应，HR会主动深读相关项目，提升简历整体说服力。"
+    },
+    "next": null
+  },
+  {
+    "current": {
+      "id": 5787,
+      "retrieval_scope": "resume_edit",
+      "role_family": "universal",
+      "target_roles": "universal",
+      "problem_tags": "weak_summary_role_alignment,education_details_missing,missing_exact_job_title,generic_resume_positioning,weak_target_role_alignment",
+      "ats_dimensions": "D_keyword_match,F_role_fit",
+      "keywords": "targeted resume",
+      "advice_card_title": "求职者简历顶部Summary着重强调healthcare方向",
+      "user_problem_summary": "求职者简历顶部Summary着重强调healthcare方向，",
+      "A_action": "将Summary中过于垂直的healthcare专攻描述删减，改写为更通用的ESG/sustainability方向表述，以适配更广泛的目标岗位；同时将education和skills板块移至简历下方。",
+      "action_summary": "将Summary中过于垂直的healthcare专攻描述删减，",
+      "I_insight": "简历Summary需与目标岗位高度匹配，过度强调某一垂直领域会缩窄HR的联想空间，申请广泛方向岗位时应保持一定通用性。"
+    },
+    "next": {
+      "role_family": "sustainability_environment",
+      "target_roles": "sustainability_analyst,esg_analyst,climate_analyst",
+      "reason": "content points to Sustainability/ESG"
+    }
+  },
+  {
+    "current": {
+      "id": 5991,
+      "retrieval_scope": "resume_edit",
+      "role_family": "universal",
+      "target_roles": "universal",
+      "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation",
+      "ats_dimensions": "C_content_quality,F_role_fit",
+      "keywords": "internship,work authorization",
+      "advice_card_title": "求职者将餐厅自营经验视为与财务岗位无关的经历",
+      "user_problem_summary": "求职者将餐厅自营经验视为与财务岗位无关的经历，未能提炼其中的business acumen价值，导致简历中最有力的差异化卖点被埋没。",
+      "A_action": "在简历和面试中将餐厅经营经验重新定位为\"business acumen\"的来源，强调全局经营视角（整体看公司运作、实现长期盈利），并与IBM财务实习经验形成组合叙事，展示\"宏观视野+财务技能\"的双重优势。",
+      "action_summary": "在简历和面试中将餐厅经营经验重新定位为\"business acumen\"的来源，",
+      "I_insight": "财务岗位候选人通常只有单一职能经验，缺乏对公司整体运作的理解。有过自主经营经历的候选人天然具备\"如何让公司长期成功\"的宏观思维，这种business acumen是稀缺差异化点，值得在简历summary和面试中主动放大。"
+    },
+    "next": null
+  },
+  {
+    "current": {
+      "id": 8981,
+      "retrieval_scope": "resume_edit",
+      "role_family": "machine_learning,data_analyst",
+      "target_roles": "universal",
+      "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,low_hard_skill_match,keywords_only_in_skills",
+      "ats_dimensions": "D_keyword_match,F_role_fit",
+      "keywords": "ATS,portfolio,GitHub,keyword match,machine learning",
+      "advice_card_title": "求职者简历中有AB testing项目和machi...",
+      "user_problem_summary": "求职者简历中有AB testing项目和machine learning风控项目，",
+      "A_action": "将两个项目都保留在简历中，每个项目各精简为两条bullet point，确保涵盖AB testing（数据分析实战）和machine learning/risk（偏技术建模）两类关键词，以应对DA和银行风控两种职位方向。",
+      "action_summary": "将两个项目都保留在简历中，",
+      "I_insight": "面试官对AB testing经验高度重视，这是DA/DS日常工作的核心技能；同时保留两个不同侧重的项目，可最大化关键词覆盖，适配更多岗位JD的ATS筛选。"
+    },
+    "next": {
+      "role_family": "data_scientist",
+      "target_roles": "data_scientist",
+      "reason": "content points to Data Science"
+    }
+  },
+  {
+    "current": {
+      "id": 18160,
+      "retrieval_scope": "resume_edit",
+      "role_family": "product_manager,data_analyst",
+      "target_roles": "business_analyst,data_analyst",
+      "problem_tags": "missing_priority_keywords,generic_resume_positioning",
+      "ats_dimensions": "D_keyword_match,F_role_fit",
+      "keywords": "ATS,keyword match",
+      "advice_card_title": "求职者尚未针对目标岗位（BA/DA）做关键词匹配优化",
+      "user_problem_summary": "求职者尚未针对目标岗位（BA/DA）做关键词匹配优化，通用简历无法有效通过 ATS 筛选，需系统性提取高频关键词。",
+      "A_action": "第一步先完成通用版简历框架；第二步在 Google 上搜集至少 10 份目标岗位（如 BA）的 job description，提取高频关键词，按频次优先级融入简历对应 bullet point。",
+      "action_summary": "第一步先完成通用版简历框架；",
+      "I_insight": "ATS 系统通过关键词匹配决定简历是否进入人工审核环节，收集多份同类 JD 可识别行业高频词汇，显著提升匹配得分。"
+    },
+    "next": null
+  },
+  {
+    "current": {
+      "id": 19982,
+      "retrieval_scope": "resume_edit",
+      "role_family": "universal",
+      "target_roles": "universal",
+      "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation",
+      "ats_dimensions": "C_content_quality,F_role_fit",
+      "keywords": "resume version,targeted resume,resume tailoring",
+      "advice_card_title": "不要一份简历投所有岗位",
+      "user_problem_summary": "求职者简历中包含3年以上的早期教育/工作经历，",
+      "A_action": "评估3年以上旧经历是否有突出亮点，若无明显优势则大幅删减或移除；将简历重心集中在最近、最相关的三段经历上，确保每段经历质量高于数量堆砌。",
+      "action_summary": "评估3年以上旧经历是否有突出亮点，若无明显优势则大幅删减或移除；",
+      "I_insight": "招聘entry至mid level岗位时，HR关注点集中在近3年经历；过早的经历若无特别突出成果，反而稀释简历重点，建议精简至3段核心经历即可。"
+    },
+    "next": null
+  },
+  {
+    "current": {
+      "id": 22618,
+      "retrieval_scope": "resume_edit",
+      "role_family": "machine_learning,data_analyst",
+      "target_roles": "machine_learning_engineer,business_analyst,data_analyst",
+      "problem_tags": "low_hard_skill_match,generic_resume_positioning,low_role_specificity",
+      "ats_dimensions": "D_keyword_match,F_role_fit",
+      "keywords": "ATS,resume version,machine learning engineer,PyTorch,Python",
+      "advice_card_title": "不要一份简历投所有岗位",
+      "user_problem_summary": "求职者需要同时投递DS/ML方向和DA/BA方向岗位，单一版本简历无法有效匹配两类不同职位的要求，需制定多版本策略。",
+      "A_action": "准备两个版本的简历：一个偏DS/Machine Learning Engineer方向，一个偏DA/BA方向；在DA/BA基础版本之上，针对具体投递岗位的JD进行进一步微调，突出与岗位最相关的经验。",
+      "action_summary": "准备两个版本的简历：一个偏DS/Machine Learning Engineer方向，一个偏DA/BA方向；",
+      "I_insight": "不同方向岗位的HR和ATS关注的关键词与核心能力有所不同，用同一份简历投递所有职位会降低匹配度；以一个方向为基准简历，再按岗位微调，是效率与针对性的平衡做法。"
+    },
+    "next": null
+  },
+  {
+    "current": {
+      "id": 22876,
+      "retrieval_scope": "resume_edit",
+      "role_family": "universal",
+      "target_roles": "universal",
+      "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,low_hard_skill_match,keywords_only_in_skills",
+      "ats_dimensions": "D_keyword_match,F_role_fit",
+      "keywords": "quantified results,action verbs",
+      "advice_card_title": "求职者简历按时间线排列",
+      "user_problem_summary": "求职者简历按时间线排列，",
+      "A_action": "将简历中的 skills 和相关工具模块调整到靠前位置，paper 和 patent 移至后面；同时可在教育经历下补充与目标岗位相关的重要课程名称，以增强匹配度。",
+      "action_summary": "将简历中的 skills 和相关工具模块调整到靠前位置，paper 和 patent 移至后面；",
+      "I_insight": "筛选简历时间有限，HR视线优先扫描前段内容。应把与目标岗位关联性最强的模块放在最前面，而非单纯按时间线排列。"
+    },
+    "next": null
+  },
+  {
+    "current": {
+      "id": 24900,
+      "retrieval_scope": "resume_edit",
+      "role_family": "software_engineer,product_manager",
+      "target_roles": "backend_engineer,software_engineer,software_development_engineer",
+      "problem_tags": "low_hard_skill_match",
+      "ats_dimensions": "C_content_quality,D_keyword_match,F_role_fit",
+      "keywords": "backend engineer",
+      "advice_card_title": "求职者项目描述的第一句话未能清晰说明产品类型和所属...",
+      "user_problem_summary": "求职者项目描述的第一句话未能清晰说明产品类型和所属领域（domain），",
+      "A_action": "将项目描述第一句改写为明确说明「这是什么产品/系统 + 所属领域」，例如Fintech支付系统、内部运营工具等，让HR在3秒内判断domain匹配度。",
+      "action_summary": "将项目描述第一句改写为明确说明「这是什么产品/系统 + 所属领域」，",
+      "I_insight": "HR首轮筛选不足10秒，主要看skill match和项目是什么。项目第一句话是决定性展示窗口，且第一份工作的domain（如Fintech/Payment）会高度影响后续70-80%的职业路径，因为HR会直接以domain来匹配候选人。"
+    },
+    "next": {
+      "role_family": "software_engineer",
+      "target_roles": "software_engineer,backend_engineer,frontend_engineer",
+      "reason": "content points to Software Engineering"
+    }
+  },
+  {
+    "current": {
+      "id": 26130,
+      "retrieval_scope": "resume_edit",
+      "role_family": "product_manager,marketing",
+      "target_roles": "universal",
+      "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,weak_result_orientation,weak_action_verbs,low_measurable_results",
+      "ats_dimensions": "D_keyword_match,F_role_fit,C_content_quality",
+      "keywords": "portfolio,GitHub,work authorization",
+      "advice_card_title": "求职者第三段经历为家族企业虚构经历",
+      "user_problem_summary": "求职者第三段经历为家族企业虚构经历，内容空泛，缺乏可信度与技能展示；原版偏重电商平台操作，未能体现可迁移的营销能力",
+      "A_action": "将家族企业（惠普电脑代理零售）经历重新包装为general marketing方向，聚焦三类可信技能：①Social media内容创作（小红书/公众号产品推广帖）；②电商产品详情页copywriting（京东/淘宝listing优化）；③产品图片拍摄与修图，三条bullet point分别对应一个技能，使经历看起来真实且与营销岗位匹配",
+      "action_summary": "将家族企业（惠普电脑代理零售）经历重新包装为general marketing方向，",
+      "I_insight": "家族企业经历在简历中可信度较低，关键是将其包装为「可核实的具体输出物」（如发布的帖子、上线的详情页），并与目标岗位所需技能对齐，避免过度强调分析而缺乏执行层面内容"
+    },
+    "next": {
+      "role_family": "marketing",
+      "target_roles": "marketing_analyst,digital_marketing_specialist,brand_manager",
+      "reason": "content points to Marketing"
+    }
+  }
+]

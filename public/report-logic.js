@@ -11,6 +11,28 @@ if (typeof guardSubmitted === 'function') {
 
 const s = window.Store.get();
 const atsResult = s.atsResult || {};
+if (s.isPaid && s.reportId && s.reportAccessToken && (!s.premiumKeywordBreakdown || !s.premiumAdviceItems)) {
+  fetch(`/api/v1/reports/${encodeURIComponent(s.reportId)}/unlock`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ reportAccessToken: s.reportAccessToken }),
+  })
+    .then((res) => res.ok ? res.json() : null)
+    .then((data) => {
+      const premiumReport = data?.premiumReport;
+      if (!premiumReport) return;
+      window.Store.set({
+        premiumMentors: premiumReport.mentors || null,
+        premiumAdviceItems: premiumReport.allAdviceItems || null,
+        premiumKeywordBreakdown: premiumReport.keywordBreakdown || null,
+        missingKeywordChecklist: premiumReport.missingKeywordChecklist || null,
+        sectionFixPlan: premiumReport.sectionFixPlan || null,
+        mentorLogoPool: premiumReport.mentorLogoPool || s.mentorLogoPool || null,
+      });
+      window.location.reload();
+    })
+    .catch(() => {});
+}
 const mentorsSection = document.getElementById("mentors");
 if (mentorsSection) {
   const num = mentorsSection.querySelector(".section-num");
@@ -29,6 +51,85 @@ function escapeAttr(str){ return String(str).replace(/'/g,"&apos;").replace(/"/g
 function escapeHtml(s){
   return String(s||"").replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 }
+const STATIC_MENTOR_COMPANY_LOGOS = [
+  { company: "Amazon", companyLogo: "/logos/Amazon.png" },
+  { company: "Amazon Web Services", companyLogo: "/logos/Amazon Web Services, Inc.png" },
+  { company: "Google", companyLogo: "/logos/google.png" },
+  { company: "Meta", companyLogo: "/logos/Meta.png" },
+  { company: "Microsoft", companyLogo: "/logos/Microsoft.png" },
+  { company: "Apple", companyLogo: "/logos/Apple.png" },
+  { company: "NVIDIA", companyLogo: "/logos/NVIDIA.png" },
+  { company: "Intel", companyLogo: "/logos/Intel.png" },
+  { company: "Qualcomm", companyLogo: "/logos/Qualcomm.png" },
+  { company: "Cisco", companyLogo: "/logos/Cisco.png" },
+  { company: "IBM", companyLogo: "/logos/IBM.jpg" },
+  { company: "Oracle", companyLogo: "/logos/Oracle.png" },
+  { company: "Salesforce", companyLogo: "/logos/Salesforce.png" },
+  { company: "Adobe", companyLogo: "/logos/Adobe.png" },
+  { company: "Intuit", companyLogo: "/logos/Intuit.png" },
+  { company: "Snowflake", companyLogo: "/logos/Snowflake.png" },
+  { company: "Spotify", companyLogo: "/logos/Spotify.png" },
+  { company: "Uber", companyLogo: "/logos/Uber.jpg" },
+  { company: "Robinhood", companyLogo: "/logos/Robinhood.png" },
+  { company: "OpenAI", companyLogo: "/logos/OpenAI.png" },
+  { company: "ByteDance", companyLogo: "/logos/ByteDance.png" },
+  { company: "TikTok", companyLogo: "/logos/Tiktok.png" },
+  { company: "SAP", companyLogo: "/logos/SAP.png" },
+  { company: "Goldman Sachs", companyLogo: "/logos/Goldman Sachs.png" },
+  { company: "JPMorgan Chase", companyLogo: "/logos/JPMorganChase.png" },
+  { company: "Morgan Stanley", companyLogo: "/logos/Morgan Stanley.png" },
+  { company: "BlackRock", companyLogo: "/logos/BlackRock.png" },
+  { company: "Capital One", companyLogo: "/logos/Capital One.png" },
+  { company: "Bank of America", companyLogo: "/logos/Bank of America.png" },
+  { company: "Citigroup", companyLogo: "/logos/Citigroup.png" },
+  { company: "American Express", companyLogo: "/logos/American Express.png" },
+  { company: "State Street", companyLogo: "/logos/State Street.png" },
+  { company: "McKinsey", companyLogo: "/logos/McKinsey & Company.png" },
+  { company: "BCG", companyLogo: "/logos/Boston Consulting Group.png" },
+  { company: "Deloitte", companyLogo: "/logos/Deloitte.png" },
+  { company: "KPMG", companyLogo: "/logos/KPMG.png" },
+  { company: "EY", companyLogo: "/logos/EY.png" },
+  { company: "PwC", companyLogo: "/logos/PRICE WATERHOUSE COOPERS.png" },
+  { company: "Accenture", companyLogo: "/logos/Accenture.png" },
+  { company: "BDO", companyLogo: "/logos/BDO.png" },
+  { company: "Applied Materials", companyLogo: "/logos/Applied Materials.png" },
+  { company: "KLA", companyLogo: "/logos/KLA.png" },
+  { company: "Lam Research", companyLogo: "/logos/Lam Research.png" },
+  { company: "Marvell", companyLogo: "/logos/Marvell.png" },
+  { company: "TSMC", companyLogo: "/logos/TSMC.png" },
+  { company: "Texas Instruments", companyLogo: "/logos/Texas Instruments.png" },
+  { company: "Cirrus Logic", companyLogo: "/logos/Cirrus Logic.png" },
+  { company: "NXP", companyLogo: "/logos/NXP Semiconductors.png" },
+  { company: "Renesas", companyLogo: "/logos/Renesas Electronics.png" },
+  { company: "Skyworks", companyLogo: "/logos/Skyworks.png" },
+  { company: "Johnson & Johnson", companyLogo: "/logos/Johnson & Johnson.png" },
+  { company: "Merck", companyLogo: "/logos/Merck.png" },
+  { company: "Bristol Myers Squibb", companyLogo: "/logos/Bristol Myers Squibb.png" },
+  { company: "Amgen", companyLogo: "/logos/Amgen.png" },
+  { company: "Biogen", companyLogo: "/logos/Biogen.png" },
+  { company: "Moderna", companyLogo: "/logos/Moderna.png" },
+  { company: "AbbVie", companyLogo: "/logos/AbbVie.png" },
+  { company: "Humana", companyLogo: "/logos/Humana.png" },
+  { company: "CVS Health", companyLogo: "/logos/CVS Health.png" },
+  { company: "Kaiser Permanente", companyLogo: "/logos/Kaiser Permanente.png" },
+  { company: "Tesla", companyLogo: "/logos/Tesla.png" },
+  { company: "Ford", companyLogo: "/logos/Ford Motor Company.png" },
+  { company: "General Motors", companyLogo: "/logos/General Motors.png" },
+  { company: "Nissan", companyLogo: "/logos/Nissan.png" },
+  { company: "Volvo", companyLogo: "/logos/Volvo Group.png" },
+  { company: "John Deere", companyLogo: "/logos/John Deere.png" },
+  { company: "General Electric", companyLogo: "/logos/General Electric.png" },
+  { company: "Bosch", companyLogo: "/logos/Bosch Group.png" },
+  { company: "Walmart", companyLogo: "/logos/Walmart.png" },
+  { company: "Target", companyLogo: "/logos/Target.png" },
+  { company: "Costco", companyLogo: "/logos/Costco.png" },
+  { company: "Nordstrom", companyLogo: "/logos/Nordstrom.png" },
+  { company: "Kroger", companyLogo: "/logos/Kroger.png" },
+  { company: "Disney", companyLogo: "/logos/Disney.png" },
+  { company: "Sony", companyLogo: "/logos/Sony AI America Inc.png" },
+  { company: "FedEx", companyLogo: "/logos/FedEx.png" },
+  { company: "Amtrak", companyLogo: "/logos/Amtrak.png" },
+];
 function getJdMatchRatio(ats) {
   const value = ats?.jdMatchRatio ?? ats?.raw?.jdMatchRatio ?? ats?.raw?.metrics?.jdMatchRatio ?? ats?.metrics?.jdMatchRatio;
   if (value === null || value === undefined || value === "") return null;
@@ -46,7 +147,7 @@ function uniqueList(items) {
   });
 }
 function getKeywordBreakdown() {
-  return atsResult.keywordBreakdown || atsResult.raw?.keywordBreakdown || [];
+  return s.premiumKeywordBreakdown || atsResult.raw?.premiumKeywordBreakdown || atsResult.keywordBreakdown || atsResult.raw?.keywordBreakdown || [];
 }
 function getMissingKeywordChecklist() {
   return Array.isArray(s.missingKeywordChecklist) ? s.missingKeywordChecklist : [];
@@ -107,13 +208,14 @@ function normalizeSuggestionList() {
     ...(atsResult.raw?.topMissingKeywords || []),
   ]).slice(0, 8);
   const fallbackSuggestions = [
-    missingKw.length ? `优先补齐 JD 缺失关键词：${missingKw.join("、")}。` : "",
+    missingKw.length ? `优先补齐 JD 缺失技能：${missingKw.join("、")}。` : "",
     "把目标岗位关键词写进 Summary、Skills 和最相关的 Experience bullet，避免只堆在技能列表。",
     "将每段核心经历改成「动作 + 方法/工具 + 量化结果」结构，让 ATS 和招聘官都能看到岗位证据。",
   ];
   return uniqueList([
     ...(atsResult.suggestions || []),
     ...(atsResult.raw?.suggestions || []),
+    ...Object.values(s.sectionFixPlan || {}).flat().map(item => item.message || item.action || item.actionSummary || item.title).filter(Boolean),
     ...((atsResult.structuredSuggestions || []).map(item => item.action || item.actionSummary || item.title).filter(Boolean)),
     ...((atsResult.raw?.structuredSuggestions || []).map(item => item.action || item.actionSummary || item.title).filter(Boolean)),
     ...fallbackSuggestions,
@@ -130,14 +232,14 @@ function buildSkillsFromJD() {
   const seen = new Set();
   const skills = [];
   for (const cat of breakdown) {
-    for (const term of (cat.matched || [])) {
+    for (const term of normalizeTerms(cat.matched || [])) {
       const name = String(term).trim();
       const key = name.toLowerCase();
       if (!name || seen.has(key)) continue;
       seen.add(key);
       skills.push({ name, status: "have" });
     }
-    for (const term of (cat.missing || [])) {
+    for (const term of normalizeTerms(cat.missing || [])) {
       const name = String(term).trim();
       const key = name.toLowerCase();
       if (!name || seen.has(key)) continue;
@@ -147,8 +249,28 @@ function buildSkillsFromJD() {
   }
   return { skills, seen };
 }
+
+function normalizeTerms(value) {
+  const raw = Array.isArray(value) ? value : [value];
+  return raw.flatMap((item) => {
+    const text = typeof item === "string" ? item : (item?.term || item?.name || "");
+    return splitKeywordText(text);
+  }).map((item) => String(item).trim()).filter(Boolean);
+}
+
+function splitKeywordText(text) {
+  let value = String(text || "").trim();
+  if (!value) return [];
+  value = value
+    .replace(/machine learningimage generationdebugging/gi, "machine learning,image generation,debugging")
+    .replace(/machine learningimage generation/gi, "machine learning,image generation")
+    .replace(/image generationdebugging/gi, "image generation,debugging");
+  if (/[、,;；|]/.test(value)) return value.split(/[、,;；|]/).map((item) => item.trim()).filter(Boolean);
+  return [value];
+}
 function renderMentorLogoMarquee(pool) {
-  const logos = (pool || []).filter(item => item && item.companyLogo).slice(0, 16);
+  const source = (pool && pool.length ? pool : STATIC_MENTOR_COMPANY_LOGOS);
+  const logos = (source || []).filter(item => item && item.companyLogo).slice(0, 80);
   if (!logos.length) return "";
   const chips = [...logos, ...logos].map(item => `
     <div class="mentor-logo-chip" title="${escapeAttr(item.company || "")}">
@@ -156,6 +278,24 @@ function renderMentorLogoMarquee(pool) {
     </div>
   `).join("");
   return `<div class="logo-marquee" aria-label="Mentor company logos"><div class="logo-marquee-track">${chips}</div></div>`;
+}
+
+function collectMentorLogoPool() {
+  const pools = [
+    ...(s.mentorLogoPool || []),
+    ...(s.lockedAdvicePreview?.mentorLogoPool || []),
+    ...(s.freeMentorAdvice?.mentorLogoPool || []),
+    ...(s.premiumMentors || []).map((m) => ({ company: m.company, companyLogo: m.companyLogo })),
+    ...(atsResult.raw?.premiumMentors || []).map((m) => ({ company: m.company, companyLogo: m.companyLogo })),
+    ...(atsResult.raw?.freeMentorAdvice?.mentorLogoPool || []),
+  ];
+  const seen = new Set();
+  return pools.filter((item) => {
+    const key = `${item?.company || ""}|${item?.companyLogo || ""}`;
+    if (!item?.companyLogo || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 function formatMentorName(name){
   if (!name) return "X导师";
@@ -204,55 +344,64 @@ if (headlineEl && atsResult.atsScore) headlineEl.textContent = atsResult.atsScor
 (function renderAtsDetail() {
   const raw = atsResult.raw?.dimensions || atsResult.dimensions || {};
   const dimKeys = ["A","B","C","D","E","F"];
-  const dimLabels = { A:"格式规范", B:"基本资料", C:"内容质量", D:"JD匹配", E:"市场适配", F:"经验匹配" };
-
-  const dimHTML = dimKeys.map(k => {
-    const d = raw[k]; if (!d) return "";
-    const pct = Math.round((d.score / d.max) * 100);
-    const color = pct >= 70 ? "var(--good,#6abf7b)" : pct >= 45 ? "#e9a84c" : "var(--rose,#e07070)";
-    return `
-      <div style="background:rgba(255,255,255,.5);border-radius:8px;padding:10px 8px;text-align:center;">
-        <div style="font-size:11px;color:var(--ink-soft);margin-bottom:4px;">${k} · ${dimLabels[k]}</div>
-        <div style="font-size:17px;font-weight:700;color:${color};font-family:var(--mono);">${d.score}<span style="font-size:11px;color:var(--ink-mute);">/${d.max}</span></div>
-        <div style="height:4px;border-radius:99px;background:rgba(0,0,0,.08);margin-top:6px;overflow:hidden;">
-          <div style="width:${pct}%;height:100%;background:${color};border-radius:99px;"></div>
-        </div>
-      </div>`;
-  }).join("");
-  const dimGrid = document.getElementById("atsDimGrid");
-  if (dimGrid) dimGrid.innerHTML = dimHTML;
-
-  const breakdown = getKeywordBreakdown();
+  const dimLabels = { A:"格式规范", B:"基本资料", C:"内容质量", D:"技能匹配", E:"市场适配", F:"经验匹配" };
   const jdKeywordCount = formatJdKeywordCount(atsResult);
-  let kwHTML = `<div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed var(--line);">JD 关键词覆盖${jdKeywordCount !== "--" ? ` <span style="color:var(--ink);font-family:var(--mono);font-size:13px;"> · 已命中 ${jdKeywordCount}</span>` : ""}</div>`;
 
-  if (breakdown.length) {
-    kwHTML += breakdown.map(cat => {
-      const matchedPills = (cat.matched || []).map(k=>`<span style="display:inline-block;padding:3px 8px;border-radius:99px;background:rgba(106,191,123,.15);color:#2d7a4a;font-size:12px;font-weight:500;margin:2px;">${escapeHtml(k)}</span>`).join("");
-      const missingPills = (cat.missing || []).map(k=>`<span style="display:inline-block;padding:3px 8px;border-radius:99px;background:rgba(224,112,112,.12);color:#b02020;font-size:12px;font-weight:500;margin:2px;">${escapeHtml(k)}</span>`).join("");
-      const total = cat.total || (cat.matched.length + cat.missing.length);
-      const pct = total ? Math.round((cat.matched.length / total) * 100) : 0;
-      const pctColor = pct>=70?"var(--good)":pct>=40?"#e9a84c":"var(--rose)";
-      return `
-        <div style="margin-bottom:14px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-            <span style="font-size:12px;font-weight:700;color:var(--ink);font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase;">${escapeHtml(cat.label)}</span>
-            <span style="font-size:12px;font-weight:700;font-family:var(--mono);color:${pctColor};">${cat.matched.length}/${total}</span>
-          </div>
-          ${matchedPills ? `<div style="margin-bottom:4px;"><span style="font-size:10px;color:var(--ink-mute);font-family:var(--mono);letter-spacing:.03em;">✓ 已命中</span><div style="margin-top:3px;">${matchedPills}</div></div>` : ""}
-          ${missingPills ? `<div><span style="font-size:10px;color:var(--ink-mute);font-family:var(--mono);letter-spacing:.03em;">✗ 未命中</span><div style="margin-top:3px;">${missingPills}</div></div>` : ""}
-        </div>`;
-    }).join("");
-  } else {
-    const missingKw = uniqueList([
-      ...(atsResult.topMissingKw || []),
-      ...(atsResult.raw?.topMissingKw || []),
-      ...getMissingKeywordChecklist().map(item => item.term || item.name),
-    ]);
-    if (missingKw.length) kwHTML += `<div><div style="font-size:11px;color:var(--ink-soft);font-family:var(--mono);letter-spacing:.04em;margin-bottom:4px;">缺口关键词</div><div style="display:flex;flex-wrap:wrap;gap:4px;">${missingKw.map(k=>`<span style="display:inline-block;padding:3px 8px;border-radius:99px;background:rgba(224,112,112,.12);color:#b02020;font-size:12px;">${escapeHtml(k)}</span>`).join("")}</div></div>`;
+  const svgEl = document.getElementById("atsRadarChart");
+  if (svgEl) {
+    const cx = 120, cy = 110, R = 80;
+    const dims = dimKeys.map(k => {
+      const d = raw[k];
+      return d ? { score:d.score, max:d.max, pct:Math.round((d.score / d.max) * 100) } : { score:0, max:1, pct:0 };
+    });
+    const angle = (i) => (Math.PI / 3) * i - Math.PI / 2;
+    const pt = (i, r) => [cx + r * Math.cos(angle(i)), cy + r * Math.sin(angle(i))];
+    let svg = "";
+    [0.25, 0.5, 0.75, 1].forEach(frac => {
+      svg += `<polygon points="${dimKeys.map((_,i) => pt(i, R * frac).join(",")).join(" ")}" fill="none" stroke="rgba(0,0,0,.08)" stroke-width="1"/>`;
+    });
+    dimKeys.forEach((_, i) => {
+      const [x, y] = pt(i, R);
+      svg += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(0,0,0,.1)" stroke-width="1"/>`;
+    });
+    const dataPts = dims.map((d, i) => pt(i, R * d.pct / 100).join(",")).join(" ");
+    svg += `<polygon points="${dataPts}" fill="rgba(106,191,123,.25)" stroke="var(--jade,#6abf7b)" stroke-width="2"/>`;
+    dims.forEach((d, i) => {
+      const [dx, dy] = pt(i, R * d.pct / 100);
+      const [lx, ly] = pt(i, R + 22);
+      const anchor = lx < cx - 4 ? "end" : lx > cx + 4 ? "start" : "middle";
+      const color = d.pct >= 70 ? "var(--good,#6abf7b)" : d.pct >= 45 ? "#e9a84c" : "var(--rose,#e07070)";
+      svg += `<circle cx="${dx}" cy="${dy}" r="4" fill="${color}"/>`;
+      svg += `<text x="${lx}" y="${ly}" text-anchor="${anchor}" font-size="11" font-weight="600" fill="var(--ink-soft)" font-family="var(--sans)">${dimLabels[dimKeys[i]]}</text>`;
+      svg += `<text x="${lx}" y="${ly + 13}" text-anchor="${anchor}" font-size="12" font-weight="800" fill="${color}" font-family="var(--sans)">${d.score}/${d.max}</text>`;
+    });
+    svgEl.innerHTML = svg;
   }
-  const kwSection = document.getElementById("atsKeywordSection");
-  if (kwSection) kwSection.innerHTML = kwHTML;
+
+  const totalEl = document.getElementById("atsTotalScore");
+  if (totalEl && atsResult.atsScore) {
+    const sc = atsResult.atsScore;
+    const scoreColor = sc >= 75 ? "var(--jade,#6abf7b)" : sc >= 55 ? "#e9a84c" : "var(--rose,#e07070)";
+    totalEl.innerHTML = `<span style="color:${scoreColor};">${sc}</span><span style="font-size:13px;color:var(--ink-soft);font-weight:500;">/100</span>`;
+  }
+  const riskMap = {
+    "低": { label:"低风险", bg:"#d4f0de", color:"#2d7a4a", border:"#2d7a4a" },
+    "中": { label:"中风险", bg:"#fde8c8", color:"#b05e00", border:"#b05e00" },
+    "高": { label:"高风险", bg:"#fdd8d8", color:"#b02020", border:"#b02020" },
+  };
+  const r = riskMap[atsResult.riskLevel] || { label: atsResult.riskLevel || "未知", bg:"#eee", color:"#666", border:"#999" };
+  const badgeEl = document.getElementById("atsRiskBadge");
+  if (badgeEl) { badgeEl.textContent = r.label; badgeEl.style.background = r.bg; badgeEl.style.color = r.color; badgeEl.style.border = `1.5px solid ${r.border}`; }
+
+  const sysSummaryEl = document.getElementById("atsSystemSummary");
+  if (sysSummaryEl) {
+    const missingKw = atsResult.topMissingKw || atsResult.raw?.topMissingKw || [];
+    sysSummaryEl.innerHTML = [
+      jdKeywordCount !== "--" ? `<div><b>JD 技能匹配：</b>${jdKeywordCount}</div>` : "",
+      missingKw.length ? `<div><b>待补技能：</b>${missingKw.slice(0, 10).join("、")}</div>` : "",
+      atsResult.formatPenaltyTriggered ? `<div style="color:var(--rose);"><b>格式处罚：</b>${(atsResult.formatPenaltyReason || []).join("；")}</div>` : "",
+    ].filter(Boolean).join("");
+  }
 
   const problems = normalizeProblemList();
   const suggestions = normalizeSuggestionList();
@@ -278,22 +427,37 @@ const labelMap = {
 function renderSkillList(skills){
   const skillListEl = document.getElementById("skillList");
   if (!skillListEl) return;
-  skillListEl.innerHTML = skills.map(sk => `
+  document.getElementById("reportSkillExpandToggle")?.remove();
+  const visible = skills.slice(0, 5);
+  const hidden = skills.slice(5);
+  skillListEl.innerHTML = [
+    ...visible.map(sk => `
     <li class="skill-row">
       <div class="skill-name"><span class="priority">#${sk.priority}</span>${escapeHtml(sk.name)}</div>
       ${labelMap[sk.status] || ""}
-    </li>
-  `).join("");
-  const jdCount = getJdKeywordCount(atsResult);
-  if (jdCount) {
-    skills = Array.from({ length: jdCount.total }, (_, i) => ({
-      status: i < jdCount.matched ? "have" : "weak"
-    }));
+    </li>`),
+    ...hidden.map(sk => `
+    <li class="skill-row skill-extra" hidden>
+      <div class="skill-name"><span class="priority">#${sk.priority}</span>${escapeHtml(sk.name)}</div>
+      ${labelMap[sk.status] || ""}
+    </li>`),
+  ].join("");
+  if (hidden.length) {
+    skillListEl.insertAdjacentHTML("afterend", `<button class="skill-expand-toggle" id="reportSkillExpandToggle" type="button">展开全部 ${skills.length} 项技能 ↓</button>`);
+    const btn = document.getElementById("reportSkillExpandToggle");
+    let open = false;
+    btn?.addEventListener("click", () => {
+      open = !open;
+      document.querySelectorAll(".skill-extra").forEach((el) => { el.hidden = !open; });
+      btn.textContent = open ? "收起 ↑" : `展开全部 ${skills.length} 项技能 ↓`;
+    });
   }
-  const have = skills.filter(sk => sk.status === "have").length;
-  const weak = skills.filter(sk => sk.status === "weak").length;
+  const jdCount = getJdKeywordCount(atsResult);
+  const have = jdCount ? jdCount.matched : skills.filter(sk => sk.status === "have").length;
+  const total = jdCount ? jdCount.total : skills.length;
+  const weak = Math.max(0, total - have);
   const insightEl = document.querySelector(".ai-insight-diagnosis");
-  if (insightEl) insightEl.innerHTML = `<span class="ico">💡</span>你已掌握 <b>${have}/${skills.length}</b> 项 JD 技能关键词，还有 <b>${weak} 项</b>待补强。${weak > 0 ? "招聘官会优先看简历是否使用岗位语言，建议把缺失关键词写进 Summary、Skills 和相关经历证据里。" : "技能覆盖率良好，建议进一步量化成果。"}`;
+  if (insightEl) insightEl.innerHTML = `<span class="ico">💡</span>你已掌握 <b>${have}/${total}</b> 项 JD 技能，还有 <b>${weak} 项</b>待补强。${weak > 0 ? "招聘官会优先看简历是否使用岗位语言，建议把缺失技能写进 Summary、Skills 和相关经历证据里。" : "技能覆盖率良好，建议进一步量化成果。"}`;
 }
 (async function loadSkills(){
   const { skills: jdSkills } = buildSkillsFromJD();
@@ -308,11 +472,11 @@ function renderSkillList(skills){
   if (kwSection) {
     const breakdown = getKeywordBreakdown();
     const jdKeywordCount = formatJdKeywordCount(atsResult);
-    let kwHTML = `<div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed var(--line);">JD 关键词覆盖${jdKeywordCount !== "--" ? ` <span style="color:var(--ink);font-family:var(--mono);font-size:13px;"> · 已命中 ${jdKeywordCount}</span>` : ""}</div>`;
+    let kwHTML = `<div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed var(--line);">JD 技能覆盖${jdKeywordCount !== "--" ? ` <span style="color:var(--ink);font-family:var(--mono);font-size:13px;"> · 已具备 ${jdKeywordCount}</span>` : ""}</div>`;
     if (breakdown.length) {
       kwHTML += breakdown.map(cat => {
-        const matched = cat.matched || [];
-        const missing = cat.missing || [];
+        const matched = normalizeTerms(cat.matched || []);
+        const missing = normalizeTerms(cat.missing || []);
         const total = cat.total || matched.length + missing.length;
         const pct = total ? Math.round((matched.length / total) * 100) : 0;
         const pctColor = pct>=70 ? "var(--good)" : pct>=40 ? "#e9a84c" : "var(--rose)";
@@ -334,7 +498,7 @@ function renderSkillList(skills){
         ...getMissingKeywordChecklist().map(item => item.term || item.name),
       ]);
       if (missingKw.length) {
-        kwHTML += `<div><div style="font-size:11px;color:var(--ink-soft);font-family:var(--mono);letter-spacing:.04em;margin-bottom:4px;">缺口关键词</div><div style="display:flex;flex-wrap:wrap;gap:4px;">${missingKw.map(k=>`<span style="display:inline-block;padding:3px 8px;border-radius:99px;background:rgba(224,112,112,.12);color:#b02020;font-size:12px;">${escapeHtml(k)}</span>`).join("")}</div></div>`;
+        kwHTML += `<div><div style="font-size:11px;color:var(--ink-soft);font-family:var(--mono);letter-spacing:.04em;margin-bottom:4px;">待补技能</div><div style="display:flex;flex-wrap:wrap;gap:4px;">${missingKw.map(k=>`<span style="display:inline-block;padding:3px 8px;border-radius:99px;background:rgba(224,112,112,.12);color:#b02020;font-size:12px;">${escapeHtml(k)}</span>`).join("")}</div></div>`;
       }
     }
     kwSection.innerHTML = kwHTML;
@@ -445,6 +609,19 @@ function renderAdviceBundle(items, logoPool) {
 function adviceIdentity(item) {
   return String(item?.adviceId || item?.id || `${item?.title || ""}|${item?.action || item?.actionSummary || ""}`).trim();
 }
+function isUnsafeReportAdvice(item) {
+  const text = [
+    item?.title,
+    item?.currentDiagnosis,
+    item?.problemSummary,
+    item?.action,
+    item?.actionSummary,
+    item?.mentorInsight,
+    item?.example,
+    item?.hrPerspective,
+  ].filter(Boolean).join(" ").toLowerCase();
+  return /绿卡|green card|工作身份|work authorization|holder|quant research|risk quant|mfe|sharpe ratio|embedded system|computer vision|ba方向|ba\s*\/\s*da|da\s*\/\s*ba/i.test(text);
+}
 function collectReportAdviceItems() {
   const sources = [
     ...(s.premiumAdviceItems || []),
@@ -458,6 +635,7 @@ function collectReportAdviceItems() {
   const seen = new Set();
   const items = [];
   for (const item of sources) {
+    if (isUnsafeReportAdvice(item)) continue;
     const key = adviceIdentity(item);
     if (!key || seen.has(key)) continue;
     seen.add(key);
@@ -544,7 +722,7 @@ function renderAdviceItem(item, i) {
 
 const premiumMentors = s.premiumMentors;
 const premiumAdviceItems = collectReportAdviceItems();
-const mentorLogoPool = s.mentorLogoPool || s.lockedAdvicePreview?.mentorLogoPool || s.freeMentorAdvice?.mentorLogoPool || [];
+const mentorLogoPool = collectMentorLogoPool();
 const legacyMentors = s.mentorAdvice;
 const mentorsListEl = document.getElementById("mentorsList");
 if (mentorsListEl) {

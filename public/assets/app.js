@@ -1,6 +1,6 @@
 const STORE_KEY = "resumeFixMVP";
 // NOTE: API_BASE is declared in api-client.js (loaded before this file)
-window.__resumeAppState = window.__resumeAppState || { isSubmitting: false, loaderRotateTimer: null };
+window.__resumeAppState = window.__resumeAppState || { isSubmitting: false, loaderRotateTimer: null, loaderProgressTimer: null };
 
 window.Store = window.Store || {
   get() {
@@ -18,11 +18,11 @@ window.Store = window.Store || {
 };
 
 const ANALYSIS_MESSAGES = [
-  ["正在分析简历…",        "导师正在读取你的简历内容"],
-  ["正在匹配导师…",        "从 1,300+ 位导师中筛选最适合的大佬"],
-  ["正在评估 ATS 兼容性…", "检测关键词匹配与岗位相关度"],
-  ["正在生成个性化建议…",  "结合你的目标岗位定制优化方向"],
-  ["即将完成…",            "正在整理诊断报告"],
+  ["正在读取简历…",        "解析 PDF / DOCX 内容与目标岗位信息"],
+  ["正在调用 ATS 评分…",   "检测关键词覆盖、岗位相关度与格式风险"],
+  ["正在匹配导师建议…",    "从真实导师建议库中筛选最相关的简历修改建议"],
+  ["正在组装免费诊断…",    "只返回免费可见的问题、建议与导师建议"],
+  ["正在保存报告…",        "生成结果页与后续解锁凭证"],
 ];
 
 function showLoader(text, subtext, rotate) {
@@ -30,14 +30,16 @@ function showLoader(text, subtext, rotate) {
   if (!o) {
     o = document.createElement("div");
     o.className = "loader-overlay";
-    o.innerHTML = '<div class="loader-container"><div class="loader-dots"><span></span><span></span><span></span></div><div class="loader-text"></div><div class="loader-subtext"></div></div>';
+    o.innerHTML = '<div class="loader-container"><div class="loader-dots"><span></span><span></span><span></span></div><div class="loader-text"></div><div class="loader-subtext"></div><div class="loader-progress"><div class="loader-progress-fill"></div></div><div class="loader-progress-label">0%</div></div>';
     document.body.appendChild(o);
     const s = document.createElement("style");
-    s.textContent = ".loader-overlay{position:fixed;inset:0;background:rgba(15,23,42,.82);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:9999;opacity:0;pointer-events:none;transition:opacity .3s}.loader-overlay.show{opacity:1;pointer-events:auto}.loader-container{text-align:center;color:#f8fafc;padding:0 32px;max-width:320px}.loader-dots{display:flex;gap:10px;justify-content:center;margin-bottom:24px}.loader-dots span{width:11px;height:11px;border-radius:50%;background:#6ee7b7;animation:ldBounce 1.4s infinite ease-in-out both}.loader-dots span:nth-child(1){animation-delay:-.32s}.loader-dots span:nth-child(2){animation-delay:-.16s}@keyframes ldBounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}.loader-text{font-size:19px;font-weight:700;margin-bottom:10px;transition:opacity .35s;color:#f8fafc;letter-spacing:-.01em}.loader-subtext{font-size:14px;color:#94a3b8;line-height:1.5;transition:opacity .35s}";
+    s.textContent = ".loader-overlay{position:fixed;inset:0;background:rgba(15,23,42,.82);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:9999;opacity:0;pointer-events:none;transition:opacity .3s}.loader-overlay.show{opacity:1;pointer-events:auto}.loader-container{text-align:center;color:#f8fafc;padding:0 32px;max-width:360px;width:min(360px,100%)}.loader-dots{display:flex;gap:10px;justify-content:center;margin-bottom:24px}.loader-dots span{width:11px;height:11px;border-radius:50%;background:#6ee7b7;animation:ldBounce 1.4s infinite ease-in-out both}.loader-dots span:nth-child(1){animation-delay:-.32s}.loader-dots span:nth-child(2){animation-delay:-.16s}@keyframes ldBounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}.loader-text{font-size:19px;font-weight:700;margin-bottom:10px;transition:opacity .35s;color:#f8fafc;letter-spacing:-.01em}.loader-subtext{font-size:14px;color:#94a3b8;line-height:1.5;transition:opacity .35s}.loader-progress{height:8px;border-radius:999px;background:rgba(255,255,255,.14);overflow:hidden;margin:22px auto 8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}.loader-progress-fill{height:100%;width:0%;border-radius:inherit;background:linear-gradient(90deg,#6ee7b7,#f8c37d,#fb7185);transition:width .45s ease;position:relative}.loader-progress-fill::after{content:\"\";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);animation:ldShimmer 1.35s linear infinite}@keyframes ldShimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}.loader-progress-label{font-size:11px;color:#cbd5e1;font-family:ui-monospace,Menlo,Consolas,monospace}";
     document.head.appendChild(s);
   }
   const textEl    = o.querySelector(".loader-text");
   const subtextEl = o.querySelector(".loader-subtext");
+  const progressEl = o.querySelector(".loader-progress-fill");
+  const progressLabelEl = o.querySelector(".loader-progress-label");
   textEl.textContent    = text    || "";
   subtextEl.textContent = subtext || "";
   o.classList.add("show");
@@ -47,6 +49,14 @@ function showLoader(text, subtext, rotate) {
     clearInterval(window.__resumeAppState.loaderRotateTimer);
     window.__resumeAppState.loaderRotateTimer = null;
   }
+  if (window.__resumeAppState.loaderProgressTimer) {
+    clearInterval(window.__resumeAppState.loaderProgressTimer);
+    window.__resumeAppState.loaderProgressTimer = null;
+  }
+
+  let progress = rotate ? 8 : (text && text.includes("完成") ? 100 : 18);
+  if (progressEl) progressEl.style.width = progress + "%";
+  if (progressLabelEl) progressLabelEl.textContent = progress + "%";
 
   if (rotate) {
     let idx = 0;
@@ -61,7 +71,12 @@ function showLoader(text, subtext, rotate) {
         textEl.style.opacity = "1";
         subtextEl.style.opacity = "0.7";
       }, 300);
-    }, 2000);
+    }, 3200);
+    window.__resumeAppState.loaderProgressTimer = setInterval(() => {
+      progress = Math.min(92, progress + Math.max(1, Math.round((92 - progress) * 0.08)));
+      if (progressEl) progressEl.style.width = progress + "%";
+      if (progressLabelEl) progressLabelEl.textContent = progress + "%";
+    }, 900);
   }
 }
 function hideLoader() {
@@ -69,8 +84,32 @@ function hideLoader() {
     clearInterval(window.__resumeAppState.loaderRotateTimer);
     window.__resumeAppState.loaderRotateTimer = null;
   }
+  if (window.__resumeAppState.loaderProgressTimer) {
+    clearInterval(window.__resumeAppState.loaderProgressTimer);
+    window.__resumeAppState.loaderProgressTimer = null;
+  }
   const o = document.querySelector(".loader-overlay");
   if (o) o.classList.remove("show");
+}
+
+function inferTargetJobFromJD(jdText) {
+  const text = String(jdText || "").replace(/\r/g, "\n").trim();
+  if (!text) return "";
+  const labeled = text.match(/(?:job\s*title|position|role|title|职位|岗位|招聘岗位|目标岗位)\s*[:：\-]\s*([^\n|;；,，]+)/i);
+  if (labeled && labeled[1]) return labeled[1].replace(/\s+/g, " ").trim().slice(0, 80);
+  const roleWords = /(engineer|developer|scientist|analyst|manager|designer|consultant|researcher|architect|specialist|associate|intern|实习|工程师|分析师|经理|顾问|研究员|设计师|产品|运营|数据|算法|机器学习|软件|前端|后端)/i;
+  const noiseWords = /(responsibilities|requirements|qualifications|about us|description|summary|薪资|职责|要求|资格|福利|公司|我们|工作内容)/i;
+  const lines = text.split("\n").map((line) => line.trim()).filter(Boolean).slice(0, 18);
+  for (const line of lines) {
+    const cleaned = line
+      .replace(/^[#*\-\s]+/, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (cleaned.length < 3 || cleaned.length > 90) continue;
+    if (noiseWords.test(cleaned)) continue;
+    if (roleWords.test(cleaned)) return cleaned;
+  }
+  return "";
 }
 
 async function submitResume(form) {
@@ -86,30 +125,29 @@ async function submitResume(form) {
   window.__resumeAppState.isSubmitting = true;
   if (btn) btn.disabled = true;
   try {
-    showLoader("准备文件…", "读取简历内容…");
     const resumeText = await readResumeFile(file);
-    showLoader("正在分析简历…", "导师正在读取你的简历内容", true);
-    const atsRaw    = await scoreResumeAPI(resumeText, job || null, jd, file);
-    const atsResult = formatATSResult(atsRaw);
-    const targetJob = job || atsRaw.jobTitle || "";
+    const analysisJob = await startAnalysisJobAPI(resumeText, job || null, jd, file.name);
+    const targetJob = job || inferTargetJobFromJD(jd);
     window.Store.set({
       resumeName: file.name,
       jobTitle: targetJob,
       targetLabel: targetJob,
       jdText: jd,
       resumeText,
-      atsResult,
-      freeMentorAdvice: atsRaw.freeMentorAdvice || null,
-      lockedAdvicePreview: atsRaw.lockedAdvicePreview || null,
+      analysisJobId: analysisJob.jobId,
+      analysisJobStatus: analysisJob.status,
+      analysisJobStartedAt: Date.now(),
+      atsResult: null,
+      freeMentorAdvice: null,
+      lockedAdvicePreview: null,
       premiumMentors: null,
       premiumAdviceItems: null,
-      mentorLogoPool: atsRaw.lockedAdvicePreview?.mentorLogoPool || atsRaw.freeMentorAdvice?.mentorLogoPool || null,
+      mentorLogoPool: null,
       submittedAt: Date.now(),
       isPaid: false,
       mentorAdvice: null
     });
-    showLoader("诊断完成！", "已匹配免费导师建议，正在跳转报告页面…");
-    setTimeout(() => { window.location.href = "/login"; }, 800);
+    window.location.href = "/login";
   } catch(err) {
     errorBox.textContent = "❌ " + (err.message || "未知错误");
     errorBox.classList.add("show");
@@ -150,10 +188,64 @@ function bindFileUpload() {
   });
 }
 
+function storeAnalysisJobResult(result) {
+  const publicReport = result?.publicReport || result?.data || {};
+  const atsResult = typeof formatATSResult === "function"
+    ? formatATSResult({ ...publicReport, reportId: result?.reportId, reportAccessToken: result?.reportAccessToken })
+    : publicReport;
+  window.Store.set({
+    reportId: result?.reportId || publicReport.reportId || null,
+    sessionId: result?.reportId || publicReport.reportId || null,
+    reportAccessToken: result?.reportAccessToken || null,
+    atsResult,
+    targetLabel: atsResult.jobTitle || publicReport.jobTitle || window.Store.get().targetLabel || window.Store.get().jobTitle || null,
+    freeMentorAdvice: publicReport.freeMentorAdvice || null,
+    lockedAdvicePreview: publicReport.lockedAdvicePreview || null,
+    mentorLogoPool: publicReport.lockedAdvicePreview?.mentorLogoPool || publicReport.freeMentorAdvice?.mentorLogoPool || null,
+    analysisJobStatus: "completed",
+    analysisCompletedAt: Date.now(),
+  });
+}
+
+async function waitForAnalysisJobAndRedirect(btn) {
+  const current = window.Store.get();
+  if (current.reportId && current.atsResult) {
+    showLoader("诊断完成！", "报告已生成，正在进入结果页…");
+    setTimeout(() => { window.location.href = "/result"; }, 500);
+    return;
+  }
+  if (!current.analysisJobId || typeof getAnalysisJobAPI !== "function") {
+    showLoader("正在登录…", "3 秒即将跳转…");
+    if (btn) btn.disabled = false;
+    return;
+  }
+
+  showLoader("正在调用 ATS 评分…", "检测技能覆盖、岗位相关度与格式风险", true);
+  try {
+    const job = await getAnalysisJobAPI(current.analysisJobId);
+    window.Store.set({ analysisJobStatus: job.status, analysisJobStage: job.stage });
+    if (job.status === "completed" && job.result) {
+      storeAnalysisJobResult(job.result);
+      showLoader("诊断完成！", "报告已生成，正在进入结果页…");
+      setTimeout(() => { window.location.href = "/result"; }, 500);
+      return;
+    }
+    if (job.status === "failed") {
+      hideLoader();
+      if (btn) btn.disabled = false;
+      alert("分析失败，请返回首页重新提交。");
+      return;
+    }
+    setTimeout(() => waitForAnalysisJobAndRedirect(btn), 1200);
+  } catch (err) {
+    setTimeout(() => waitForAnalysisJobAndRedirect(btn), 1800);
+  }
+}
+
 function mockLogin(btn) {
-  btn.disabled = true;
-  window.Store.set({ userId: "mock_" + Date.now() });
-  setTimeout(() => { window.location.href = "/result"; }, 800);
+  if (btn) btn.disabled = true;
+  window.Store.set({ userId: "mock_" + Date.now(), loginAt: Date.now() });
+  waitForAnalysisJobAndRedirect(btn);
 }
 function mockPayment(btn) {
   btn.disabled = true;
@@ -275,7 +367,9 @@ if (document.readyState === "loading") {
 }
 
 window.submitResume = submitResume;
-window.mockLogin = mockLogin;
+window.showLoader = showLoader;
+window.hideLoader = hideLoader;
+window.mockLogin = window.mockLogin || mockLogin;
 window.mockPayment = mockPayment;
 window.guardSubmitted = guardSubmitted;
 window.guardPaid = guardPaid;

@@ -1,6 +1,9 @@
 import { resolveResumeText, buildAtsReportPayload, logPublicAtsResponseForTesting, scoreWithHostedFirst } from '../../../lib/atsHelpers';
 
 export async function POST(request) {
+  const startedAt = Date.now();
+  const timings = [];
+  const mark = (label) => timings.push([label, Date.now() - startedAt]);
   try {
     const contentType = request.headers.get('content-type') || '';
     let file = null, jobTitle = '', jdText = '', resumeText = '';
@@ -16,6 +19,7 @@ export async function POST(request) {
       jdText = body.jdText || '';
       resumeText = body.resumeText || '';
     }
+    mark('parse_request');
 
     const userId = request.headers.get('x-user-id') || null;
 
@@ -25,6 +29,7 @@ export async function POST(request) {
 
     const hostedFileBuffer = file ? Buffer.from(await file.arrayBuffer()) : null;
     const resolvedText = await resolveResumeText(file, resumeText);
+    mark('resolve_resume_text');
     const scoreResult = await scoreWithHostedFirst({
       resumeText: resolvedText,
       jobTitle,
@@ -32,8 +37,10 @@ export async function POST(request) {
       fileName: file?.name || '',
       fileBuffer: hostedFileBuffer,
     });
+    mark('hosted_ats');
     const rawScoreResult = scoreResult.rawScoreResult;
     const report = await buildAtsReportPayload(rawScoreResult, { resumeText: resolvedText, jobTitle, jdText }, userId);
+    mark('build_report');
 
     const payload = {
       success: true,
@@ -44,9 +51,20 @@ export async function POST(request) {
       warning: scoreResult.warning || undefined,
       timestamp: new Date().toISOString(),
     };
+    console.log('[ATS-Report Timing]', JSON.stringify({
+      totalMs: Date.now() - startedAt,
+      timings: Object.fromEntries(timings),
+      source: scoreResult.source,
+      reportId: report.reportId,
+    }));
     logPublicAtsResponseForTesting('score', payload);
     return Response.json(payload);
   } catch (err) {
+    console.warn('[ATS-Report Timing][failed]', JSON.stringify({
+      totalMs: Date.now() - startedAt,
+      timings: Object.fromEntries(timings),
+      error: err.message,
+    }));
     console.error('[ATS-Report] Error:', err.message);
     const isHostedAtsError = /hosted|ats api|ats_api|ATS system/i.test(err.message || '');
     return Response.json({

@@ -55,6 +55,8 @@ function compact(value, length = 260) {
 
 async function segmentIdForAdviceId(pool, adviceId) {
   if (!adviceId || String(adviceId).startsWith("fb_")) return "";
+  const segMatch = String(adviceId).match(/^seg_(\d+)$/);
+  if (segMatch) return segMatch[1];
   const { rows } = await pool.query("SELECT id FROM segments WHERE chunk_id = $1 LIMIT 1", [adviceId]);
   return rows[0]?.id || "";
 }

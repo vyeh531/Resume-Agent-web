@@ -182,6 +182,33 @@ async function scoreResumeAPI(resumeText, jobTitle, jdText, resumeFile) {
   }
 }
 
+async function startAnalysisJobAPI(resumeText, jobTitle, jdText, fileName) {
+  const response = await fetch(`${API_BASE}/api/v1/analysis-jobs`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      resumeText,
+      jobTitle: jobTitle || null,
+      jdText: jdText || null,
+      fileName: fileName || "",
+    }),
+  });
+  const { ok, status, json } = await safeParseResponse(response);
+  if (!ok || !json?.success) {
+    throw new Error(json?.error || `Analysis job failed to start (${status})`);
+  }
+  return json.job;
+}
+
+async function getAnalysisJobAPI(jobId) {
+  const response = await fetch(`${API_BASE}/api/v1/analysis-jobs/${encodeURIComponent(jobId)}`);
+  const { ok, status, json } = await safeParseResponse(response);
+  if (!ok || !json?.success) {
+    throw new Error(json?.error || `Analysis job status failed (${status})`);
+  }
+  return json.job;
+}
+
 // 從伺服器重新撈取評分結果（用 sessionId）
 async function loadAnalysisFromServer(sessionId) {
   const id = sessionId || (() => {

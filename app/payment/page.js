@@ -86,7 +86,16 @@ export default function PaymentPage() {
       </div>
 
       <Script id="payment-logic" strategy="afterInteractive">{`
-        guardSubmitted();
+        if (typeof guardSubmitted === "function") {
+          guardSubmitted();
+        } else {
+          try {
+            const store = JSON.parse(localStorage.getItem("resumeFixMVP") || "{}");
+            if (!store.resumeName && !store.reportId) window.location.href = "/";
+          } catch {
+            window.location.href = "/";
+          }
+        }
         let timer = 14 * 60 + 59;
         const el = document.getElementById("qrTimer");
         const countdown = setInterval(() => {

@@ -10,6 +10,9 @@ if (typeof guardSubmitted === 'function') {
 }
 
 const s = _S.get();
+if (!s.atsResult) {
+  window.location.href = s.resumeName ? "/login" : "/";
+}
 const atsResult = s.atsResult || {};
 const mentorSections = document.querySelectorAll(".section");
 if (mentorSections.length) {
@@ -32,6 +35,14 @@ function escapeHtml(str) {
   );
 }
 function escapeAttr(str) { return String(str).replace(/'/g,"&apos;").replace(/"/g,"&quot;"); }
+function renderUnlockMiniCta() {
+  return `
+    <div class="result-lock-cta">
+      <div class="lock">🔒</div>
+      <div class="text">解锁<b>全部 4 位导师</b> + <b>完整改写报告</b><br><span>含完整技能清单</span></div>
+      <a class="btn btn-jade" href="/payment">¥ 49 解锁完整诊断</a>
+    </div>`;
+}
 const STATIC_MENTOR_COMPANY_LOGOS = [
   { company: "Amazon", companyLogo: "/logos/Amazon.png" },
   { company: "Amazon Web Services", companyLogo: "/logos/Amazon Web Services, Inc.png" },
@@ -186,7 +197,7 @@ function renderPaywallMoreBlock(kind) {
       <div class="paywall-more-list">
         ${rows.map(row => `<div>${escapeHtml(row)}</div>`).join("")}
       </div>
-      <div class="paywall-more-overlay">解锁付费报告查看更多</div>
+      <div class="paywall-more-overlay">${renderUnlockMiniCta()}</div>
     </li>`;
 }
 function normalizeProblemList() {
@@ -197,7 +208,7 @@ function normalizeProblemList() {
     ...((atsResult.topProblems || []).map(item => item.message || item.title).filter(Boolean)),
   ];
   const items = [...new Set(raw.filter(Boolean).map(repairTargetRoleProblem))].slice(0, 3);
-  while (items.length < 3) items.push(["JD 关键词匹配仍有提升空间。", "简历定位需要更贴近目标岗位。", "经历证据需要更清楚支撑核心技能。"][items.length]);
+  while (items.length < 3) items.push(["JD 技能匹配仍有提升空间。", "简历定位需要更贴近目标岗位。", "经历证据需要更清楚支撑核心技能。"][items.length]);
   return items;
 }
 function isIrrelevantSuggestion(text) {
@@ -355,7 +366,7 @@ const atsDetailEl = document.getElementById("atsDetail");
 if (atsDetailEl && atsScore) {
   atsDetailEl.innerHTML = renderRows([
     { k:"ATS 总分", v: atsScore + "/100", note: atsRiskText(atsResult.riskLevel) },
-    { k:"JD 匹配度", v: formatJdKeywordCount(atsResult), note:"已命中 / JD 关键词总数" },
+    { k:"JD 技能匹配", v: formatJdKeywordCount(atsResult), note:"已具备 / JD 技能总数" },
     { k:"简历质量", v: (atsResult.dimensions?.C?.score ?? "--") + "/" + (atsResult.dimensions?.C?.max ?? 12), note:"内容质量与成果表达" },
   ]);
 }
@@ -427,6 +438,7 @@ function renderSkillSection(skills) {
   const have  = counts.have;
   const weak  = counts.weak;
   const total = counts.total;
+  const lockedCount = Math.max(total - 3, 0);
   const skillHaveEl    = document.getElementById("skillHave");
   const skillTotalEl   = document.getElementById("skillTotal");
   const skillSummaryEl = document.getElementById("skillSummary");
@@ -439,9 +451,18 @@ function renderSkillSection(skills) {
     <span class="skill-have" style="flex:${have}"></span>
     <span class="skill-weak" style="flex:${Math.max(weak, 1)}"></span>`;
   if (skillListTop3El)    skillListTop3El.innerHTML    = skills.slice(0, 3).map(renderSkillRow).join("");
-  if (skillPaywallListEl) skillPaywallListEl.innerHTML = skills.slice(3).map(renderSkillRow).join("");
+  if (skillPaywallListEl) {
+    const lockedSkills = skills.slice(3);
+    const placeholderCount = Math.min(Math.max(lockedCount, lockedSkills.length), 5);
+    const placeholders = Array.from({ length: placeholderCount }, (_, i) => ({
+      priority: i + 4,
+      name: "更多 JD 技能",
+      status: "weak",
+    }));
+    skillPaywallListEl.innerHTML = (lockedSkills.length ? lockedSkills : placeholders).map(renderSkillRow).join("");
+  }
   // Update expand button label to reflect actual count
-  if (expandBtn && skills.length > 3) {
+  if (expandBtn && total > 3) {
     expandBtn.hidden = false;
     expandBtn.innerHTML = `查看全部 ${total} 项技能 ↓`;
   } else if (expandBtn) {
@@ -640,12 +661,10 @@ function renderLockedAdvicePreview(preview) {
   if (!areaEl || !preview) return;
   const topics = (preview.topics || []).slice(0, 4).map(t => `<span class="cred-pill">${escapeHtml(t)}</span>`).join("");
   areaEl.innerHTML = `
-    <article class="locked-mentor-v2" style="position:relative;overflow:hidden;min-height:132px;">
+    <article class="locked-mentor-v2" style="position:relative;overflow:hidden;min-height:190px;">
       <div style="font-size:12px;font-weight:600;color:var(--ink-soft);font-family:var(--mono);margin:0 0 8px;">${preview.lockedAdviceCount || 9} æ¡ä»˜è´¹æ·±åº¦å»ºè®®</div>
       <div class="cred-pills" style="margin-bottom:10px;">${topics}</div>
-      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(246,243,236,.6);backdrop-filter:blur(2px);">
-        <div style="text-align:center;"><div style="font-size:22px;margin-bottom:4px;">ðŸ”’</div><div style="font-size:12px;font-weight:600;">è§£é”æŸ¥çœ‹ 9 æ¡å®Œæ•´å»ºè®®</div></div>
-      </div>
+      <div class="locked-preview-overlay">${renderUnlockMiniCta()}</div>
     </article>`;
   return;
   const lockedMentors = preview.lockedMentors || [];
@@ -653,7 +672,7 @@ function renderLockedAdvicePreview(preview) {
     areaEl.innerHTML = lockedMentors.map(m => {
       const topics = (m.previewTopics || []).map(t => `<span class="cred-pill">${escapeHtml(t)}</span>`).join("");
       const companyMeta = [m.company, m.mentorTitle].filter(Boolean).join(" · ");
-      return `<article class="locked-mentor-v2" style="position:relative;overflow:hidden;">
+      return `<article class="locked-mentor-v2" style="position:relative;overflow:hidden;min-height:190px;">
         <div style="margin-bottom:8px;">
           <div style="font-size:17px;font-weight:700;color:var(--ink);line-height:1.2;">${escapeHtml(m.mentorName || "导师")}</div>
           ${companyMeta ? `<div style="font-size:12px;color:var(--ink-mute);margin-top:3px;">${escapeHtml(companyMeta)}</div>` : ""}
@@ -661,9 +680,7 @@ function renderLockedAdvicePreview(preview) {
         </div>
         <div style="font-size:12px;font-weight:600;color:var(--ink-soft);font-family:var(--mono);margin:6px 0 6px;">${m.lockedAdviceCount || 3} 条建议</div>
         <div class="cred-pills" style="margin-bottom:10px;">${topics}</div>
-        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(246,243,236,.6);backdrop-filter:blur(2px);">
-          <div style="text-align:center;"><div style="font-size:22px;margin-bottom:4px;">🔒</div><div style="font-size:12px;font-weight:600;">解锁查看完整建议</div></div>
-        </div>
+        <div class="locked-preview-overlay">${renderUnlockMiniCta()}</div>
       </article>`;
     }).join("");
   }
@@ -675,12 +692,10 @@ function renderLockedAdvicePreviewClean(preview) {
   if (!areaEl || !preview) return;
   const topics = (preview.topics || []).slice(0, 4).map(t => `<span class="cred-pill">${escapeHtml(t)}</span>`).join("");
   areaEl.innerHTML = `
-    <article class="locked-mentor-v2" style="position:relative;overflow:hidden;min-height:132px;">
+    <article class="locked-mentor-v2" style="position:relative;overflow:hidden;min-height:190px;">
       <div style="font-size:12px;font-weight:600;color:var(--ink-soft);font-family:var(--mono);margin:0 0 8px;">${preview.lockedAdviceCount || 9} 条付费深度建议</div>
       <div class="cred-pills" style="margin-bottom:10px;">${topics}</div>
-      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(246,243,236,.6);backdrop-filter:blur(2px);">
-        <div style="text-align:center;"><div style="font-size:22px;margin-bottom:4px;">🔒</div><div style="font-size:12px;font-weight:600;">解锁查看 9 条完整建议</div></div>
-      </div>
+      <div class="locked-preview-overlay">${renderUnlockMiniCta()}</div>
     </article>`;
 }
 
@@ -716,8 +731,8 @@ if (atsResult && atsResult.atsScore) {
     const jdKeywordCount = formatJdKeywordCount(atsResult);
     const missingKw = atsResult.topMissingKw || atsResult.raw?.topMissingKw || [];
     sysSummaryEl.innerHTML = [
-      jdKeywordCount !== "--" ? `<div><b>JD 关键词匹配：</b>${jdKeywordCount}</div>` : "",
-      missingKw.length ? `<div><b>缺口关键词：</b>${missingKw.slice(0, 10).join("、")}</div>` : "",
+      jdKeywordCount !== "--" ? `<div><b>JD 技能匹配：</b>${jdKeywordCount}</div>` : "",
+      missingKw.length ? `<div><b>待补技能：</b>${missingKw.slice(0, 10).join("、")}</div>` : "",
       atsResult.formatPenaltyTriggered ? `<div style="color:var(--rose);"><b>格式处罚：</b>${(atsResult.formatPenaltyReason || []).join("；")}</div>` : "",
     ].filter(Boolean).join("");
   }
@@ -728,7 +743,7 @@ if (atsResult && atsResult.atsScore) {
     if (!svgEl) return;
     const cx = 120, cy = 110, R = 80;
     const dimKeys = ["A","B","C","D","E","F"];
-    const dimLabels = { A:"格式规范", B:"基本资料", C:"内容质量", D:"JD匹配", E:"市场适配", F:"经验匹配" };
+    const dimLabels = { A:"格式规范", B:"基本资料", C:"内容质量", D:"技能匹配", E:"市场适配", F:"经验匹配" };
     const raw = atsResult.raw?.dimensions || atsResult.dimensions || {};
     const dims = dimKeys.map(k => {
       const d = raw[k];
@@ -752,8 +767,8 @@ if (atsResult && atsResult.atsScore) {
       const anchor = lx < cx - 4 ? "end" : lx > cx + 4 ? "start" : "middle";
       const color = d.pct >= 70 ? "var(--good,#6abf7b)" : d.pct >= 45 ? "#e9a84c" : "var(--rose,#e07070)";
       svg += `<circle cx="${dx}" cy="${dy}" r="4" fill="${color}"/>`;
-      svg += `<text x="${lx}" y="${ly}" text-anchor="${anchor}" font-size="10" fill="var(--ink-soft)" font-family="var(--sans)">${dimLabels[dimKeys[i]]}</text>`;
-      svg += `<text x="${lx}" y="${ly + 11}" text-anchor="${anchor}" font-size="10" font-weight="700" fill="${color}" font-family="var(--mono)">${d.score}/${d.max}</text>`;
+      svg += `<text x="${lx}" y="${ly}" text-anchor="${anchor}" font-size="11" font-weight="600" fill="var(--ink-soft)" font-family="var(--sans)">${dimLabels[dimKeys[i]]}</text>`;
+      svg += `<text x="${lx}" y="${ly + 13}" text-anchor="${anchor}" font-size="12" font-weight="800" fill="${color}" font-family="var(--sans)">${d.score}/${d.max}</text>`;
     });
     svgEl.innerHTML = svg;
 
@@ -814,6 +829,6 @@ if (atsResult && atsResult.atsScore) {
   // ATS tile detail（覆盖前面的预设）
   if (atsDetailEl) atsDetailEl.innerHTML = renderRows([
     { k:"ATS 总分", v:`${atsResult.atsScore}/100`, note: atsRiskText(atsResult.riskLevel) },
-    { k:"JD 关键词匹配", v: formatJdKeywordCount(atsResult), note:"已命中 / JD 关键词总数" },
+    { k:"JD 技能匹配", v: formatJdKeywordCount(atsResult), note:"已具备 / JD 技能总数" },
   ]);
 }

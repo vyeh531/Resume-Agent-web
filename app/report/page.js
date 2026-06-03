@@ -28,6 +28,9 @@ export default function ReportPage() {
         .skill-row:last-child{border-bottom:none;}
         .skill-name{font-size:14px;font-weight:500;}
         .skill-name .priority{font-family:var(--mono);font-size:10px;color:var(--ink-mute);margin-right:8px;}
+        .skill-extra[hidden]{display:none!important;}
+        .skill-expand-toggle{width:100%;margin-top:8px;border:1px dashed var(--line);background:var(--paper-warm);border-radius:10px;padding:10px 12px;font-size:13px;font-weight:700;color:var(--jade);cursor:pointer}
+        .skill-expand-toggle:hover{background:var(--jade-soft)}
         .service-card{background:linear-gradient(135deg,var(--paper-warm) 0%,var(--paper-deep) 100%);border:1px solid var(--line);border-radius:var(--r-lg);padding:26px 22px 22px;margin-top:12px;position:relative;overflow:hidden;}
         .service-card::before{content:"";position:absolute;left:-40px;bottom:-40px;width:140px;height:140px;background:radial-gradient(circle,rgba(232,160,107,.22) 0%,transparent 70%);pointer-events:none;}
         .service-card-title{font-family:var(--serif);font-weight:700;font-size:22px;line-height:1.3;text-align:center;margin:0 0 8px;position:relative;letter-spacing:-0.01em;}
@@ -43,7 +46,7 @@ export default function ReportPage() {
         .service-cta-text{font-size:13px;color:var(--ink);font-weight:600;margin-bottom:4px;}
         .service-foot{font-size:11px;color:var(--ink-mute);text-align:center;line-height:1.6;position:relative;}
         .logo-marquee{overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#fffdf7;margin:0 0 16px;padding:10px 0}
-        .logo-marquee-track{display:flex;gap:14px;width:max-content;animation:logo-scroll 28s linear infinite}
+        .logo-marquee-track{display:flex;gap:14px;width:max-content;animation:logo-scroll 72s linear infinite}
         .logo-marquee:hover .logo-marquee-track{animation-play-state:paused}
         .mentor-logo-chip{width:72px;height:42px;border:1px solid #ede9dc;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;padding:7px;flex:0 0 auto}
         .mentor-logo-chip img{max-width:100%;max-height:100%;object-fit:contain}
@@ -74,7 +77,7 @@ export default function ReportPage() {
           </div>
           <p className="export-card-desc">把这份 PDF 整段喂给 <b>ChatGPT / Claude / 豆包</b> 等任意 LLM，基于 4 位大厂导师建议<b>自动重写你的简历</b>——不用一句句改，一键产出可投递的新版本。</p>
           <ul className="export-card-perks">
-            <li><span className="check">✓</span><span>ATS 通过率 <b>+30%</b>，自动匹配 JD 关键词</span></li>
+            <li><span className="check">✓</span><span>ATS 通过率 <b>+30%</b>，自动匹配 JD 技能</span></li>
             <li><span className="check">✓</span><span>面试邀约率 <b>翻倍</b>，简历讲对 PM 的语言</span></li>
             <li><span className="check">✓</span><span>1 份报告反复用，投每个公司都能精准对齐</span></li>
           </ul>
@@ -108,9 +111,14 @@ export default function ReportPage() {
         <section className="section" id="atsDetailSection">
           <div className="section-num">02 · ATS 诊断</div>
           <h2 className="section-title" style={{fontSize:'22px'}}>系统评分详情</h2>
-          <div className="card card-tight">
-            <div id="atsDimGrid" style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:10,marginBottom:16}}></div>
-            <div id="atsKeywordSection" style={{marginBottom:14}}></div>
+          <div className="card card-tight" style={{background:'linear-gradient(135deg,rgba(168,213,186,.08) 0%,rgba(232,160,107,.06) 100%)',border:'1px solid rgba(168,213,186,.2)'}}>
+            <div style={{display:'flex',flexDirection:'column',alignItems:'center',marginBottom:'16px',position:'relative'}}>
+              <div id="atsRiskBadge" style={{position:'absolute',top:0,right:0,padding:'4px 10px',borderRadius:'99px',fontSize:'12px',fontWeight:700,fontFamily:'var(--mono)',letterSpacing:'.04em'}}></div>
+              <div id="atsTotalScore" style={{position:'absolute',top:0,left:0,fontSize:'22px',fontWeight:800,fontFamily:'var(--mono)',lineHeight:1}}></div>
+              <svg id="atsRadarChart" width="240" height="220" viewBox="0 0 240 220" style={{overflow:'visible',marginTop:'28px'}}></svg>
+            </div>
+            <div id="atsSystemSummary" style={{fontSize:'13px',color:'var(--ink-soft)',lineHeight:1.6,marginBottom:'14px'}}></div>
+            <div id="atsDimensionProblems" style={{marginTop:'12px'}}></div>
             <div id="atsProblemsSection"></div>
           </div>
         </section>
