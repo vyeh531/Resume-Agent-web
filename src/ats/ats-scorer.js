@@ -1225,6 +1225,14 @@ function bulletsFromSection(text) {
   return getBulletLines(text).map((line) => line.replace(/^[^a-zA-Z]+/, "").trim());
 }
 
+function stripBulletMarker(line) {
+  return String(line || "").replace(/^[^a-zA-Z]+/, "").trim();
+}
+
+function hasQuantifiedResult(text) {
+  return countQuantifiedResults(text) > 0;
+}
+
 function countQuantifiedResults(text) {
   const matches = normalizeText(text).match(/\d+\s*%|\$[\d,]+[kKmMbB]?|\b\d+[kKmMbB]\b|\b[1-9]\d{2,}\b|\b\d+x\b/gi) || [];
   return matches.filter((m) => {
@@ -1698,7 +1706,18 @@ function extractJobDateRange(line) {
   const s = normalizeText(line).toLowerCase();
   const re = /(?:(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+)?(20\d{2}|19\d{2})\s*[-–—]\s*(?:(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+)?(20\d{2}|19\d{2}|present|current|now)/i;
   const match = s.match(re);
-  if (!match) return null;
+  if (!match) {
+    const numericMatch = s.match(/\b(0?[1-9]|1[0-2])\s*\/\s*((?:19|20)\d{2})\s*[-–—]\s*(?:(0?[1-9]|1[0-2])\s*\/\s*)?((?:19|20)\d{2}|present|current|now)\b/i);
+    if (!numericMatch) return null;
+    const [, startMonthStr, startYearStr, endMonthStr, endYearStr] = numericMatch;
+    const startYear = parseInt(startYearStr);
+    const startMonth = parseInt(startMonthStr);
+    const isCurrent = /present|current|now/i.test(endYearStr);
+    const endYear = isCurrent ? new Date().getFullYear() : parseInt(endYearStr);
+    const endMonth = endMonthStr ? parseInt(endMonthStr) : (isCurrent ? new Date().getMonth() + 1 : 6);
+    return { startYear, startMonth, endYear, endMonth, isCurrent,
+      durationMonths: (endYear - startYear) * 12 + (endMonth - startMonth) };
+  }
   const [, startMonStr, startYearStr, endMonStr, endYearStr] = match;
   const startYear = parseInt(startYearStr);
   const startMonth = startMonStr ? (MONTH_ABBR_MAP[startMonStr.slice(0, 3)] || 6) : 6;
@@ -1945,9 +1964,16 @@ function checkSectionHasDates(text) {
 
 function checkExperienceLocations(expEntries) {
   if (!expEntries.length) return { allHaveLocation: true, missingCount: 0 };
-  const locationRe = /\b[A-Z][a-z]+,\s*[A-Z]{2}\b|\b(Remote|Hybrid|On-?site)\b/i;
-  const missing = expEntries.filter(e => !locationRe.test(e.titleLines.join(" ")));
-  return { allHaveLocation: missing.length === 0, missingCount: missing.length };
+  const locationRe = /\b[A-Z][A-Za-z .'-]+,\s*(?:[A-Z]{2}|China|USA|United States|Canada|Singapore|Taiwan|Hong Kong)\b|\b(Remote|Hybrid|On-?site)\b/i;
+  const missing = expEntries.filter(e => !locationRe.test(`${e.titleLines.join(" ")} ${e.rawText || ""}`));
+  return {
+    allHaveLocation: missing.length === 0,
+    missingCount: missing.length,
+    missingEntries: missing.map((entry) => ({
+      titleLines: entry.titleLines,
+      rawText: entry.rawText
+    }))
+  };
 }
 
 function checkJobTitleAlignment(expEntries, jobTitle) {
@@ -2273,6 +2299,101 @@ function buildProblemTags({
   return tags.sort((a, b) => (order[a.severity] ?? 9) - (order[b.severity] ?? 9));
 }
 
+function makeEvidence(tag, dimension, evidence = [], metadata = {}) {
+  return {
+    tag,
+    dimension,
+    evidence: evidence
+      .map((item) => ({
+        section: item.section || "",
+        text: String(item.text || "").trim()
+      }))
+      .filter((item) => item.text)
+      .slice(0, 6),
+    metadata
+  };
+}
+
+function buildProblemEvidence({
+  expLocationResult,
+  rawBullets,
+  quantifiedCount,
+  weakPhraseCount,
+  writeGoodResult,
+  repetitiveVerbResult,
+  coreSkillBulletCoverage,
+  shortTenures
+}) {
+  const items = [];
+
+  if (expLocationResult && !expLocationResult.allHaveLocation) {
+    items.push(makeEvidence(
+      "missing_exp_location",
+      "B",
+      (expLocationResult.missingEntries || []).map((entry) => ({
+        section: "experience",
+        text: (entry.titleLines || []).join(" ") || entry.rawText
+      })),
+      { missingCount: expLocationResult.missingCount }
+    ));
+  }
+
+  if (quantifiedCount < 3) {
+    items.push(makeEvidence(
+      "insufficient_quantification",
+      "C",
+      rawBullets
+        .filter((bullet) => !hasQuantifiedResult(bullet))
+        .slice(0, 6)
+        .map((bullet) => ({ section: "experience_or_projects", text: bullet })),
+      { quantifiedCount }
+    ));
+  }
+
+  if (weakPhraseCount >= 3) {
+    const weakEvidence = rawBullets
+      .filter((bullet) => WEAK_PHRASES.some((phrase) => bullet.toLowerCase().includes(phrase)))
+      .map((bullet) => ({ section: "experience_or_projects", text: bullet }));
+    items.push(makeEvidence("weak_verbs", "C", weakEvidence, { weakPhraseCount }));
+  }
+
+  if (writeGoodResult?.passiveCount >= 2) {
+    items.push(makeEvidence(
+      "passive_voice",
+      "C",
+      (writeGoodResult.flagged || []).map((item) => ({ section: "experience_or_projects", text: item.text })),
+      { passiveCount: writeGoodResult.passiveCount }
+    ));
+  }
+
+  if (repetitiveVerbResult?.maxCount >= 2) {
+    const verb = repetitiveVerbResult.maxVerb;
+    const repeatedBullets = rawBullets
+      .filter((bullet) => verb && getStartingVerb(bullet) === verb)
+      .map((bullet) => ({ section: "experience_or_projects", text: bullet }));
+    items.push(makeEvidence("repetitive_verbs", "C", repeatedBullets, {
+      maxVerb: repetitiveVerbResult.maxVerb,
+      maxCount: repetitiveVerbResult.maxCount
+    }));
+  }
+
+  if (coreSkillBulletCoverage < 0.4) {
+    items.push(makeEvidence("low_bullet_coverage", "C", rawBullets.slice(0, 6).map((bullet) => ({
+      section: "experience_or_projects",
+      text: bullet
+    })), { coreSkillBulletCoverage }));
+  }
+
+  if (shortTenures && shortTenures.length > 0) {
+    items.push(makeEvidence("short_tenure_unexplained", "C", shortTenures.map((entry) => ({
+      section: "experience",
+      text: entry.title || entry.rawText || ""
+    })), { count: shortTenures.length }));
+  }
+
+  return items.filter((item) => item.evidence.length || Object.keys(item.metadata || {}).length);
+}
+
 // ── Retrieval query ──────────────────────────────────────────────────────────
 
 function buildRetrievalQuery(profile, problemTags, priorityMissingKeywords) {
@@ -2419,12 +2540,13 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
   const educationHasDates = !educationText.trim() || checkSectionHasDates(educationText);
   const projectsHasDates = !projectsText.trim() || checkSectionHasDates(projectsText);
   const inconsistentMonthStyle = hasInconsistentMonthStyle(normalizeText(resumeText));
-  const rawBullets = getBulletLines(normalized).map(l => l.replace(/^[-•*]\s*/, ""));
+  const experienceProjectBulletLines = getBulletLines(experienceProjectsText);
+  const rawBullets = experienceProjectBulletLines.map(stripBulletMarker);
   const writeGoodResult = analyzeWriteGoodIssues(rawBullets);
-  const repetitiveVerbResult = checkRepetitiveVerbs(getBulletLines(normalized));
+  const repetitiveVerbResult = checkRepetitiveVerbs(experienceProjectBulletLines);
   const verbDiversity = analyzeVerbDiversity(rawBullets);
   const skillBalance  = analyzeSkillBalance(rawBullets);
-  const experienceBullets = bulletsFromSection(experienceProjectsText);
+  const experienceBullets = rawBullets;
   const bulletLines = getBulletLines(normalized);
   const hasJD = Boolean(jdText && jdText.trim());
 
@@ -2488,24 +2610,25 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
   B = clamp(B, 0, 7);
 
   let C = 0;
-  const quantifiedCount = countQuantifiedResults(normalized);
+  const quantifiedCount = countQuantifiedResults(rawBullets.join("\n"));
   if (quantifiedCount >= 8) C += 5;
   else if (quantifiedCount >= 5) C += 4;
   else if (quantifiedCount >= 3) C += 3;
   else if (quantifiedCount >= 1) C += 1;
 
-  const strongVerbCount = countStrongVerbStarts(lines);
+  const strongVerbCount = countStrongVerbStarts(experienceProjectBulletLines);
   if (strongVerbCount >= 8) C += 4;
   else if (strongVerbCount >= 5) C += 3;
   else if (strongVerbCount >= 3) C += 2;
   else if (strongVerbCount >= 1) C += 1;
 
-  const impactCount = (normalized.match(/\b(result|impact|improv|reduc|increas|achiev|enabl|boost|cut|sav|generat|drove|delivered|launched|grew|decreas)/gi) || []).length;
+  const impactSourceText = rawBullets.join("\n");
+  const impactCount = (impactSourceText.match(/\b(result|impact|improv|reduc|increas|achiev|enabl|boost|cut|sav|generat|drove|delivered|launched|grew|decreas)/gi) || []).length;
   if (impactCount >= 6) C += 2;
   else if (impactCount >= 3) C += 1.5;
   else if (impactCount >= 1) C += 1;
-  if (bulletLines.length >= 5) C += 1;
-  if (countWeakPhrases(normalized) >= 3) C -= 1;
+  if (experienceProjectBulletLines.length >= 5) C += 1;
+  if (countWeakPhrases(impactSourceText) >= 3) C -= 1;
   if (writeGoodResult.passiveCount >= 5) C -= 1;
   else if (writeGoodResult.passiveCount >= 2) C -= 0.5;
   if (repetitiveVerbResult.maxCount >= 3) C -= 1;
@@ -2614,7 +2737,7 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
   const missingKeywords = keywordMatch.allMissing;
 
   const coreSectionNames = ["experience", "education", "skills"].filter((s) => lowerResume.includes(s));
-  const weakPhraseCount = countWeakPhrases(normalized);
+  const weakPhraseCount = countWeakPhrases(impactSourceText);
   const hasEducation = /education|university|college|bachelor|master|degree/i.test(normalized);
   const phonePresent = analyzePhone(normalized).present;
   const inconsistentDates = hasInconsistentDateFormat(normalized);
@@ -2634,6 +2757,16 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
     targetRole, resumeRole, jobTitleAligned, summaryMentionsRole, total
   };
   const problemTags = buildProblemTags(problemTagsInput);
+  const problemEvidence = buildProblemEvidence({
+    expLocationResult,
+    rawBullets,
+    quantifiedCount,
+    weakPhraseCount,
+    writeGoodResult,
+    repetitiveVerbResult,
+    coreSkillBulletCoverage: coreBulletSignal.coverage,
+    shortTenures
+  });
 
   const diagnostics = buildDiagnostics({
     emailValid, phoneValid: phoneInfo.valid,
@@ -2648,7 +2781,7 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
 
   const problems = buildProblems({
     hasEmail, hasJD, jdMatchRatio, quantifiedCount, strongVerbCount, impactCount,
-    bulletCount: bulletLines.length, missingKeywords, keywordMatch, targetRole, resumeRole,
+    bulletCount: experienceProjectBulletLines.length, missingKeywords, keywordMatch, targetRole, resumeRole,
     allChina, hasAnyChinaExp, formatPenaltyTriggered, isChronological, shortTenures,
     exactJobTitle, scoreCaps
   });
@@ -2703,7 +2836,7 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
     strongVerbCount,
     impactCount,
     weakPhraseCount,
-    bulletCount: bulletLines.length,
+    bulletCount: experienceProjectBulletLines.length,
     shortTenures,
     hasJD,
     jdMatchRatio,
@@ -2737,7 +2870,9 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
       F: { score: F, max: DIMENSION_MAX.F, label: "职位相关性 / 经验匹配度" }
     },
     metrics: {
-      bulletCount: bulletLines.length,
+      bulletCount: experienceProjectBulletLines.length,
+      allBulletCount: bulletLines.length,
+      experienceProjectBulletCount: experienceProjectBulletLines.length,
       quantifiedCount,
       strongVerbCount,
       impactCount,
@@ -2796,6 +2931,7 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
       : `${total} → ${Math.min(90, total + potentialGain)}（保守估计）`,
     profile,
     problemTags,
+    problemEvidence,
     retrievalQuery,
     diagnostics,
     priorityMissingKeywords,
