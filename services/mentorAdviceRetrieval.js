@@ -1592,6 +1592,7 @@ function selectFreeAdvice(candidates, retrievalQuery = candidates?.debug?.retrie
       const resolved = actionGovernance.resolveDisplayAction(card, governanceContext);
       return Boolean(resolved.allowed && resolved.action);
     })
+    .filter((card) => actionPreconditionGate(card, { retrievalQuery, resumeFacts: retrievalQuery.resumeFacts || null }).allowed)
     .filter((card) => !requireResumeIntent || FREE_HIGH_RISK_INTENTS.has(card.adviceIntent))
     .filter((card) => !card.matched_reasons?.includes("conflicting_role_examples"))
     .sort((a, b) => compareCardsStable(a, b, [], new Set(), []))[0];
@@ -1613,6 +1614,7 @@ function selectPaidAdvice(candidates, freeAdvice, retrievalQuery = candidates?.d
       const resolved = actionGovernance.resolveDisplayAction(card, governanceContext);
       return Boolean(resolved.allowed && resolved.action);
     })
+    .filter((card) => actionPreconditionGate(card, { retrievalQuery, resumeFacts: retrievalQuery.resumeFacts || null }).allowed)
     .filter((card) => !card.matched_reasons?.includes("conflicting_role_examples"))
     .sort((a, b) =>
       Number(b.unlockTier === "paid") - Number(a.unlockTier === "paid") ||
@@ -2400,6 +2402,216 @@ function isResumeGroundedAdvice(card = {}, internalAtsResult = {}) {
 function isGovernedAdviceDisplayable(card = {}, internalAtsResult = {}) {
   const resolved = actionGovernance.resolveDisplayAction(card, governanceContextFromInternal(internalAtsResult));
   return Boolean(resolved.allowed && resolved.action);
+}
+
+function actionPreconditionText(card = {}, internalAtsResult = {}) {
+  const governed = actionGovernance.resolveDisplayAction(card, governanceContextFromInternal(internalAtsResult));
+  return [
+    governed.action,
+    card.actionSummary,
+    card.action,
+    card.rawActionSummary,
+    card.title,
+    card.problemSummary,
+    card.currentDiagnosis,
+    card.mentorLens,
+    card.reason,
+  ].filter(Boolean).join(" ");
+}
+
+function hasResumeFacts(internalAtsResult = {}) {
+  return Boolean(internalAtsResult.resumeFacts && typeof internalAtsResult.resumeFacts === "object");
+}
+
+function arrayOf(value) {
+  return Array.isArray(value) ? value : [];
+}
+
+function hasExplicitProfileLinkProblemForGate(internalAtsResult = {}) {
+  const tags = [
+    ...(internalAtsResult.problemTags || []),
+    ...(internalAtsResult.adviceCoverageObligations || []),
+  ];
+  return tags.some((item) => {
+    const text = [
+      item.tag,
+      item.coverageFamily,
+      item.targetSection,
+      item.message,
+      ...(item.keywords || []),
+    ].filter(Boolean).join(" ").toLowerCase();
+    return /linkedin|github|portfolio|website|profile_links|project_link|missing_.*link|header.*link/.test(text);
+  });
+}
+
+function roleOrProjectActuallyNeedsPortfolio(card = {}, internalAtsResult = {}) {
+  const facts = internalAtsResult.resumeFacts || {};
+  const roleFamily = normalizeTerm(
+    facts.roleEvidence?.targetRoleFamily ||
+    internalAtsResult.profile?.roleFamily ||
+    internalAtsResult.profile?.targetRole ||
+    internalAtsResult.jobTitle
+  );
+  const text = actionPreconditionText(card, internalAtsResult).toLowerCase();
+  const portfolioRoles = new Set([
+    "software_engineer",
+    "cloud_infrastructure",
+    "cybersecurity",
+    "machine_learning",
+    "ai_engineer",
+    "data_scientist",
+    "data_analyst",
+    "data_engineer",
+    "design_creative",
+    "ux_research_design",
+    "product_manager",
+  ]);
+  if (hasExplicitProfileLinkProblemForGate(internalAtsResult)) return true;
+  if (facts.sections?.hasProjects && /project|portfolio|github|作品|项目/.test(text)) return true;
+  return portfolioRoles.has(roleFamily);
+}
+
+function containsAnyPattern(text, patterns = []) {
+  return patterns.some((pattern) => pattern.test(text));
+}
+
+function jdRequiredTextFromFacts(facts = {}) {
+  return arrayOf(facts.keywords?.jdRequired).join(" ").toLowerCase();
+}
+
+function actionPreconditionGate(card = {}, internalAtsResult = {}) {
+  if (!hasResumeFacts(internalAtsResult)) {
+    return { allowed: true, reason: "resumeFacts_missing", fallbackMode: "resumeFacts_missing" };
+  }
+
+  const facts = internalAtsResult.resumeFacts || {};
+  const sections = facts.sections || {};
+  const links = facts.links || {};
+  const keywords = facts.keywords || {};
+  const experience = facts.experience || {};
+  const format = facts.format || {};
+  const education = facts.education || {};
+  const roleEvidence = facts.roleEvidence || {};
+  const text = actionPreconditionText(card, internalAtsResult);
+  const lower = text.toLowerCase();
+  const targetRoleFamily = normalizeTerm(roleEvidence.targetRoleFamily || internalAtsResult.profile?.roleFamily || "");
+
+  const isExperienceRename = containsAnyPattern(text, [
+    /\binternship\b/i,
+    /professional\s+experience/i,
+    /经历栏标题|经历.*标题|section title|rename experience section/i,
+  ]) && /professional\s+experience|经历栏标题|section title|rename experience section/i.test(text);
+  if (isExperienceRename) {
+    if (!sections.hasInternshipTitle) {
+      return { allowed: false, reason: "section_title_no_internship" };
+    }
+    if (sections.hasProfessionalExperienceTitle) {
+      return { allowed: false, reason: "section_title_already_professional_experience" };
+    }
+  }
+
+  const isLinkedInAdvice = /\blinkedin\b|linked[\s-]?in/i.test(text);
+  if (isLinkedInAdvice && links.hasLinkedIn === true) {
+    return { allowed: false, reason: "linkedin_already_present" };
+  }
+
+  const isGithubAdvice = /\bgithub\b|git hub/i.test(text);
+  if (isGithubAdvice) {
+    if (links.hasGithub === true) return { allowed: false, reason: "github_already_present" };
+    if (!roleOrProjectActuallyNeedsPortfolio(card, internalAtsResult)) {
+      return { allowed: false, reason: "github_not_needed_for_role" };
+    }
+  }
+
+  const isPortfolioAdvice = /\bportfolio\b|作品集|personal website|个人网站|website link|项目链接/i.test(text);
+  if (isPortfolioAdvice) {
+    if (links.hasPortfolio === true) return { allowed: false, reason: "portfolio_already_present" };
+    if (!roleOrProjectActuallyNeedsPortfolio(card, internalAtsResult)) {
+      return { allowed: false, reason: "portfolio_not_needed_for_role" };
+    }
+  }
+
+  const isKeywordAdvice = /jd|ats|keyword|关键词|核心词|技能词|岗位词|priority keyword/i.test(text);
+  if (isKeywordAdvice) {
+    const hasKeywordGap = arrayOf(keywords.missingFromResume).length > 0 || arrayOf(keywords.skillsOnly).length > 0;
+    if (!hasKeywordGap) return { allowed: false, reason: "keyword_gap_not_present" };
+    const jdRequired = jdRequiredTextFromFacts(facts);
+    const staleTerms = [
+      ["aws", /\baws\b/i],
+      ["gcp", /\bgcp\b/i],
+      ["it infrastructure", /\bit infrastructure\b/i],
+      ["azure", /\bazure\b/i],
+    ].filter(([term, pattern]) => pattern.test(text) && !jdRequired.includes(term));
+    if (staleTerms.length) {
+      return { allowed: false, reason: `stale_keyword_${staleTerms[0][0].replace(/\s+/g, "_")}` };
+    }
+  }
+
+  if (/\brisk consulting\b|rcsa|control framework|regulatory compliance|internal control/i.test(text) &&
+      !["risk_consulting", "consulting", "legal_compliance"].includes(targetRoleFamily)) {
+    return { allowed: false, reason: "role_specific_risk_consulting_mismatch" };
+  }
+  if (/\bfinancial advisor\b|\bFA\b/.test(text) &&
+      !["finance", "financial_analyst", "accounting"].includes(targetRoleFamily)) {
+    return { allowed: false, reason: "role_specific_fa_mismatch" };
+  }
+  if (/\bquant\b|risk quant|trading book|limits monitoring/i.test(text) &&
+      !["trading_quant", "finance", "data_scientist"].includes(targetRoleFamily)) {
+    return { allowed: false, reason: "role_specific_quant_mismatch" };
+  }
+
+  const isQuantifiedAdvice = /量化|quantif|measurable|result|impact|成果|数字|规模|频率|效率|metrics?/i.test(text);
+  if (isQuantifiedAdvice &&
+      Number(experience.quantifiedBulletCount || 0) >= 3 &&
+      experience.hasMeasurableResults === true) {
+    return { allowed: false, reason: "quantification_already_sufficient" };
+  }
+
+  const isEducationAdvice = /coursework|course work|education|certificate|certification|training|课程|教育|证书|lab\/project|lab project|课程项目/i.test(text);
+  if (isEducationAdvice) {
+    const isEntryOrJunior = /entry|junior|trainee|student|recent/i.test([
+      internalAtsResult.profile?.seniority,
+      internalAtsResult.profile?.candidateType,
+      targetRoleFamily,
+    ].filter(Boolean).join(" "));
+    const hasRelevantCondition = sections.hasEducation === true ||
+      sections.hasProjects === true ||
+      education.hasCoursework === false ||
+      isEntryOrJunior;
+    if (!hasRelevantCondition) return { allowed: false, reason: "education_condition_not_present" };
+    if (/补.*课程项目|add.*course project|补.*project/i.test(text) &&
+        sections.hasProjects === true &&
+        !hasExplicitProfileLinkProblemForGate(internalAtsResult) &&
+        !arrayOf(internalAtsResult.problemTags).some((item) => /course|education|project|training/i.test(item.tag || ""))) {
+      return { allowed: false, reason: "course_project_already_present_without_problem" };
+    }
+  }
+
+  const isFormatAdvice = /一页|one[-\s]?page|format|格式|日期|date|section order|顺序|排版|行距|字体|压缩|压到|错位/i.test(text);
+  if (isFormatAdvice) {
+    const hasFormatProblem = format.likelyOverOnePage === true ||
+      format.hasDateInconsistency === true ||
+      format.hasMonthStyleInconsistency === true ||
+      arrayOf(format.missingDatesSections).length > 0 ||
+      sections.educationBeforeExperience === true;
+    if (!hasFormatProblem) return { allowed: false, reason: "format_condition_not_present" };
+  }
+
+  return { allowed: true, reason: "passed", fallbackMode: null };
+}
+
+function recordActionPreconditionGate(card = {}, internalAtsResult = {}) {
+  const result = actionPreconditionGate(card, internalAtsResult);
+  if (!result.allowed || result.fallbackMode === "resumeFacts_missing") {
+    const key = result.reason || result.fallbackMode || "unknown";
+    if (!internalAtsResult._actionPreconditionRejected) internalAtsResult._actionPreconditionRejected = {};
+    internalAtsResult._actionPreconditionRejected[key] = (internalAtsResult._actionPreconditionRejected[key] || 0) + 1;
+  }
+  return result;
+}
+
+function isActionPreconditionAllowed(card = {}, internalAtsResult = {}) {
+  return recordActionPreconditionGate(card, internalAtsResult).allowed;
 }
 
 function isCardAlignedWithTargetProblems(card = {}, targetProblemTags = []) {
@@ -3420,6 +3632,7 @@ function selectTopAdviceForMentor(mentorBucket, targetProblemTags, count, covere
   const selected = [];
   const cards = [...(mentorBucket.cards || [])]
     .filter((card) => isGovernedAdviceDisplayable(card, internalAtsResult))
+    .filter((card) => isActionPreconditionAllowed(card, internalAtsResult))
     .filter((card) => isResumeGroundedAdvice(card, internalAtsResult));
   const usedDiagnosisTags = new Set();
   while (selected.length < count && cards.length) {
@@ -3670,6 +3883,7 @@ function selectFreeMentorPlan(candidates, internalAtsResult) {
   })
     .filter((card) => isCardAlignedWithTargetProblems(card, targetProblemTags))
     .filter((card) => isGovernedAdviceDisplayable(card, internalAtsResult))
+    .filter((card) => isActionPreconditionAllowed(card, internalAtsResult))
     .filter((card) => isResumeGroundedAdvice(card, internalAtsResult));
 
   // Annotate each candidate with transferability scope + topic cluster (cached to avoid recomputation)
@@ -3821,6 +4035,7 @@ function selectFreeMentorPlan(candidates, internalAtsResult) {
       freeAdviceSources: (plan.adviceItems || []).map((item) => item.source || "db"),
       issueFirst: true,
       problemsRanked: rankedProblems.map((p) => p.tag),
+      actionPreconditionRejected: internalAtsResult._actionPreconditionRejected || {},
     },
   });
   return plan;
@@ -4090,6 +4305,7 @@ function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan =
   )
     .filter((card) => isCardAlignedWithTargetProblems(card, targetProblemTags))
     .filter((card) => isGovernedAdviceDisplayable(card, internalAtsResult))
+    .filter((card) => isActionPreconditionAllowed(card, internalAtsResult))
     .filter((card) => isResumeGroundedAdvice(card, internalAtsResult));
 
   const coveredTags = new Set();
@@ -4125,6 +4341,7 @@ function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan =
         isAdviceRoleSafe(card, internalAtsResult.jobTitle || profile.targetRole, roleFamily)
       )
       .filter((card) => isGovernedAdviceDisplayable(card, internalAtsResult))
+      .filter((card) => isActionPreconditionAllowed(card, internalAtsResult))
       .filter((card) => isResumeGroundedAdvice(card, internalAtsResult));
     const supplementItems = selectGlobalAdviceItems(
       genericSupplementCandidates,
@@ -4285,10 +4502,17 @@ function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan =
     }
   }
 
-  return normalizePremiumAdvicePriorities(mentors.slice(0, 4).map((mentor) => ({
+  const normalizedMentors = normalizePremiumAdvicePriorities(mentors.slice(0, 4).map((mentor) => ({
     ...mentor,
     adviceItems: mentor.adviceItems.slice(0, 3),
   })));
+  Object.defineProperty(normalizedMentors, "debug", {
+    enumerable: false,
+    value: {
+      actionPreconditionRejected: internalAtsResult._actionPreconditionRejected || {},
+    },
+  });
+  return normalizedMentors;
 }
 
 function buildCoverageSummary(selectedAdviceItems, internalAtsResult) {
@@ -4531,6 +4755,7 @@ module.exports = {
   extractGroundingTermsFromAdvice,
   isResumeGroundedAdvice,
   isGovernedAdviceDisplayable,
+  actionPreconditionGate,
   canonicalActionFamilyOf,
   actionDepthOf,
   canAddToTwelveAdviceBundle,

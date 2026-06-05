@@ -68,6 +68,7 @@ export function normalizeHostedAtsScoreResult(payload) {
     topProblems: hosted.topProblems || [],
     structuredSuggestions: hosted.structuredSuggestions || [],
     retrievalQuery: hosted.retrievalQuery || null,
+    resumeFacts: hosted.resumeFacts || null,
     mentorAdviceSlots: hosted.mentorAdviceSlots || null,
     reportAssembly: hosted.reportAssembly || null,
     topMissingKeywords: hosted.topMissingKeywords || hosted.topMissingKw || [],

@@ -36,6 +36,7 @@ const {
   isCardAlignedWithTargetProblems,
   extractGroundingTermsFromAdvice,
   isResumeGroundedAdvice,
+  actionPreconditionGate,
   normalizeDisplayActionLanguage,
   normalizeDisplayTitle,
   normalizeDisplayDiagnosis,
@@ -309,4 +310,114 @@ test("project-specific advice is accepted when the named project exists in resum
 });
 
 console.log(`\nAfter grounding tests: ${passed + failed} tests: ${passed} passed, ${failed} failed`);
+console.log("\nTest 10: action precondition gate uses resumeFacts");
+
+function baseFacts(overrides = {}) {
+  return {
+    sections: {
+      hasInternshipTitle: false,
+      hasProfessionalExperienceTitle: true,
+      hasEducation: true,
+      hasProjects: false,
+      educationBeforeExperience: false,
+      ...(overrides.sections || {}),
+    },
+    links: {
+      hasLinkedIn: true,
+      hasGithub: false,
+      hasPortfolio: false,
+      ...(overrides.links || {}),
+    },
+    keywords: {
+      jdRequired: ["operations", "sales", "finance", "customer service", "data analysis", "reporting"],
+      missingFromResume: ["operations"],
+      skillsOnly: [],
+      ...(overrides.keywords || {}),
+    },
+    experience: {
+      quantifiedBulletCount: 1,
+      hasMeasurableResults: true,
+      ...(overrides.experience || {}),
+    },
+    roleEvidence: {
+      targetRoleFamily: "management_trainee",
+      resumeRoleFamily: "biostatistics",
+      ...(overrides.roleEvidence || {}),
+    },
+    format: {
+      likelyOverOnePage: false,
+      hasDateInconsistency: false,
+      hasMonthStyleInconsistency: false,
+      missingDatesSections: [],
+      ...(overrides.format || {}),
+    },
+    education: {
+      hasCoursework: false,
+      ...(overrides.education || {}),
+    },
+  };
+}
+
+test("rejects Internship rename when Professional Experience already exists", () => {
+  const result = actionPreconditionGate({
+    actionSummary: 'Change the Experience section title from "Internship" to "Professional Experience".',
+  }, { resumeFacts: baseFacts() });
+  assert.strictEqual(result.allowed, false);
+  assert.ok(/section_title/.test(result.reason));
+});
+
+test("allows Internship rename when Internship exists and Professional Experience does not", () => {
+  const result = actionPreconditionGate({
+    actionSummary: 'Rename Internship section to Professional Experience.',
+  }, { resumeFacts: baseFacts({ sections: { hasInternshipTitle: true, hasProfessionalExperienceTitle: false } }) });
+  assert.strictEqual(result.allowed, true);
+});
+
+test("rejects LinkedIn advice when LinkedIn is already present", () => {
+  const result = actionPreconditionGate({
+    actionSummary: "Add your LinkedIn link to the header.",
+  }, { resumeFacts: baseFacts({ links: { hasLinkedIn: true } }) });
+  assert.strictEqual(result.allowed, false);
+  assert.strictEqual(result.reason, "linkedin_already_present");
+});
+
+test("allows LinkedIn advice when LinkedIn is missing", () => {
+  const result = actionPreconditionGate({
+    actionSummary: "Add your LinkedIn link to the header.",
+  }, { resumeFacts: baseFacts({ links: { hasLinkedIn: false } }) });
+  assert.strictEqual(result.allowed, true);
+});
+
+test("rejects stale AWS/GCP keyword advice for Management Trainee facts", () => {
+  const result = actionPreconditionGate({
+    actionSummary: "Add JD keywords such as AWS, GCP, and IT infrastructure.",
+  }, { resumeFacts: baseFacts() });
+  assert.strictEqual(result.allowed, false);
+  assert.ok(/stale_keyword/.test(result.reason));
+});
+
+test("rejects generic quantification advice when quantification is sufficient", () => {
+  const result = actionPreconditionGate({
+    actionSummary: "Strengthen bullet quantification, measurable results, and impact.",
+  }, { resumeFacts: baseFacts({ experience: { quantifiedBulletCount: 4, hasMeasurableResults: true } }) });
+  assert.strictEqual(result.allowed, false);
+  assert.strictEqual(result.reason, "quantification_already_sufficient");
+});
+
+test("allows quantification advice when quantified bullets are weak", () => {
+  const result = actionPreconditionGate({
+    actionSummary: "Strengthen bullet quantification, measurable results, and impact.",
+  }, { resumeFacts: baseFacts({ experience: { quantifiedBulletCount: 1, hasMeasurableResults: true } }) });
+  assert.strictEqual(result.allowed, true);
+});
+
+test("missing resumeFacts falls back without crashing", () => {
+  const result = actionPreconditionGate({
+    actionSummary: "Rename Internship section to Professional Experience.",
+  }, {});
+  assert.strictEqual(result.allowed, true);
+  assert.strictEqual(result.fallbackMode, "resumeFacts_missing");
+});
+
+console.log(`\nAfter action precondition tests: ${passed + failed} tests: ${passed} passed, ${failed} failed`);
 if (failed > 0) process.exit(1);

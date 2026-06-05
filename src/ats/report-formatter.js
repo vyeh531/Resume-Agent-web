@@ -946,6 +946,7 @@ function buildInternalAtsResult(rawScoreResult, input = {}) {
     topProblems: [],
     structuredSuggestions: [],
     retrievalQuery: null,
+    resumeFacts: rawScoreResult.resumeFacts || rawScoreResult.hostedAtsResponse?.resumeFacts || null,
     mentorAdviceSlots: buildMentorAdviceSlots(),
     reportAssembly: buildReportAssembly(),
     metrics: rawScoreResult.metrics || {},

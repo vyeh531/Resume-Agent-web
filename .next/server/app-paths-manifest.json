@@ -1,10 +1,8 @@
 {
-  "/api/positions/route": "app/api/positions/route.js",
-  "/api/parse-file/route": "app/api/parse-file/route.js",
-  "/api/v1/analysis-jobs/route": "app/api/v1/analysis-jobs/route.js",
-  "/api/v1/analysis-jobs/[jobId]/route": "app/api/v1/analysis-jobs/[jobId]/route.js",
   "/api/position-salary/route": "app/api/position-salary/route.js",
+  "/result/page": "app/result/page.js",
+  "/payment/page": "app/payment/page.js",
+  "/report/page": "app/report/page.js",
   "/page": "app/page.js",
-  "/login/page": "app/login/page.js",
-  "/result/page": "app/result/page.js"
+  "/login/page": "app/login/page.js"
 }
