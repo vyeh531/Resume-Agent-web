@@ -1,6 +1,8 @@
 ﻿"use strict";
 
 const db = require("../database");
+const actionGovernance = require("./actionGovernance");
+const titleGovernance = require("./titleGovernance");
 // pg pool is retrieved lazily via db.getPool()
 
 const FALLBACK_FREE_ADVICE = {
@@ -21,7 +23,7 @@ const ACCOUNTING_FALLBACK_FREE_ADVICE = {
 };
 
 const TECH_ROLE_FAMILIES = new Set(["software_engineer", "ai_engineer", "machine_learning", "data_scientist"]);
-const BUSINESS_ROLE_FAMILIES = new Set(["accounting", "finance", "financial_analyst", "business", "operations"]);
+const BUSINESS_ROLE_FAMILIES = new Set(["accounting", "finance", "financial_analyst", "business", "operations", "management_trainee"]);
 
 // ── Company → logo file mapping (files live in public/logos/) ─────────────────
 const COMPANY_LOGO_MAP = {
@@ -433,6 +435,9 @@ function textTermOverlapScore(queryTerms, text) {
 
 function inferRoleFamilyFromJobTitle(jobTitle) {
   const text = String(jobTitle || "").toLowerCase();
+  if (/\b(management trainee|graduate trainee|leadership development program|rotational program)\b/.test(text) || /管培/.test(text)) {
+    return "management_trainee";
+  }
   if (/\b(machine learning engineer|ml engineer|mle|deep learning engineer)\b/.test(text)) {
     return "machine_learning";
   }
@@ -527,6 +532,7 @@ function rowText(row) {
     row.topic, row.L1, row.L2, row.P_mentor, row.A_action, row.I_insight, row.H_hook,
     row.E_example, row.HR_os, row.keywords, row.retrieval_text, row.advice_card_title,
     row.user_problem_summary, row.action_summary, row.role_family, row.target_roles,
+    row.generalized_action, row.activation_keywords, row.grounding_terms, row.canonical_action_family,
     row.title, row.problemSummary, row.actionSummary, row.currentDiagnosis, row.action,
     row.mentorInsight, row.example, row.hrPerspective, row.roleFamily, row.targetRoles,
     row.mentorName, row.mentor_name, row.company, row.mentor_company, row.mentorTitle,
@@ -547,6 +553,18 @@ function hasUnsupportedIdentityAssumption(row) {
 function hasUnsupportedBackgroundAssumption(row) {
   const text = rowText(row);
   return /\bphd\b|ph\.d\.|doctorate|doctoral|博士|博士学历|博士研究|research domain/i.test(text);
+}
+
+function hasMismatchedCaseStudyAdvice(row, targetProblemTags = []) {
+  const text = rowText(row);
+  const hasPrCase = /battery scandal|pr crisis|public relations crisis|legal implications|case study|竞争分析|宏观影响|舆情|危机公关/i.test(text);
+  if (!hasPrCase) return false;
+  const allowed = targetProblemTags.some((item) => {
+    const tag = item.tag || item;
+    const family = item.coverageFamily || "";
+    return /communications|pr|legal|policy|case_study|research|market|competition/i.test(`${tag} ${family}`);
+  });
+  return !allowed;
 }
 
 function hasExperienceSectionTitleOnlyAdvice(row) {
@@ -1154,9 +1172,80 @@ function roleSafeActionSummary(row, retrievalQuery = {}) {
   return row.A_action || row.action_summary;
 }
 
+function governanceContextFromInternal(internalAtsResult = {}) {
+  const profile = internalAtsResult.profile || {};
+  return {
+    resumeText: internalAtsResult.resumeText || internalAtsResult.rawResumeText || "",
+    jdText: internalAtsResult.jdText || internalAtsResult.retrievalQuery?.queryText || "",
+    jobTitle: internalAtsResult.jobTitle || profile.targetRole || "",
+    targetRole: profile.targetRole || internalAtsResult.jobTitle || "",
+    roleFamily: profile.roleFamily || "",
+  };
+}
+
+function governanceContextFromRetrievalQuery(retrievalQuery = {}) {
+  const filters = retrievalQuery.filters || {};
+  return {
+    jdText: retrievalQuery.queryText || "",
+    jobTitle: retrievalQuery.targetRole || "",
+    targetRole: retrievalQuery.targetRole || "",
+    roleFamily: retrievalQuery.roleFamily || (filters.roleFamily || [])[0] || "",
+  };
+}
+
+function resolvedGovernedAction(card = {}, context = {}, fallback = "") {
+  const resolved = actionGovernance.resolveDisplayAction(card, context);
+  const actionSource = resolved.allowed === false ? resolved.action : (resolved.action || fallback);
+  return {
+    ...resolved,
+    action: cleanAndTruncate(actionSource, 500, resolved.allowed === false ? "" : fallback),
+  };
+}
+
+function shouldUseGeneralizedPerspective(card = {}, governedAction = {}) {
+  return governedAction.usedMode === "generalized";
+}
+
+function generalizedMentorLensForCard(card = {}) {
+  const family = canonicalActionFamilyOf(card);
+  if (family === "experience_evidence") {
+    return "项目和经历的价值不在于名字多亮，而在于招聘方能否看出你做了什么、怎么做、产出了什么，以及这些证据是否支撑目标岗位。";
+  }
+  if (family === "jd_keyword_alignment") {
+    return "关键词只有放进真实经历里才有说服力。把 JD 里的能力要求转成项目或工作证据，比单纯堆词更容易通过人工筛选。";
+  }
+  if (family === "summary_positioning") {
+    return "简历开头要先帮招聘方判断方向。定位清楚后，后面的项目、技能和经历才会被放在正确语境里理解。";
+  }
+  return "这条建议的重点是把原本零散的经历证据，改写成招聘方能快速判断价值的简历信息。";
+}
+
+function generalizedReasonForCard(card = {}) {
+  const family = canonicalActionFamilyOf(card);
+  if (family === "experience_evidence") {
+    return "HR 和面试官扫经历时会找任务、方法和结果；只看到课程名、工具名或职责描述，会很难判断你的真实贡献。";
+  }
+  if (family === "jd_keyword_alignment") {
+    return "ATS 能扫到词，但人工筛选会继续看这些词有没有出现在真实项目和工作场景里。";
+  }
+  return "去掉个案细节后，建议仍然保留原本的判断：让简历内容更具体、更可验证，也更贴近目标岗位。";
+}
+
+function generalizedHrPerspectiveForCard(card = {}) {
+  const family = canonicalActionFamilyOf(card);
+  if (family === "experience_evidence") {
+    return "我看项目时不会只看你上过什么课或用过什么工具，我更在意你能不能把任务、过程和结果讲清楚。";
+  }
+  if (family === "jd_keyword_alignment") {
+    return "关键词不是写给系统看的摆设；如果经历里没有对应证据，我会怀疑你只是照着 JD 填词。";
+  }
+  return "如果一条经历缺少上下文和结果，我会先把它当成弱信号，除非你能给出更具体的证据。";
+}
+
 function buildCardTitle(row) {
+  if (row.canonical_title) return row.canonical_title;
   // Use full first sentence of P_mentor — stop at sentence-ending punctuation only
-  const p = (row.P_mentor || row.advice_card_title || row.topic || "").trim();
+  const p = (row.advice_card_title || row.topic || "").trim();
   // Only break at definitive sentence ends (。！？), not commas/semicolons
   for (const sep of ["。", "！", "？"]) {
     const idx = p.indexOf(sep);
@@ -1172,12 +1261,14 @@ function buildCardTitle(row) {
 }
 
 function formatAdviceCardForPublic(row, retrievalQuery = {}) {
+  const preliminary = resolvedGovernedAction(row, governanceContextFromRetrievalQuery(retrievalQuery), roleSafeActionSummary(row, retrievalQuery));
   return {
     adviceId: row.id ? `seg_${row.id}` : row.chunk_id,
     chunkId: row.chunk_id || null,
     title: buildCardTitle(row),
     problemSummary: cleanAndTruncate(row.user_problem_summary || row.P_mentor, 180),
-    actionSummary: cleanAndTruncate(roleSafeActionSummary(row, retrievalQuery), 500),
+    actionSummary: preliminary.action,
+    rawActionSummary: row.A_action || row.action_summary || "",
     mentorInsight: row.I_insight || "",
     example: row.E_example || "",
     hrPerspective: row.HR_os || "",
@@ -1206,6 +1297,20 @@ function formatAdviceCardForPublic(row, retrievalQuery = {}) {
     mentor_career_path_display: row.mentor_career_path_display || null,
     mentor_company: row.mentor_company || null,
     retrievalScope: row.retrieval_scope || null,
+    actionSpecificity: row.action_specificity || "",
+    displayActionMode: row.display_action_mode || "",
+    generalizedAction: row.generalized_action || "",
+    activationRoleFamily: row.activation_role_family || "",
+    activationKeywords: row.activation_keywords || "",
+    groundingTerms: row.grounding_terms || "",
+    canonicalActionFamily: row.canonical_action_family || "",
+    actionDepth: row.action_depth || "",
+    actionReviewStatus: row.action_review_status || "",
+    actionDisplayModeUsed: preliminary.usedMode,
+    canonicalTitle: row.canonical_title || "",
+    titleReviewStatus: row.title_review_status || "",
+    titleSource: row.title_source || "",
+    titleConfidence: row.title_confidence || null,
   };
 }
 
@@ -1222,7 +1327,10 @@ function baseSelectSql(where, limit = 500) {
       advice_card_title, user_problem_summary, action_summary, safe_to_show_free,
       requires_ai_rewrite, mentor_quality_score, feedback_score,
       mentor_title, mentor_career_keywords, mentor_career_path_display, mentor_company,
-      retrieval_scope
+      retrieval_scope,
+      action_specificity, display_action_mode, generalized_action,
+      activation_role_family, activation_keywords, grounding_terms,
+      canonical_action_family, action_depth, action_review_status
     FROM segments
     WHERE (${where})
       AND (retrieval_scope IS NULL OR retrieval_scope = 'resume_edit')
@@ -1472,23 +1580,39 @@ async function retrieveMentorAdvice(retrievalQuery = {}, options = {}) {
 
 function selectFreeAdvice(candidates, retrievalQuery = candidates?.debug?.retrievalQuery || {}) {
   const requireResumeIntent = isHighRiskAtsGap(retrievalQuery);
+  const governanceContext = {
+    ...governanceContextFromRetrievalQuery(retrievalQuery),
+    resumeText: retrievalQuery.resumeText || retrievalQuery.rawResumeText || "",
+  };
   const freeAdvice = candidates
     .filter((card) => card.unlockTier === "free" || card.safeToShowFree)
     .filter((card) => !["interview_prep", "behavioral_interview"].includes(card.adviceScope))
     .filter((card) => card.adviceIntent !== "application_timing")
+    .filter((card) => {
+      const resolved = actionGovernance.resolveDisplayAction(card, governanceContext);
+      return Boolean(resolved.allowed && resolved.action);
+    })
     .filter((card) => !requireResumeIntent || FREE_HIGH_RISK_INTENTS.has(card.adviceIntent))
     .filter((card) => !card.matched_reasons?.includes("conflicting_role_examples"))
     .sort((a, b) => compareCardsStable(a, b, [], new Set(), []))[0];
   return freeAdvice || (isAccountingQuery(retrievalQuery) ? ACCOUNTING_FALLBACK_FREE_ADVICE : FALLBACK_FREE_ADVICE);
 }
 
-function selectPaidAdvice(candidates, freeAdvice) {
+function selectPaidAdvice(candidates, freeAdvice, retrievalQuery = candidates?.debug?.retrievalQuery || {}) {
   const selected = [];
   const usedTopics = new Set();
   const freeId = freeAdvice?.adviceId;
+  const governanceContext = {
+    ...governanceContextFromRetrievalQuery(retrievalQuery),
+    resumeText: retrievalQuery.resumeText || retrievalQuery.rawResumeText || "",
+  };
   const paidCandidates = candidates
     .filter((card) => card.adviceId !== freeId)
     .filter((card) => !["interview_prep", "behavioral_interview"].includes(card.adviceScope))
+    .filter((card) => {
+      const resolved = actionGovernance.resolveDisplayAction(card, governanceContext);
+      return Boolean(resolved.allowed && resolved.action);
+    })
     .filter((card) => !card.matched_reasons?.includes("conflicting_role_examples"))
     .sort((a, b) =>
       Number(b.unlockTier === "paid") - Number(a.unlockTier === "paid") ||
@@ -1518,6 +1642,26 @@ function problemTagsFromInternal(internalAtsResult = {}) {
     dimension: item.dimension || "overall",
     topic: item.topic || "resume_ats",
     evidence: item.evidence,
+  })).filter((item) => item.tag);
+}
+
+function obligationsFromInternal(internalAtsResult = {}) {
+  const obligations = Array.isArray(internalAtsResult.adviceCoverageObligations)
+    ? internalAtsResult.adviceCoverageObligations
+    : [];
+  if (!obligations.length) return problemTagsFromInternal(internalAtsResult);
+  return obligations.map((item) => ({
+    ...item,
+    tag: normalizeProblemTagForRetrieval(item.tag),
+    originalTag: item.tag,
+    severity: item.severity || "medium",
+    dimension: item.dimension || "overall",
+    topic: item.topic || item.coverageFamily || "resume_ats",
+    evidence: item.message || item.evidence,
+    obligationId: item.id,
+    keywords: item.keywords || [],
+    required: item.required !== false,
+    coverageFamily: item.coverageFamily || problemFamilyForTag(item.tag),
   })).filter((item) => item.tag);
 }
 
@@ -1581,6 +1725,7 @@ function inferAdviceActionFamily(card = {}) {
     card.targetSection,
   ].filter(Boolean).join(" ").toLowerCase();
 
+  if (/压缩至?一页|控制在一页|一页以内|行间距|字体|字号|页边距|删除不相关.*(活动|activity|获奖|award)|activity section|获奖记录/.test(text)) return "format_structure";
   if (/排序|顺序|置于前列|放到前面|靠前|提前|移至后面|移到后面|reorder|section order/.test(text)) return "section_relevance_order";
   if (/植入|嵌入|正文bullet|bullet point.*关键词|关键词.*bullet|关键词.*经历/.test(text)) return "keyword_in_experience";
   if (/时间最近|最新技术状态|保留.*项目|替换旧项目|筛选.*项目/.test(text)) return "project_selection";
@@ -1599,10 +1744,91 @@ function inferAdviceActionFamily(card = {}) {
   return "general_resume_edit";
 }
 
+function actionFamiliesForProblemFamily(family = "") {
+  const map = {
+    keyword: new Set([
+      "keyword_in_experience",
+      "keyword_visibility",
+      "jd_terminology",
+      "skills_section",
+      "jd_gap_audit",
+      "resume_versioning",
+      "role_persona_alignment",
+      "project_evidence",
+      "summary_positioning",
+      "section_relevance_order",
+      "project_selection",
+      "general_resume_edit",
+    ]),
+    positioning: new Set([
+      "summary_positioning",
+      "resume_versioning",
+      "role_persona_alignment",
+      "section_relevance_order",
+      "project_selection",
+      "skills_section",
+      "jd_terminology",
+      "general_resume_edit",
+    ]),
+    experience: new Set([
+      "keyword_in_experience",
+      "project_evidence",
+      "impact_metrics",
+      "readability",
+      "section_relevance_order",
+      "project_selection",
+      "general_resume_edit",
+    ]),
+    impact: new Set([
+      "impact_metrics",
+      "project_evidence",
+      "readability",
+      "keyword_in_experience",
+      "general_resume_edit",
+    ]),
+    format: new Set([
+      "format_structure",
+      "readability",
+      "section_relevance_order",
+      "project_selection",
+      "keyword_visibility",
+      "general_resume_edit",
+    ]),
+    links: new Set(["profile_links", "general_resume_edit"]),
+    education: new Set([
+      "format_structure",
+      "section_relevance_order",
+      "skills_section",
+      "project_evidence",
+      "general_resume_edit",
+    ]),
+  };
+  return map[family] || new Set(["general_resume_edit"]);
+}
+
+function isActionFamilyCompatibleWithProblems(card = {}, targetProblemTags = []) {
+  const related = relatedTagsForCard(card, targetProblemTags);
+  if (!related.length) return false;
+  const actionFamily = card._actionFamily || inferAdviceActionFamily(card);
+  return related.some((tag) => actionFamiliesForProblemFamily(problemFamilyForTag(tag)).has(actionFamily));
+}
+
 function forceAdvicePriority(item, priority) {
   item.priority = priority;
   item.priorityLabel = priorityLabel(priority);
   return item;
+}
+
+function resolveHrPerspective(item = {}) {
+  return decontextualizeAdviceText(
+    item.hrPerspective ||
+    item.HR_os ||
+    item.hrPov ||
+    item.recruiterPerspective ||
+    item.recruiter_perspective ||
+    "",
+    ""
+  );
 }
 
 function normalizePremiumAdvicePriorities(mentors = []) {
@@ -1624,6 +1850,13 @@ function stableAdviceKey(card = {}) {
   const raw = String(card.adviceId || card.chunk_id || card.id || "");
   const numeric = raw.match(/\d+/)?.[0];
   return `${numeric ? numeric.padStart(10, "0") : "9999999999"}:${raw}`;
+}
+
+function renderedCardTitle(card = {}, targetProblemTags = []) {
+  return titleGovernance.bestDisplayTitle(
+    card,
+    titleForCurrentProblem(relatedTagsForCard(card, targetProblemTags), card)
+  );
 }
 
 function dbPriorityScore(card = {}) {
@@ -1720,6 +1953,10 @@ function generateUserDiagnosis(relatedProblemTags = [], targetProblemTags = [], 
       `教育背景或课程信息没有充分服务目标岗位，相关课程、训练或证书信号还可以更清楚。`,
     low_soft_skill_match: () =>
       `简历中与岗位相关的沟通、协作或 stakeholder 经验呈现不足，软技能证据不够具体。`,
+    partial_china_experience: () =>
+      `简历中有部分经历来自中国或非目标市场，需要把工具、场景和成果写得更容易被目标市场 HR 理解。`,
+    all_china_experience: () =>
+      `简历的核心经历主要来自中国或非目标市场，需要更主动说明这些经历如何迁移到目标岗位和目标市场。`,
     missing_section_dates: () => {
       const section = sectionHintForProblemTag(targetProblemTags, "missing_section_dates");
       return section
@@ -1908,7 +2145,7 @@ function titleForCurrentProblem(relatedProblemTags = [], card = {}) {
   if (tags.has("all_china_experience")) return "强化美国市场可信经历";
   if (tags.has("career_growth_optimization")) return "补强成长轨迹";
   if (tags.has("missing_section_dates")) return "补齐经历日期";
-  return cleanAndTruncate(card.title || "优化简历与目标岗位的匹配度", 80, "优化简历与目标岗位的匹配度");
+  return titleGovernance.bestDisplayTitle(card, card.title || card.advice_card_title || "");
 }
 
 function decontextualizeAdviceText(value, fallback = "") {
@@ -1933,6 +2170,83 @@ function decontextualizeAdviceText(value, fallback = "") {
     .replace(/^\s*[，,；;。]\s*/, "")
     .trim();
   return cleanAndTruncate(text, 500, fallback);
+}
+
+function isSystemPlaceholderAdviceText(value = "") {
+  const text = String(value || "");
+  return /当前报告可用的导师建议不足\s*12\s*条|导师建议不足\s*12\s*条|简历优化建议\s*\d+|report-fallback/i.test(text);
+}
+
+function isMostlyEnglishAction(value = "") {
+  const text = String(value || "").trim();
+  if (!text) return false;
+  const cjk = (text.match(/[\u4e00-\u9fff]/g) || []).length;
+  if (cjk >= 8) return false;
+  const letters = (text.match(/[A-Za-z]/g) || []).length;
+  const words = (text.match(/\b[A-Za-z][A-Za-z'-]*\b/g) || [])
+    .filter((word) => !/^(ATS|JD|Summary|Skills|Experience|Projects?|Education|HR|PDF|LinkedIn|GitHub|bullet)$/i.test(word));
+  return letters >= 32 && words.length >= 5;
+}
+
+function chineseActionFallbackForCard(card = {}, defaultAction = "") {
+  const candidates = [
+    card.generalizedAction,
+    card.generalized_action,
+    actionGovernance.buildGeneralizedAction(card),
+    defaultAction,
+  ].map((item) => String(item || "").trim()).filter(Boolean);
+  const chineseCandidate = candidates.find((item) => /[\u4e00-\u9fff]/.test(item) && !isMostlyEnglishAction(item));
+  if (chineseCandidate) return chineseCandidate;
+  const family = canonicalActionFamilyOf(card);
+  const fallbacks = {
+    summary_positioning: "先把 Summary 改成目标岗位导向：写出目标岗位原词，并用一句话连接你的经历与 JD 核心职责。",
+    jd_keyword_alignment: "对照 JD 提取真实掌握的核心关键词，把它们补进 Skills，并写进最相关的 Experience bullet。",
+    experience_evidence: "选择最相关的一段经历，把 bullet 改成「动作 + 方法/工具 + 结果」结构，让关键词有真实证据支撑。",
+    quantified_impact: "为核心 bullet 补充数量、频率、规模、效率或结果，让 HR 能判断你的实际贡献。",
+    skills_section: "重排 Skills，把目标 JD 最需要且你真实掌握的技能放在前面，并删除干扰定位的弱相关技能。",
+    education_signal: "只保留和目标岗位相关的课程、证书或训练成果，并说明它们如何支撑岗位要求。",
+    format_cleanup: "统一简历格式、日期和 section 结构，优先保证 ATS 可解析、HR 可快速扫描。",
+    profile_links: "在简历头部补齐可验证资料入口，并确保链接、联系方式和文件格式稳定可用。",
+  };
+  return fallbacks[family] || "围绕目标岗位重新检查这部分内容，把最相关的职责、关键词和结果证据写得更明确。";
+}
+
+function normalizeDisplayActionLanguage(action = "", card = {}, defaultAction = "") {
+  const text = cleanAndTruncate(action, 500, defaultAction);
+  if (!text || isSystemPlaceholderAdviceText(text) || isMostlyEnglishAction(text)) {
+    return cleanAndTruncate(chineseActionFallbackForCard(card, defaultAction), 500, defaultAction);
+  }
+  return text;
+}
+
+function titleFallbackForCard(card = {}) {
+  const canonical = card.canonicalTitle || card.canonical_title;
+  if (canonical && !titleGovernance.isBadVisibleTitle(canonical)) return canonical;
+  const family = canonicalActionFamilyOf(card);
+  const titles = {
+    summary_positioning: "优化 Summary 岗位定位",
+    jd_keyword_alignment: "补齐 JD 关键词证据",
+    experience_evidence: "优化经历 bullet 证据",
+    quantified_impact: "强化 bullet 的结果表达",
+    skills_section: "整理 Skills 关键词",
+    education_signal: "补强教育背景信号",
+    format_cleanup: "修复格式和时间线问题",
+    profile_links: "补齐可验证资料入口",
+    transferable_framing: "改写可迁移经历表达",
+  };
+  return titles[family] || titleGovernance.titleFromRules(card);
+}
+
+function normalizeDisplayTitle(title = "", card = {}) {
+  return titleGovernance.bestDisplayTitle(
+    { ...card, canonicalTitle: card.canonicalTitle || card.canonical_title || titleFallbackForCard(card) },
+    cleanAndTruncate(title, 80, titleFallbackForCard(card))
+  );
+}
+
+function normalizeDisplayDiagnosis(diagnosis = "", fallback = "") {
+  if (!diagnosis || isSystemPlaceholderAdviceText(diagnosis)) return fallback || "这条建议针对当前简历与目标岗位之间的匹配缺口，优先转化成可执行的修改动作。";
+  return diagnosis;
 }
 
 function targetTagSet(targetProblemTags = []) {
@@ -2000,10 +2314,100 @@ function hasGpaSpecificWarning(card = {}) {
   return /\bgpa\s*[:：]?\s*[3-4](?:\.\d+)?\b|gpa[^0-9]{0,16}[3-4](?:\.\d+)?|gpa\s*3\.8/i.test(text);
 }
 
+function normalizeGroundingText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[\u2010-\u2015]/g, "-")
+    .replace(/[^a-z0-9\u4e00-\u9fff]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function termAppearsInResume(term, resumeText) {
+  const normalizedTerm = normalizeGroundingText(term);
+  if (!normalizedTerm || normalizedTerm.length < 2) return true;
+  const normalizedResume = normalizeGroundingText(resumeText);
+  if (!normalizedResume) return true;
+  if (normalizedResume.includes(normalizedTerm)) return true;
+  const compactTerm = normalizedTerm.replace(/\s+/g, "");
+  const compactResume = normalizedResume.replace(/\s+/g, "");
+  return compactTerm.length >= 3 && compactResume.includes(compactTerm);
+}
+
+function extractGroundingTermsFromAdvice(card = {}) {
+  const actionText = [
+    card.action,
+    card.actionSummary,
+    card.example,
+    card.E_example,
+  ].filter(Boolean).join(" ");
+  const terms = new Set();
+  const add = (value) => {
+    const term = String(value || "")
+      .replace(/^(?:the|a|an)\s+/i, "")
+      .replace(/\b(project|pipeline|section|bullet|summary|experience|skills?)\b$/i, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (term.length >= 3 && term.length <= 80) terms.add(term);
+  };
+
+  const projectPatterns = [
+    /(?:将|把|在|从|选择|拆分|重写|改写|展开|合并)\s*([A-Z][A-Za-z0-9&/ .-]{2,70}?)(?:项目|project)/g,
+    /\b([A-Z][A-Za-z0-9&/ .-]{2,70}?)\s+(?:project|pipeline)\b/gi,
+  ];
+  for (const pattern of projectPatterns) {
+    let match;
+    while ((match = pattern.exec(actionText))) add(match[1]);
+  }
+
+  const acronymAllowlist = new Set([
+    "ATS", "HR", "JD", "PDF", "DOC", "DOCX", "GPA", "USA", "US", "CA", "NY",
+    "BA", "BS", "MS", "MBA", "PhD", "CEO", "CFO", "API", "KPI", "OKR",
+  ]);
+  for (const match of actionText.matchAll(/\b[A-Z][A-Z0-9+/#.-]{1,}\b/g)) {
+    const token = match[0].replace(/[.,;:!?]+$/, "");
+    if (acronymAllowlist.has(token)) continue;
+    if (/^\d+$/.test(token)) continue;
+    add(token);
+  }
+
+  const specificPhrasePatterns = [
+    /\b(compound sentiment scores?|market trends?|sentiment scores?|data acquisition|data pre[-\s]?processing|pre[-\s]?processing headlines?|article summar(?:y|ies))\b/gi,
+  ];
+  for (const pattern of specificPhrasePatterns) {
+    let match;
+    while ((match = pattern.exec(actionText))) add(match[1]);
+  }
+
+  return [...terms];
+}
+
+function isResumeGroundedAdvice(card = {}, internalAtsResult = {}) {
+  const resumeText = internalAtsResult.resumeText || internalAtsResult.rawResumeText || "";
+  if (!resumeText) return true;
+  const terms = extractGroundingTermsFromAdvice(card);
+  if (!terms.length) return true;
+  const actionText = [card.action, card.actionSummary, card.example, card.E_example].filter(Boolean).join(" ");
+  const hasProjectLevelInstruction = /(?:项目|project|pipeline|拆分|合并|重写|改写|展开|用[A-Z][A-Z0-9+/#.-]{1,})/i.test(actionText);
+  if (!hasProjectLevelInstruction) return true;
+  const missing = terms.filter((term) => !termAppearsInResume(term, resumeText));
+  if (!missing.length) return true;
+  const groundedCount = terms.length - missing.length;
+  if (terms.some((term) => /research|project|pipeline/i.test(term) && !termAppearsInResume(term, resumeText))) return false;
+  return groundedCount >= 2 && groundedCount / terms.length >= 0.5;
+}
+
+function isGovernedAdviceDisplayable(card = {}, internalAtsResult = {}) {
+  const resolved = actionGovernance.resolveDisplayAction(card, governanceContextFromInternal(internalAtsResult));
+  return Boolean(resolved.allowed && resolved.action);
+}
+
 function isCardAlignedWithTargetProblems(card = {}, targetProblemTags = []) {
   const tags = targetProblemTags.map((item) => item.tag || item).filter(Boolean);
   if (!tags.length) return true;
   if (!exactTriggerSatisfied(card, targetProblemTags)) return false;
+  if (hasMismatchedCaseStudyAdvice(card, targetProblemTags)) return false;
+  if (!isActionFamilyCompatibleWithProblems(card, targetProblemTags)) return false;
   const related = relatedTagsForCard(card, targetProblemTags);
   const text = [
     card.title,
@@ -2068,8 +2472,11 @@ function toAdviceItem(card = {}, targetProblemTags = [], index = 0, includePremi
   const relatedProblemTags = relatedTagsForCard(card, targetProblemTags);
   const defaultAction = "优先把目标岗位关键词、相关技能和经历证据放到 Summary、Skills 和 Experience 中。";
 
+  const hasNativeNewSchema = !!(card.mentorLens || card.currentDiagnosis || card.action || card.reason);
   const currentDiagnosis = generateUserDiagnosis(relatedProblemTags, targetProblemTags, internalAtsResult, usedDiagnosisTags);
-  let action = decontextualizeAdviceText(card.action || card.actionSummary, defaultAction);
+  const governedAction = resolvedGovernedAction(card, governanceContextFromInternal(internalAtsResult), card.action || card.actionSummary || defaultAction);
+  let action = decontextualizeAdviceText(governedAction.action, defaultAction);
+  action = normalizeDisplayActionLanguage(action, card, defaultAction);
   const sectionForMissingDates = relatedProblemTags.includes("missing_section_dates")
     ? sectionHintForProblemTag(targetProblemTags, "missing_section_dates")
     : "";
@@ -2081,44 +2488,68 @@ function toAdviceItem(card = {}, targetProblemTags = [], index = 0, includePremi
       );
     }
   }
+  const useGeneralizedPerspective = shouldUseGeneralizedPerspective(card, governedAction);
   // mentorLens: new schema field; for DB-adapted rows derive from P_mentor if helpful
-  const mentorLens = card.mentorLens || "";
+  const mentorLens = useGeneralizedPerspective
+    ? generalizedMentorLensForCard(card)
+    : card.mentorLens || card.P_mentor || "";
   // reason: new schema field; for DB-adapted rows, I_insight is the closest analog
-  const reason = card.reason || "";
+  const reason = useGeneralizedPerspective
+    ? generalizedReasonForCard(card)
+    : card.reason || card.I_insight || "";
+  const hrPerspective = useGeneralizedPerspective
+    ? generalizedHrPerspectiveForCard(card)
+    : resolveHrPerspective(card);
   // evidence: explicit chips array; populated by fallback templates or buildAdviceEvidence later
   const evidence = Array.isArray(card.evidence) ? [...card.evidence] : [];
 
   // Determine source: prefer explicit, then detect whether we have native new-schema fields
-  const hasNativeNewSchema = !!(card.mentorLens || card.currentDiagnosis || card.action || card.reason);
   const source = card.source || (hasNativeNewSchema ? "db" : "db_adapted");
+  const titleBase = useGeneralizedPerspective
+    ? titleFallbackForCard(card)
+    : titleForCurrentProblem(relatedProblemTags, card);
+  const title = normalizeDisplayTitle(titleBase, card);
 
   const item = {
     adviceId: card.adviceId || `fallback_${index}`,
-    title: titleForCurrentProblem(relatedProblemTags, card),
+    title,
     mentorLens,
-    currentDiagnosis,
+    currentDiagnosis: normalizeDisplayDiagnosis(currentDiagnosis),
     action,
     reason,
     evidence,
     // backward compat aliases
-    problemSummary: currentDiagnosis,
+    problemSummary: normalizeDisplayDiagnosis(currentDiagnosis),
     actionSummary: action,
     targetSection: card.targetSection || (sectionForMissingDates ? sectionForMissingDates.toLowerCase() : targetSectionFromCard(card)),
     relatedProblemTags,
     priority: card.priority || priorityFromTags(relatedProblemTags, targetProblemTags),
     priorityLabel: priorityLabel(card.priority || priorityFromTags(relatedProblemTags, targetProblemTags)),
     source,
+    actionSpecificity: card.actionSpecificity || card.action_specificity || "",
+    actionDisplayMode: card.displayActionMode || card.display_action_mode || "",
+    actionDisplayModeUsed: governedAction.usedMode || "",
+    canonicalActionFamily: card.canonicalActionFamily || card.canonical_action_family || inferAdviceActionFamily(card),
+    actionDepth: card.actionDepth || card.action_depth || actionGovernance.inferActionDepth(card),
+    canonicalTitle: card.canonicalTitle || card.canonical_title || titleFallbackForCard(card),
+    titleReviewStatus: card.titleReviewStatus || card.title_review_status || "",
+    titleSource: card.titleSource || card.title_source || "",
+    titleConfidence: card.titleConfidence || card.title_confidence || null,
     mentorSource: {
       mentorName: card.mentorName || card.mentor_name || "",
       company: inferCompanyFromMentor(card),
       companyLogo: resolveCompanyLogo(inferCompanyFromMentor(card)),
       mentorTitle: inferMentorTitle(card),
     },
+    hrPerspective,
+    HR_os: hrPerspective,
   };
   if (includePremiumFields) {
-    item.mentorInsight = decontextualizeAdviceText(card.mentorInsight || card.I_insight || "", "");
-    item.example = decontextualizeAdviceText(card.example || card.E_example || "", "");
-    item.hrPerspective = decontextualizeAdviceText(card.hrPerspective || card.HR_os || "", "");
+    const suppressContext = useGeneralizedPerspective || hasMismatchedCaseStudyAdvice(card, targetProblemTags);
+    item.mentorInsight = suppressContext ? "" : decontextualizeAdviceText(card.mentorInsight || card.I_insight || card.mentorLens || card.P_mentor || "", "");
+    item.example = suppressContext ? "" : decontextualizeAdviceText(card.example || card.E_example || "", "");
+    item.hrPerspective = hrPerspective;
+    item.HR_os = item.hrPerspective;
   }
   return item;
 }
@@ -2163,7 +2594,26 @@ function buildMentorLogoPoolFromCandidates(candidates = [], max = 16) {
   return [...byCompany.values()];
 }
 
-function selectGlobalAdviceItems(candidates, targetProblemTags, count, coveredTags = new Set(), internalAtsResult = {}, userProfile = {}, usedAdviceIds = new Set()) {
+function canonicalActionFamilyOf(item = {}) {
+  return normalizeTerm(
+    item.canonicalActionFamily ||
+    item.canonical_action_family ||
+    item.actionFamily ||
+    item._actionFamily ||
+    actionGovernance.inferCanonicalActionFamily(item) ||
+    inferAdviceActionFamily(item)
+  ) || "overall_positioning";
+}
+
+function actionDepthOf(item = {}) {
+  return normalizeTerm(
+    item.actionDepth ||
+    item.action_depth ||
+    actionGovernance.inferActionDepth(item)
+  ) || "rewrite";
+}
+
+function selectGlobalAdviceItems(candidates, targetProblemTags, count, coveredTags = new Set(), internalAtsResult = {}, userProfile = {}, usedAdviceIds = new Set(), options = {}) {
   const selectedCards = [];
   const selectedItems = [];
   const clusterCounts = new Map();
@@ -2171,14 +2621,18 @@ function selectGlobalAdviceItems(candidates, targetProblemTags, count, coveredTa
   const actionFamilyCounts = new Map();
   const titleCounts = new Map();
   const usedDiagnosisTags = new Set();
+  const familyDepths = new Map();
   const cards = [...(candidates || [])]
     .filter((card) => !usedAdviceIds.has(card.adviceId))
     .sort((a, b) => compareCardsStable(a, b, targetProblemTags, coveredTags, selectedCards));
 
   for (const item of userProfile.seedAdviceItems || []) {
-    const actionFamily = item.actionFamily || inferAdviceActionFamily(item);
-    const renderedTitle = item.title || titleForCurrentProblem(item.relatedProblemTags || [], item);
+    const actionFamily = canonicalActionFamilyOf(item);
+    const actionDepth = actionDepthOf(item);
+    const renderedTitle = item.title || renderedCardTitle(item, targetProblemTags);
     actionFamilyCounts.set(actionFamily, (actionFamilyCounts.get(actionFamily) || 0) + 1);
+    if (!familyDepths.has(actionFamily)) familyDepths.set(actionFamily, new Set());
+    familyDepths.get(actionFamily).add(actionDepth);
     titleCounts.set(renderedTitle, (titleCounts.get(renderedTitle) || 0) + 1);
   }
 
@@ -2194,6 +2648,7 @@ function selectGlobalAdviceItems(candidates, targetProblemTags, count, coveredTa
     item.topicCluster = meta.topicCluster;
     item.confidenceScore = meta.confidenceScore;
     item.adviceTransferScope = meta.adviceTransferScope;
+    if (!canAddToTwelveAdviceBundle(item, [...(userProfile.seedAdviceItems || []), ...selectedItems])) return false;
 
     selectedCards.push(card);
     selectedItems.push(item);
@@ -2201,11 +2656,14 @@ function selectGlobalAdviceItems(candidates, targetProblemTags, count, coveredTa
     (item.relatedProblemTags || []).forEach((tag) => coveredTags.add(tag));
     const company = inferCompanyFromMentor(card);
     const cluster = card._topicCluster || inferTopicCluster(card);
-    const actionFamily = card._actionFamily || inferAdviceActionFamily(card);
-    const renderedTitle = titleForCurrentProblem(relatedTagsForCard(card, targetProblemTags), card);
+    const actionFamily = canonicalActionFamilyOf(item);
+    const actionDepth = actionDepthOf(item);
+    const renderedTitle = item.title || renderedCardTitle(card, targetProblemTags);
     companyCounts.set(company, (companyCounts.get(company) || 0) + 1);
     clusterCounts.set(cluster, (clusterCounts.get(cluster) || 0) + 1);
     actionFamilyCounts.set(actionFamily, (actionFamilyCounts.get(actionFamily) || 0) + 1);
+    if (!familyDepths.has(actionFamily)) familyDepths.set(actionFamily, new Set());
+    familyDepths.get(actionFamily).add(actionDepth);
     titleCounts.set(renderedTitle, (titleCounts.get(renderedTitle) || 0) + 1);
     return true;
   }
@@ -2213,12 +2671,15 @@ function selectGlobalAdviceItems(candidates, targetProblemTags, count, coveredTa
   function canAddCard(card, options = {}) {
     if (hasUnsupportedIdentityAssumption(card)) return false;
     if (hasUnsupportedBackgroundAssumption(card)) return false;
-    if (options.allowDiversityOverflow) return true;
-    const actionFamily = card._actionFamily || inferAdviceActionFamily(card);
-    const renderedTitle = titleForCurrentProblem(relatedTagsForCard(card, targetProblemTags), card);
+    const actionFamily = canonicalActionFamilyOf(card);
+    const actionDepth = actionDepthOf(card);
+    const renderedTitle = renderedCardTitle(card, targetProblemTags);
     const relaxed = Boolean(options.relaxed);
-    if ((actionFamilyCounts.get(actionFamily) || 0) >= (relaxed ? 4 : 3)) return false;
-    if ((titleCounts.get(renderedTitle) || 0) >= (relaxed ? 3 : 2)) return false;
+    const allowDiversityOverflow = Boolean(options.allowDiversityOverflow);
+    const familyCount = actionFamilyCounts.get(actionFamily) || 0;
+    if (familyCount >= (relaxed ? 2 : 2)) return false;
+    if (familyCount >= 1 && (familyDepths.get(actionFamily) || new Set()).has(actionDepth)) return false;
+    if (!allowDiversityOverflow && (titleCounts.get(renderedTitle) || 0) >= (relaxed ? 3 : 2)) return false;
     return true;
   }
 
@@ -2240,8 +2701,8 @@ function selectGlobalAdviceItems(candidates, targetProblemTags, count, coveredTa
       const bCluster = b._topicCluster || inferTopicCluster(b);
       const aAction = a._actionFamily || inferAdviceActionFamily(a);
       const bAction = b._actionFamily || inferAdviceActionFamily(b);
-      const aTitle = titleForCurrentProblem(relatedTagsForCard(a, targetProblemTags), a);
-      const bTitle = titleForCurrentProblem(relatedTagsForCard(b, targetProblemTags), b);
+      const aTitle = renderedCardTitle(a, targetProblemTags);
+      const bTitle = renderedCardTitle(b, targetProblemTags);
       const aPenalty = (companyCounts.get(aCompany) || 0) * 0.08 + (clusterCounts.get(aCluster) || 0) * 0.12 +
         (actionFamilyCounts.get(aAction) || 0) * 0.18 + (titleCounts.get(aTitle) || 0) * 0.22;
       const bPenalty = (companyCounts.get(bCompany) || 0) * 0.08 + (clusterCounts.get(bCluster) || 0) * 0.12 +
@@ -2259,18 +2720,22 @@ function selectGlobalAdviceItems(candidates, targetProblemTags, count, coveredTa
       relaxed = Boolean(card);
     }
     if (!card) {
-      card = cards.find((item) => !hasUnsupportedIdentityAssumption(item));
+      card = cards.find((item) => canAddCard(item, { relaxed: true, allowDiversityOverflow: true }));
       allowDiversityOverflow = Boolean(card);
     }
+    if (!card) break;
     if (card) cards.splice(cards.indexOf(card), 1);
     addCard(card, { relaxed, allowDiversityOverflow });
   }
 
-  if (selectedItems.length < count) {
-    const fallback = fallbackAdviceItems(internalAtsResult, count, coveredTags);
+  if (selectedItems.length < count && options.allowFallback !== false) {
+    const fallback = fallbackAdviceItems(internalAtsResult, count, coveredTags, {
+      allowGenericTemplates: options.allowGenericFallbackTemplates !== false,
+    });
     for (const item of fallback) {
       if (selectedItems.length >= count) break;
       if (usedAdviceIds.has(item.adviceId)) continue;
+      if (!canAddToTwelveAdviceBundle(item, [...(userProfile.seedAdviceItems || []), ...selectedItems])) continue;
       selectedItems.push(item);
       usedAdviceIds.add(item.adviceId);
       (item.relatedProblemTags || []).forEach((tag) => coveredTags.add(tag));
@@ -2280,7 +2745,141 @@ function selectGlobalAdviceItems(candidates, targetProblemTags, count, coveredTa
   return selectedItems.slice(0, count);
 }
 
-function fallbackAdviceItems(internalAtsResult = {}, count = 3, usedTags = new Set()) {
+function fallbackAdviceForObligation(obligation = {}, context = {}) {
+  const roleName = context.roleName || "目标岗位";
+  const targetRole = context.targetRole || roleName;
+  const keywordText = (obligation.keywords || []).filter(Boolean).join("、");
+  const tag = obligation.tag || "resume_optimization_gap";
+  const dimensionLabels = {
+    A: "格式规范",
+    B: "基本资料完整性",
+    C: "内容质量",
+    D: "JD 关键词匹配",
+    E: "市场适配度",
+    F: "职位相关性",
+  };
+  const dimensionLabel = dimensionLabels[obligation.dimension] || "简历匹配";
+  const diagnosisMessage = obligation.message || `你的简历在「${dimensionLabel}」方面还有明显优化空间，需要转化成更具体的简历修改动作。`;
+  const base = {
+    adviceId: `fb_obligation_${normalizeTerm(obligation.id || `${tag}_${keywordText || dimensionLabel}`)}`.slice(0, 96),
+    relatedProblemTags: [tag],
+    obligationIds: [obligation.id || tag],
+    coverageFamily: obligation.coverageFamily || problemFamilyForTag(tag),
+    targetSection: obligation.targetSection || targetSectionFromCard({ problemSummary: obligation.message || "", actionSummary: "" }),
+    priority: ["critical", "high"].includes(obligation.severity) ? "high" : obligation.severity === "medium" ? "medium" : "low",
+    source: "fallback",
+  };
+
+  if (tag === "short_tenure_unclear") {
+    return {
+      ...base,
+      title: "说明短期经历性质",
+      mentorLens: "短于 3 个月的经历如果没有标注原因，HR 很容易把它理解成稳定性风险，而不是正常实习或项目经历。",
+      currentDiagnosis: obligation.message || "简历中存在在职时长较短的经历，当前没有足够说明，可能引发 HR 对稳定性或离职原因的疑虑。",
+      action: "如果这段经历是实习，请在 title 中明确标注 Intern / Internship；如果不是核心相关经历，评估是否保留，或在 bullet 中用项目周期说明这段经历的边界和产出。",
+      reason: "把短期经历解释清楚，可以降低 HR 的负面猜测，也让 ATS 和人工筛选更准确理解经历性质。",
+      evidence: ["短期经历未说明", "HR 稳定性疑虑", "Experience 时间线需澄清"],
+    };
+  }
+
+  if (tag === "missing_exact_job_title") {
+    return {
+      ...base,
+      title: "补上目标岗位原词",
+      mentorLens: `ATS 和 recruiter 会优先查找目标岗位原词；如果 Summary 没有出现 ${targetRole}，系统可能无法稳定判断你的投递方向。`,
+      currentDiagnosis: obligation.message || `简历中缺少 ${targetRole} 作为精确职位名称，岗位定位信号不够明确。`,
+      action: `在 Summary 第一或第二句自然加入 ${targetRole}，并紧接一句说明你和该岗位核心职责相关的经历或项目证据。`,
+      reason: "岗位原词放在 Summary 能最快建立职位定位，也能帮助后续 Skills 和 Experience 的关键词被正确解释。",
+      evidence: ["缺少目标岗位原词", "Summary 岗位定位不清晰", "F 职位相关性偏低"],
+    };
+  }
+
+  if (tag === "missing_priority_keywords" || /keyword|hard_skill|jd_match/.test(`${tag} ${obligation.coverageFamily}`)) {
+    return {
+      ...base,
+      title: keywordText ? `补齐 JD 缺失技能：${keywordText}` : "补齐 JD 缺失关键词",
+      mentorLens: "ATS 做 JD match 时会扫目标岗位的核心技能词，但关键词必须建立在真实经验上，不能只为了机筛硬塞。",
+      currentDiagnosis: obligation.message || `简历缺少 ${roleName} 相关的高优先级关键词，JD Match 信号偏弱。`,
+      action: keywordText
+        ? `优先确认你真实掌握的 ${keywordText}，把它写进 Skills，并至少选择一个最相关的 Experience bullet 说明使用场景、任务和结果。`
+        : "对照 JD 标出真实掌握的核心工具、技能和职责词，把它们分别写进 Summary、Skills 和最相关的 Experience bullet。",
+      reason: "关键词出现在 Skills 能提升检索命中，出现在经历证据里才能让 HR 相信你真的用过。",
+      evidence: keywordText ? [`缺失关键词：${keywordText}`, "JD Match 偏低", "需要经历证据支撑"] : ["JD Match 偏低", "核心关键词缺失", "需要经历证据支撑"],
+    };
+  }
+
+  if (/experience|evidence|skills_only/.test(tag)) {
+    return {
+      ...base,
+      title: "把关键词写进经历证据",
+      mentorLens: "只把技能列在 Skills 中，ATS 可能能扫到词，但招聘方无法判断你是否真的在工作或项目里用过。",
+      currentDiagnosis: obligation.message || "Experience 中缺少与目标岗位关键词对应的实际职责、工具和结果证据。",
+      action: `选择最相关的一段经历，把 ${roleName} 的核心职责写成 bullet：动作 + 方法/工具 + 量化结果；如果涉及 AWS、GCP 或 IT infrastructure，要说明使用场景和产出。`,
+      reason: "经历证据能把关键词从“会写”变成“做过”，同时服务 ATS 和人工筛选。",
+      evidence: ["Experience 缺少关键词证据", "关键词不能只堆 Skills", "需要动作 + 工具 + 结果"],
+    };
+  }
+
+  if (/measurable|result|impact|action_verbs|weak_result/.test(tag)) {
+    return {
+      ...base,
+      title: "强化 bullet 的量化结果",
+      mentorLens: "HR 看经历 bullet 时会快速找影响、规模和结果；只有职责描述会让贡献显得模糊。",
+      currentDiagnosis: obligation.message || "经历描述偏向说明做了什么，缺少数量、频率、效率、规模或业务结果。",
+      action: "将核心 bullet 改成「动作 + 方法/工具 + 量化结果」：例如处理多少请求/工单、维护多少设备或系统、降低多少故障率、提升多少响应效率。",
+      reason: "量化结果让 ATS 和招聘官都能判断你的工作强度、技术深度和实际贡献。",
+      evidence: ["Bullet 量化结果不足", "内容质量维度偏低", "成果表达不够具体"],
+    };
+  }
+
+  if (/education|gpa|coursework/.test(tag)) {
+    return {
+      ...base,
+      title: "补强教育背景相关信号",
+      mentorLens: "Entry-level 或 junior 岗位会看课程、证书和训练是否支撑目标岗位，尤其当工作经验还不长时。",
+      currentDiagnosis: obligation.message || "教育背景信息还没有充分服务目标岗位，相关课程、证书或训练信号不够清楚。",
+      action: `只保留和 ${roleName} 有关的课程、证书或 lab/project，并把它们放在 Education 或 Projects 中靠前位置。`,
+      reason: "相关教育信号可以补足 junior 候选人的经验不足，让岗位匹配更完整。",
+      evidence: ["教育背景信号不足", "Junior 岗位需要训练证据", "相关课程可补强匹配"],
+    };
+  }
+
+  if (/linkedin|github|portfolio|contact|link|profile_completeness/.test(`${tag} ${obligation.coverageFamily}`)) {
+    return {
+      ...base,
+      title: "补齐可验证资料入口",
+      mentorLens: "ATS 和 HR 都会优先读取简历头部的联系方式与可验证链接，缺失会降低可信度和后续联系效率。",
+      currentDiagnosis: obligation.message || "简历基础资料或可验证链接不完整，影响搜索、联系和背景判断。",
+      action: "在简历头部补齐邮箱、电话、LinkedIn；技术或项目相关岗位补 GitHub / portfolio / project link，并确保链接可点击。",
+      reason: "完整的资料入口能减少 HR 的验证成本，也能提升 ATS 对候选人资料完整性的判断。",
+      evidence: ["基本资料完整性偏低", "可验证链接不足", "Header 信息需补齐"],
+    };
+  }
+
+  if (/format|date|section|chronological/.test(`${tag} ${obligation.coverageFamily}`)) {
+    return {
+      ...base,
+      title: "修复格式和时间线问题",
+      mentorLens: "格式、日期和 section 结构会影响 ATS 解析，也会影响 HR 快速判断经历新旧和相关性。",
+      currentDiagnosis: diagnosisMessage,
+      action: "统一日期格式，补齐 Experience / Education / Projects 的时间信息，按倒序排列经历，并导出稳定的一页 PDF 版本。",
+      reason: "稳定格式能降低 ATS 解析失败风险，也让招聘方更快看懂你的经历顺序。",
+      evidence: [`${dimensionLabel}偏低`, "时间线需澄清", "ATS 解析稳定性"],
+    };
+  }
+
+  return {
+    ...base,
+    title: `${dimensionLabel}优化建议`,
+    mentorLens: "这条建议来自 ATS 对简历维度的综合诊断，重点是把问题转化成可以直接修改的简历动作。",
+    currentDiagnosis: diagnosisMessage,
+    action: `围绕 ${roleName} 重新检查 ${base.targetSection} 部分，把最相关的关键词、职责和结果证据写得更明确。`,
+    reason: "把诊断维度落到具体 section 修改，能避免建议只停留在分数解释上。",
+    evidence: [`${dimensionLabel}需补强`, "ATS 诊断问题", "需要具体修改动作"],
+  };
+}
+
+function fallbackAdviceItems(internalAtsResult = {}, count = 3, usedTags = new Set(), options = {}) {
   const profile = internalAtsResult.profile || {};
   const roleFamily = normalizeTerm(profile.roleFamily || "");
   const targetRole = internalAtsResult.jobTitle || profile.targetRole || "target role";
@@ -2295,6 +2894,7 @@ function fallbackAdviceItems(internalAtsResult = {}, count = 3, usedTags = new S
     data_scientist:    { name: "Data Scientist",     keywords: "Python、R、SQL、statistical modeling、A/B testing、machine learning、visualization 或 experimentation",                            evidence: "说明你做了什么分析、使用了什么方法、输出了什么洞察或业务建议。" },
     data_analyst:      { name: "Data Analyst",       keywords: "SQL、Excel、Tableau、Power BI、data cleaning、KPI reporting、dashboards 或 business insights",                                     evidence: "说明你清洗了什么数据、搭建了什么 dashboard、追踪了什么 KPI，并补充业务洞察或结果。" },
     product_manager:   { name: "Product Manager",    keywords: "product roadmap、user research、A/B testing、PRD、stakeholder management、OKR、go-to-market 或 cross-functional",                  evidence: "说明你负责了什么产品或功能、如何推动跨团队协作、取得了什么可量化结果。" },
+    management_trainee:{ name: "Management Trainee", keywords: "department rotation、operations、sales、finance、customer service、data analysis、reporting、process improvement、communication 或 leadership potential", evidence: "说明你支持了什么跨部门任务、分析了什么数据、产出了什么报告、提出了什么流程改进或协作结果。" },
     marketing:         { name: "Marketing",          keywords: "campaign management、SEO/SEM、Google Analytics、content strategy、brand awareness、lead generation 或 CRM",                        evidence: "说明你策划或执行了什么 campaign、使用了什么渠道、取得了什么转化或增长结果。" },
     business_analyst:  { name: "Business Analyst",   keywords: "requirements gathering、process improvement、SQL、Excel、stakeholder communication、Agile、JIRA 或 business case",                  evidence: "说明你分析了什么业务问题、提出了什么方案、推动了什么流程改进或结果。" },
     consulting:        { name: "Consulting",         keywords: "client engagement、problem structuring、data analysis、presentation、Excel modeling、project management 或 cross-industry",         evidence: "说明你参与了什么项目、解决了什么客户问题、产出了什么交付物或建议。" },
@@ -2314,6 +2914,33 @@ function fallbackAdviceItems(internalAtsResult = {}, count = 3, usedTags = new S
   const keywordText = rp.keywords;
   const evidenceText = rp.evidence;
   const isAccounting = ["accounting", "finance", "financial_analyst"].includes(roleFamily);
+  const selected = [];
+  const obligations = obligationsFromInternal(internalAtsResult);
+  const sortedObligations = obligations
+    .filter((obligation) => obligation.required !== false)
+    .sort((a, b) => {
+      const severityDiff = severityWeight(b.severity) - severityWeight(a.severity);
+      if (Math.abs(severityDiff) > 1e-9) return severityDiff;
+      const aDim = a.source === "dimensions" ? 1 : 0;
+      const bDim = b.source === "dimensions" ? 1 : 0;
+      if (aDim !== bDim) return bDim - aDim;
+      return String(a.id || a.tag).localeCompare(String(b.id || b.tag));
+    });
+  for (const obligation of sortedObligations) {
+    if (selected.length >= count) break;
+    const coverageKey = obligation.id || obligation.tag;
+    const keywordKey = `${obligation.tag}:${(obligation.keywords || []).join("|").toLowerCase()}`;
+    if (usedTags.has(coverageKey) || (usedTags.has(obligation.tag) && !obligation.keywords?.length) || usedTags.has(keywordKey)) continue;
+    const item = fallbackAdviceForObligation(obligation, { roleName, targetRole });
+    if (selected.some((existing) => existing.adviceId === item.adviceId)) continue;
+    selected.push(item);
+    usedTags.add(coverageKey);
+    usedTags.add(keywordKey);
+    (item.relatedProblemTags || []).forEach((tag) => usedTags.add(tag));
+  }
+
+  if (options.allowGenericTemplates === false) return selected.slice(0, count);
+
   const templates = [
     {
       adviceId: "fb_target_role_positioning",
@@ -2326,11 +2953,15 @@ function fallbackAdviceItems(internalAtsResult = {}, count = 3, usedTags = new S
         ? "先在 Summary 中自然加入 Accounting / Accountant 等目标岗位原词，并用一句话说明你与财务、报表、对账或审计支持相关的经验。"
         : `先在 Summary 中自然加入 ${targetRole === "unknown" ? roleName : targetRole} 等目标岗位原词，并用一句话说明你与该岗位核心职责相关的经验。`,
       reason: "这样做可以帮助 ATS 和 recruiter 更快识别你的投递方向，也能让后面的 Skills 和 Experience 看起来更有一致性。",
+      HR_os: `HR 第一眼会先找岗位原词和定位线索；如果 Summary 没有明确指向 ${roleName}，即使经历不错，也可能被快速归到“不够相关”。`,
+      hrPerspective: `HR 第一眼会先找岗位原词和定位线索；如果 Summary 没有明确指向 ${roleName}，即使经历不错，也可能被快速归到“不够相关”。`,
       evidence: ["JD Match 偏低", "F 职位相关性偏低", "缺少目标岗位原词"],
       // backward compat
       get problemSummary() { return this.currentDiagnosis; },
       get actionSummary() { return this.action; },
       relatedProblemTags: ["missing_exact_job_title", "weak_summary_role_alignment", "weak_target_role_alignment"],
+      canonicalActionFamily: "summary_positioning",
+      actionDepth: "rewrite",
       targetSection: "summary",
       priority: "high",
       source: "fallback",
@@ -2342,11 +2973,15 @@ function fallbackAdviceItems(internalAtsResult = {}, count = 3, usedTags = new S
       currentDiagnosis: "当前简历缺少目标岗位会搜索的核心硬技能和工具词，导致 JD Match 分数偏低。",
       action: `把你真实掌握的 ${roleName} 相关关键词补进 Skills，例如 ${keywordText}。`,
       reason: "把真实掌握的关键词补进 Skills，不仅能直接提升 ATS 匹配分，也能让 recruiter 快速确认你的技能范围与 JD 相符。",
+      HR_os: "HR 在筛简历时会用 JD 技能词快速确认候选人是否进入下一轮；缺少核心关键词会让你看起来不像这份 JD 的直接匹配人选。",
+      hrPerspective: "HR 在筛简历时会用 JD 技能词快速确认候选人是否进入下一轮；缺少核心关键词会让你看起来不像这份 JD 的直接匹配人选。",
       evidence: ["JD Match 偏低", "D 关键词维度偏低", "Skills 缺少 JD 核心词"],
       // backward compat
       get problemSummary() { return this.currentDiagnosis; },
       get actionSummary() { return this.action; },
       relatedProblemTags: ["low_jd_keyword_match", "missing_priority_keywords", "low_hard_skill_match"],
+      canonicalActionFamily: "jd_keyword_alignment",
+      actionDepth: "evidence",
       targetSection: "skills",
       priority: "high",
       source: "fallback",
@@ -2358,17 +2993,153 @@ function fallbackAdviceItems(internalAtsResult = {}, count = 3, usedTags = new S
       currentDiagnosis: "即使关键词出现在 Skills 区块，如果 Experience 中没有对应证据，ATS 和招聘方仍然难以判断你的真实匹配度。",
       action: `选择一段最相关经历，把 ${roleName} 关键词写进 bullet：${evidenceText}`,
       reason: "经历证据让关键词变得可信。把技能词嵌入到具体工作内容里，既提升 ATS 分，也让 recruiter 看到你真的做过相关工作。",
+      HR_os: "HR 不只看 Skills 列表，也会扫 Experience 里有没有同样的技能证据；如果技能只停留在列表里，可信度会明显下降。",
+      hrPerspective: "HR 不只看 Skills 列表，也会扫 Experience 里有没有同样的技能证据；如果技能只停留在列表里，可信度会明显下降。",
       evidence: ["Experience 缺少关键词证据", "关键词集中在 Skills 区块", "JD Match 偏低"],
       // backward compat
       get problemSummary() { return this.currentDiagnosis; },
       get actionSummary() { return this.action; },
       relatedProblemTags: ["weak_experience_keyword_evidence", "keywords_only_in_skills", "resume_not_tailored_to_jd"],
+      canonicalActionFamily: "experience_evidence",
+      actionDepth: "evidence",
       targetSection: "experience",
       priority: "high",
       source: "fallback",
     },
+    {
+      adviceId: "fb_quantified_impact",
+      title: "把职责描述改成结果表达",
+      mentorLens: "HR 扫 bullet 时会先找规模、频率、效率或结果。只有职责描述，会让你看起来像参与过，但看不出贡献大小。",
+      currentDiagnosis: "当前经历里有任务，但缺少能判断贡献的数字或结果，影响内容说服力。",
+      action: "挑 2–3 条最核心经历，补上处理数量、报告频率、协作人数、流程节省时间或业务结果；没有精确数字时，也可以写范围、周期或交付物规模。",
+      reason: "结果表达能让同一段经历从“做过”变成“做出了什么”，这是免费建议之后付费内容应该继续深化的层级。",
+      HR_os: "我会看你是不是能把事情做到有结果；数字不一定要夸张，但要让我知道工作量和影响边界。",
+      hrPerspective: "我会看你是不是能把事情做到有结果；数字不一定要夸张，但要让我知道工作量和影响边界。",
+      evidence: ["Bullet 量化结果不足", "职责描述偏多", "成果表达需补强"],
+      get problemSummary() { return this.currentDiagnosis; },
+      get actionSummary() { return this.action; },
+      relatedProblemTags: ["weak_measurable_results", "weak_result_oriented_bullets", "low_content_quality"],
+      canonicalActionFamily: "quantified_impact",
+      actionDepth: "proof",
+      targetSection: "experience",
+      priority: "medium",
+      source: "fallback",
+    },
+    {
+      adviceId: "fb_skills_section_order",
+      title: "重排 Skills，让关键词更像这份 JD",
+      mentorLens: "Skills 不是技能清单仓库，而是 ATS 和 recruiter 判断方向的入口。顺序混乱时，真实相关技能也会被埋掉。",
+      currentDiagnosis: `Skills 还没有围绕 ${roleName} 的 JD 优先级重排，岗位信号不够集中。`,
+      action: `把最贴近 ${roleName} 的技能放在 Skills 前半段，弱相关或解释不清的技能后移或删除；每个核心技能最好能在经历里找到对应证据。`,
+      reason: "技能排序能快速改变第一印象，也能减少一份简历同时像多个方向的模糊感。",
+      HR_os: "我通常先扫技能栏确认方向；如果最相关的词藏在后面，会降低继续细读的动力。",
+      hrPerspective: "我通常先扫技能栏确认方向；如果最相关的词藏在后面，会降低继续细读的动力。",
+      evidence: ["Skills 顺序需优化", "JD 关键词优先级不清", "岗位定位信号分散"],
+      get problemSummary() { return this.currentDiagnosis; },
+      get actionSummary() { return this.action; },
+      relatedProblemTags: ["skills_section_ordering", "low_hard_skill_match", "resume_not_tailored_to_jd"],
+      canonicalActionFamily: "skills_section",
+      actionDepth: "structure",
+      targetSection: "skills",
+      priority: "medium",
+      source: "fallback",
+    },
+    {
+      adviceId: "fb_format_cleanup",
+      title: "先把版面压到可快速扫描",
+      mentorLens: "格式问题不只是好不好看，它会影响 ATS 解析，也会影响 HR 是否愿意继续读细节。",
+      currentDiagnosis: "简历需要进一步检查版面、日期、section 顺序和一页可读性，避免内容被格式问题拖累。",
+      action: "统一日期格式和 section 标题，删掉低相关内容，把最相关经历留在第一页上半部；导出 PDF 后检查是否仍可复制、可搜索、无错位。",
+      reason: "格式清楚后，招聘方才会把注意力放在经历内容，而不是先处理阅读阻力。",
+      HR_os: "排版稳定会让我更快进入内容；如果版面乱，很多亮点还没被读到就已经扣分。",
+      hrPerspective: "排版稳定会让我更快进入内容；如果版面乱，很多亮点还没被读到就已经扣分。",
+      evidence: ["ATS 解析稳定性", "格式可读性", "一页扫描效率"],
+      get problemSummary() { return this.currentDiagnosis; },
+      get actionSummary() { return this.action; },
+      relatedProblemTags: ["format_parse_risk", "section_structure_weak", "resume_length_risk"],
+      canonicalActionFamily: "format_cleanup",
+      actionDepth: "delivery",
+      targetSection: "overall",
+      priority: "medium",
+      source: "fallback",
+    },
+    {
+      adviceId: "fb_education_signal",
+      title: "用课程或项目补足 junior 信号",
+      mentorLens: "经验还不长时，课程、训练和项目可以补岗位信号，但必须写成能力证据，而不是课程名单。",
+      currentDiagnosis: "教育背景和项目训练还没有充分服务目标岗位，相关内容可以更靠近 JD 职责来表达。",
+      action: `保留和 ${roleName} 相关的课程、项目或证书，把它们写成「学了什么方法 + 做了什么交付物 + 支撑哪项岗位能力」。`,
+      reason: "这能把学生背景转成岗位可读的训练证据，尤其适合 entry-level / trainee 类岗位。",
+      HR_os: "经验不长时，我会看训练是否补得上；相关课程别只列名字，要让我看到它和岗位的关系。",
+      hrPerspective: "经验不长时，我会看训练是否补得上；相关课程别只列名字，要让我看到它和岗位的关系。",
+      evidence: ["Entry-level 训练证据", "Education 可迁移信号", "项目经历不足"],
+      get problemSummary() { return this.currentDiagnosis; },
+      get actionSummary() { return this.action; },
+      relatedProblemTags: ["education_signal_weak", "project_evidence_gap", "entry_level_training_signal"],
+      canonicalActionFamily: "education_signal",
+      actionDepth: "evidence",
+      targetSection: "education",
+      priority: "low",
+      source: "fallback",
+    },
+    {
+      adviceId: "fb_profile_links",
+      title: "补齐可验证入口",
+      mentorLens: "可验证链接会降低招聘方确认成本。没有入口时，很多项目和经历只能停留在文字描述里。",
+      currentDiagnosis: "简历头部和项目入口还可以更完整，尤其是 LinkedIn、作品、项目或可点击链接。",
+      action: "检查邮箱、电话、LinkedIn 是否完整；如果有项目、作品集或 GitHub，把最能证明目标岗位能力的链接放在 header 或项目名旁边。",
+      reason: "可验证入口能增强可信度，也能让付费版建议里的项目证据更容易被招聘方确认。",
+      HR_os: "如果我能一键看到作品或项目，判断成本会低很多；没有链接时，只能按文字可信度打折。",
+      hrPerspective: "如果我能一键看到作品或项目，判断成本会低很多；没有链接时，只能按文字可信度打折。",
+      evidence: ["链接完整性", "项目可验证性", "Header 信息"],
+      get problemSummary() { return this.currentDiagnosis; },
+      get actionSummary() { return this.action; },
+      relatedProblemTags: ["profile_links_missing", "project_link_missing", "contact_info_incomplete"],
+      canonicalActionFamily: "profile_links",
+      actionDepth: "delivery",
+      targetSection: "header",
+      priority: "low",
+      source: "fallback",
+    },
+    {
+      adviceId: "fb_section_structure",
+      title: "调整 section 顺序，让主线更清楚",
+      mentorLens: "简历 section 顺序会影响第一眼判断。最能证明目标岗位的内容应该先出现，而不是按模板机械排列。",
+      currentDiagnosis: "当前简历主线还可以更集中，section 顺序需要服务目标岗位，而不是平均展示所有经历。",
+      action: `按 ${roleName} 的相关性重排内容：最相关的 Summary、Skills 和 Experience 靠前；低相关活动、奖项或课程后移或删除。`,
+      reason: "这能让免费版指出的问题在付费版里变成更具体的结构调整，而不是重复同一句定位建议。",
+      HR_os: "我不会平均阅读每个 section；越靠前的内容越决定我怎么理解你。",
+      hrPerspective: "我不会平均阅读每个 section；越靠前的内容越决定我怎么理解你。",
+      evidence: ["Section 顺序", "岗位主线", "信息优先级"],
+      get problemSummary() { return this.currentDiagnosis; },
+      get actionSummary() { return this.action; },
+      relatedProblemTags: ["section_structure_weak", "weak_target_role_alignment", "resume_not_tailored_to_jd"],
+      canonicalActionFamily: "section_structure",
+      actionDepth: "structure",
+      targetSection: "overall",
+      priority: "low",
+      source: "fallback",
+    },
+    {
+      adviceId: "fb_transferable_framing",
+      title: "把原经历翻译成岗位可读语言",
+      mentorLens: "转方向或投 trainee 类岗位时，重点不是隐藏原背景，而是把原经历改写成目标岗位能理解的能力信号。",
+      currentDiagnosis: `你的经历里有可迁移能力，但还没有充分翻译成 ${roleName} 会关心的业务、协作和交付语言。`,
+      action: `把最相关的 2 条经历按 ${roleName} 视角重写：先写你支持了什么业务目标，再写你用了什么分析、沟通或协调方法，最后写交付物或改进结果。`,
+      reason: "这样能让非同专业背景也显得顺理成章，付费建议可以从“哪里不匹配”继续推进到“如何把已有经历转成匹配”。",
+      HR_os: "我不介意候选人背景不是一模一样；但你要帮我看懂，这段经历为什么能迁移到现在这个岗位。",
+      hrPerspective: "我不介意候选人背景不是一模一样；但你要帮我看懂，这段经历为什么能迁移到现在这个岗位。",
+      evidence: ["可迁移能力", "经历叙事", "岗位语言"],
+      get problemSummary() { return this.currentDiagnosis; },
+      get actionSummary() { return this.action; },
+      relatedProblemTags: ["transferable_experience_framing", "weak_target_role_alignment", "low_content_quality"],
+      canonicalActionFamily: "transferable_framing",
+      actionDepth: "rewrite",
+      targetSection: "experience",
+      priority: "low",
+      source: "fallback",
+    },
   ];
-  const selected = [];
   for (const template of templates) {
     if (selected.length >= count) break;
     if (template.relatedProblemTags.some((tag) => !usedTags.has(tag))) {
@@ -2467,6 +3238,46 @@ function calculateAdviceCoverage(adviceItems = [], problemTags = []) {
   return covered;
 }
 
+function adviceTextForCoverage(item = {}) {
+  return [
+    item.title,
+    item.currentDiagnosis,
+    item.problemSummary,
+    item.action,
+    item.actionSummary,
+    item.mentorLens,
+    item.mentorInsight,
+    item.reason,
+    item.example,
+    ...(item.evidence || []),
+  ].filter(Boolean).join(" ").toLowerCase();
+}
+
+function adviceCoversObligation(item = {}, obligation = {}) {
+  const tag = obligation.tag || "";
+  const relatedTags = new Set(item.relatedProblemTags || []);
+  if (tag && relatedTags.has(tag)) {
+    const kws = obligation.keywords || [];
+    if (!kws.length) return true;
+    const text = adviceTextForCoverage(item);
+    return kws.some((kw) => kw && text.includes(String(kw).toLowerCase()));
+  }
+  const text = adviceTextForCoverage(item);
+  if (obligation.coverageFamily && text.includes(String(obligation.coverageFamily).replace(/_/g, " "))) return true;
+  if ((obligation.keywords || []).some((kw) => kw && text.includes(String(kw).toLowerCase()))) return true;
+  return false;
+}
+
+function calculateObligationCoverage(adviceItems = [], obligations = []) {
+  const covered = new Set();
+  for (const obligation of obligations) {
+    if (adviceItems.some((item) => adviceCoversObligation(item, obligation))) {
+      covered.add(obligation.id || obligation.tag);
+    }
+  }
+  return covered;
+}
+
 function adviceSelectionScore(card, targetProblemTags, coveredTags, selectedCards = []) {
   const related = relatedTagsForCard(card, targetProblemTags);
   const uncovered = related.filter((tag) => !coveredTags.has(tag));
@@ -2531,7 +3342,9 @@ function compareCardsStable(a, b, targetProblemTags = [], coveredTags = new Set(
 
 function selectTopAdviceForMentor(mentorBucket, targetProblemTags, count, coveredTags = new Set(), internalAtsResult = {}) {
   const selected = [];
-  const cards = [...(mentorBucket.cards || [])];
+  const cards = [...(mentorBucket.cards || [])]
+    .filter((card) => isGovernedAdviceDisplayable(card, internalAtsResult))
+    .filter((card) => isResumeGroundedAdvice(card, internalAtsResult));
   const usedDiagnosisTags = new Set();
   while (selected.length < count && cards.length) {
     cards.sort((a, b) => compareCardsStable(a, b, targetProblemTags, coveredTags, selected));
@@ -2567,6 +3380,44 @@ function normalizeFreeAdviceLanes(adviceItems = [], internalAtsResult = {}) {
     if (item) result.push(forceAdvicePriority(item, priority));
   }
   return result.slice(0, 3);
+}
+
+function normalizeAdviceBundleDiversity(adviceItems = [], candidateItems = [], internalAtsResult = {}, count = 3) {
+  const priorityOrder = ["high", "medium", "low"];
+  const selected = [];
+  const usedAdviceIds = new Set();
+
+  function tryAdd(item) {
+    if (!item || selected.length >= count) return false;
+    if (item.adviceId && usedAdviceIds.has(item.adviceId)) return false;
+    if (!canAddToTwelveAdviceBundle(item, selected)) return false;
+    selected.push(item);
+    if (item.adviceId) usedAdviceIds.add(item.adviceId);
+    return true;
+  }
+
+  for (const item of adviceItems) {
+    tryAdd(item);
+  }
+
+  const usedTags = new Set(selected.flatMap((item) => item.relatedProblemTags || []));
+  const fallbackPool = fallbackAdviceItems(internalAtsResult, Math.max(count * 3, 9), usedTags);
+  for (const item of [...candidateItems, ...fallbackPool]) {
+    if (selected.length >= count) break;
+    tryAdd(item);
+  }
+
+  for (const item of adviceItems) {
+    if (selected.length >= count) break;
+    if (!item?.adviceId || !usedAdviceIds.has(item.adviceId)) {
+      selected.push(item);
+      if (item?.adviceId) usedAdviceIds.add(item.adviceId);
+    }
+  }
+
+  return selected.slice(0, count).map((item, index) =>
+    forceAdvicePriority(item, priorityOrder[index] || item.priority || "medium")
+  );
 }
 
 const BIG_TECH_COMPANIES = new Set([
@@ -2710,13 +3561,17 @@ function selectFreeMentorPlan(candidates, internalAtsResult) {
     const safe = isAdviceRoleSafe(card, internalAtsResult.jobTitle || profile.targetRole, roleFamily);
     if (!safe) roleSafeRejected += 1;
     return safe;
-  }).filter((card) => isCardAlignedWithTargetProblems(card, targetProblemTags));
+  })
+    .filter((card) => isCardAlignedWithTargetProblems(card, targetProblemTags))
+    .filter((card) => isGovernedAdviceDisplayable(card, internalAtsResult))
+    .filter((card) => isResumeGroundedAdvice(card, internalAtsResult));
 
   // Annotate each candidate with transferability scope + topic cluster (cached to avoid recomputation)
   for (const card of eligibleCandidates) {
     card._transferabilityScope = card._transferabilityScope || inferAdviceTransferabilityScope(card);
     card._topicCluster = card._topicCluster || inferTopicCluster(card);
-    card._actionFamily = card._actionFamily || inferAdviceActionFamily(card);
+    card._actionFamily = card._actionFamily || canonicalActionFamilyOf(card);
+    card._actionDepth = card._actionDepth || actionDepthOf(card);
   }
 
   // Step 2: Issue-first — pick one free card for each priority lane.
@@ -2752,7 +3607,7 @@ function selectFreeMentorPlan(candidates, internalAtsResult) {
     const exactActionDiverse = eligibleCandidates
       .filter((card) => !usedCardIds.has(card.adviceId))
       .filter((card) => relatedTagsForCard(card, targetProblemTags).includes(problem.tag))
-      .filter((card) => !usedActionFamilies.has(card._actionFamily || inferAdviceActionFamily(card)))
+      .filter((card) => !usedActionFamilies.has(canonicalActionFamilyOf(card)))
       .sort((a, b) => compareCardsStable(a, b, [problem], coveredTags, selectedCards))[0] || null;
     if (exactActionDiverse) return exactActionDiverse;
     return eligibleCandidates
@@ -2769,7 +3624,7 @@ function selectFreeMentorPlan(candidates, internalAtsResult) {
       selectedCards.push(bestCard);
       selectedLanes.push(lane);
       usedCardIds.add(bestCard.adviceId);
-      usedActionFamilies.add(bestCard._actionFamily || inferAdviceActionFamily(bestCard));
+      usedActionFamilies.add(canonicalActionFamilyOf(bestCard));
       if (problem?.tag) usedProblemTags.add(problem.tag);
       if (problem?.tag) usedProblemFamilies.add(problemFamilyForTag(problem.tag));
       relatedTagsForCard(bestCard, targetProblemTags).forEach((t) => coveredTags.add(t));
@@ -2787,7 +3642,7 @@ function selectFreeMentorPlan(candidates, internalAtsResult) {
       selectedCards.push(card);
       selectedLanes.push(lane);
       usedCardIds.add(card.adviceId);
-      usedActionFamilies.add(card._actionFamily || inferAdviceActionFamily(card));
+      usedActionFamilies.add(canonicalActionFamilyOf(card));
       relatedTagsForCard(card, targetProblemTags).forEach((t) => usedProblemFamilies.add(problemFamilyForTag(t)));
       relatedTagsForCard(card, targetProblemTags).forEach((t) => coveredTags.add(t));
     }
@@ -2807,7 +3662,23 @@ function selectFreeMentorPlan(candidates, internalAtsResult) {
     return item;
   });
 
+  const alternativeItems = eligibleCandidates
+    .filter((card) => !usedCardIds.has(card.adviceId))
+    .sort((a, b) => compareCardsStable(a, b, targetProblemTags, coveredTags, selectedCards))
+    .slice(0, 18)
+    .map((card, i) => {
+      const item = toAdviceItem(card, targetProblemTags, i, true, internalAtsResult, new Set());
+      const meta = generateAdviceExplanationMetadata(card, userProfile);
+      item.matchReason = meta.matchReason;
+      item.mentorFitType = meta.mentorFitType;
+      item.topicCluster = meta.topicCluster;
+      item.confidenceScore = meta.confidenceScore;
+      item.adviceTransferScope = meta.adviceTransferScope;
+      return item;
+    });
+
   adviceItems = normalizeFreeAdviceLanes(adviceItems, internalAtsResult);
+  adviceItems = normalizeAdviceBundleDiversity(adviceItems, alternativeItems, internalAtsResult, 3);
 
   // Step 5: Choose displayed mentor — pick best bucket that covers most problems
   let plan;
@@ -2852,9 +3723,48 @@ function buildFreeMentorAdvicePlan({ candidates = [], internalAtsResult = {}, pu
   return selectFreeMentorPlan(candidates, internalAtsResult, publicReport);
 }
 
+function bundleFamilyStats(items = []) {
+  const counts = new Map();
+  const depths = new Map();
+  for (const item of items) {
+    const family = canonicalActionFamilyOf(item);
+    const depth = actionDepthOf(item);
+    counts.set(family, (counts.get(family) || 0) + 1);
+    if (!depths.has(family)) depths.set(family, new Set());
+    depths.get(family).add(depth);
+  }
+  return { counts, depths };
+}
+
+function normalizedBundleVisibleText(value = "") {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/\s+/g, "")
+    .replace(/[，。；、,.!?;:："'“”‘’（）()\[\]{}<>]/g, "")
+    .trim();
+}
+
+function canAddToTwelveAdviceBundle(item = {}, existingItems = []) {
+  const family = canonicalActionFamilyOf(item);
+  const depth = actionDepthOf(item);
+  const stats = bundleFamilyStats(existingItems);
+  const count = stats.counts.get(family) || 0;
+  if (count >= 2) return false;
+  if (count >= 1 && (stats.depths.get(family) || new Set()).has(depth)) return false;
+  const itemAction = normalizedBundleVisibleText(item.action || item.actionSummary || item.generalized_action || item.generalizedAction);
+  const itemTitle = normalizedBundleVisibleText(item.title || item.canonicalTitle || item.canonical_title);
+  for (const existing of existingItems) {
+    const existingAction = normalizedBundleVisibleText(existing.action || existing.actionSummary || existing.generalized_action || existing.generalizedAction);
+    const existingTitle = normalizedBundleVisibleText(existing.title || existing.canonicalTitle || existing.canonical_title);
+    if (itemAction && existingAction && itemAction.length >= 18 && itemAction === existingAction) return false;
+    if (count >= 1 && itemTitle && existingTitle && itemTitle === existingTitle) return false;
+  }
+  return true;
+}
+
 function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan = null) {
   const profile = internalAtsResult.profile || {};
-  const targetProblemTags = problemTagsFromInternal(internalAtsResult);
+  const targetProblemTags = obligationsFromInternal(internalAtsResult);
   const roleFamily = profile.roleFamily || "";
   const userProfile = { roleFamily, problemTags: targetProblemTags };
 
@@ -2862,6 +3772,8 @@ function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan =
   for (const card of candidates) {
     card._transferabilityScope = card._transferabilityScope || inferAdviceTransferabilityScope(card);
     card._topicCluster = card._topicCluster || inferTopicCluster(card);
+    card._actionFamily = card._actionFamily || canonicalActionFamilyOf(card);
+    card._actionDepth = card._actionDepth || actionDepthOf(card);
   }
 
   const eligibleCandidates = candidates.filter((card) =>
@@ -2869,7 +3781,10 @@ function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan =
     !["interview_prep", "behavioral_interview"].includes(card.adviceScope) &&
     (!card.retrievalScope || card.retrievalScope === "resume_edit") &&
     isAdviceRoleSafe(card, internalAtsResult.jobTitle || profile.targetRole, roleFamily)
-  ).filter((card) => isCardAlignedWithTargetProblems(card, targetProblemTags));
+  )
+    .filter((card) => isCardAlignedWithTargetProblems(card, targetProblemTags))
+    .filter((card) => isGovernedAdviceDisplayable(card, internalAtsResult))
+    .filter((card) => isResumeGroundedAdvice(card, internalAtsResult));
 
   const coveredTags = new Set();
   const usedAdviceIds = new Set();
@@ -2879,15 +3794,117 @@ function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan =
     (item.relatedProblemTags || []).forEach((tag) => coveredTags.add(tag));
   });
 
-  const paidItems = selectGlobalAdviceItems(
+  let paidItems = selectGlobalAdviceItems(
     eligibleCandidates,
     targetProblemTags,
     9,
     coveredTags,
     internalAtsResult,
     { ...userProfile, seedAdviceItems: freeItems },
-    usedAdviceIds
+    usedAdviceIds,
+    { allowGenericFallbackTemplates: false }
   );
+
+  if (paidItems.length < 9) {
+    const genericSupplementCandidates = candidates
+      .filter((card) => !usedAdviceIds.has(card.adviceId))
+      .filter((card) => normalizeTerm(card.actionSpecificity || card.action_specificity) === "generic")
+      .filter((card) => normalizeTerm(card.displayActionMode || card.display_action_mode) === "raw")
+      .filter((card) => normalizeTerm(card.actionReviewStatus || card.action_review_status) === "auto_classified")
+      .filter((card) => normalizeTerm(card.confidence) !== "low")
+      .filter((card) =>
+        FREE_HIGH_RISK_INTENTS.has(card.adviceIntent) &&
+        !["interview_prep", "behavioral_interview"].includes(card.adviceScope) &&
+        (!card.retrievalScope || card.retrievalScope === "resume_edit") &&
+        isAdviceRoleSafe(card, internalAtsResult.jobTitle || profile.targetRole, roleFamily)
+      )
+      .filter((card) => isGovernedAdviceDisplayable(card, internalAtsResult))
+      .filter((card) => isResumeGroundedAdvice(card, internalAtsResult));
+    const supplementItems = selectGlobalAdviceItems(
+      genericSupplementCandidates,
+      targetProblemTags,
+      9 - paidItems.length,
+      coveredTags,
+      internalAtsResult,
+      { ...userProfile, seedAdviceItems: [...freeItems, ...paidItems] },
+      usedAdviceIds,
+      { allowFallback: false }
+    );
+    paidItems.push(...supplementItems);
+  }
+
+  if (paidItems.length < 9) {
+    const fallbackSupplementItems = selectGlobalAdviceItems(
+      [],
+      targetProblemTags,
+      9 - paidItems.length,
+      coveredTags,
+      internalAtsResult,
+      { ...userProfile, seedAdviceItems: [...freeItems, ...paidItems] },
+      usedAdviceIds,
+      { allowGenericFallbackTemplates: true }
+    );
+    paidItems.push(...fallbackSupplementItems);
+  }
+
+  const allInitialItems = [...freeItems, ...paidItems];
+  let coveredObligations = calculateObligationCoverage(allInitialItems, targetProblemTags);
+  const allAdviceIds = new Set(allInitialItems.map((item) => item.adviceId).filter(Boolean));
+  const orderedObligations = [...targetProblemTags]
+    .filter((item) => item.required !== false)
+    .sort((a, b) => {
+      const severityDiff = severityWeight(b.severity) - severityWeight(a.severity);
+      if (Math.abs(severityDiff) > 1e-9) return severityDiff;
+      const aDim = a.source === "dimensions" ? 1 : 0;
+      const bDim = b.source === "dimensions" ? 1 : 0;
+      if (aDim !== bDim) return bDim - aDim;
+      const aKw = a.source === "priorityMissingKeywords" ? 1 : 0;
+      const bKw = b.source === "priorityMissingKeywords" ? 1 : 0;
+      if (aKw !== bKw) return bKw - aKw;
+      return String(a.id || a.tag).localeCompare(String(b.id || b.tag));
+    });
+
+  for (const obligation of orderedObligations) {
+    if (paidItems.length >= 9 && coveredObligations.has(obligation.id || obligation.tag)) continue;
+    if (coveredObligations.has(obligation.id || obligation.tag)) continue;
+    const coverCandidate = eligibleCandidates
+      .filter((card) => !allAdviceIds.has(card.adviceId))
+      .filter((card) => relatedTagsForCard(card, targetProblemTags).includes(obligation.tag))
+      .sort((a, b) => compareCardsStable(a, b, [obligation], coveredTags, []))[0];
+    let newItem = null;
+    if (coverCandidate) {
+      newItem = toAdviceItem(coverCandidate, targetProblemTags, paidItems.length, true, internalAtsResult, new Set());
+      allAdviceIds.add(coverCandidate.adviceId);
+    } else {
+      newItem = fallbackAdviceForObligation(obligation, {
+        roleName: internalAtsResult.jobTitle || profile.targetRole || "目标岗位",
+        targetRole: internalAtsResult.jobTitle || profile.targetRole || "目标岗位",
+      });
+    }
+    if (!newItem) continue;
+    if (paidItems.some((item) => item.adviceId === newItem.adviceId) || freeItems.some((item) => item.adviceId === newItem.adviceId)) continue;
+    if (!canAddToTwelveAdviceBundle(newItem, [...freeItems, ...paidItems])) continue;
+    if (paidItems.length < 9) {
+      paidItems.push(newItem);
+    } else {
+      const replaceIndex = paidItems.findIndex((item) => item.priority === "low" || item.source !== "fallback");
+      if (replaceIndex === -1) continue;
+      paidItems[replaceIndex] = newItem;
+    }
+    coveredObligations = calculateObligationCoverage([...freeItems, ...paidItems], targetProblemTags);
+  }
+
+  if (paidItems.length < 9) {
+    const finalFallbackPool = fallbackAdviceItems(internalAtsResult, 30, new Set());
+    for (const item of finalFallbackPool) {
+      if (paidItems.length >= 9) break;
+      if (!item || paidItems.some((existing) => existing.adviceId === item.adviceId) || freeItems.some((existing) => existing.adviceId === item.adviceId)) continue;
+      if (!canAddToTwelveAdviceBundle(item, [...freeItems, ...paidItems])) continue;
+      paidItems.push(item);
+    }
+  }
+
+  paidItems = paidItems.slice(0, 9);
 
   const logoPool = [
     ...buildMentorLogoPoolFromItems([...freeItems, ...paidItems]),
@@ -2911,37 +3928,54 @@ function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan =
     mentorFromBucket({ mentorId: "paid_advice_bundle_3", mentorName: "付费建议 3", company: "MentorX", mentorTitle: "简历策略组" }, paidItems.slice(6, 9), targetProblemTags, 3),
   ].map((mentor) => ({ ...mentor, mentorLogoPool: logoPool }));
 
-  // ── 補漏：確保所有 problem tags 至少被一條建議覆蓋 ──────────────
+  // ── 補漏：確保高優先 obligation 至少被一條建議覆蓋 ──────────────
   const allAdviceItems = mentors.flatMap((m) => m.adviceItems || []);
-  const allCovered = calculateAdviceCoverage(allAdviceItems, targetProblemTags);
-  const uncoveredTags = targetProblemTags.filter((p) => !allCovered.has(p.tag));
+  const allCovered = calculateObligationCoverage(allAdviceItems, targetProblemTags);
+  const uncoveredTags = targetProblemTags.filter((p) => p.required !== false && !allCovered.has(p.id || p.tag));
 
   if (uncoveredTags.length > 0) {
     // 找出還有空間的導師（adviceItems < 3 的不存在，所以替換最低分那條）
     // 策略：在每個導師的 candidates 池裡找能覆蓋 uncoveredTags 的建議，替換得分最低的
     for (const problem of uncoveredTags) {
       const tag = problem.tag;
-      if (allCovered.has(tag)) continue;
+      if (allCovered.has(problem.id || tag)) continue;
       // 找能覆蓋這個 tag 的候選
       const coverCandidate = eligibleCandidates
         .filter((card) => !allAdviceItems.some((a) => a.adviceId === card.adviceId))
         .filter((card) => relatedTagsForCard(card, targetProblemTags).includes(tag))
         .sort((a, b) => compareCardsStable(a, b, [problem], allCovered, []))[0];
-      if (!coverCandidate) continue;
+      const fallbackItem = !coverCandidate ? fallbackAdviceForObligation(problem, {
+        roleName: internalAtsResult.jobTitle || profile.targetRole || "目标岗位",
+        targetRole: internalAtsResult.jobTitle || profile.targetRole || "目标岗位",
+      }) : null;
       // 找最合適的導師（優先選和這個 card 同一個 mentorName 的，或最後一個導師）
-      const targetMentor = mentors.find((m) => m.mentorName === coverCandidate.mentorName) || mentors[mentors.length - 1];
+      const targetMentor = (coverCandidate && mentors.find((m) => m.mentorName === coverCandidate.mentorName)) || mentors[mentors.length - 1];
       if (!targetMentor || !targetMentor.adviceItems) continue;
+      if (targetMentor.adviceItems.length === 0) {
+        const newItem = coverCandidate
+          ? toAdviceItem(coverCandidate, targetProblemTags, 0, true, internalAtsResult, new Set())
+          : fallbackItem;
+        if (newItem && canAddToTwelveAdviceBundle(newItem, allAdviceItems)) {
+          targetMentor.adviceItems.push(newItem);
+          allAdviceItems.push(newItem);
+        }
+        allCovered.add(problem.id || tag);
+        continue;
+      }
       // 把這個 mentor 的最低優先級建議換掉
       const toReplace = targetMentor.adviceItems.reduce((a, b) =>
         (severityWeight(a.priority) < severityWeight(b.priority) ? a : b)
       );
-      const newItem = toAdviceItem(coverCandidate, targetProblemTags, targetMentor.adviceItems.indexOf(toReplace), true, internalAtsResult, new Set());
+      const newItem = coverCandidate
+        ? toAdviceItem(coverCandidate, targetProblemTags, targetMentor.adviceItems.indexOf(toReplace), true, internalAtsResult, new Set())
+        : fallbackItem;
       const idx = targetMentor.adviceItems.indexOf(toReplace);
-      if (idx !== -1) {
+      const bundleWithoutReplace = allAdviceItems.filter((item) => item !== toReplace);
+      if (newItem && idx !== -1 && canAddToTwelveAdviceBundle(newItem, bundleWithoutReplace)) {
         targetMentor.adviceItems[idx] = newItem;
         allAdviceItems.push(newItem);
       }
-      allCovered.add(tag);
+      allCovered.add(problem.id || tag);
     }
   }
 
@@ -2956,18 +3990,29 @@ function buildCoverageSummary(selectedAdviceItems, internalAtsResult) {
   const target = problems.map((item) => item.tag);
   const covered = [...calculateAdviceCoverage(selectedAdviceItems, problems)];
   const uncovered = target.filter((tag) => !covered.includes(tag));
+  const obligations = obligationsFromInternal(internalAtsResult);
+  const requiredObligations = obligations.filter((item) => item.required !== false);
+  const coveredObligations = [...calculateObligationCoverage(selectedAdviceItems, requiredObligations)];
+  const targetObligationIds = requiredObligations.map((item) => item.id || item.tag);
+  const uncoveredObligations = targetObligationIds.filter((id) => !coveredObligations.includes(id));
   return {
     totalProblemsDetected: target.length,
     problemsCovered: covered.length,
-    coverageRatio: target.length ? Number((covered.length / target.length).toFixed(3)) : 1,
+    coverageRatio: targetObligationIds.length ? Number((coveredObligations.length / targetObligationIds.length).toFixed(3)) : (target.length ? Number((covered.length / target.length).toFixed(3)) : 1),
     coveredProblemTags: covered,
     uncoveredProblemTags: uncovered,
+    totalObligationsDetected: targetObligationIds.length,
+    obligationsCovered: coveredObligations.length,
+    coveredObligationIds: coveredObligations,
+    uncoveredObligationIds: uncoveredObligations,
   };
 }
 
 function buildLockedAdvicePreview(premiumMentorPlan = [], internalAtsResult = {}) {
   const totalMentorCount = 4;
-  const totalAdviceCount = 12;
+  const actualAdviceCount = premiumMentorPlan.reduce((sum, mentor) => sum + ((mentor.adviceItems || []).length), 0);
+  const actualLockedAdviceCount = premiumMentorPlan.slice(1, 4).reduce((sum, mentor) => sum + ((mentor.adviceItems || []).length), 0);
+  const totalAdviceCount = actualAdviceCount;
   const roleFamily = normalizeTerm(internalAtsResult.profile?.roleFamily || internalAtsResult.jobTitle || "");
   const topics = roleFamily === "accounting" || roleFamily === "finance"
     ? ["Accounting 关键词补充位置", "Summary 岗位定位强化", "Experience bullet 优化", "岗位匹配与投递策略"]
@@ -3004,13 +4049,15 @@ function buildLockedAdvicePreview(premiumMentorPlan = [], internalAtsResult = {}
 
   return {
     lockedMentorCount: Math.max(0, totalMentorCount - 1),
-    lockedAdviceCount: Math.max(0, totalAdviceCount - 3),
+    lockedAdviceCount: actualLockedAdviceCount,
     totalMentorCount,
     totalAdviceCount,
     topics,
     lockedMentors,
     mentorLogoPool: premiumMentorPlan[0]?.mentorLogoPool || buildMentorLogoPoolFromItems(premiumMentorPlan.flatMap((mentor) => mentor.adviceItems || [])),
-    message: "解锁后查看 9 条付费深度建议，与免费 3 条共同覆盖你的主要 ATS 问题与分段修改路径。",
+    message: actualLockedAdviceCount
+      ? `解锁后查看 ${actualLockedAdviceCount} 条付费深度建议，与免费建议共同覆盖你的主要 ATS 问题与分段修改路径。`
+      : "当前免费建议已覆盖主要可行动作；若后续匹配到更多高质量导师建议，会继续补充到报告中。",
   };
 }
 
@@ -3058,16 +4105,17 @@ function formatPublicFreeMentorAdvice(freeMentorPlan, internalAtsResult = {}) {
     mentorLogoPool: freeMentorPlan.mentorLogoPool || buildMentorLogoPoolFromItems(freeMentorPlan.adviceItems || []),
     adviceItems: (freeMentorPlan.adviceItems || []).slice(0, 3).map((item) => {
       // Resolve canonical new-schema fields, supporting both native and adapted cards
-      const currentDiagnosis = item.currentDiagnosis || item.problemSummary || "";
-      const action = item.action || item.actionSummary || "";
+      const currentDiagnosis = normalizeDisplayDiagnosis(item.currentDiagnosis || item.problemSummary || "");
+      const action = normalizeDisplayActionLanguage(item.action || item.actionSummary || "", item, "优先把目标岗位关键词、相关技能和经历证据放到 Summary、Skills 和 Experience 中。");
+      const hrPerspective = resolveHrPerspective(item);
       return {
         adviceId: item.adviceId,
-        title: item.title,
+        title: normalizeDisplayTitle(item.title, item),
         // ── New schema fields ──
-        mentorLens: item.mentorLens || "",
+        mentorLens: item.mentorLens || item.P_mentor || "",
         currentDiagnosis,
         action,
-        reason: item.reason || "",
+        reason: item.reason || item.I_insight || "",
         evidence: buildAdviceEvidence(item, null, internalAtsResult),
         // ── Explanation metadata (issue-first) ──
         matchReason: item.matchReason || "",
@@ -3075,6 +4123,9 @@ function formatPublicFreeMentorAdvice(freeMentorPlan, internalAtsResult = {}) {
         topicCluster: item.topicCluster || inferTopicCluster(item),
         confidenceScore: item.confidenceScore || null,
         adviceTransferScope: item.adviceTransferScope || "",
+        canonicalActionFamily: canonicalActionFamilyOf(item),
+        actionDepth: actionDepthOf(item),
+        actionDisplayModeUsed: item.actionDisplayModeUsed || "",
         // ── Backward-compat aliases ──
         problemSummary: currentDiagnosis,
         actionSummary: action,
@@ -3082,9 +4133,10 @@ function formatPublicFreeMentorAdvice(freeMentorPlan, internalAtsResult = {}) {
         relatedProblemTags: item.relatedProblemTags || [],
         priority: item.priority || "medium",
         // Rich mentor voice fields
-        mentorInsight: item.mentorInsight || item.I_insight || "",
+        mentorInsight: item.mentorInsight || item.I_insight || item.mentorLens || item.P_mentor || "",
         example: item.example || item.E_example || "",
-        hrPerspective: item.hrPerspective || item.HR_os || "",
+        hrPerspective,
+        HR_os: hrPerspective,
         source: item.source || "db",
         mentorSource: item.mentorSource || null,
       };
@@ -3096,16 +4148,17 @@ function formatPremiumMentorReport(premiumMentorPlan, internalAtsResult) {
   const mentors = premiumMentorPlan.slice(0, 4).map((mentor) => ({
     ...mentor,
     adviceItems: (mentor.adviceItems || []).slice(0, 3).map((item) => {
-      const currentDiagnosis = item.currentDiagnosis || item.problemSummary || "";
-      const action = item.action || item.actionSummary || "";
+      const currentDiagnosis = normalizeDisplayDiagnosis(item.currentDiagnosis || item.problemSummary || "");
+      const action = normalizeDisplayActionLanguage(item.action || item.actionSummary || "", item, "优先把目标岗位关键词、相关技能和经历证据放到 Summary、Skills 和 Experience 中。");
+      const hrPerspective = resolveHrPerspective(item);
       return {
         adviceId: item.adviceId,
-        title: item.title,
+        title: normalizeDisplayTitle(item.title, item),
         // New schema fields
-        mentorLens: item.mentorLens || "",
+        mentorLens: item.mentorLens || item.P_mentor || "",
         currentDiagnosis,
         action,
-        reason: item.reason || "",
+        reason: item.reason || item.I_insight || "",
         evidence: buildAdviceEvidence(item, null, internalAtsResult),
         // Explanation metadata
         matchReason: item.matchReason || "",
@@ -3113,13 +4166,17 @@ function formatPremiumMentorReport(premiumMentorPlan, internalAtsResult) {
         topicCluster: item.topicCluster || inferTopicCluster(item),
         confidenceScore: item.confidenceScore || null,
         adviceTransferScope: item.adviceTransferScope || "",
+        canonicalActionFamily: canonicalActionFamilyOf(item),
+        actionDepth: actionDepthOf(item),
+        actionDisplayModeUsed: item.actionDisplayModeUsed || "",
         // Backward compat
         problemSummary: currentDiagnosis,
         actionSummary: action,
         // Paid-only premium fields
-        mentorInsight: item.mentorInsight || "",
+        mentorInsight: item.mentorInsight || item.I_insight || item.mentorLens || item.P_mentor || "",
         example: item.example || "",
-        hrPerspective: item.hrPerspective || "",
+        hrPerspective,
+        HR_os: hrPerspective,
         targetSection: item.targetSection || "overall",
         relatedProblemTags: item.relatedProblemTags || [],
         priority: item.priority || "medium",
@@ -3165,6 +4222,12 @@ module.exports = {
   isEligibleForAtsResumeReport,
   isAdviceRoleSafe,
   isCardAlignedWithTargetProblems,
+  extractGroundingTermsFromAdvice,
+  isResumeGroundedAdvice,
+  isGovernedAdviceDisplayable,
+  canonicalActionFamilyOf,
+  actionDepthOf,
+  canAddToTwelveAdviceBundle,
   hasConflictingRoleExamples,
   calculateRoleMismatchPenalty,
   calculateRetrievalScore,
@@ -3186,6 +4249,11 @@ module.exports = {
   buildLockedAdvicePreview,
   buildAdviceEvidence,
   buildPublicSafeEvidence,
+  isSystemPlaceholderAdviceText,
+  isMostlyEnglishAction,
+  normalizeDisplayActionLanguage,
+  normalizeDisplayTitle,
+  normalizeDisplayDiagnosis,
   formatPublicFreeMentorAdvice,
   formatPremiumMentorReport,
   formatAdviceCard,

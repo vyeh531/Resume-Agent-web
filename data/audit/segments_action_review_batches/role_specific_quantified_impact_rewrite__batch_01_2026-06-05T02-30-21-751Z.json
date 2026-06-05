@@ -1,0 +1,48 @@
+[
+  {
+    "id": 23578,
+    "chunk_id": "8d26e3f6-789a-4948-95a9-629fc5c09ff7-2024-11-29-Session-01-gap分析报告+简历润色_chunk_008",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "retrieval_scope": "resume_edit",
+    "role_family": "software_engineer,data_analyst",
+    "target_roles": "data_analyst",
+    "problem_tags": "low_hard_skill_match",
+    "ats_dimensions": "B_contact,C_content_quality,E_market_fit",
+    "advice_card_title": "求职者缺乏量化回测实战经验",
+    "user_problem_summary": "求职者缺乏量化回测实战经验，需要低成本平台进行策略开发练习，但不了解Quantconnect平台的使用方法及其数据局限性",
+    "A_action": "注册并熟练使用Quantconnect平台，编写股票回测代码，学习equity和option各类策略；注意避开SP500和QQQ的期权数据（存在错误），股票数据可正常使用；期权数据可尝试用Python yfinance作为补充但需了解其局限",
+    "action_summary": "注册并熟练使用Quantconnect平台，编写股票回测代码，学习equity和option各类策略；",
+    "I_insight": "Quantconnect是免费提供数据的研究与实盘平台，对于没有资金购买昂贵数据的求职者而言是极低门槛的实战练习工具，能有效积累量化研究经验，提升简历含金量",
+    "HR_os": "身份信息如果处理得不清楚，招聘流程会多一层不确定；提前讲明白会让判断更顺。",
+    "current": {
+      "action_specificity": "",
+      "display_action_mode": "",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "",
+      "action_depth": "",
+      "action_review_status": ""
+    },
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "为核心 bullet 补充数量、频率、规模、效率或结果，让 HR 能判断你实际带来的影响。",
+      "activation_role_family": "trading_quant",
+      "activation_keywords": "",
+      "grounding_terms": "SP500,QQQ",
+      "canonical_action_family": "quantified_impact",
+      "action_depth": "rewrite",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:role_specific;has_grounding_terms;has_activation_conditions"
+    },
+    "review_priority_score": 90,
+    "review_priority_reasons": [
+      "role_specific action is valuable but must be role/JD gated",
+      "contains high-risk role/project/tool terms"
+    ]
+  }
+]

@@ -1,0 +1,2902 @@
+[
+  {
+    "id": 1808,
+    "chunk_id": "02b09d1f-e7f3-4d54-bb1d-e0a45999436b-2026-04-06-SDE-&-AI-简历迭代指导_chunk_014",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "proof",
+    "advice_card_title": "学生在school project简历中写了\"50...",
+    "user_problem_summary": "学生在school project简历中写了\"50% reduction in manual effort\"，",
+    "A_action": "删除无法验证来源的量化数据；若要保留，必须能清楚说明：用户从哪里来、如何对比测量、基线是什么、测试迭代了几次，所有量化结论必须有数据支撑。",
+    "action_summary": "删除无法验证来源的量化数据；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1809,
+    "chunk_id": "02b09d1f-e7f3-4d54-bb1d-e0a45999436b-2026-04-06-SDE-&-AI-简历迭代指导_chunk_014",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "rewrite",
+    "advice_card_title": "学生将框架自带的task delegation功能...",
+    "user_problem_summary": "学生将框架自带的task delegation功能写成自己的设计成果，",
+    "A_action": "改写项目描述：(1)说明为何选用该框架及其局限；(2)明确每个agent的职责边界与设计决策；(3)描述agent间通信与context传递的信息损失问题及解决方案；(4)加入错误处理机制（retry、fallback、output validation）。",
+    "action_summary": "改写项目描述：(1)说明为何选用该框架及其局限；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1810,
+    "chunk_id": "02b09d1f-e7f3-4d54-bb1d-e0a45999436b-2026-04-06-SDE-&-AI-简历迭代指导_chunk_014",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "diagnose",
+    "advice_card_title": "学生写\"fine-tune prompts to...",
+    "user_problem_summary": "学生写\"fine-tune prompts to reduce hallucination\"，",
+    "A_action": "补充以下要素：(1)hallucination的定义与baseline数据；(2)prompt迭代版本数量及每版的具体改动方向；(3)最终减少的量化结果（如从X%降至Y%）；(4)评估方式说明（人工标注/自动化benchmark）。",
+    "action_summary": "补充以下要素：(1)hallucination的定义与baseline数据；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1811,
+    "chunk_id": "02b09d1f-e7f3-4d54-bb1d-e0a45999436b-2026-04-06-SDE-&-AI-简历迭代指导_chunk_014",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "简历未说明为何选择Multi-agent而非sin...",
+    "user_problem_summary": "简历未说明为何选择Multi-agent而非single agent，",
+    "A_action": "在项目描述中加入选型依据：对比Multi-agent与single-agent在关键指标（准确率/延迟/成本）上的实验数据，说明Multi-agent在哪个维度有可量化的提升，并承认其trade-off（如更高latency、更复杂调试）及应对方案。",
+    "action_summary": "在项目描述中加入选型依据：对比Multi-agent与single-agent在关键指标（准确率/延迟/成本）上的实验数据，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1817,
+    "chunk_id": "04ad713b-0588-4b82-a828-fc119b92ebac-2026-03-28-AI-简历版本熟悉度辅导-with-Mentor-Kunling_chunk_002",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills,weak_experience_keyword_evidence,weak_result_orientation",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "候选人若只展示模型构建或API搭建",
+    "user_problem_summary": "候选人若只展示模型构建或API搭建，",
+    "A_action": "修改项目描述，明确说明使用了Claude Code、GitHub Copilot、Cursor等AI工具，并强调项目最终部署至可供用户使用的全栈应用，而非停留在模型或API层面。",
+    "action_summary": "修改项目描述，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1826,
+    "chunk_id": "04ad713b-0588-4b82-a828-fc119b92ebac-2026-03-28-AI-简历版本熟悉度辅导-with-Mentor-Kunling_chunk_011",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者在简历中使用了HyDE技术但无法清晰解释其解决的问题",
+    "user_problem_summary": "求职者在简历中使用了HyDE技术但无法清晰解释其解决的问题，",
+    "A_action": "修改简历中RAG项目描述：1）先点明传统RAG的不足（query与answer匹配问题），再说明如何用HyDE解决；2）将BLEU score替换为precision、recall、F1、MRR或MAP等正确评估指标；3）阅读导师提供的RAG优化文档，内化chunking、OCR质量、表格处理等进阶方法。",
+    "action_summary": "修改简历中RAG项目描述：1）先点明传统RAG的不足（query与answer匹配问题），再说明如何用HyDE解决；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1831,
+    "chunk_id": "04ad713b-0588-4b82-a828-fc119b92ebac-2026-03-28-AI-简历版本熟悉度辅导-with-Mentor-Kunling_chunk_010",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者简历中使用BLEU score作为RAG项目的评估指标",
+    "user_problem_summary": "求职者简历中使用BLEU score作为RAG项目的评估指标，该指标不适用于RAG场景，会在技术面试中暴露知识漏洞。",
+    "A_action": "立即核查并替换简历中RAG项目的评估指标，将BLEU score改为适合RAG场景的正确指标（如RAGAS框架中的faithfulness、answer relevancy等），并深入学习RAG最佳实践文档后更新项目描述。",
+    "action_summary": "立即核查并替换简历中RAG项目的评估指标，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1857,
+    "chunk_id": "0980c120-a0f9-41cf-81a3-62e1aebaed1c-2026-03-30-Session10-简历修改(项目补充)及优化_chunk_004",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "学生自我诊断：简历上的C语言和MATLAB等软件技...",
+    "user_problem_summary": "学生自我诊断：简历上的C语言和MATLAB等软件技能因长期未使用已遗忘，",
+    "A_action": "系统梳理简历中列出的每项技能和项目经历，针对已生疏的C语言、MATLAB等内容制定复习计划，确保能在面试中自信、准确地回答相关问题；同时考虑是否将掌握程度不足的技能从简历中移除或降级标注。",
+    "action_summary": "系统梳理简历中列出的每项技能和项目经历，针对已生疏的C语言、MATLAB等内容制定复习计划，确保能在面试中自信、准确地回答相关问题；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1883,
+    "chunk_id": "139f1d1b-3e42-4e35-90d6-2dc3782cd75a-2026-04-15-Gap-Analysis+简历精修-Crystal-Zuo&瞿尉丞_chunk_005",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "学生已有团队为其安排的暑期实习机会（投行岗/资管岗）",
+    "user_problem_summary": "学生已有团队为其安排的暑期实习机会（投行岗/资管岗），但尚未写入简历，导致简历经历空白。",
+    "A_action": "提前将已确定或基本确定的实习经历写入简历，即使尚未正式开始，以填补经历空白并增强申请竞争力。",
+    "action_summary": "提前将已确定或基本确定的实习经历写入简历，即使尚未正式开始，以填补经历空白并增强申请竞争力。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1901,
+    "chunk_id": "223d41e3-edf9-4544-a67c-51ee337545ed-2026-04-16-简历修改_chunk_004",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,low_hard_skill_match,keywords_only_in_skills",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者已有MATLAB经验",
+    "user_problem_summary": "求职者已有MATLAB经验，",
+    "A_action": "在简历技能列表和项目描述中明确列出MATLAB/Simulink经验，并说明是否有用Simulink生成embedded C code的经历；控制工程方向岗位应将此作为核心技能词优先呈现。",
+    "action_summary": "在简历技能列表和项目描述中明确列出MATLAB/Simulink经验，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1913,
+    "chunk_id": "223d41e3-edf9-4544-a67c-51ee337545ed-2026-04-16-简历修改_chunk_012",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "low_jd_keyword_match",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历缺乏Solidworks和CAD相关项目经历",
+    "user_problem_summary": "求职者简历缺乏Solidworks和CAD相关项目经历，无法匹配机械工程职位的核心技能要求，导致关键词覆盖不足。",
+    "A_action": "将硕士期间用Solidworks画图并导入ANSYS分析的桥梁实验项目写入简历，即使项目未完成也要写上；用中文先起草后翻译成英文发给导师修改。",
+    "action_summary": "将硕士期间用Solidworks画图并导入ANSYS分析的桥梁实验项目写入简历，即使项目未完成也要写上；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1917,
+    "chunk_id": "223d41e3-edf9-4544-a67c-51ee337545ed-2026-04-16-简历修改_chunk_013",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills,weak_experience_keyword_evidence,weak_result_orientation",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者因项目未完成而犹豫是否写入简历",
+    "user_problem_summary": "求职者因项目未完成而犹豫是否写入简历，导致简历内容薄弱，缺少关键技术工具（Solidworks、仿真软件）的展示机会。",
+    "A_action": "将未完成的项目也写入简历，先用中文草稿整理项目内容发给导师，确保Solidworks和仿真相关经验得到体现。",
+    "action_summary": "将未完成的项目也写入简历，先用中文草稿整理项目内容发给导师，确保Solidworks和仿真相关经验得到体现。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1919,
+    "chunk_id": "223d41e3-edf9-4544-a67c-51ee337545ed-2026-04-16-简历修改_chunk_013",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者无正式工作经验",
+    "user_problem_summary": "求职者无正式工作经验，简历内容单薄，需要靠项目经历填充一页纸并展示技术能力。",
+    "A_action": "梳理所有有产出的项目（包括PhD阶段、master阶段），确保第一页至少列出3-4个项目，publications和patents移至第二页。",
+    "action_summary": "梳理所有有产出的项目（包括PhD阶段、master阶段），",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1920,
+    "chunk_id": "223d41e3-edf9-4544-a67c-51ee337545ed-2026-04-16-简历修改_chunk_014",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历项目数量不足",
+    "user_problem_summary": "求职者简历项目数量不足，目前仅有两个项目，不足以填充一页完整简历并展示技术深度。",
+    "A_action": "整理所有有产出的项目，至少准备3-4个项目写入简历；将旧版简历发给辅导老师，由其协助补充遗漏项目，并将行业相关项目优先标注。",
+    "action_summary": "整理所有有产出的项目，至少准备3-4个项目写入简历；将旧版简历发给辅导老师，由其协助补充遗漏项目，并将行业相关项目优先标注。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1922,
+    "chunk_id": "223d41e3-edf9-4544-a67c-51ee337545ed-2026-04-16-简历修改_chunk_014",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者的项目描述偏学术",
+    "user_problem_summary": "求职者的项目描述偏学术，缺乏与目标行业（如汽车、制造业）的关联性表述，HR难以判断其工程实用价值。",
+    "A_action": "梳理现有项目，识别哪些成果可与工业应用挂钩；在项目描述中补充行业应用场景或潜在落地价值，使学术成果对HR更具可读性。",
+    "action_summary": "梳理现有项目，识别哪些成果可与工业应用挂钩；在项目描述中补充行业应用场景或潜在落地价值，使学术成果对HR更具可读性。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1929,
+    "chunk_id": "223d41e3-edf9-4544-a67c-51ee337545ed-2026-04-16-简历修改_chunk_016",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "学生项目描述中绑定了特定材料（硅片）",
+    "user_problem_summary": "学生项目描述中绑定了特定材料（硅片），限制了受众感知的适用范围，导致HR难以联想到其他行业的可迁移性。",
+    "A_action": "将项目描述中过于具体的行业材料词（如\"硅片\"）去掉，改为强调方法论与分析能力（如热仿真、传导分析），使项目经验可跨行业（Bio/Chemical/Material）展示。",
+    "action_summary": "将项目描述中过于具体的行业材料词（如\"硅片\"）去掉，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1930,
+    "chunk_id": "223d41e3-edf9-4544-a67c-51ee337545ed-2026-04-16-简历修改_chunk_016",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "学生有进行中但尚未出成果的项目",
+    "user_problem_summary": "学生有进行中但尚未出成果的项目，担心写入简历会被认为学术不端或内容不实，不确定能否放上去。",
+    "A_action": "未完成且无明确成果的项目暂不写入简历；待项目完成或有可陈述的阶段性结果后再添加，以避免内容存疑或引发诚信质疑。",
+    "action_summary": "未完成且无明确成果的项目暂不写入简历；待项目完成或有可陈述的阶段性结果后再添加，以避免内容存疑或引发诚信质疑。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1931,
+    "chunk_id": "223d41e3-edf9-4544-a67c-51ee337545ed-2026-04-16-简历修改_chunk_016",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills,weak_experience_keyword_evidence,weak_result_orientation",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "学生简历项目数量不足",
+    "user_problem_summary": "学生简历项目数量不足，需补充第四个项目，但学生低估了课程报告中使用的仿真工具（MATLAB/Abaqus）经验的简历价值。",
+    "A_action": "将课程报告中有实际操作仿真工具（如MATLAB、Abaqus）的小项目整理为简历项目条目；将slides发给导师审阅后协助撰写描述，确保措辞专业且有说服力。",
+    "action_summary": "将课程报告中有实际操作仿真工具（如MATLAB、Abaqus）的小项目整理为简历项目条目；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1948,
+    "chunk_id": "2580aed3-6f95-487c-9243-0540516fbd38-2026-03-31-GAP-分析+提升方案+简历分析_chunk_019",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills,weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "rewrite",
+    "advice_card_title": "该段主要是june在描述其investment g...",
+    "user_problem_summary": "该段主要是june在描述其investment group实习经历，",
+    "A_action": "梳理项目核心量化指标（key metrics），将投资组合可视化工具的实际业务影响转化为简历bullet point，需包含：工具覆盖基金数量、客户数量、数据维度、节省时间或提升效率等可量化成果。",
+    "action_summary": "梳理项目核心量化指标（key metrics），",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1949,
+    "chunk_id": "2580aed3-6f95-487c-9243-0540516fbd38-2026-03-31-GAP-分析+提升方案+简历分析_chunk_020",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "diagnose",
+    "advice_card_title": "学生在PE/VC实习中独立构建了多维度投资组合可视化分析框架",
+    "user_problem_summary": "学生在PE/VC实习中独立构建了多维度投资组合可视化分析框架，但简历未充分呈现其实质贡献与业务价值，导致含金量被低估。",
+    "A_action": "围绕三大维度提炼成果：1）以项目为维度重构投资占比分析逻辑；2）按行业（新能源/半导体/医疗/AI）及细分赛道做多层标签体系；3）量化各阶段（成长期/Pre-IPO/已退出）的投资收益率变化，并突出\"在正确阶段进入正确行业\"的timing判断价值。",
+    "action_summary": "围绕三大维度提炼成果：1）以项目为维度重构投资占比分析逻辑；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1951,
+    "chunk_id": "2580aed3-6f95-487c-9243-0540516fbd38-2026-03-31-GAP-分析+提升方案+简历分析_chunk_017",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,education_details_missing",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "proof",
+    "advice_card_title": "求职者简历缺乏量化数字",
+    "user_problem_summary": "求职者简历缺乏量化数字，HR 无法快速感知工作量与成果；同时 HR 并非专业背景，主要依赖关键词扫描和视觉冲击力判断候选人价值。",
+    "A_action": "在简历对应实习段落加入具体数字（如处理 240 个 AP invoices、100% accuracy），用量化成果替代纯描述性语言，提升简历对 HR 的视觉冲击力和 ATS 关键词匹配率。",
+    "action_summary": "在简历对应实习段落加入具体数字（如处理 240 个 AP invoices、100% accuracy），",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1953,
+    "chunk_id": "2580aed3-6f95-487c-9243-0540516fbd38-2026-03-31-GAP-分析+提升方案+简历分析_chunk_016",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "low_soft_skill_match",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者在丽思卡尔顿实习的经历中",
+    "user_problem_summary": "求职者在丽思卡尔顿实习的经历中，",
+    "A_action": "将AP invoice核对、reconciliation等高频操作提炼为\"注重细节\"技能；将主动识别invoice分类错误、跨部门确认沟通的经历提炼为\"沟通能力\"，并在简历bullet point中具体呈现这两项能力的应用场景。",
+    "action_summary": "将AP invoice核对、reconciliation等高频操作提炼为\"注重细节\"技能；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1954,
+    "chunk_id": "2580aed3-6f95-487c-9243-0540516fbd38-2026-03-31-GAP-分析+提升方案+简历分析_chunk_021",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "学生在金融机构有过主导数据格式标准化的实质经历",
+    "user_problem_summary": "学生在金融机构有过主导数据格式标准化的实质经历，但简历中该段经历描述不够充分，未能体现其推动跨团队协作和提升效率的贡献。",
+    "A_action": "拓写工作经历中的数据标准化项目，突出主导统一基金经理Excel数据格式、推动跨团队落地、最终提升数据处理效率的全过程，体现影响力和解决问题的能力。",
+    "action_summary": "拓写工作经历中的数据标准化项目，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1956,
+    "chunk_id": "2cbb2c20-7975-4fb2-83be-1e77cb8d1041-2026-03-31-数据分析方向求职差距分析&简历修改辅导_chunk_001",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "学生简历中写了SQL、AI等工具",
+    "user_problem_summary": "学生简历中写了SQL、AI等工具，",
+    "A_action": "核查简历中每项技能和工具描述是否与实际经历相符，将夸大的\"large dataset\"改为符合实际规模的表述，避免面试时被追问而暴露水分。",
+    "action_summary": "核查简历中每项技能和工具描述是否与实际经历相符，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1958,
+    "chunk_id": "2580aed3-6f95-487c-9243-0540516fbd38-2026-03-31-GAP-分析+提升方案+简历分析_chunk_022",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "problem_tags": "low_hard_skill_match,education_details_missing",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "delivery",
+    "advice_card_title": "学生担心SQL和Python已生疏",
+    "user_problem_summary": "学生担心SQL和Python已生疏，不确定是否需要系统复习，存在对技能要求的焦虑",
+    "A_action": "无需深度复习SQL与Python，能看懂基础语法即可；BA/FA岗位面试不常考编程题，将精力聚焦于简历优化和岗位投递",
+    "action_summary": "无需深度复习SQL与Python，能看懂基础语法即可；BA/FA岗位面试不常考编程题，将精力聚焦于简历优化和岗位投递",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 1961,
+    "chunk_id": "2cbb2c20-7975-4fb2-83be-1e77cb8d1041-2026-03-31-数据分析方向求职差距分析&简历修改辅导_chunk_000",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "学生简历中列出了SQL、AI等技术工具",
+    "user_problem_summary": "学生简历中列出了SQL、AI等技术工具，导师直接质疑这些内容是否真实操作过，还是存在夸大或虚构成分，揭示简历可信度风险。",
+    "A_action": "逐条核查简历中每个技术工具和成果的真实性；确保所有描述均有实际操作支撑，去除或降级无法深入阐述的内容，避免面试中被追问时露馅。",
+    "action_summary": "逐条核查简历中每个技术工具和成果的真实性；确保所有描述均有实际操作支撑，去除或降级无法深入阐述的内容，避免面试中被追问时露馅。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1967,
+    "chunk_id": "2cbb2c20-7975-4fb2-83be-1e77cb8d1041-2026-03-31-数据分析方向求职差距分析&简历修改辅导_chunk_005",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者Cyber Security版本简历缺少相关实习",
+    "user_problem_summary": "求职者Cyber Security版本简历缺少相关实习，仅将现有实习经历向该方向硬套，导致经验薄弱说服力不足；",
+    "A_action": "将医院安全系统设计项目作为核心项目写入Cyber Security简历，详细描述：出发点/需求分析→解决方案设计→实施过程→最终成果，用STAR结构完整呈现以弥补无实习经验的缺口。",
+    "action_summary": "将医院安全系统设计项目作为核心项目写入Cyber Security简历，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1985,
+    "chunk_id": "2cbb2c20-7975-4fb2-83be-1e77cb8d1041-2026-03-31-数据分析方向求职差距分析&简历修改辅导_chunk_016",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "proof",
+    "advice_card_title": "求职者在简历中堆砌无法自圆其说的百分比数字（如17...",
+    "user_problem_summary": "求职者在简历中堆砌无法自圆其说的百分比数字（如17%、55%），",
+    "A_action": "只写能清晰追溯计算方式的量化数据，例如从手动3小时缩短到5分钟可算出500%效率提升；不要为了好看随意填写无法解释的百分比数字。",
+    "action_summary": "只写能清晰追溯计算方式的量化数据，例如从手动3小时缩短到5分钟可算出500%效率提升；不要为了好看随意填写无法解释的百分比数字。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1986,
+    "chunk_id": "2cbb2c20-7975-4fb2-83be-1e77cb8d1041-2026-03-31-数据分析方向求职差距分析&简历修改辅导_chunk_018",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "low_soft_skill_match,education_details_missing",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者项目经历描述缺乏清晰逻辑框架",
+    "user_problem_summary": "求职者项目经历描述缺乏清晰逻辑框架，未能体现分析思路、使用工具和最终结论，HR无法判断候选人的技能水平与沟通能力。",
+    "A_action": "按框架撰写项目经历：第一点说明分析背景（分析哪类数据、服务什么业务目标），第二点描述具体工具和方法（如SQL查询、linear regression），最后写出结论或业务影响（提升收入/运营效率/支持投资决策），让HR看到清晰思路与技能应用。",
+    "action_summary": "按框架撰写项目经历：第一点说明分析背景（分析哪类数据、服务什么业务目标），",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1987,
+    "chunk_id": "2cbb2c20-7975-4fb2-83be-1e77cb8d1041-2026-03-31-数据分析方向求职差距分析&简历修改辅导_chunk_017",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "proof",
+    "advice_card_title": "许多辅导机构出来的简历每个bullet后面都硬加一...",
+    "user_problem_summary": "许多辅导机构出来的简历每个bullet后面都硬加一个百分比数字，但这种无意义的量化反而令面试官反感，不建议为了量化而量化。",
+    "A_action": "只在数据有实际业务意义且面试时能清晰解释来源的情况下才写量化指标；若数字无法解释，宁可不写。",
+    "action_summary": "只在数据有实际业务意义且面试时能清晰解释来源的情况下才写量化指标；若数字无法解释，宁可不写。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1992,
+    "chunk_id": "2cbb2c20-7975-4fb2-83be-1e77cb8d1041-2026-03-31-数据分析方向求职差距分析&简历修改辅导_chunk_015",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "部分求职者为追求量化成果而编造数字",
+    "user_problem_summary": "部分求职者为追求量化成果而编造数字，导致简历可信度下降；但也有人有真实成果却未写出。",
+    "A_action": "若工作/项目成果可衡量（如效率提升百分比、收入增长数字），务必写出量化结果；若结果本身无法量化或数据不可靠，则不要强行添加数字。",
+    "action_summary": "若工作/项目成果可衡量（如效率提升百分比、收入增长数字），务必写出量化结果；若结果本身无法量化或数据不可靠，则不要强行添加数字。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1996,
+    "chunk_id": "2cbb2c20-7975-4fb2-83be-1e77cb8d1041-2026-03-31-数据分析方向求职差距分析&简历修改辅导_chunk_014",
+    "topic": "ATS机筛策略",
+    "L1": "求职策略",
+    "L2": "ATS机筛机制",
+    "problem_tags": "missing_priority_keywords,low_jd_keyword_match",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者简历关键词密度不足",
+    "user_problem_summary": "求职者简历关键词密度不足，",
+    "A_action": "仔细阅读目标JD，识别高频关键词（如SQL、Python），在工作经历、项目描述等多个板块中自然植入这些词，提高关键词出现频次以通过ATS筛选。",
+    "action_summary": "仔细阅读目标JD，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 1998,
+    "chunk_id": "2cbb2c20-7975-4fb2-83be-1e77cb8d1041-2026-03-31-数据分析方向求职差距分析&简历修改辅导_chunk_019",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,low_hard_skill_match",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历中数据分析实习经历描述过于笼统",
+    "user_problem_summary": "求职者简历中数据分析实习经历描述过于笼统，",
+    "A_action": "按数据分析完整流程分层撰写bullet point：1）用SQL定时查询数据库并存储至OneDrive；2）用pandas在Jupyter Lab中构建数据清洗pipeline（去重、处理缺失值、检测异常值、数据转换）；3）用scikit-learn构建机器学习模型并进行超参数调优以提升模型性能；4）用Tableau搭建交互式dashboard呈现分析发现及变量间相关性。",
+    "action_summary": "按数据分析完整流程分层撰写bullet point：1）用SQL定时查询数据库并存储至OneDrive；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2001,
+    "chunk_id": "2cbb2c20-7975-4fb2-83be-1e77cb8d1041-2026-03-31-数据分析方向求职差距分析&简历修改辅导_chunk_021",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,low_hard_skill_match,keywords_only_in_skills",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "rewrite",
+    "advice_card_title": "学生实习经历描述缺乏结构",
+    "user_problem_summary": "学生实习经历描述缺乏结构，",
+    "A_action": "按照framework重写两段实习经历：先写market research（含competitor analysis、industry overview、growth分析），再写data analysis（用Excel分析top players的sales/ratios等指标），最后draft一份Industry Research Report；写完后用AI润色，再发给导师审阅排版。",
+    "action_summary": "按照framework重写两段实习经历：先写market research（含competitor analysis、indu...",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2003,
+    "chunk_id": "2cbb2c20-7975-4fb2-83be-1e77cb8d1041-2026-03-31-数据分析方向求职差距分析&简历修改辅导_chunk_020",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者担心简历会被AI检测识别",
+    "user_problem_summary": "求职者担心简历会被AI检测识别，且若直接让AI从头写，AI无法了解实际工作细节，容易写出不符合事实的内容。",
+    "A_action": "先自己写出简历草稿，填入真实工作内容（分析了什么、用了什么工具、达成了什么效果），再交给AI润色语言表达，而非让AI从头生成全文。",
+    "action_summary": "先自己写出简历草稿，填入真实工作内容（分析了什么、用了什么工具、达成了什么效果），再交给AI润色语言表达，而非让AI从头生成全文。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2005,
+    "chunk_id": "2cbb2c20-7975-4fb2-83be-1e77cb8d1041-2026-03-31-数据分析方向求职差距分析&简历修改辅导_chunk_020",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者在投资公司的实习经历描述过于笼统",
+    "user_problem_summary": "求职者在投资公司的实习经历描述过于笼统，缺乏具体量化数字和结构化表达，无法体现实际贡献与分析广度。",
+    "A_action": "第一个bullet写高层次总结并量化：覆盖了几个行业、支持了什么决策；后续bullet按流程细化：market research内容（competitor analysis、industry overview、potential growth等），并尽量加入数字佐证。",
+    "action_summary": "第一个bullet写高层次总结并量化：覆盖了几个行业、支持了什么决策；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2006,
+    "chunk_id": "372bed54-6eac-4bd6-98a3-c2bbbcafa150-2026-03-25-简历更新和MKT技能辅导_chunk_001",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "low_soft_skill_match",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者将普通PPT制作列为经历",
+    "user_problem_summary": "求职者将普通PPT制作列为经历，但该项目价值不明确；",
+    "A_action": "筛选实习工作内容时，判断该任务是否有商业影响力：若PPT是用于向客户介绍公司/产品的pitch deck，则值得写入简历并说明其业务背景和成果。",
+    "action_summary": "筛选实习工作内容时，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2015,
+    "chunk_id": "372bed54-6eac-4bd6-98a3-c2bbbcafa150-2026-03-25-简历更新和MKT技能辅导_chunk_008",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者将网站设计经历描述过于笼统",
+    "user_problem_summary": "求职者将网站设计经历描述过于笼统，未能拆解出具体的工作内容（产品卖点提炼、视觉创作、产品描述），导致简历中项目价值不清晰。",
+    "A_action": "将网站设计经历细化为三个维度：梳理产品USP（unique selling point）、撰写product description、完成visual creation（图片素材），分别用专业术语写入简历bullet point。",
+    "action_summary": "将网站设计经历细化为三个维度：梳理产品USP（unique selling point）、撰写product descript...",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2016,
+    "chunk_id": "372bed54-6eac-4bd6-98a3-c2bbbcafa150-2026-03-25-简历更新和MKT技能辅导_chunk_008",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,low_hard_skill_match,keywords_only_in_skills",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者做网站内容时未意识到自己的工作已涉及SEO逻辑",
+    "user_problem_summary": "求职者做网站内容时未意识到自己的工作已涉及SEO逻辑，",
+    "A_action": "在简历该项目中补充SEO相关内容：说明曾进行keyword research，分析search volume与keyword difficulty，并依据关键词优化产品详情页copywriting；可引用所用工具名称以增加可信度。",
+    "action_summary": "在简历该项目中补充SEO相关内容：说明曾进行keyword research，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2017,
+    "chunk_id": "372bed54-6eac-4bd6-98a3-c2bbbcafa150-2026-03-25-简历更新和MKT技能辅导_chunk_009",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,low_hard_skill_match,keywords_only_in_skills",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者有实际做过网站内容撰写的经历",
+    "user_problem_summary": "求职者有实际做过网站内容撰写的经历，但未在简历中体现SEO关键词研究这一市场营销岗位普遍要求的技能，导致简历含金量不足。",
+    "A_action": "将关键词研究流程写入简历：先自行brainstorming产品特点得出seed keywords列表，再用SEO工具验证各关键词的搜索volume，最终根据数据选定高价值关键词指导产品描述撰写，并在results中量化网页流量提升幅度（如30%-40%）。",
+    "action_summary": "将关键词研究流程写入简历：先自行brainstorming产品特点得出seed keywords列表，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2018,
+    "chunk_id": "372bed54-6eac-4bd6-98a3-c2bbbcafa150-2026-03-25-简历更新和MKT技能辅导_chunk_009",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者认为自己是从零创建网页（前任只上传了PDF）",
+    "user_problem_summary": "求职者认为自己是从零创建网页（前任只上传了PDF），",
+    "A_action": "将该经历定性为\"Revamp/Redesign\"而非从零创建，以前任的PDF版本作为基准，对比重新上线后一个月内的流量增长数据，在简历bullet point中写出具体提升百分比，展示工作的实际impact。",
+    "action_summary": "将该经历定性为\"Revamp/Redesign\"而非从零创建，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2019,
+    "chunk_id": "372bed54-6eac-4bd6-98a3-c2bbbcafa150-2026-03-25-简历更新和MKT技能辅导_chunk_007",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "学生实习内容少（仅发2个post）、manager指导不足",
+    "user_problem_summary": "学生实习内容少（仅发2个post）、manager指导不足，导致简历经历看似单薄，难以体现营销能力。",
+    "A_action": "按content planning、execution、copy writing、image editing、performance review等维度拆解实际工作内容，即使产出有限，也要将所有参与环节逐一写入简历，使social media这段经历在简历上呈现丰富度。",
+    "action_summary": "按content planning、execution、copy writing、image editing、performa...",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2020,
+    "chunk_id": "372bed54-6eac-4bd6-98a3-c2bbbcafa150-2026-03-25-简历更新和MKT技能辅导_chunk_007",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,education_details_missing",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "学生参与了产品页redesign",
+    "user_problem_summary": "学生参与了产品页redesign，但未能清晰梳理具体工作模块，导致这段经历难以有效转化为简历bullet point。",
+    "A_action": "将产品页redesign经历拆解为：①梳理产品核心卖点（USP/unique selling point）；②撰写product description；③视觉内容制作（visual creation）；④整体页面布局设计——按模块分别写入简历。",
+    "action_summary": "将产品页redesign经历拆解为：①梳理产品核心卖点（USP/unique selling point）；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2022,
+    "chunk_id": "372bed54-6eac-4bd6-98a3-c2bbbcafa150-2026-03-25-简历更新和MKT技能辅导_chunk_010",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "proof",
+    "advice_card_title": "学生参与的是网页/内容改版项目（Revamp/Re...",
+    "user_problem_summary": "学生参与的是网页/内容改版项目（Revamp/Redesign），",
+    "A_action": "在简历results部分写出改版前后的流量对比指标，例如\"页面重新发布一个月后traffic增长30-40%\"，以此体现SEO优化和内容改版带来的可量化业务提升。",
+    "action_summary": "在简历results部分写出改版前后的流量对比指标，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2025,
+    "chunk_id": "372bed54-6eac-4bd6-98a3-c2bbbcafa150-2026-03-25-简历更新和MKT技能辅导_chunk_011",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "low_soft_skill_match",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "学生简历缺少数据支撑和软技能体现",
+    "user_problem_summary": "学生简历缺少数据支撑和软技能体现，经历真实性与影响力不足，需补充可量化成果及跨职能协作能力的描述。",
+    "A_action": "1）补充量化指标：如网页redesign后traffic增长百分比、竞品research数量（如100+产品）；2）增加跨部门协作描述：体现support sales team、制作pitch deck、协助close deal等cross-functional技能；3）在social media部分加入creative campaign name使经历更真实具体。",
+    "action_summary": "1）补充量化指标：如网页redesign后traffic增长百分比、竞品research数量（如100+产品）；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2058,
+    "chunk_id": "3a09ec90-75b8-472d-a1cd-f141728da3cb-2026-04-03-Session-1-Gap-Analysis-+简历修改_chunk_017",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者描述的项目经历停留在\"做了什么研究\"层面",
+    "user_problem_summary": "求职者描述的项目经历停留在\"做了什么研究\"层面，无法说清楚解决了什么具体问题，导致项目价值模糊，难以打动HR。",
+    "A_action": "重新梳理项目逻辑：明确项目背景→识别核心问题→说明你的分析方法→呈现对业务决策的贡献（如支持投资判断）。",
+    "action_summary": "重新梳理项目逻辑：明确项目背景→识别核心问题→说明你的分析方法→呈现对业务决策的贡献（如支持投资判断）。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2062,
+    "chunk_id": "3a09ec90-75b8-472d-a1cd-f141728da3cb-2026-04-03-Session-1-Gap-Analysis-+简历修改_chunk_011",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,education_details_missing",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历目前只有课外活动（school club...",
+    "user_problem_summary": "求职者简历目前只有课外活动（school club、student union等），",
+    "A_action": "立即排查是否有未写入简历的实习经历，并规划补充专业项目；将课外活动与专业经历分层处理，突出后者",
+    "action_summary": "立即排查是否有未写入简历的实习经历，并规划补充专业项目；将课外活动与专业经历分层处理，突出后者",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2063,
+    "chunk_id": "3a09ec90-75b8-472d-a1cd-f141728da3cb-2026-04-03-Session-1-Gap-Analysis-+简历修改_chunk_019",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历缺乏Marketing相关项目",
+    "user_problem_summary": "求职者简历缺乏Marketing相关项目，",
+    "A_action": "选择一个具体公司作为目标，围绕其设计完整的digital marketing campaign项目；或按通用流程撰写brand marketing/digital marketing项目，确保项目有具体成果可量化。",
+    "action_summary": "选择一个具体公司作为目标，围绕其设计完整的digital marketing campaign项目；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2108,
+    "chunk_id": "4a562d94-6b20-4c2b-b6ee-d027c11c1c95-2026-04-13-项目后简历内容+Bullet-point梳理_chunk_002",
+    "topic": "ATS机筛策略",
+    "L1": "求职策略",
+    "L2": "ATS机筛机制",
+    "problem_tags": "low_jd_keyword_match,missing_priority_keywords,low_hard_skill_match,low_role_specificity,weak_target_role_alignment,education_details_missing",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "diagnose",
+    "advice_card_title": "学生简历缺乏风险方向专业关键词",
+    "user_problem_summary": "学生简历缺乏风险方向专业关键词，难以通过机器筛选；",
+    "A_action": "针对风险方向简历版本，在bullet point中加入风险相关关键词；修改完成后逐条确认学生理解每条内容的含义，确保面试时能流畅作答。",
+    "action_summary": "针对风险方向简历版本，在bullet point中加入风险相关关键词；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2113,
+    "chunk_id": "4a562d94-6b20-4c2b-b6ee-d027c11c1c95-2026-04-13-项目后简历内容+Bullet-point梳理_chunk_007",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "学生在描述XGBoost模型时只给出定性解释",
+    "user_problem_summary": "学生在描述XGBoost模型时只给出定性解释，",
+    "A_action": "在项目描述中补充最终模型的AUC/ROC具体分数，直接以数字说明XGBoost相较其他模型的优越性，而非仅用文字定性说明。",
+    "action_summary": "在项目描述中补充最终模型的AUC/ROC具体分数，直接以数字说明XGBoost相较其他模型的优越性，而非仅用文字定性说明。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2137,
+    "chunk_id": "4b3922cb-c31a-46bf-b628-4ffe5918c8fe-2026-04-06-GAP-分析+提升方案+简历分析_chunk_012",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "学生的校内创业立项项目内容较空洞",
+    "user_problem_summary": "学生的校内创业立项项目内容较空洞，仅做了问卷调查，缺乏数据分析深度，直接写上简历说服力不足。",
+    "A_action": "将项目内容扩充，补充数据处理细节（如Excel数据清洗、分类归类），在简历中体现analyze data、data cleaning等具体技能动作，使项目更具说服力。",
+    "action_summary": "将项目内容扩充，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2194,
+    "chunk_id": "51c8069b-d55a-4785-9339-be244ebfd0d5-2026-03-30-Gap-Analysis-和简历修改_chunk_006",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者实习内容模糊",
+    "user_problem_summary": "求职者实习内容模糊，简历中写了实际未深度参与的工作（如data analysis），面试时可能无法自圆其说，存在被追问后露馅的风险。",
+    "A_action": "回顾并整理当时实习收到的资料文件，重新梳理实际做过的事情；只保留自己能在面试中讲清楚故事线的bullet point，无法解释的内容删除或替换。",
+    "action_summary": "回顾并整理当时实习收到的资料文件，重新梳理实际做过的事情；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2195,
+    "chunk_id": "51c8069b-d55a-4785-9339-be244ebfd0d5-2026-03-30-Gap-Analysis-和简历修改_chunk_006",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者简历中出现\"studied某技能\"或\"提高了...",
+    "user_problem_summary": "求职者简历中出现\"studied某技能\"或\"提高了某技能\"等表述，这类写法占据篇幅却未体现实际贡献，无法展示求职者的差异化优势。",
+    "A_action": "删除所有\"studied/learned/improved skills\"类表述，改写为具体行动+结果的结构：描述自己实际做了什么事，产生了什么结果或影响。",
+    "action_summary": "删除所有\"studied/learned/improved skills\"类表述，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2200,
+    "chunk_id": "51c8069b-d55a-4785-9339-be244ebfd0d5-2026-03-30-Gap-Analysis-和简历修改_chunk_005",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历bullet points可能未能真实反映工作内容",
+    "user_problem_summary": "求职者简历bullet points可能未能真实反映工作内容，导师采用先让求职者口头描述再针对性改写的方式，避免遗漏可包装的细节",
+    "A_action": "在修改简历前，先口头逐一描述每段经历实际做了什么，包括参与的engagement数量、客户所在行业等背景信息，再由此提炼可量化的bullet points",
+    "action_summary": "在修改简历前，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2201,
+    "chunk_id": "51c8069b-d55a-4785-9339-be244ebfd0d5-2026-03-30-Gap-Analysis-和简历修改_chunk_007",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "proof",
+    "advice_card_title": "求职者在简历中写了\"studied某技能\"或\"提高...",
+    "user_problem_summary": "求职者在简历中写了\"studied某技能\"或\"提高了某技能\"等表述，",
+    "A_action": "删除简历中所有\"studied/learned/提高了XX技能\"类表述，改为描述具体做了什么事情（行动）以及得到了什么结果（量化成果）。",
+    "action_summary": "删除简历中所有\"studied/learned/提高了XX技能\"类表述，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2202,
+    "chunk_id": "51c8069b-d55a-4785-9339-be244ebfd0d5-2026-03-30-Gap-Analysis-和简历修改_chunk_007",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者的IT审计相关bullet point描述过...",
+    "user_problem_summary": "求职者的IT审计相关bullet point描述过于泛泛（too general），",
+    "A_action": "在描述审计项目时，补充客户所在行业或领域（如金融、医疗、制造等），并说明针对该行业所采用的具体审计程序，以体现针对性和专业度。",
+    "action_summary": "在描述审计项目时，补充客户所在行业或领域（如金融、医疗、制造等），并说明针对该行业所采用的具体审计程序，以体现针对性和专业度。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2203,
+    "chunk_id": "51c8069b-d55a-4785-9339-be244ebfd0d5-2026-03-30-Gap-Analysis-和简历修改_chunk_008",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者的简历项目描述过于笼统",
+    "user_problem_summary": "求职者的简历项目描述过于笼统，未能体现具体行业背景、操作流程及工作目的，HR难以判断实际工作内容与影响力",
+    "A_action": "在描述项目时补充具体行业背景（如retail行业），说明操作流程细节，并明确每项工作的目的（如数据敏感性分析是为了什么目标），使描述越具体越好",
+    "action_summary": "在描述项目时补充具体行业背景（如retail行业），",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2205,
+    "chunk_id": "51c8069b-d55a-4785-9339-be244ebfd0d5-2026-03-30-Gap-Analysis-和简历修改_chunk_013",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,low_jd_keyword_match,low_hard_skill_match",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者的实习经历描述过于笼统",
+    "user_problem_summary": "求职者的实习经历描述过于笼统，",
+    "A_action": "主动追问求职者在实习中用到的具体工具（如Excel、学术数据库等），将这些工具和方法补充进简历对应的工作经历条目中，使bullet point更具体、可信。",
+    "action_summary": "主动追问求职者在实习中用到的具体工具（如Excel、学术数据库等），",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2208,
+    "chunk_id": "51c8069b-d55a-4785-9339-be244ebfd0d5-2026-03-30-Gap-Analysis-和简历修改_chunk_009",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者将敏感信息分析的目的只写成\"保护客户隐私\"",
+    "user_problem_summary": "求职者将敏感信息分析的目的只写成\"保护客户隐私\"，",
+    "A_action": "在描述数据安全相关工作时，结合客户行业背景补充具体数据类型，例如retail客户需保护信用卡信息，金融客户需保护账户交易数据，使描述更具体、更有行业针对性。",
+    "action_summary": "在描述数据安全相关工作时，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2209,
+    "chunk_id": "51c8069b-d55a-4785-9339-be244ebfd0d5-2026-03-30-Gap-Analysis-和简历修改_chunk_010",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "short_tenure_unclear,weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者的简历bullet point描述过于泛泛",
+    "user_problem_summary": "求职者的简历bullet point描述过于泛泛，",
+    "A_action": "将每条bullet point补充具体故事：说明发现了什么问题（具体的control gap是什么）、用了什么方法或工具解决、达到了什么效果。避免只写职责描述，要让每条bullet都能回答面试官的追问。",
+    "action_summary": "将每条bullet point补充具体故事：说明发现了什么问题（具体的control gap是什么）、用了什么方法或工具解决、...",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2210,
+    "chunk_id": "51c8069b-d55a-4785-9339-be244ebfd0d5-2026-03-30-Gap-Analysis-和简历修改_chunk_010",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills,weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者使用的动词和描述（如walkthroughs...",
+    "user_problem_summary": "求职者使用的动词和描述（如walkthroughs、sample testing、provide feedbacks）偏向软性职责，",
+    "A_action": "在描述实习/项目工作时，明确写出使用的具体技术工具（如Excel公式、Python脚本、自动化系统等）和操作方法，将'soft'描述升级为'technical'描述。追问自己：'我用了什么技术？'并将答案写进bullet。",
+    "action_summary": "在描述实习/项目工作时，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2216,
+    "chunk_id": "51c8069b-d55a-4785-9339-be244ebfd0d5-2026-03-30-Gap-Analysis-和简历修改_chunk_019",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "low_hard_skill_match",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者在描述财务分析工作时未主动点明所使用的三大财...",
+    "user_problem_summary": "求职者在描述财务分析工作时未主动点明所使用的三大财务报表（Income Statement、Balance Sheet、Cas...",
+    "A_action": "在相关bullet point中明确写出「analyzed Income Statement, Balance Sheet, and Cash Flow Statement」，将实际操作工具和数据来源显性化，提升简历关键词密度与专业可信度。",
+    "action_summary": "在相关bullet point中明确写出「analyzed Income Statement, Balance Sheet,...",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2219,
+    "chunk_id": "51c8069b-d55a-4785-9339-be244ebfd0d5-2026-03-30-Gap-Analysis-和简历修改_chunk_016",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者部分实习经历时间较为久远（如5-6年前）",
+    "user_problem_summary": "求职者部分实习经历时间较为久远（如5-6年前），HR倾向于认为近1-2年的经历更具参考价值，久远经历会稀释整体简历吸引力",
+    "A_action": "建议对时间久远的实习经历考虑调整时间标注或降低其在简历中的权重，优先突出近1-2年的相关经历",
+    "action_summary": "建议对时间久远的实习经历考虑调整时间标注或降低其在简历中的权重，优先突出近1-2年的相关经历",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2223,
+    "chunk_id": "51c8069b-d55a-4785-9339-be244ebfd0d5-2026-03-30-Gap-Analysis-和简历修改_chunk_020",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "proof",
+    "advice_card_title": "求职者的研究经历中",
+    "user_problem_summary": "求职者的研究经历中，论文状态描述不准确，写的是\"将发表\"，但实际已发表，简历中未及时更新状态，影响含金量的呈现。",
+    "A_action": "将论文状态从\"将发表于某处\"修改为\"已发表于某处\"，并注明发表期刊/平台名称，以准确体现成果的真实含金量。",
+    "action_summary": "将论文状态从\"将发表于某处\"修改为\"已发表于某处\"，并注明发表期刊/平台名称，以准确体现成果的真实含金量。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2246,
+    "chunk_id": "5371c89d-8876-4242-b241-bd8180c99a7a-2026-04-05-简历精修&GAP分析_chunk_008",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "missing_distributed_systems,low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历缺乏具体数字",
+    "user_problem_summary": "求职者简历缺乏具体数字，导致经历的规模和影响力无法被感知，HR无法区分工作量大小",
+    "A_action": "在每条bullet point中加入可量化的数据，如问卷数量（如100份/1000份）、活动场次、覆盖人数等，即使数字不大也要标注，以体现工作的真实规模与影响",
+    "action_summary": "在每条bullet point中加入可量化的数据，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2248,
+    "chunk_id": "5371c89d-8876-4242-b241-bd8180c99a7a-2026-04-05-简历精修&GAP分析_chunk_011",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者描述赴法国奢侈品项目时",
+    "user_problem_summary": "求职者描述赴法国奢侈品项目时，仅写「去门店与销售沟通」，未说明沟通具体内容，导致这段实地调研经历价值无法被HR识别。",
+    "A_action": "将门店访谈经历细化，写明沟通的具体内容，例如：观察门店陈列逻辑、了解销售人员客户接待方式、收集销售对品牌香水的认知，并将这些信息与后续分析结论挂钩。",
+    "action_summary": "将门店访谈经历细化，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2250,
+    "chunk_id": "5371c89d-8876-4242-b241-bd8180c99a7a-2026-04-05-简历精修&GAP分析_chunk_007",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "missing_distributed_systems",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者描述工作内容时使用日常语言（如'调查用户满意...",
+    "user_problem_summary": "求职者描述工作内容时使用日常语言（如'调查用户满意度''看用户反馈'），",
+    "A_action": "用Marketing标准术语替换口语表达：'看用户反馈'→'consumer feedback analysis'；'问用户'→'conduct focus group / user interview'；'发问卷'→'design and distribute questionnaire'；'找到结论'→'derive insights'；'做宣传材料'→'create marketing assets'。",
+    "action_summary": "用Marketing标准术语替换口语表达：'看用户反馈'→'consumer feedback analysis'；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2255,
+    "chunk_id": "5371c89d-8876-4242-b241-bd8180c99a7a-2026-04-05-简历精修&GAP分析_chunk_010",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者有招商/人才公寓相关工作经历",
+    "user_problem_summary": "求职者有招商/人才公寓相关工作经历，",
+    "A_action": "将招商工作拆解为两个核心模块写入简历：①通过research建立目标公司名单（筛选维度：公司规模、类型、年招聘人数）；②通过outreach主动联系目标公司（电话、面谈、信息推送），用B2B sales/BD语言包装，体现主动开拓客户的行动。",
+    "action_summary": "将招商工作拆解为两个核心模块写入简历：①通过research建立目标公司名单（筛选维度：公司规模、类型、年招聘人数）；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2256,
+    "chunk_id": "5371c89d-8876-4242-b241-bd8180c99a7a-2026-04-05-简历精修&GAP分析_chunk_010",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,low_hard_skill_match",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者简历中列有商务用车管理经历",
+    "user_problem_summary": "求职者简历中列有商务用车管理经历，但该经历仅涉及用Excel记录车辆预订，无技术亮点或量化成果，单独列出反而稀释简历质量。",
+    "A_action": "判断某段经历是否值得保留的标准：若使用了有价值的工具（如实时数据库、dashboard）或产出了可量化的成果，则保留；若只是基础行政操作（如Excel记录），则删除，将简历空间留给更有说服力的经历。",
+    "action_summary": "判断某段经历是否值得保留的标准：若使用了有价值的工具（如实时数据库、dashboard）或产出了可量化的成果，则保留；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2284,
+    "chunk_id": "566ccd96-4ada-431b-a71f-4ecff69c141b-2026-04-04-简历深挖课程_chunk_016",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者将项目中简单的Google搜索描述得过于普通",
+    "user_problem_summary": "求职者将项目中简单的Google搜索描述得过于普通，未能体现专业性，导致简历缺乏含金量和说服力。",
+    "A_action": "将项目中普通的Google搜索行为重新描述为'research'，并补充具体产出，如'基于research得到的dimension数据建模，验证产品尺寸是否符合真人规格'，最终强调successfully deliver的结果。",
+    "action_summary": "将项目中普通的Google搜索行为重新描述为'research'，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2293,
+    "chunk_id": "566ccd96-4ada-431b-a71f-4ecff69c141b-2026-04-04-简历深挖课程_chunk_018",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "low_soft_skill_match,missing_code_review_documentation",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者描述Popmart实习中的跨部门工作时",
+    "user_problem_summary": "求职者描述Popmart实习中的跨部门工作时，",
+    "A_action": "将跨部门协作经历改写为具体行动bullet：1）'Designed SOPs and shared documents to clarify design requirements across teams'；2）'Arranged cross-functional meetings with marketing and retailing teams to communicate on product data'；3）'Gathered feedback iteratively and optimized research findings, sharing updated results with all stakeholders'。每条bullet以动词开头，体现具体输出与协作方式。",
+    "action_summary": "将跨部门协作经历改写为具体行动bullet：1）'Designed SOPs and shared documents to...",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2296,
+    "chunk_id": "566ccd96-4ada-431b-a71f-4ecff69c141b-2026-04-04-简历深挖课程_chunk_022",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,weak_experience_keyword_evidence,weak_result_orientation",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "delivery",
+    "advice_card_title": "求职者纠结于是否提交排版更美观的简历版本",
+    "user_problem_summary": "求职者纠结于是否提交排版更美观的简历版本，",
+    "A_action": "始终提交内容清晰、关键词完整的纯文本版简历（第一版），而非花哨排版版；同时在简历中附上 portfolio 网址，帮助招聘者直观感受作品，弥补纯文字简历的视觉局限",
+    "action_summary": "始终提交内容清晰、关键词完整的纯文本版简历（第一版），而非花哨排版版；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2315,
+    "chunk_id": "58bce0e8-652b-4369-837c-bd3ea73f078d-2026-04-06-Motor-engineer方向Gap-Analysis-和简历修改_chunk_010",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历上列有多个projects（如e-com...",
+    "user_problem_summary": "求职者简历上列有多个projects（如e-commerce数据分析、AB test等），",
+    "A_action": "删除或暂缓使用未亲自完成的项目；待实际动手完成相关项目后，再将其写入简历，确保每条项目经历都能在面试中准确描述和复盘。",
+    "action_summary": "删除或暂缓使用未亲自完成的项目；待实际动手完成相关项目后，再将其写入简历，确保每条项目经历都能在面试中准确描述和复盘。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2324,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_001",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,education_details_missing",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者将最新实习经历放在后面、旧经历放在前面",
+    "user_problem_summary": "求职者将最新实习经历放在后面、旧经历放在前面，违反简历时间倒序原则，HR扫描时会产生困惑",
+    "A_action": "将最新一段实习经历调整至简历最前面，按照时间由近到远（descending order）排列所有工作/实习经历",
+    "action_summary": "将最新一段实习经历调整至简历最前面，按照时间由近到远（descending order）排列所有工作/实习经历",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2325,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_001",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills,weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者的AI方向简历内容太general",
+    "user_problem_summary": "求职者的AI方向简历内容太general，缺乏针对AI岗位的具体技术细节和成果，且部分经历与AI关联牵强，强行挪用SDE实习内容",
+    "A_action": "检查AI简历每段经历，删除与AI关联牵强的描述，聚焦真实AI相关工作内容，用具体技术工具和量化成果替代泛泛描述",
+    "action_summary": "检查AI简历每段经历，删除与AI关联牵强的描述，聚焦真实AI相关工作内容，用具体技术工具和量化成果替代泛泛描述",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2329,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_002",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills,weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者的项目bullet point只描述了动作",
+    "user_problem_summary": "求职者的项目bullet point只描述了动作，",
+    "A_action": "每条项目bullet point按以下四要素结构撰写：①用了什么技术/工具；②做了什么具体行动；③解决了什么业务或技术问题；④达到了什么可量化效果。确保读者不需追问即可理解完整贡献。",
+    "action_summary": "每条项目bullet point按以下四要素结构撰写：①用了什么技术/工具；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2330,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_004",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历中写了技术内容（如模型、部署、数据量）",
+    "user_problem_summary": "求职者简历中写了技术内容（如模型、部署、数据量），但自己并未真正掌握细节，面试官追问时会答不上来，反而暴露可信度问题并影响面试表现。",
+    "A_action": "在写入简历前，先确保自己能清晰回答：用了什么模型/方法、数据量多少、具体做了哪些步骤、输入输出是什么。若掌握程度不足，需先补学再写，或精简描述至自己能自信回答的范围。",
+    "action_summary": "在写入简历前，先确保自己能清晰回答：用了什么模型/方法、数据量多少、具体做了哪些步骤、输入输出是什么。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2331,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_004",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者简历将项目描述为'AI agent for...",
+    "user_problem_summary": "求职者简历将项目描述为'AI agent for multiple step financial workflow'，",
+    "A_action": "按以下三点重写AI项目bullet point：①明确agent帮用户完成了什么任务（输入→处理→输出）；②解释为何是agent而非RAG（是否有decision making、multi-step subTask拆解、tool调用）；③说明是否使用框架（如LangChain），若自研则描述自己设计了哪些模块（prompt、tool schema、workflow frame）。",
+    "action_summary": "按以下三点重写AI项目bullet point：①明确agent帮用户完成了什么任务（输入→处理→输出）；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2332,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_004",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者爬取了约2万条财报数据做分析",
+    "user_problem_summary": "求职者爬取了约2万条财报数据做分析，但简历中未写明数据量，使项目规模无法被HR和面试官感知，错失量化亮点。",
+    "A_action": "将数据量写入对应bullet point，例如'scraped ~20,000 quarterly earnings reports (Fortune 500, 2025–2026)'，让面试官直观感受数据规模。",
+    "action_summary": "将数据量写入对应bullet point，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2333,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_003",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者写了'improving response...",
+    "user_problem_summary": "求职者写了'improving response variance'但没有说明对比基准，面试官无法判断提升幅度从何而来；",
+    "A_action": "在每条bullet point中补充：1）用了什么技术/方法；2）解决了什么问题/动机是什么；3）与什么做对比；4）最终达到了什么量化效果。缺少对比基准的提升数据不得单独出现。",
+    "action_summary": "在每条bullet point中补充：1）用了什么技术/方法；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2334,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_003",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "proof",
+    "advice_card_title": "求职者使用了'faster''fine-tune'...",
+    "user_problem_summary": "求职者使用了'faster''fine-tune''deploy'等高分量词，",
+    "A_action": "使用强技术词汇前必须配齐：1）用了哪个模型（如Qwen/LLAMA）；2）fine-tune的动机（格式问题/准确率问题等）；3）训练数据量级；4）deploy的具体终点（API/AWS/容器等）；5）fine-tune后的效果（准确率/输出稳定性提升多少）。",
+    "action_summary": "使用强技术词汇前必须配齐：1）用了哪个模型（如Qwen/LLAMA）；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2335,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_003",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者担心爬取数据的来源合规性而不敢写数量",
+    "user_problem_summary": "求职者担心爬取数据的来源合规性而不敢写数量，但面试官关注的是数据规模而非来源渠道，缺少数量级会让项目显得不扎实。",
+    "A_action": "直接在bullet point中写数据数量级（如'20,000 quarterly reports'），不需要说明数据怎么获取的；若数据量不确定，写大概数字即可（如'~20K records'）。",
+    "action_summary": "直接在bullet point中写数据数量级（如'20,000 quarterly reports'），不需要说明数据怎么获取的；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2337,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_005",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者写了'implemented embeddi...",
+    "user_problem_summary": "求职者写了'implemented embedding and evaluation pipeline'，",
+    "A_action": "将embedding pipeline描述补充以下要素：1）数据来源与清洗方式；2）具体使用的embedding模型；3）evaluation的指标（如RAGAS、BLEU等）；4）evaluation是否自动化（非手动case review）；5）评估的是retrieval、generation还是端到端效果。",
+    "action_summary": "将embedding pipeline描述补充以下要素：1）数据来源与清洗方式；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2339,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_007",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历中对数据处理Pipeline的描述过于笼统",
+    "user_problem_summary": "求职者简历中对数据处理Pipeline的描述过于笼统，",
+    "A_action": "在Pipeline描述中明确写出数据来源与输出终点；在image cleaning后补充具体操作类型（如去模糊、去重）；对label violation注明是rule-based还是自动标注方法（如XAI），使面试官无需追问即可理解技术选型。",
+    "action_summary": "在Pipeline描述中明确写出数据来源与输出终点；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2340,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_007",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "proof",
+    "advice_card_title": "求职者用'ensure data quality...",
+    "user_problem_summary": "求职者用'ensure data quality and reproducibility'作为结果描述，",
+    "A_action": "在每条技术行动后补充量化成果，例如训练稳定性提升比例、mislabel率下降幅度、或数据集版本一致性指标；若无精确数字，可描述定性改善如'reduced training variance across runs'。",
+    "action_summary": "在每条技术行动后补充量化成果，例如训练稳定性提升比例、mislabel率下降幅度、或数据集版本一致性指标；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2341,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_007",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者写了'develop modular mod...",
+    "user_problem_summary": "求职者写了'develop modular model serving API'，",
+    "A_action": "在API描述中补充：1）使用的框架（如FastAPI、Flask）；2）接口输入输出（如接收图片返回bounding box坐标）；3）调用模式（同步/异步）；使面试官能直接评估技术选型合理性。",
+    "action_summary": "在API描述中补充：1）使用的框架（如FastAPI、Flask）；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2342,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_006",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者将RAG/AI项目描述为'evaluatio...",
+    "user_problem_summary": "求职者将RAG/AI项目描述为'evaluation pipeline'，但未说明数据集、评估指标、是否自动化，面试官一追问即露馅；",
+    "A_action": "将evaluation相关bullet point补充完整闭环：明确evaluation方式（有无benchmark dataset）、评估指标（accuracy/latency具体数值）、是否自动化；若无法写出完整pipeline，至少写清楚embedding方案与unit test结果，避免为写而写。",
+    "action_summary": "将evaluation相关bullet point补充完整闭环：明确evaluation方式（有无benchmark data...",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2343,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_006",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,formatting_penalty_triggered",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "学生依赖AI工具美化简历表面措辞",
+    "user_problem_summary": "学生依赖AI工具美化简历表面措辞，",
+    "A_action": "对简历每条bullet point做'自我追问'练习：为什么这么写？数字从哪来？如果面试官问'你怎么做到的'能否完整回答？确保每个描述背后都有可讲的完整故事，再决定是否保留该措辞。",
+    "action_summary": "对简历每条bullet point做'自我追问'练习：为什么这么写？数字从哪来？如果面试官问'你怎么做到的'能否完整回答？确保...",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2345,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_006",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者写了'end-to-end data pro...",
+    "user_problem_summary": "求职者写了'end-to-end data processing pipeline'，",
+    "A_action": "在data pipeline的bullet point中补充：数据量级（如'processed 500K+ images'）、数据来源（如'from AWS S3 / camera feeds / internal database'）、pipeline终点（如'output to training-ready labeled dataset'），让'end-to-end'有实质内容支撑。",
+    "action_summary": "在data pipeline的bullet point中补充：数据量级（如'processed 500K+ images'）、...",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2347,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_009",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills,weak_experience_keyword_evidence,weak_result_orientation",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者写了'parameter tuning'但未...",
+    "user_problem_summary": "求职者写了'parameter tuning'但未说明调的是训练超参数、YOLO相关参数还是其他，读者无法理解工作深度；",
+    "A_action": "将parameter tuning改写为具体参数类别，例如'tuned YOLO v8 hyperparameters (learning rate, anchor size)'；若configuration management仅是修改配置文件，建议删除或替换为更有分量的描述",
+    "action_summary": "将parameter tuning改写为具体参数类别，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2349,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_010",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者的简历bullet point只写了完成了什么任务",
+    "user_problem_summary": "求职者的简历bullet point只写了完成了什么任务，",
+    "A_action": "逐条检查每个bullet point是否包含：(1)Why——集成/改造的动机或原有系统的痛点；(2)How——具体技术方案（API服务、本地推理还是pipeline改造）；(3)Effect——量化结果（如准确率提升X%、实时推理延迟<100ms）；(4)Context——系统规模、输入类型（图片/视频）、是否上线到production。",
+    "action_summary": "逐条检查每个bullet point是否包含：(1)Why——集成/改造的动机或原有系统的痛点；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2350,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_010",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者在描述AI推理项目时遗漏了关键系统设计信息：...",
+    "user_problem_summary": "求职者在描述AI推理项目时遗漏了关键系统设计信息：输入类型（图片vs视频）、推理方式（本地推理vs API调用）、实时性要求（...",
+    "A_action": "在AI/ML项目bullet point中明确补充：(1)输入数据类型与规模；(2)推理架构选型（本地GPU推理/API服务）及选型原因；(3)实时性约束（如<100ms）；(4)自定义pipeline改造内容（如preprocessing步骤）；(5)是否deploy to production及服务规模，将这些技术决策显性化写入简历。",
+    "action_summary": "在AI/ML项目bullet point中明确补充：(1)输入数据类型与规模；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2352,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_008",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者写了'develop modular mod...",
+    "user_problem_summary": "求职者写了'develop modular model'但未说明模块如何拆解、包含哪些子模块（如preprocessing、p...",
+    "A_action": "列出模型pipeline中的具体模块划分，如preprocessing模块、inference模块、postprocessing模块，说明每个模块的职责，体现模块化设计的实际工程价值",
+    "action_summary": "列出模型pipeline中的具体模块划分，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2353,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_008",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者写了Multi-class object d...",
+    "user_problem_summary": "求职者写了Multi-class object detection使用YOLO，",
+    "A_action": "在简历中明确写出使用YOLO等预训练模型时的个人贡献点，例如：自定义训练类别、针对模糊图像设计预处理pipeline、将模型集成进生产系统等具体行动",
+    "action_summary": "在简历中明确写出使用YOLO等预训练模型时的个人贡献点，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2356,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_015",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者过度依赖AI生成简历内容",
+    "user_problem_summary": "求职者过度依赖AI生成简历内容，",
+    "A_action": "使用AI修改简历后，必须逐条自问内容是否符合自身真实经历和逻辑，尤其是数据类描述要验证真实性，不能直接照搬AI输出",
+    "action_summary": "使用AI修改简历后，必须逐条自问内容是否符合自身真实经历和逻辑，尤其是数据类描述要验证真实性，不能直接照搬AI输出",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2357,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_011",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者的简历bullet point只写了高层动词...",
+    "user_problem_summary": "求职者的简历bullet point只写了高层动词（如automate、optimize、improve）却未说明具体实现方式...",
+    "A_action": "将每条bullet point补充四要素：①说清楚用了什么技术/方法（rule-based脚本、Flask API、microservice等）；②加入数据规模（每天处理多少图片/视频）；③说明实现机制（pipeline如何运作、latency具体数值）；④量化结果（节省时间、提升数据质量、reliability提升幅度）。",
+    "action_summary": "将每条bullet point补充四要素：①说清楚用了什么技术/方法（rule-based脚本、Flask API、micro...",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2358,
+    "chunk_id": "5a737ae5-9e49-4192-8dc6-bc45d6a76fd7-2026-04-04-SDE-&-AI-方向简历迭代辅导_chunk_011",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者在描述模型部署与API开发时",
+    "user_problem_summary": "求职者在描述模型部署与API开发时，",
+    "A_action": "在API/服务相关bullet point中明确：①框架类型（如Flask RESTful API或microservice）；②输入数据类型（图片、视频帧等）；③优化内容（推理速度、模型加载时间、API响应时间）；④性能数值（如latency < 100ms）；⑤部署形式（deployed to production）。",
+    "action_summary": "在API/服务相关bullet point中明确：①框架类型（如Flask RESTful API或microservice）；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2366,
+    "chunk_id": "66fec24b-dfe3-4870-bd42-b0d0595c27ee-2026-04-01-进度了解+简历优化+后续提要_chunk_001",
+    "topic": "教育背景优化",
+    "L1": "简历内容",
+    "L2": "教育背景",
+    "problem_tags": "education_details_missing",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者GPA为3.4",
+    "user_problem_summary": "求职者GPA为3.4，不够突出，若写在简历上可能成为减分项，建议省略并将重心转移到实习经历的挖掘与包装上。",
+    "A_action": "当GPA低于3.5时，从简历中删去GPA，将精力集中在实习经历的内容挖掘与优化上，以实际项目成果代替学业数据吸引HR注意。",
+    "action_summary": "当GPA低于3.5时，从简历中删去GPA，将精力集中在实习经历的内容挖掘与优化上，以实际项目成果代替学业数据吸引HR注意。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2367,
+    "chunk_id": "66fec24b-dfe3-4870-bd42-b0d0595c27ee-2026-04-01-进度了解+简历优化+后续提要_chunk_001",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,low_hard_skill_match,keywords_only_in_skills",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者的实习经历描述中完全未提及SQL",
+    "user_problem_summary": "求职者的实习经历描述中完全未提及SQL，",
+    "A_action": "重新审视实习工作内容，将其中涉及数据查询、清洗、核对的工作用SQL相关表述重新包装，在bullet point中明确写出'using SQL to query/analyze'等关键词，确保Data相关技能可见。",
+    "action_summary": "重新审视实习工作内容，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2368,
+    "chunk_id": "66fec24b-dfe3-4870-bd42-b0d0595c27ee-2026-04-01-进度了解+简历优化+后续提要_chunk_004",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者的Survey项目描述缺乏统计层面的分析背书",
+    "user_problem_summary": "求职者的Survey项目描述缺乏统计层面的分析背书，仅描述操作行为，未体现数据结果的统计意义，说服力不足。",
+    "A_action": "在项目bullet point中补充statistical analysis的描述，说明通过统计分析验证survey结果的显著性，强化数据严谨性的呈现。",
+    "action_summary": "在项目bullet point中补充statistical analysis的描述，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把关键词写进经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  }
+]

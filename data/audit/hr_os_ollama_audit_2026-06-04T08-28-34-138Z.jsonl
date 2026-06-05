@@ -1,0 +1,4 @@
+{"type":"validation","id":1,"issues":["forbidden_phrase"],"value":"如果你投所有岗位使用同一份通用简历，可能会降低机筛通过率。根据目标岗位分别维护针对性简历版本可以提高匹配度和面试机会。"}
+{"type":"validation","id":2,"issues":["missing_id"]}
+{"type":"validation","id":3,"issues":["missing_id"]}
+{"type":"validation","id":2,"issues":["too_long"],"value":"在 ATS 筛选中，关键词匹配是重要但不完全决定性的因素。我会先看你简历中是否有 JD 中提到的技能，并且在哪些项目或经验中使用过它们。如果只列出了技能，而没有提供具体的应用场景，我可能会认为你对这些技能的熟练程度不高。","retry":"single"}

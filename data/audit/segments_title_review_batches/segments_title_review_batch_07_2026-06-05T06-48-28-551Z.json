@@ -1,0 +1,2902 @@
+[
+  {
+    "id": 2980,
+    "chunk_id": "a3f14f79-efa3-40c1-8e6f-f386f3a32643-2026-04-06-简历修改&GAP分析_chunk_002",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "low_role_specificity",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "生统背景求职者面对Tech/Biotech、药厂统...",
+    "user_problem_summary": "生统背景求职者面对Tech/Biotech、药厂统计师、Healthcare三条职业路径，",
+    "A_action": "根据目标方向选择对应路径：1）Tech/Biotech偏clinical data scientist；2）药厂/医疗器械/CRO偏统计编程；3）Healthcare医疗保险。Healthcare与Biotech简历可共用一套，药厂/医疗器械/CRO另准备一套，明确方向后再针对性准备面试内容",
+    "action_summary": "根据目标方向选择对应路径：1）Tech/Biotech偏clinical data scientist；",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2984,
+    "chunk_id": "a3f14f79-efa3-40c1-8e6f-f386f3a32643-2026-04-06-简历修改&GAP分析_chunk_004",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "low_hard_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者对简历中列出的模型/统计方法缺乏系统性准备",
+    "user_problem_summary": "求职者对简历中列出的模型/统计方法缺乏系统性准备，",
+    "A_action": "针对简历中出现的每个模型，按三层级准备：第一层能用自己语言描述定义；第二层掌握其assumption、limitation、advantage/disadvantage；第三层了解与其相近模型的区别。用ChatGPT/AI生成check sheet，逐一背熟，前两层为必须达到的基线。",
+    "action_summary": "针对简历中出现的每个模型，按三层级准备：第一层能用自己语言描述定义；",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2986,
+    "chunk_id": "a3f14f79-efa3-40c1-8e6f-f386f3a32643-2026-04-06-简历修改&GAP分析_chunk_006",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "low_hard_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者不清楚药厂/医疗器械数据统计岗位的技术面试范围",
+    "user_problem_summary": "求职者不清楚药厂/医疗器械数据统计岗位的技术面试范围，容易复习过广或遗漏核心考点。",
+    "A_action": "重点复习ANOVA、t-test、survival analysis、repeated measurement、Pearson correlation、feature selection等传统统计模型，15~20个核心模型反复掌握即可应对大多数药厂面试。",
+    "action_summary": "重点复习ANOVA、t-test、survival analysis、repeated measurement、Pearson...",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2992,
+    "chunk_id": "a3f14f79-efa3-40c1-8e6f-f386f3a32643-2026-04-06-简历修改&GAP分析_chunk_003",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "low_hard_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者在面试中被问到统计模型时",
+    "user_problem_summary": "求职者在面试中被问到统计模型时，可能只会背教科书定义，无法用自己语言解释，也缺乏实际应用和调参经验，难以通过技术面试。",
+    "A_action": "针对简历中出现的每个统计模型，按三层级备考：第一层能用自己语言解释模型原理（非定义照背）；第二层能描述在实际项目中如何应用；第三层能解释模型假设、参数选择和调优逻辑。至少达到第一层，争取第二层。",
+    "action_summary": "针对简历中出现的每个统计模型，按三层级备考：第一层能用自己语言解释模型原理（非定义照背）；",
+    "current": {
+      "canonical_title": "把项目关键词写成证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2995,
+    "chunk_id": "a3f14f79-efa3-40c1-8e6f-f386f3a32643-2026-04-06-简历修改&GAP分析_chunk_005",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "low_hard_skill_match,weak_target_role_alignment",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "药厂/医疗器械面试的统计模型考察范围固定且有规律",
+    "user_problem_summary": "药厂/医疗器械面试的统计模型考察范围固定且有规律，求职者若不了解高频考点会分散备考精力",
+    "A_action": "聚焦备考以下15-20个高频统计模型：ANOVA、t-test、survival analysis、repeated measurement、Pearson correlation、feature selection、regression等；药厂统计师岗考察70%模型+30%clinical programming，programming岗正好相反，按目标岗位分配备考重心",
+    "action_summary": "聚焦备考以下15-20个高频统计模型：ANOVA、t-test、survival analysis、repeated meas...",
+    "current": {
+      "canonical_title": "重排定位相关技能",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2996,
+    "chunk_id": "a3f14f79-efa3-40c1-8e6f-f386f3a32643-2026-04-06-简历修改&GAP分析_chunk_005",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "Healthcare行业开始引入AI",
+    "user_problem_summary": "Healthcare行业开始引入AI，面试可能涉及较新技术，但考察不深；",
+    "A_action": "在简历项目中加入一个AI/ML相关经历（哪怕是课程项目），面试时当问到相关技术，可借助项目背景将对话引导至自己熟悉的模型和流程，掌握面试节奏主动权",
+    "action_summary": "在简历项目中加入一个AI/ML相关经历（哪怕是课程项目），",
+    "current": {
+      "canonical_title": "补清工具和方法证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 2998,
+    "chunk_id": "a3f14f79-efa3-40c1-8e6f-f386f3a32643-2026-04-06-简历修改&GAP分析_chunk_008",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "生统求职者普遍只考虑大药厂或Biotech",
+    "user_problem_summary": "生统求职者普遍只考虑大药厂或Biotech，忽视了小药厂被收购带来的股票暴涨机会，错过重要的财富积累窗口",
+    "A_action": "积累几年经验后，可主动考虑加入有被收购潜力的小药厂，尤其是拥有中国pipeline的公司；入职时争取股票期权，以获得并购溢价收益",
+    "action_summary": "积累几年经验后，可主动考虑加入有被收购潜力的小药厂，尤其是拥有中国pipeline的公司；入职时争取股票期权，以获得并购溢价收益",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 2999,
+    "chunk_id": "a3f14f79-efa3-40c1-8e6f-f386f3a32643-2026-04-06-简历修改&GAP分析_chunk_007",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者对目标行业的晋升节奏和职场文化不熟悉",
+    "user_problem_summary": "求职者对目标行业的晋升节奏和职场文化不熟悉，需了解制药/医疗统计领域从Senior到Manager的典型路径及竞争烈度",
+    "A_action": "了解目标行业晋升节奏：制药统计领域一般工作7~8年可升Manager，竞争压力较小、吃资历；在择业时优先考虑晋升空间大、内部竞争温和的行业，避免内卷严重环境",
+    "action_summary": "了解目标行业晋升节奏：制药统计领域一般工作7~8年可升Manager，竞争压力较小、吃资历；",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 3000,
+    "chunk_id": "a3f14f79-efa3-40c1-8e6f-f386f3a32643-2026-04-06-简历修改&GAP分析_chunk_007",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "outdated_resume,short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者可能担心技能过时风险",
+    "user_problem_summary": "求职者可能担心技能过时风险；",
+    "A_action": "将制药统计行业的监管合规知识（FDA、CDISC标准）作为核心竞争力积累，长期投入回报率高；在简历和面试中突出对行业标准规范的熟悉程度",
+    "action_summary": "将制药统计行业的监管合规知识（FDA、CDISC标准）作为核心竞争力积累，长期投入回报率高；",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3002,
+    "chunk_id": "a3f14f79-efa3-40c1-8e6f-f386f3a32643-2026-04-06-简历修改&GAP分析_chunk_009",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "生统求职者往往只关注大厂稳定性",
+    "user_problem_summary": "生统求职者往往只关注大厂稳定性，忽视小药厂被收购带来的股票溢价财富机会；但级别低时股票价值有限，需工作积累到高级职位才能最大化收益。",
+    "A_action": "规划职业路径时优先积累经验至Senior Director级别（约10-13年），再考虑加入小药厂，利用被收购时4年股票一次性兑现+2-3倍溢价机制实现财富积累。",
+    "action_summary": "规划职业路径时优先积累经验至Senior Director级别（约10-13年），",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 3009,
+    "chunk_id": "a3f14f79-efa3-40c1-8e6f-f386f3a32643-2026-04-06-简历修改&GAP分析_chunk_010",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "生物统计方向求职者除工业界外",
+    "user_problem_summary": "生物统计方向求职者除工业界外，政府机构和学校医疗中心也是备选，但薪资较低（6-9万），晋升空间有限，需权衡薪资与发展机会的取舍。",
+    "A_action": "评估自身对薪资与发展路径的优先级：若优先积累经验或留读博路径，可考虑UC系列medical center职位；若优先薪资，则聚焦工业界biotech/pharma岗位。",
+    "action_summary": "评估自身对薪资与发展路径的优先级：若优先积累经验或留读博路径，可考虑UC系列medical center职位；",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 3012,
+    "chunk_id": "a3f14f79-efa3-40c1-8e6f-f386f3a32643-2026-04-06-简历修改&GAP分析_chunk_013",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "low_hard_skill_match,education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者理论基础偏弱",
+    "user_problem_summary": "求职者理论基础偏弱，担心面试中被问到基础theory时表现不佳，但应用能力较强",
+    "A_action": "面试前用AI工具制作cheatsheet，将核心概念整理成用自己语言解释的简单例子，尤其准备如何向非统计学背景的人解释统计概念；面试时可适当借助cheatsheet但注意不要被发现",
+    "action_summary": "面试前用AI工具制作cheatsheet，将核心概念整理成用自己语言解释的简单例子，尤其准备如何向非统计学背景的人解释统计概念；",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3016,
+    "chunk_id": "a3f14f79-efa3-40c1-8e6f-f386f3a32643-2026-04-06-简历修改&GAP分析_chunk_014",
+    "topic": "证书资质规划",
+    "L1": "技能提升",
+    "L2": "证书资质",
+    "problem_tags": "education_details_missing",
+    "canonical_action_family": "quantified_impact",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者使用SAS但未持有官方认证",
+    "user_problem_summary": "求职者使用SAS但未持有官方认证，在竞争者普遍持证的情况下，缺证会形成明显劣势，尤其在药厂数据岗位",
+    "A_action": "优先考取SAS Base证书，再考Advanced证书（须先通过Base才可报考Advanced）；若有精力可额外考Clinical Trial证书，否则可跳过；同时利用SAS免费Education版多加练习，为面试中可能出现的online coding做准备",
+    "action_summary": "优先考取SAS Base证书，再考Advanced证书（须先通过Base才可报考Advanced）；",
+    "current": {
+      "canonical_title": "补强教育背景信号",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3017,
+    "chunk_id": "a3f14f79-efa3-40c1-8e6f-f386f3a32643-2026-04-06-简历修改&GAP分析_chunk_014",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "education_details_missing,low_hard_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者SAS实际操作经验不足",
+    "user_problem_summary": "求职者SAS实际操作经验不足，仅停留在课业作业层面，而部分药厂面试包含SAS在线编程考核，不熟悉操作会直接影响发挥",
+    "A_action": "利用SAS免费Education版进行自主练习，积累实际操作经验；重点不在于难度，而在于熟练度——只要用过就能应对面试中的online coding环节",
+    "action_summary": "利用SAS免费Education版进行自主练习，积累实际操作经验；",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3018,
+    "chunk_id": "a3f14f79-efa3-40c1-8e6f-f386f3a32643-2026-04-06-简历修改&GAP分析_chunk_015",
+    "topic": "证书资质规划",
+    "L1": "技能提升",
+    "L2": "证书资质",
+    "problem_tags": "education_details_missing",
+    "canonical_action_family": "education_signal",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者SAS使用经验不足",
+    "user_problem_summary": "求职者SAS使用经验不足，仅限于学校作业，而药厂岗位要求较高的SAS实操能力，且市面上免费SAS学习渠道少，竞争者练习机会同样有限。",
+    "A_action": "利用SAS Education免费版自主练习，备考SAS Base/Advance官方认证证书；练习重点放在实际操作，因为药厂面试可能含online coding考核，熟悉使用即可应对。",
+    "action_summary": "利用SAS Education免费版自主练习，备考SAS Base/Advance官方认证证书；",
+    "current": {
+      "canonical_title": "补强教育背景信号",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3019,
+    "chunk_id": "a3f14f79-efa3-40c1-8e6f-f386f3a32643-2026-04-06-简历修改&GAP分析_chunk_015",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者对自身技能掌握程度缺乏系统性自我评估",
+    "user_problem_summary": "求职者对自身技能掌握程度缺乏系统性自我评估，导师通过三层级框架帮助量化技能水平，从而识别需重点补强的GAP项。",
+    "A_action": "按照三层级框架逐项自评所有相关技能：1=能独立应用于新项目；2=做过但难以独立完成，面试能说清楚；3=未用过或仅听过，无法描述或独立编码。允许使用1.5、2.5等中间值，据此制定补强优先级。",
+    "action_summary": "按照三层级框架逐项自评所有相关技能：1=能独立应用于新项目；",
+    "current": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3021,
+    "chunk_id": "a3f14f79-efa3-40c1-8e6f-f386f3a32643-2026-04-06-简历修改&GAP分析_chunk_017",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "low_hard_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者需了解面试官询问data cleaning经...",
+    "user_problem_summary": "求职者需了解面试官询问data cleaning经验的常见提问方式，以便准确回应项目中的数据处理经历",
+    "A_action": "准备项目中数据来源（raw data vs clean data）的说明，并能具体描述data cleaning和data preprocessing的步骤，如处理outlier、查看distribution、做frequency分析和可视化",
+    "action_summary": "准备项目中数据来源（raw data vs clean data）的说明，",
+    "current": {
+      "canonical_title": "把项目关键词写成证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3023,
+    "chunk_id": "a3f14f79-efa3-40c1-8e6f-f386f3a32643-2026-04-06-简历修改&GAP分析_chunk_016",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "low_hard_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "部分公司仍会在数据分析面试中出概率论题目（cond...",
+    "user_problem_summary": "部分公司仍会在数据分析面试中出概率论题目（conditional probability、贝叶斯），求职者需了解此类考点并有所准备。",
+    "A_action": "复习conditional probability和贝叶斯定理，能够解答类似「某疾病发病率已知，随机抽样后某人检测阳性，其真实患病概率是多少」的经典题型，以应对偶发的概率面试题。",
+    "action_summary": "复习conditional probability和贝叶斯定理，",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3033,
+    "chunk_id": "aa9bac7a-e659-4d7a-b209-d570d899d8e0-2026-03-26-MKT方向gap分析和简历修改_chunk_004",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者对CTA、ROAS、CAC等营销核心指标只有模糊概念",
+    "user_problem_summary": "求职者对CTA、ROAS、CAC等营销核心指标只有模糊概念，",
+    "A_action": "系统学习CTA、ROAS、CAC等关键营销metrics的计算公式及优化方法，能够结合实际案例说明如何通过调整策略提升这些指标的表现。",
+    "action_summary": "系统学习CTA、ROAS、CAC等关键营销metrics的计算公式及优化方法，",
+    "current": {
+      "canonical_title": "补齐目标岗位技能",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3038,
+    "chunk_id": "aa9bac7a-e659-4d7a-b209-d570d899d8e0-2026-03-26-MKT方向gap分析和简历修改_chunk_011",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "universal_resume_problem",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者的实习经历内容空洞",
+    "user_problem_summary": "求职者的实习经历内容空洞，",
+    "A_action": "仔细熟悉简历中的每一条内容，尤其是经他人帮助修改或添加的部分，确保面试时能够自圆其说，避免因答不上来而被大公司拉黑。",
+    "action_summary": "仔细熟悉简历中的每一条内容，尤其是经他人帮助修改或添加的部分，确保面试时能够自圆其说，避免因答不上来而被大公司拉黑。",
+    "current": {
+      "canonical_title": "把经历改成任务-方法-结果",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3039,
+    "chunk_id": "aa9bac7a-e659-4d7a-b209-d570d899d8e0-2026-03-26-MKT方向gap分析和简历修改_chunk_011",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者的银行实习实际上只是学习产品知识",
+    "user_problem_summary": "求职者的银行实习实际上只是学习产品知识，",
+    "A_action": "将银行实习岗位包装为Marketing Intern，重点写：1）梳理理财产品核心卖点与产品定位；2）协助Marketing team制作pitch deck材料；3）支持Sales team进行客户触达准备。确保围绕实际接触过的产品知识展开，避免凭空捏造。",
+    "action_summary": "将银行实习岗位包装为Marketing Intern，重点写：1）梳理理财产品核心卖点与产品定位；",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 3064,
+    "chunk_id": "af2a6c3e-a43c-4171-bb4a-7348c2102c3a-2026-04-11-AI-ML方向技能提升和简历修改_chunk_001",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "problem_tags": "low_hard_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者目前的AI项目仅停留在本地LLM部署（Oll...",
+    "user_problem_summary": "求职者目前的AI项目仅停留在本地LLM部署（Ollama）等基础层面，难以说服面试官具备实际工程能力；",
+    "A_action": "系统学习并实践以下三个技术方向：1）AI Agent生态（了解agent发展阶段，做类似Claude Code/Cursor/OpenCloud的深度项目）；2）RAG（将大模型与非结构化数据结合）；3）大模型post-training与fine-tuning。在每个方向产出有说服力的深度项目。",
+    "action_summary": "系统学习并实践以下三个技术方向：1）AI Agent生态（了解agent发展阶段，",
+    "current": {
+      "canonical_title": "把技能写进经历证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3067,
+    "chunk_id": "af2a6c3e-a43c-4171-bb4a-7348c2102c3a-2026-04-11-AI-ML方向技能提升和简历修改_chunk_002",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_target_role_alignment",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "proof",
+    "advice_card_title": "求职者有多段实习经历但均以数据分析角度呈现",
+    "user_problem_summary": "求职者有多段实习经历但均以数据分析角度呈现，",
+    "A_action": "梳理现有实习经历中涉及系统集成、方案搭建、跨部门/客户协作的内容，将bullet point重新包装为Solution Engineer视角，突出解决方案交付和技术集成成果。",
+    "action_summary": "梳理现有实习经历中涉及系统集成、方案搭建、跨部门/客户协作的内容，",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 3068,
+    "chunk_id": "af2a6c3e-a43c-4171-bb4a-7348c2102c3a-2026-04-11-AI-ML方向技能提升和简历修改_chunk_002",
+    "topic": "职业方向选择",
+    "L1": "职业规划",
+    "L2": "方向定位",
+    "problem_tags": "low_soft_skill_match,weak_summary_role_alignment,weak_target_role_alignment,low_role_specificity",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者需明确Solution Engineer（含...",
+    "user_problem_summary": "求职者需明确Solution Engineer（含Forward Deployment Engineer）岗位对候选人性格的要求，",
+    "A_action": "自我评估是否具备外向、善于做presentation、喜欢与客户打交道的特质；若符合，将性格优势在简历Summary或面试中主动体现，强化岗位适配信号。",
+    "action_summary": "自我评估是否具备外向、善于做presentation、喜欢与客户打交道的特质；",
+    "current": {
+      "canonical_title": "重排定位相关技能",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3078,
+    "chunk_id": "af2a6c3e-a43c-4171-bb4a-7348c2102c3a-2026-04-11-AI-ML方向技能提升和简历修改_chunk_006",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "low_role_specificity",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "proof",
+    "advice_card_title": "求职者希望将尚未掌握的技能写入简历以匹配目标岗位",
+    "user_problem_summary": "求职者希望将尚未掌握的技能写入简历以匹配目标岗位，但导师指出若面试时被深入追问将无法应答，存在风险；",
+    "A_action": "先由导师帮助改出包含目标技能关键词的简历最终形态供参考，同时求职者在实习和业余时间针对性地补足这些技能，确保简历内容与实际能力同步提升，再投递相关岗位。",
+    "action_summary": "先由导师帮助改出包含目标技能关键词的简历最终形态供参考，",
+    "current": {
+      "canonical_title": "按岗位维护简历版本",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3088,
+    "chunk_id": "af2a6c3e-a43c-4171-bb4a-7348c2102c3a-2026-04-11-AI-ML方向技能提升和简历修改_chunk_013",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "problem_tags": "low_hard_skill_match,weak_target_role_alignment",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "当前求职市场对AI技能要求极高",
+    "user_problem_summary": "当前求职市场对AI技能要求极高，即使名校CS背景（CMU、伯克利）的学生，若不具备AI相关技能，投递上百上千份简历也可能零面试邀约",
+    "A_action": "转向AI方向，主动补强AI相关技能点，避免仅停留在传统统计或纯代码能力，确保求职竞争力",
+    "action_summary": "转向AI方向，主动补强AI相关技能点，避免仅停留在传统统计或纯代码能力，确保求职竞争力",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3089,
+    "chunk_id": "af2a6c3e-a43c-4171-bb4a-7348c2102c3a-2026-04-11-AI-ML方向技能提升和简历修改_chunk_013",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "problem_tags": "low_hard_skill_match,education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "很多学生只看资料不动手做项目",
+    "user_problem_summary": "很多学生只看资料不动手做项目，面试时被稍微深入追问便答不上来，暴露出只有理论没有实践的短板",
+    "A_action": "主动动手完成AI相关项目，而非仅浏览网络资料；可结合导师带项目机会或自行找开源项目实操，确保面试时能回答深入技术问题",
+    "action_summary": "主动动手完成AI相关项目，而非仅浏览网络资料；可结合导师带项目机会或自行找开源项目实操，确保面试时能回答深入技术问题",
+    "current": {
+      "canonical_title": "把技能写进经历证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3091,
+    "chunk_id": "af2a6c3e-a43c-4171-bb4a-7348c2102c3a-2026-04-11-AI-ML方向技能提升和简历修改_chunk_014",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "problem_tags": "low_hard_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "学生倾向于只看资料而不动手实践",
+    "user_problem_summary": "学生倾向于只看资料而不动手实践，导致面试中被深入追问时答不上来，缺乏真实操作经验支撑。",
+    "A_action": "主动动手完成实际项目，而非只阅读教程或观看视频；可借助 Claude Code、Cursor 等 AI 工具降低上手门槛，但核心是培养自己的动手能力，确保能从头到尾讲清楚整个实现过程。",
+    "action_summary": "主动动手完成实际项目，而非只阅读教程或观看视频；",
+    "current": {
+      "canonical_title": "把技能写进经历证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3093,
+    "chunk_id": "af2a6c3e-a43c-4171-bb4a-7348c2102c3a-2026-04-11-AI-ML方向技能提升和简历修改_chunk_012",
+    "topic": "市场竞争分析",
+    "L1": "求职策略",
+    "L2": "竞争分析",
+    "problem_tags": "education_details_missing,low_role_specificity,weak_target_role_alignment",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "即使是CMU、Berkeley等顶校学生",
+    "user_problem_summary": "即使是CMU、Berkeley等顶校学生，",
+    "A_action": "无论原本专业背景是统计、供应链还是其他方向，都必须转型学习AI相关技能，将其融入项目经历，以满足当前招聘市场的最低要求。",
+    "action_summary": "无论原本专业背景是统计、供应链还是其他方向，都必须转型学习AI相关技能，将其融入项目经历，以满足当前招聘市场的最低要求。",
+    "current": {
+      "canonical_title": "把项目证据写进 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3097,
+    "chunk_id": "af67085b-7178-4516-8b20-889615c1bff7-2026-03-24-Session-2-庚蒙简历优化+投递复盘_chunk_007",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,missing_portfolio,low_hard_skill_match,low_measurable_results,weak_target_role_alignment,education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者的金融项目简历描述语言过于专业化",
+    "user_problem_summary": "求职者的金融项目简历描述语言过于专业化，",
+    "A_action": "将金融专业术语转化为通用机器学习框架语言，例如将股价预测任务描述为supervised learning中的outcome variable预测，将因子挖掘过程描述为feature engineering以提升prediction accuracy，使技术背景招聘方也能快速理解项目价值。",
+    "action_summary": "将金融专业术语转化为通用机器学习框架语言，",
+    "current": {
+      "canonical_title": "把项目关键词写成证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3099,
+    "chunk_id": "af67085b-7178-4516-8b20-889615c1bff7-2026-03-24-Session-2-庚蒙简历优化+投递复盘_chunk_005",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历中bullet point的手段（dev...",
+    "user_problem_summary": "求职者简历中bullet point的手段（develop、z score normalization等操作步骤）和最终imp...",
+    "A_action": "将每条bullet point明确拆分为「手段（方法/工具）+ 目标/结果（具体metrics）」两层结构，确保impact部分的metrics与实际工作内容一致，例如将'improving IC stability'改为实际提升的准确率或其他可量化指标。",
+    "action_summary": "将每条bullet point明确拆分为「手段（方法/工具）+ 目标/结果（具体metrics）」两层结构，",
+    "current": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3103,
+    "chunk_id": "af67085b-7178-4516-8b20-889615c1bff7-2026-03-24-Session-2-庚蒙简历优化+投递复盘_chunk_004",
+    "topic": "多版本简历策略",
+    "L1": "求职策略",
+    "L2": "简历版本规划",
+    "problem_tags": "generic_resume_positioning",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "不要一份简历投所有岗位",
+    "user_problem_summary": "求职者简历中使用金融专业术语（如IC analysis、z score normalization），",
+    "A_action": "准备两份简历：一份偏Tech，将金融术语替换为技术人员可理解的表达，突出可迁移技能（如数据处理、模型评估逻辑）；一份偏Finance，保留现有专业术语和量化指标写法，分别针对不同岗位投递。",
+    "action_summary": "准备两份简历：一份偏Tech，将金融术语替换为技术人员可理解的表达，突出可迁移技能（如数据处理、模型评估逻辑）；",
+    "current": {
+      "canonical_title": "按岗位维护简历版本",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3107,
+    "chunk_id": "af67085b-7178-4516-8b20-889615c1bff7-2026-03-24-Session-2-庚蒙简历优化+投递复盘_chunk_012",
+    "topic": "投递渠道规划",
+    "L1": "求职策略",
+    "L2": "投递渠道",
+    "problem_tags": "generic_resume_positioning,weak_target_role_alignment",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者参加Career Fair时缺乏有效的后续跟进策略",
+    "user_problem_summary": "求职者参加Career Fair时缺乏有效的后续跟进策略，仅靠现场交流难以让面试官记住自己，错失建立持续联系的机会。",
+    "A_action": "在Career Fair结束后立即发送follow-up邮件，邮件中附上简历，并highlight自身经历与目标岗位最相关的部分，语言要针对具体职位进行定制化润色。",
+    "action_summary": "在Career Fair结束后立即发送follow-up邮件，",
+    "current": {
+      "canonical_title": "按岗位维护简历版本",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3116,
+    "chunk_id": "af67085b-7178-4516-8b20-889615c1bff7-2026-03-24-Session-2-庚蒙简历优化+投递复盘_chunk_014",
+    "topic": "投递渠道规划",
+    "L1": "求职策略",
+    "L2": "投递渠道",
+    "problem_tags": "missing_portfolio",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者焦虑于是否需要搭建GitHub作品集",
+    "user_problem_summary": "求职者焦虑于是否需要搭建GitHub作品集，",
+    "A_action": "将GitHub作品集视为可选的side project，而非紧急任务；优先把时间投入到简历优化；若有时间且感兴趣再整理过去项目上传，不必为此焦虑。",
+    "action_summary": "将GitHub作品集视为可选的side project，而非紧急任务；",
+    "current": {
+      "canonical_title": "把项目证据写进 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3124,
+    "chunk_id": "af67085b-7178-4516-8b20-889615c1bff7-2026-03-24-Session-2-庚蒙简历优化+投递复盘_chunk_015",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "low_hard_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者不确定OA和技术测试在整体筛选中的权重",
+    "user_problem_summary": "求职者不确定OA和技术测试在整体筛选中的权重，导师明确指出OA是公司在正式面试前大规模初筛的核心手段，不可轻视。",
+    "A_action": "认真准备并认真作答OA和技术测试，视其为进入面试轮的关键门槛；投入足够时间练习，不可因其形式轻松而掉以轻心。",
+    "action_summary": "认真准备并认真作答OA和技术测试，视其为进入面试轮的关键门槛；投入足够时间练习，不可因其形式轻松而掉以轻心。",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3140,
+    "chunk_id": "af879cc7-2cfd-43ea-abe5-7ef819e74e99-2026-04-20-GAP分析+简历初稿润色_chunk_011",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,low_hard_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者在不同智能硬件领域（移动机器人、无人车、可穿...",
+    "user_problem_summary": "求职者在不同智能硬件领域（移动机器人、无人车、可穿戴设备、脑机接口）之间切换时，不清楚哪些技能是可以跨领域迁移的核心竞争力。",
+    "A_action": "识别并梳理不同行业底层相通的核心技能：算法（控制系统逻辑：input→algorithm→output的闭环/开环框架）与硬件理解（mechanical/electrical/embedded），以此构建跨领域的transferable skill set，在简历和面试中主动用这套框架来连接不同项目经历。",
+    "action_summary": "识别并梳理不同行业底层相通的核心技能：算法（控制系统逻辑：input→algorithm→output的闭环/开环框架）与硬件...",
+    "current": {
+      "canonical_title": "把项目关键词写成证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3153,
+    "chunk_id": "b97ed417-9a29-4d33-bff9-08ff038bf930-2026-03-27-Session1-Gap-Analysis+简历修改_chunk_001",
+    "topic": "教育背景优化",
+    "L1": "简历内容",
+    "L2": "教育背景",
+    "problem_tags": "education_details_missing",
+    "canonical_action_family": "education_signal",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者GPA低于3.0",
+    "user_problem_summary": "求职者GPA低于3.0，放在简历上可能给面试官留下负面印象，不如删除以避免扣分",
+    "A_action": "将GPA低于3.0（或所在行业通行门槛）的成绩从简历中删除，避免主动暴露弱点；若GPA较高则保留以增加好感",
+    "action_summary": "将GPA低于3.0（或所在行业通行门槛）的成绩从简历中删除，避免主动暴露弱点；若GPA较高则保留以增加好感",
+    "current": {
+      "canonical_title": "补强教育背景信号",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3155,
+    "chunk_id": "b97ed417-9a29-4d33-bff9-08ff038bf930-2026-03-27-Session1-Gap-Analysis+简历修改_chunk_002",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历经历严重不足",
+    "user_problem_summary": "求职者简历经历严重不足，现有内容无法撑满一页，且项目描述过于简单，导致面试官缺乏可提问的切入点。",
+    "A_action": "删除相关性较低的经历（如不相关的summer program），将节省出的空间用于扩充项目细节，每个项目多写具体内容，让面试官有充分的提问依据。",
+    "action_summary": "删除相关性较低的经历（如不相关的summer program），",
+    "current": {
+      "canonical_title": "改写工作经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3165,
+    "chunk_id": "b97ed417-9a29-4d33-bff9-08ff038bf930-2026-03-27-Session1-Gap-Analysis+简历修改_chunk_004",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "low_hard_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者简历项目描述笼统",
+    "user_problem_summary": "求职者简历项目描述笼统，",
+    "A_action": "针对每个简历项目，提前准备以下答题思路：1）为何选择该机构/方案而非其他替代方案；2）关键力学参数计算过程（扭矩、静力分析）；3）遇到的最大challenge及解决方法；4）从2D到3D的设计流程及公差考量；5）实物制造经验（用何种工艺、结果如何）。",
+    "action_summary": "针对每个简历项目，提前准备以下答题思路：1）为何选择该机构/方案而非其他替代方案；",
+    "current": {
+      "canonical_title": "把项目关键词写成证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3166,
+    "chunk_id": "b97ed417-9a29-4d33-bff9-08ff038bf930-2026-03-27-Session1-Gap-Analysis+简历修改_chunk_004",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者所有项目均停留在CAD图纸阶段",
+    "user_problem_summary": "求职者所有项目均停留在CAD图纸阶段，",
+    "A_action": "在简历项目中明确注明是否有实物产出，例如「3D打印原型并完成装配验证」或「通过注塑/浇筑工艺制造零件」；若有实物，补充测试结果或发现的问题及改进方案，以证明完整的工程实践经历。",
+    "action_summary": "在简历项目中明确注明是否有实物产出，例如「3D打印原型并完成装配验证」或「通过注塑/浇筑工艺制造零件」；",
+    "current": {
+      "canonical_title": "改写工作经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3167,
+    "chunk_id": "b97ed417-9a29-4d33-bff9-08ff038bf930-2026-03-27-Session1-Gap-Analysis+简历修改_chunk_007",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "problem_tags": "low_hard_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者对FEA仿真缺乏实战理解",
+    "user_problem_summary": "求职者对FEA仿真缺乏实战理解，",
+    "A_action": "学习Solidworks中FEA的完整流程：明确真实工况下部件的受力位置（boundary condition），正确设置网格（Mesh）密度（关键区域加密），并用常识验证仿真结果的合理性；可通过网上Solidworks FEA教程自学。",
+    "action_summary": "学习Solidworks中FEA的完整流程：明确真实工况下部件的受力位置（boundary condition），",
+    "current": {
+      "canonical_title": "补齐目标岗位技能",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3168,
+    "chunk_id": "b97ed417-9a29-4d33-bff9-08ff038bf930-2026-03-27-Session1-Gap-Analysis+简历修改_chunk_007",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者简历中项目描述缺乏完整设计逻辑",
+    "user_problem_summary": "求职者简历中项目描述缺乏完整设计逻辑，",
+    "A_action": "将项目描述改写为完整工程设计叙事：包括立项背景（motivation）、设计前分析阶段、选材逻辑、机构选型理由（如为何选择correct linkage mechanism）、力学/FEA分析过程及结果，使面试官能据此追问有深度的技术问题。",
+    "action_summary": "将项目描述改写为完整工程设计叙事：包括立项背景（motivation）、设计前分析阶段、选材逻辑、机构选型理由（如为何选择co...",
+    "current": {
+      "canonical_title": "把经历改成任务-方法-结果",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3170,
+    "chunk_id": "b97ed417-9a29-4d33-bff9-08ff038bf930-2026-03-27-Session1-Gap-Analysis+简历修改_chunk_006",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "problem_tags": "low_hard_skill_match,weak_experience_keyword_evidence",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者对机械设计验证流程（运动学→动力学→静力学/...",
+    "user_problem_summary": "求职者对机械设计验证流程（运动学→动力学→静力学/应力分析）缺乏系统认知，无法在简历或面试中体现设计全流程能力。",
+    "A_action": "梳理并能够表述完整机械设计验证流程：运动学验证（排除dead point）→动力学分析→静力学/应力分析（FEA）；在项目描述中明确写出各验证阶段的工作内容与结论。",
+    "action_summary": "梳理并能够表述完整机械设计验证流程：运动学验证（排除dead point）→动力学分析→静力学/应力分析（FEA）；",
+    "current": {
+      "canonical_title": "把技能写进经历证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3171,
+    "chunk_id": "b97ed417-9a29-4d33-bff9-08ff038bf930-2026-03-27-Session1-Gap-Analysis+简历修改_chunk_005",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "low_hard_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者项目停留在图纸设计层面",
+    "user_problem_summary": "求职者项目停留在图纸设计层面，",
+    "A_action": "回顾自己做过的机械项目，梳理从设计到验证的完整过程：包括力矩计算、静力学/动力学分析逻辑；在简历和面试中能说清楚「为什么这样设计」「如何验证设计可行性」，并在Solidworks中练习motion study及应力仿真功能。",
+    "action_summary": "回顾自己做过的机械项目，梳理从设计到验证的完整过程：包括力矩计算、静力学/动力学分析逻辑；",
+    "current": {
+      "canonical_title": "把项目关键词写成证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3172,
+    "chunk_id": "b97ed417-9a29-4d33-bff9-08ff038bf930-2026-03-27-Session1-Gap-Analysis+简历修改_chunk_005",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "short_tenure_unclear,low_hard_skill_match,low_role_specificity,weak_target_role_alignment,low_measurable_results",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者所有项目均为图纸设计",
+    "user_problem_summary": "求职者所有项目均为图纸设计，",
+    "A_action": "主动补充制造类实践经验：学习3D打印（FDM）、了解CNC数控加工及injection molding等典型加工方式的基本原理；若有条件，动手制作项目实物，并在简历中明确注明「设计并制造实物」或「完成从图纸到实物的转化」。",
+    "action_summary": "主动补充制造类实践经验：学习3D打印（FDM）、了解CNC数控加工及injection molding等典型加工方式的基本原理；",
+    "current": {
+      "canonical_title": "把项目关键词写成证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3174,
+    "chunk_id": "b97ed417-9a29-4d33-bff9-08ff038bf930-2026-03-27-Session1-Gap-Analysis+简历修改_chunk_008",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者的项目描述只停留在表面",
+    "user_problem_summary": "求职者的项目描述只停留在表面，",
+    "A_action": "在简历项目描述中补充以下四个维度：1）设计决策与trade-off（为什么选择该方案而非其他）；2）材料选择理由；3）验证分析结论（如力学分析、FEA结果，标注关键参数如承载load、电机输出等）；4）装配方式（assembly细节）。将这些内容整合成从设计→选择→验证→制造的完整叙事。",
+    "action_summary": "在简历项目描述中补充以下四个维度：1）设计决策与trade-off（为什么选择该方案而非其他）；",
+    "current": {
+      "canonical_title": "改写工作经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3175,
+    "chunk_id": "b97ed417-9a29-4d33-bff9-08ff038bf930-2026-03-27-Session1-Gap-Analysis+简历修改_chunk_008",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "weak_action_verbs,low_hard_skill_match,weak_target_role_alignment",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者对DC motor、Stepper moto...",
+    "user_problem_summary": "求职者对DC motor、Stepper motor、Servo motor的区别理解停留在表面，",
+    "A_action": "系统掌握三类电机的核心差异：DC brush motor（电压正比转速，适合简单速度控制，性价比高，有电刷）；Stepper motor（离散步进角度，适合精确定位）；Servo/BLDC（交流驱动，精确角度控制，造价较高）。在描述项目选型时，能说出「为什么选这个motor而不是另外两种」的具体理由。",
+    "action_summary": "系统掌握三类电机的核心差异：DC brush motor（电压正比转速，适合简单速度控制，性价比高，有电刷）；",
+    "current": {
+      "canonical_title": "把项目关键词写成证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3176,
+    "chunk_id": "b97ed417-9a29-4d33-bff9-08ff038bf930-2026-03-27-Session1-Gap-Analysis+简历修改_chunk_009",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者的项目描述只写了设计结果",
+    "user_problem_summary": "求职者的项目描述只写了设计结果，",
+    "A_action": "在项目描述中补充以下四个维度：1）设计决策与trade-off（为何选择此方案）；2）材料选择及理由；3）结构验证（力学分析或FEA结果，如最大承载力）；4）制造可行性考量。每个维度用具体数据或结论呈现，让项目看起来完整且专业。",
+    "action_summary": "在项目描述中补充以下四个维度：1）设计决策与trade-off（为何选择此方案）；",
+    "current": {
+      "canonical_title": "改写工作经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3184,
+    "chunk_id": "b97ed417-9a29-4d33-bff9-08ff038bf930-2026-03-27-Session1-Gap-Analysis+简历修改_chunk_012",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "low_hard_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "简历写了hands-on项目经历",
+    "user_problem_summary": "简历写了hands-on项目经历，但若面试时无法回答细节（如\"做出来了吗\"",
+    "A_action": "但是道理是一样的，就是你需要一些经历来体现出来，我能够独立指导别人，或者是能够独立地自己把这些问题给解决出来，需要这个东西的体现",
+    "action_summary": "请参考导师建议进行优化。",
+    "current": {
+      "canonical_title": "把项目关键词写成证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3191,
+    "chunk_id": "b97ed417-9a29-4d33-bff9-08ff038bf930-2026-03-27-Session1-Gap-Analysis+简历修改_chunk_013",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者简历中列出了hands-on项目经验",
+    "user_problem_summary": "求职者简历中列出了hands-on项目经验，",
+    "A_action": "确认简历上每一条hands-on经历确实亲身完成过，并准备好对应的细节回答，包括原型制作过程、使用的硬件（如Arduino）、验证步骤等，做到面试时能流畅讲清楚整个项目细节。",
+    "action_summary": "确认简历上每一条hands-on经历确实亲身完成过，",
+    "current": {
+      "canonical_title": "改写工作经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3194,
+    "chunk_id": "b9f9ef2f-9cc8-4f0e-9066-41aa067f069b-2026-03-26-Gap分析+简历指导_chunk_002",
+    "topic": "个人总结撰写",
+    "L1": "简历内容",
+    "L2": "个人总结",
+    "problem_tags": "weak_summary_role_alignment,missing_exact_job_title",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者持OPT身份",
+    "user_problem_summary": "求职者持OPT身份，简历中工作授权一栏未明确标注STEM OPT，HR可能误判身份或sponsorship需求，影响筛选结果",
+    "A_action": "要么不填写工作授权信息，要么明确注明STEM OPT，避免HR误以为是普通OPT或需要sponsorship，从而提升通过率",
+    "action_summary": "要么不填写工作授权信息，要么明确注明STEM OPT，避免HR误以为是普通OPT或需要sponsorship，从而提升通过率",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3195,
+    "chunk_id": "b9f9ef2f-9cc8-4f0e-9066-41aa067f069b-2026-03-26-Gap分析+简历指导_chunk_003",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "missing_relocation_signal",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "简历要清晰展示你的目标岗位",
+    "user_problem_summary": "求职者简历未注明STEM OPT签证状态，HR可能误判为普通OPT，影响雇主对雇佣可行性的判断",
+    "A_action": "在简历中明确标注STEM OPT身份，避免HR产生误判；若不想写则直接省略，但写了就要写完整",
+    "action_summary": "在简历中明确标注STEM OPT身份，避免HR产生误判；若不想写则直接省略，但写了就要写完整",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "校准国际生求职范围",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3231,
+    "chunk_id": "bbd0ce7b-81a5-4c98-adfd-70cfa85165c4-2026-04-21-Mock-Interview-(-BQ-+-Tech-+-简历熟悉度)_chunk_002",
+    "topic": "市场竞争分析",
+    "L1": "求职策略",
+    "L2": "竞争分析",
+    "problem_tags": "missing_relocation_signal,low_role_specificity,weak_target_role_alignment",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者低估了企业招聘决策的复杂性和成本",
+    "user_problem_summary": "求职者低估了企业招聘决策的复杂性和成本，不了解从职位空缺出现到新员工真正上岗的完整流程，影响对招聘时机和竞争强度的判断。",
+    "A_action": "了解企业招聘的内部流程（离职交接→预算讨论→职位发布→面试→录用→入职→培训），在投递时机和谈判中体现对公司招聘成本的理解，展示自己能快速上手以降低公司风险。",
+    "action_summary": "了解企业招聘的内部流程（离职交接→预算讨论→职位发布→面试→录用→入职→培训），",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3245,
+    "chunk_id": "bbd0ce7b-81a5-4c98-adfd-70cfa85165c4-2026-04-21-Mock-Interview-(-BQ-+-Tech-+-简历熟悉度)_chunk_007",
+    "topic": "市场竞争分析",
+    "L1": "求职策略",
+    "L2": "竞争分析",
+    "problem_tags": "low_role_specificity,weak_target_role_alignment",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者不了解每轮面试候选人的筛选比例及推进逻辑",
+    "user_problem_summary": "求职者不了解每轮面试候选人的筛选比例及推进逻辑，容易对自己所处竞争位置判断失准，无法合理规划面试策略。",
+    "A_action": "了解招聘漏斗逻辑：简历筛选后约30-40人进入HR轮，HR轮后Hiring Manager通常优先约Top 5-10人，若未找到合适人选再扩展。求职者应尽量在简历和HR轮表现中进入Top区间，同时注意Hiring Manager的时间节奏（如季度末较忙时推进会更慢）。",
+    "action_summary": "了解招聘漏斗逻辑：简历筛选后约30-40人进入HR轮，",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3249,
+    "chunk_id": "bbd0ce7b-81a5-4c98-adfd-70cfa85165c4-2026-04-21-Mock-Interview-(-BQ-+-Tech-+-简历熟悉度)_chunk_011",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title,weak_result_orientation",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "简历要清晰展示你的目标岗位",
+    "user_problem_summary": "求职者不清楚最终轮HR面试可以主动调整之前报过的薪资范围，",
+    "A_action": "在最终轮HR面试中，根据面试过程中获得的正面反馈，主动微调薪资期望区间（如从70-90K上调至85-100K），并主动询问bonus结构、signing bonus、公司是否sponsor H1B等offer细节。",
+    "action_summary": "在最终轮HR面试中，",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3255,
+    "chunk_id": "bbd0ce7b-81a5-4c98-adfd-70cfa85165c4-2026-04-21-Mock-Interview-(-BQ-+-Tech-+-简历熟悉度)_chunk_012",
+    "topic": "投递渠道规划",
+    "L1": "求职策略",
+    "L2": "投递渠道",
+    "problem_tags": "weak_target_role_alignment",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "当简历背景与目标岗位不匹配时",
+    "user_problem_summary": "当简历背景与目标岗位不匹配时，通过正常投递渠道很难获得面试机会，内推可以绕过初筛门槛直接进入面试流程",
+    "A_action": "积极拓展人脉，尤其是已在目标公司就职的校友或熟人，争取通过内推获得面试机会，以弥补简历背景与岗位不匹配的劣势",
+    "action_summary": "积极拓展人脉，尤其是已在目标公司就职的校友或熟人，争取通过内推获得面试机会，以弥补简历背景与岗位不匹配的劣势",
+    "current": {
+      "canonical_title": "聚焦目标岗位定位",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3256,
+    "chunk_id": "bbd0ce7b-81a5-4c98-adfd-70cfa85165c4-2026-04-21-Mock-Interview-(-BQ-+-Tech-+-简历熟悉度)_chunk_013",
+    "topic": "投递渠道规划",
+    "L1": "求职策略",
+    "L2": "投递渠道",
+    "problem_tags": "weak_target_role_alignment",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者疑惑为何简历与岗位不匹配仍能进入面试",
+    "user_problem_summary": "求职者疑惑为何简历与岗位不匹配仍能进入面试，导师解释该案例依赖配偶内推才得以绕过简历筛选关，若无内推则简历关很可能直接被刷掉。",
+    "A_action": "在简历与目标岗位匹配度不足时，优先通过内推渠道（Refer）投递，同时积极提升简历关键词与岗位的匹配度，减少对内推的依赖。",
+    "action_summary": "在简历与目标岗位匹配度不足时，优先通过内推渠道（Refer）投递，同时积极提升简历关键词与岗位的匹配度，减少对内推的依赖。",
+    "current": {
+      "canonical_title": "重排定位相关技能",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3259,
+    "chunk_id": "bbd0ce7b-81a5-4c98-adfd-70cfa85165c4-2026-04-21-Mock-Interview-(-BQ-+-Tech-+-简历熟悉度)_chunk_017",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "low_hard_skill_match,weak_summary_role_alignment",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历中列出了机器学习项目",
+    "user_problem_summary": "求职者简历中列出了机器学习项目，",
+    "A_action": "对简历上所有项目，提前准备一段结构化的高层介绍（high-level overview），涵盖项目背景、使用工具/技术关键词、主要组成部分，做到被问到时能立即、流利地回答，不要遗漏关键词（如 pandas、sklearn、linear regression、decision tree 等）。",
+    "action_summary": "对简历上所有项目，",
+    "current": {
+      "canonical_title": "把项目关键词写成证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3260,
+    "chunk_id": "bbd0ce7b-81a5-4c98-adfd-70cfa85165c4-2026-04-21-Mock-Interview-(-BQ-+-Tech-+-简历熟悉度)_chunk_017",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "low_hard_skill_match,weak_summary_role_alignment,low_role_specificity",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者在介绍项目时容易陷入过度细化或过度模糊两个极端",
+    "user_problem_summary": "求职者在介绍项目时容易陷入过度细化或过度模糊两个极端，不懂得用高层介绍作为引子，导致节奏失控或信息量不足。",
+    "A_action": "介绍项目时先给出 high-level 概述（背景+技术栈+产出），点到为止，不要主动把所有细节一次讲完；等面试官根据兴趣点追问，再针对性深入展开，保持对话节奏的主动权。",
+    "action_summary": "介绍项目时先给出 high-level 概述（背景+技术栈+产出），点到为止，不要主动把所有细节一次讲完；",
+    "current": {
+      "canonical_title": "重排定位相关技能",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3267,
+    "chunk_id": "bbd0ce7b-81a5-4c98-adfd-70cfa85165c4-2026-04-21-Mock-Interview-(-BQ-+-Tech-+-简历熟悉度)_chunk_018",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "low_role_specificity,low_hard_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者在面试中介绍项目时倾向于一次性把所有细节说清楚",
+    "user_problem_summary": "求职者在面试中介绍项目时倾向于一次性把所有细节说清楚，导致回答冗长，面试官失去追问兴趣，且求职者自己也容易讲到后来不知所云。",
+    "A_action": "介绍项目时先给high level引子，点出关键词（如linear regression、decision tree、pandas），吸引面试官兴趣，然后留白让面试官提出follow up questions，不要主动把所有细节一次说完。",
+    "action_summary": "介绍项目时先给high level引子，",
+    "current": {
+      "canonical_title": "把项目关键词写成证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3269,
+    "chunk_id": "bbd0ce7b-81a5-4c98-adfd-70cfa85165c4-2026-04-21-Mock-Interview-(-BQ-+-Tech-+-简历熟悉度)_chunk_018",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "weak_action_verbs",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者项目尚未完全做完",
+    "user_problem_summary": "求职者项目尚未完全做完，面试时卡住不知道如何介绍，导致表现失常，实际上可以提前预演自己在项目中的角色和贡献点。",
+    "A_action": "即使项目未完全完成，面试前也要预先构建自己的story：梳理自己负责的模块、使用的方法、遇到的问题，把自己代入项目中想象'我会做什么'，把关键节点提前准备好，确保能流畅讲出逻辑完整的项目叙述。",
+    "action_summary": "即使项目未完全完成，",
+    "current": {
+      "canonical_title": "补清工具和方法证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3276,
+    "chunk_id": "bf36b5fc-6902-4028-b6cf-b1dc297b3881-2026-03-31-项目梳理+简历指导_chunk_001",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "low_role_specificity,low_hard_skill_match,weak_target_role_alignment",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者日常工作中已大量依赖AI工具写代码",
+    "user_problem_summary": "求职者日常工作中已大量依赖AI工具写代码，实际编码能力未达面试要求，存在工作实践与面试考核之间的明显落差，可能导致技术面试无法通过。",
+    "A_action": "正视当前技术面试仍考察手写代码的现实，针对性补强算法与编码基础，同时在求职方向选择上可优先考虑对手写代码要求较低、更看重业务或产品能力的岗位。",
+    "action_summary": "正视当前技术面试仍考察手写代码的现实，",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3277,
+    "chunk_id": "bf36b5fc-6902-4028-b6cf-b1dc297b3881-2026-03-31-项目梳理+简历指导_chunk_001",
+    "topic": "职业方向选择",
+    "L1": "职业规划",
+    "L2": "方向定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者目前通过中介挂靠公司维持H1B身份",
+    "user_problem_summary": "求职者目前通过中介挂靠公司维持H1B身份，",
+    "A_action": "明确主攻方向：结合风险管理与AI/Multi-agent开发的交叉优势，聚焦目标岗位（如金融科技、量化风控或AI产品方向），避免简历方向过于分散，尽快脱离自我挂靠的不稳定状态。",
+    "action_summary": "明确主攻方向：结合风险管理与AI/Multi-agent开发的交叉优势，",
+    "current": {
+      "canonical_title": "聚焦目标岗位定位",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "明确目标求职赛道",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3287,
+    "chunk_id": "bf36b5fc-6902-4028-b6cf-b1dc297b3881-2026-03-31-项目梳理+简历指导_chunk_002",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,low_hard_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者对AI感兴趣但不想写代码，面试代码题存在明显短板",
+    "user_problem_summary": "求职者对AI感兴趣但不想写代码，面试代码题存在明显短板。",
+    "A_action": "将职业目标调整为AI方向的Product Manager（产品经理），发挥对AI工具的使用经验和业务理解优势，规避代码面试硬门槛，同时积累AI产品相关案例以匹配PM岗位要求。",
+    "action_summary": "将职业目标调整为AI方向的Product Manager（产品经理），",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3288,
+    "chunk_id": "bf36b5fc-6902-4028-b6cf-b1dc297b3881-2026-03-31-项目梳理+简历指导_chunk_003",
+    "topic": "证书资质规划",
+    "L1": "技能提升",
+    "L2": "证书资质",
+    "problem_tags": "education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者考虑通过SIE考试进入金融/基金领域",
+    "user_problem_summary": "求职者考虑通过SIE考试进入金融/基金领域，",
+    "A_action": "评估证书含金量与H1B友好度的匹配性：若要考证书，优先选择CFA等H1B雇主认可度高、bar较高的证书，而非SIE此类门槛较低、需要H1B赞助意愿低的岗位证书。",
+    "action_summary": "评估证书含金量与H1B友好度的匹配性：若要考证书，",
+    "current": {
+      "canonical_title": "补强教育背景信号",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补强教育背景信号",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3289,
+    "chunk_id": "bf36b5fc-6902-4028-b6cf-b1dc297b3881-2026-03-31-项目梳理+简历指导_chunk_005",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者有意向转型为AI产品经理",
+    "user_problem_summary": "求职者有意向转型为AI产品经理，",
+    "A_action": "评估自身现有经验（digital value management、MVP交付）与AI PM岗位要求的匹配度，重点补强data infrastructure设计、AI模型deployment流程及data security等技术认知，以提升面试竞争力。",
+    "action_summary": "评估自身现有经验（digital value management、MVP交付）与AI PM岗位要求的匹配度，",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3291,
+    "chunk_id": "bf36b5fc-6902-4028-b6cf-b1dc297b3881-2026-03-31-项目梳理+简历指导_chunk_004",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "简历要清晰展示你的目标岗位",
+    "user_problem_summary": "H1B持有者若考取门槛不高的金融类细分证书（如非CFA），",
+    "A_action": "评估目标岗位是否属于H1B友好类型，优先考虑CFA等高门槛且H1B相对友好的证书；若坚持进入证券行业，需将简历每一段工作经历全面改写以匹配该行业要求，确保本硕专业及工作经历与目标岗位高度相关。",
+    "action_summary": "评估目标岗位是否属于H1B友好类型，优先考虑CFA等高门槛且H1B相对友好的证书；",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3293,
+    "chunk_id": "bf36b5fc-6902-4028-b6cf-b1dc297b3881-2026-03-31-项目梳理+简历指导_chunk_009",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "missing_linkedin",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "持有H1B的应届生求职压力极大",
+    "user_problem_summary": "持有H1B的应届生求职压力极大，不仅需要在时间节点前落实工作，还需在技能、刷题、证书等多方面全面自我武装，才有竞争资格",
+    "A_action": "明确求职时间节点（10月激活H1B公司），在此之前主动补强刷题、相关证书等硬性要求；同时探索风控（Risk）等对编程要求较低的岗位方向，拓宽投递渠道",
+    "action_summary": "明确求职时间节点（10月激活H1B公司），在此之前主动补强刷题、相关证书等硬性要求；",
+    "current": {
+      "canonical_title": "重排定位相关技能",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "明确目标求职赛道",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3297,
+    "chunk_id": "bf36b5fc-6902-4028-b6cf-b1dc297b3881-2026-03-31-项目梳理+简历指导_chunk_007",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "low_hard_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "System Design面试要求因公司规模差异显...",
+    "user_problem_summary": "System Design面试要求因公司规模差异显著：小公司产品体量小、用户少，要求较低；",
+    "A_action": "根据自身system design能力水平选择匹配的公司规模投递；若system design薄弱，优先从小型公司积累经验，不要盲目冲击高要求的中大型公司。",
+    "action_summary": "根据自身system design能力水平选择匹配的公司规模投递；",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3300,
+    "chunk_id": "bf36b5fc-6902-4028-b6cf-b1dc297b3881-2026-03-31-项目梳理+简历指导_chunk_008",
+    "topic": "投递渠道规划",
+    "L1": "求职策略",
+    "L2": "投递渠道",
+    "problem_tags": "missing_linkedin",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "LinkedIn上展示的PM岗位多为大公司顶级职位",
+    "user_problem_summary": "LinkedIn上展示的PM岗位多为大公司顶级职位，竞争门槛高，对于正在转型PM方向的求职者而言不够友好；",
+    "A_action": "将Indeed作为PM岗位搜索的补充渠道，专门用来寻找中小公司的PM职位，降低竞争难度，同时积累面试机会。",
+    "action_summary": "将Indeed作为PM岗位搜索的补充渠道，专门用来寻找中小公司的PM职位，降低竞争难度，同时积累面试机会。",
+    "current": {
+      "canonical_title": "补齐可验证资料入口",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3316,
+    "chunk_id": "bf36b5fc-6902-4028-b6cf-b1dc297b3881-2026-03-31-项目梳理+简历指导_chunk_015",
+    "topic": "市场竞争分析",
+    "L1": "求职策略",
+    "L2": "竞争分析",
+    "problem_tags": "low_role_specificity,weak_target_role_alignment,low_hard_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者希望从事技术相关工作但不愿刷题",
+    "user_problem_summary": "求职者希望从事技术相关工作但不愿刷题，",
+    "A_action": "明确自身是否愿意投入刷题备考，若不愿刷题则聚焦PM方向；若选择技术岗，则必须系统准备LeetCode及系统设计，否则无论AI工具多强大，面试关口仍无法通过。",
+    "action_summary": "明确自身是否愿意投入刷题备考，若不愿刷题则聚焦PM方向；",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3317,
+    "chunk_id": "bf36b5fc-6902-4028-b6cf-b1dc297b3881-2026-03-31-项目梳理+简历指导_chunk_019",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者有意向转做PM",
+    "user_problem_summary": "求职者有意向转做PM，但大公司竞争激烈、内推也收不到面试，需调整期望值从小公司起步",
+    "A_action": "先从小公司PM职位投起，不必执着于大公司或特定AI方向；第一份工作积累经验后，后续简历可进行美化包装，逐步向目标公司迈进",
+    "action_summary": "先从小公司PM职位投起，不必执着于大公司或特定AI方向；第一份工作积累经验后，后续简历可进行美化包装，逐步向目标公司迈进",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3335,
+    "chunk_id": "c42fbe5f-0e8d-45d5-9df3-6558bb6d0482-2026-04-09-Gap-Analysis-+简历精修一份-Veronica_chunk_002",
+    "topic": "市场竞争分析",
+    "L1": "求职策略",
+    "L2": "竞争分析",
+    "problem_tags": "low_role_specificity,weak_target_role_alignment,low_hard_skill_match,missing_portfolio",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者担心GitHub代码质量影响面试官评价",
+    "user_problem_summary": "求职者担心GitHub代码质量影响面试官评价，",
+    "A_action": "不必过度担忧GitHub代码质量对简历的负面影响，将精力集中在简历描述本身的质量和量化成果上，而非维护代码仓库。",
+    "action_summary": "不必过度担忧GitHub代码质量对简历的负面影响，将精力集中在简历描述本身的质量和量化成果上，而非维护代码仓库。",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3337,
+    "chunk_id": "c42fbe5f-0e8d-45d5-9df3-6558bb6d0482-2026-04-09-Gap-Analysis-+简历精修一份-Veronica_chunk_005",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历中项目数量不足",
+    "user_problem_summary": "求职者简历中项目数量不足，目前只有3个项目，低于行业最低标准，难以让HR和面试官看到足够的技术广度。",
+    "A_action": "补充项目至5个以上，确保简历展示足够的项目经验量，让面试官看到持续学习和实践能力。",
+    "action_summary": "补充项目至5个以上，确保简历展示足够的项目经验量，让面试官看到持续学习和实践能力。",
+    "current": {
+      "canonical_title": "补清工具和方法证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3338,
+    "chunk_id": "c42fbe5f-0e8d-45d5-9df3-6558bb6d0482-2026-04-09-Gap-Analysis-+简历精修一份-Veronica_chunk_005",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历中多个项目均为classification任务",
+    "user_problem_summary": "求职者简历中多个项目均为classification任务，类型高度重复，面试官只能问出同类问题，无法体现算法多样性和技术广度。",
+    "A_action": "将重复的classification项目替换为regression、NLP、推荐系统等不同类型的项目，确保简历覆盖多种模型类别，例如将房价预测等regression项目补充进来，避免同类任务重复出现。",
+    "action_summary": "将重复的classification项目替换为regression、NLP、推荐系统等不同类型的项目，",
+    "current": {
+      "canonical_title": "补清工具和方法证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3339,
+    "chunk_id": "c42fbe5f-0e8d-45d5-9df3-6558bb6d0482-2026-04-09-Gap-Analysis-+简历精修一份-Veronica_chunk_011",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "low_hard_skill_match,low_measurable_results",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者在被问到AB测试衡量指标时",
+    "user_problem_summary": "求职者在被问到AB测试衡量指标时，",
+    "A_action": "回答AB测试指标类面试题时，先完整梳理业务流程的每个关键节点，找到最直接衡量算法目标的指标。例如叫车算法的核心目标是「成功匹配乘客与司机」，因此最优指标应为「乘客成功叫到车的比率（匹配成功率）」，而非拒接率或算法调用次数等衍生指标。",
+    "action_summary": "回答AB测试指标类面试题时，先完整梳理业务流程的每个关键节点，找到最直接衡量算法目标的指标。",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3340,
+    "chunk_id": "c42fbe5f-0e8d-45d5-9df3-6558bb6d0482-2026-04-09-Gap-Analysis-+简历精修一份-Veronica_chunk_006",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历中的多个项目都是classification类型",
+    "user_problem_summary": "求职者简历中的多个项目都是classification类型，",
+    "A_action": "梳理现有项目，确保每个项目展示不同类型的ML任务（如classification与regression），删除重合度高的内容，将未体现的差异点融合进现有项目描述中，保持简历一页内容多样化。",
+    "action_summary": "梳理现有项目，",
+    "current": {
+      "canonical_title": "改写工作经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3351,
+    "chunk_id": "c42fbe5f-0e8d-45d5-9df3-6558bb6d0482-2026-04-09-Gap-Analysis-+简历精修一份-Veronica_chunk_013",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "weak_action_verbs",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "候选人在回答「如何衡量打车匹配算法优劣」时",
+    "user_problem_summary": "候选人在回答「如何衡量打车匹配算法优劣」时，",
+    "A_action": "回答算法评估类面试题时，先确定算法的职责边界，再从用户体验全局出发定义metric：打车匹配算法应以「用户点击叫车到上车」的时间最短为核心指标，因为上车后路况非算法可控，算法只负责司机匹配环节。",
+    "action_summary": "回答算法评估类面试题时，",
+    "current": {
+      "canonical_title": "强化 bullet 量化结果",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3354,
+    "chunk_id": "c42fbe5f-0e8d-45d5-9df3-6558bb6d0482-2026-04-09-Gap-Analysis-+简历精修一份-Veronica_chunk_014",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "low_hard_skill_match,low_measurable_results",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者对机器学习基础指标Recall和Precis...",
+    "user_problem_summary": "求职者对机器学习基础指标Recall和Precision的定义混淆，无法准确区分两者分母的差异，机器学习基础知识不扎实。",
+    "A_action": "牢记Recall与Precision的分母区别：Recall分母是真实标签为1的数量（衡量真实正例中答对多少）；Precision分母是预测为1的数量（衡量预测正例中答对多少），两者分子相同，均为答对的正例数量。",
+    "action_summary": "牢记Recall与Precision的分母区别：Recall分母是真实标签为1的数量（衡量真实正例中答对多少）；",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3355,
+    "chunk_id": "c42fbe5f-0e8d-45d5-9df3-6558bb6d0482-2026-04-09-Gap-Analysis-+简历精修一份-Veronica_chunk_014",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "weak_action_verbs,low_hard_skill_match,low_measurable_results,weak_target_role_alignment",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者在回答打车算法指标设计题时",
+    "user_problem_summary": "求职者在回答打车算法指标设计题时，",
+    "A_action": "回答案例题前先明确算法的职责范围，只衡量该算法实际负责的环节（如匹配算法只衡量派单效率），不要越界衡量后续流程，避免答题逻辑混乱。",
+    "action_summary": "回答案例题前先明确算法的职责范围，只衡量该算法实际负责的环节（如匹配算法只衡量派单效率），不要越界衡量后续流程，避免答题逻辑混乱。",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3362,
+    "chunk_id": "c42fbe5f-0e8d-45d5-9df3-6558bb6d0482-2026-04-09-Gap-Analysis-+简历精修一份-Veronica_chunk_016",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "problem_tags": "low_hard_skill_match,short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者认为AI时代不需要再手写代码",
+    "user_problem_summary": "求职者认为AI时代不需要再手写代码，",
+    "A_action": "若目标岗位包含AI Research或AI Engineer方向，需练习从Scratch手写MLP各层结构、loss函数、back propagation，最多只允许import numpy，禁止使用PyTorch等框架完成算法实现。",
+    "action_summary": "若目标岗位包含AI Research或AI Engineer方向，",
+    "current": {
+      "canonical_title": "重排 Skills 结构",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3368,
+    "chunk_id": "c6ad1ba4-b710-49b9-9f15-8cd7470e6852-2026-04-09-Industry-and-Resume-Discussion_chunk_006",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者主要兴趣在艺术方向",
+    "user_problem_summary": "求职者主要兴趣在艺术方向，",
+    "A_action": "评估是否愿意先尝试制作类岗位（如 Production Assistant/Coordinator），以此作为进入游戏行业的跳板；同时准备两个方向的简历版本，保持求职灵活性。",
+    "action_summary": "评估是否愿意先尝试制作类岗位（如 Production Assistant/Coordinator），以此作为进入游戏行业的跳板；",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 3382,
+    "chunk_id": "cffe1e2e-8c9e-47a8-87b3-8ec12ea91c85-2026-04-16-岗位差距分析+简历修改_chunk_001",
+    "topic": "职业方向选择",
+    "L1": "职业规划",
+    "L2": "方向定位",
+    "problem_tags": "education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者在多个Master项目间纠结",
+    "user_problem_summary": "求职者在多个Master项目间纠结，",
+    "A_action": "首先明确长期发展地区（留美/回国/先美后国），再根据此决策筛选Master项目：若回国，优先考虑综合排名更高的学校；若留美，优先看OPT时长（三年STEM OPT vs 一年）及行业就业资源。",
+    "action_summary": "首先明确长期发展地区（留美/回国/先美后国），再根据此决策筛选Master项目：若回国，优先考虑综合排名更高的学校；",
+    "current": {
+      "canonical_title": "把项目证据写进 bullet",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "明确目标求职赛道",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3389,
+    "chunk_id": "cffe1e2e-8c9e-47a8-87b3-8ec12ea91c85-2026-04-16-岗位差距分析+简历修改_chunk_002",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "low_role_specificity,short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者同时有国内和北美marketing经验",
+    "user_problem_summary": "求职者同时有国内和北美marketing经验，",
+    "A_action": "针对北美岗位，重点在简历和面试中体现data-driven决策案例，如用数据支撑campaign策略或评估ROI；减少单纯描述执行动作的bullet point，增加数据分析和业务判断相关经历。",
+    "action_summary": "针对北美岗位，重点在简历和面试中体现data-driven决策案例，如用数据支撑campaign策略或评估ROI；",
+    "current": {
+      "canonical_title": "改写工作经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3392,
+    "chunk_id": "cffe1e2e-8c9e-47a8-87b3-8ec12ea91c85-2026-04-16-岗位差距分析+简历修改_chunk_004",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_action_verbs",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者长期目标是创立自己的品牌",
+    "user_problem_summary": "求职者长期目标是创立自己的品牌，",
+    "A_action": "以长期创业为目标时，优先选择能接触多平台、多渠道的marketing岗位（如campaign specialist），避免只负责单一渠道的岗位，以积累跨渠道营销全局能力。",
+    "action_summary": "以长期创业为目标时，",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 3396,
+    "chunk_id": "cffe1e2e-8c9e-47a8-87b3-8ec12ea91c85-2026-04-16-岗位差距分析+简历修改_chunk_005",
+    "topic": "市场竞争分析",
+    "L1": "求职策略",
+    "L2": "竞争分析",
+    "problem_tags": "low_role_specificity,weak_target_role_alignment",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者自我评价偏低",
+    "user_problem_summary": "求职者自我评价偏低，认为实习经验不够好；",
+    "A_action": "在简历和面试中主动突出三点优势：①甲乙方双线经验（维度广）；②中美两地工作经历（本地化经验）；③知名大公司背书（央视、4A、麦当劳等），将这些作为差异化卖点重点呈现。",
+    "action_summary": "在简历和面试中主动突出三点优势：①甲乙方双线经验（维度广）；",
+    "current": {
+      "canonical_title": "改写工作经历 bullet",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3415,
+    "chunk_id": "d00edafa-b90d-4132-874c-70814611c0a2-2026-04-15-简历梳理和模拟面试_chunk_006",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者的Amazon ADS经历停留在方案层面",
+    "user_problem_summary": "求职者的Amazon ADS经历停留在方案层面，",
+    "A_action": "在简历中明确区分「方案设计」与「实际投放」的边界，同时将方案中的具体策略细节写入bullet point，如：按customer journey划分5个投放阶段、brand awareness阶段采用sponsor brand视频广告、daily budget $200-300、目标ROI 1.3-1.5，以体现方法论深度。",
+    "action_summary": "在简历中明确区分「方案设计」与「实际投放」的边界，",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 3447,
+    "chunk_id": "d00edafa-b90d-4132-874c-70814611c0a2-2026-04-15-简历梳理和模拟面试_chunk_022",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "简历要清晰展示你的目标岗位",
+    "user_problem_summary": "求职者考虑先做part-time工作，",
+    "A_action": "确认该part-time职位是否满足OPT激活的工时要求（通常需full-time或每周达到一定小时数），向学校DSO或移民律师核实后再做决定。",
+    "action_summary": "确认该part-time职位是否满足OPT激活的工时要求（通常需full-time或每周达到一定小时数），",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3449,
+    "chunk_id": "d00edafa-b90d-4132-874c-70814611c0a2-2026-04-15-简历梳理和模拟面试_chunk_017",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,weak_experience_keyword_evidence,education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者对国内大型消费品公司管培生项目的运作机制和面...",
+    "user_problem_summary": "求职者对国内大型消费品公司管培生项目的运作机制和面试难度了解不足，可能错失高起薪、广发展路径的机会",
+    "A_action": "主动了解欧莱雅、百威等大型消费品公司管培生项目：明确其轮岗机制（brand、渠道、电商、采购、HR等多部门轮岗约一年后定岗），并针对其多轮面试流程（群面+个人面）进行专项准备",
+    "action_summary": "主动了解欧莱雅、百威等大型消费品公司管培生项目：明确其轮岗机制（brand、渠道、电商、采购、HR等多部门轮岗约一年后定岗），",
+    "current": {
+      "canonical_title": "把项目关键词写成证据",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3452,
+    "chunk_id": "d00edafa-b90d-4132-874c-70814611c0a2-2026-04-15-简历梳理和模拟面试_chunk_021",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者计划在part-time实习期间同步找其他工作",
+    "user_problem_summary": "求职者计划在part-time实习期间同步找其他工作，",
+    "A_action": "在入职前明确向雇主确认以下三点：1）公司是否能支持OPT激活；2）part-time工时是否满足OPT生效的最低小时数要求；3）未来转full-time的时间节点及可能性。",
+    "action_summary": "在入职前明确向雇主确认以下三点：1）公司是否能支持OPT激活；",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3457,
+    "chunk_id": "d60bf40e-6b19-406a-a9c8-24799e67cc30-2026-04-03-Risk-方向-&-Data-方向-简历迭代辅导_chunk_001",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title,low_hard_skill_match,education_details_missing",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者拥有Columbia ERM背景、具备Pyt...",
+    "user_problem_summary": "求职者拥有Columbia ERM背景、具备Python/SQL基础及信用风险项目经验，",
+    "A_action": "调整投递方向，远离纯理论型风险管理岗位（如operational risk、RCSA/KRI相关岗位），转而寻找带有风险元素的复合型岗位，充分利用Python/SQL技能和信用风险项目经验提升竞争力。",
+    "action_summary": "调整投递方向，",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3463,
+    "chunk_id": "d60bf40e-6b19-406a-a9c8-24799e67cc30-2026-04-03-Risk-方向-&-Data-方向-简历迭代辅导_chunk_005",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者的RCSA项目简历描述缺乏量化结果",
+    "user_problem_summary": "求职者的RCSA项目简历描述缺乏量化结果，",
+    "A_action": "深入追问项目中的KRI指标数值，将likelihood从once a quarter降至once a year、impact从$15M-$200M降至$5M-$15M等量化结果提炼为bullet point中的量化成果，体现风险控制效果。",
+    "action_summary": "深入追问项目中的KRI指标数值，",
+    "current": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "保持内容真实可追问",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3476,
+    "chunk_id": "d60bf40e-6b19-406a-a9c8-24799e67cc30-2026-04-03-Risk-方向-&-Data-方向-简历迭代辅导_chunk_010",
+    "topic": "多版本简历策略",
+    "L1": "求职策略",
+    "L2": "简历版本规划",
+    "problem_tags": "generic_resume_positioning,missing_portfolio",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "proof",
+    "advice_card_title": "不要一份简历投所有岗位",
+    "user_problem_summary": "求职者准备投递多个方向（Risk Control、Consulting、Fraud/AML等），",
+    "A_action": "针对每个目标方向（Risk Consulting、Credit/Data/Portfolio Risk、Fraud AML）分别准备一份简历，在每份简历中加入该方向对应的行业关键词，以提升ATS机筛通过率。",
+    "action_summary": "针对每个目标方向（Risk Consulting、Credit/Data/Portfolio Risk、Fraud AML）分...",
+    "current": {
+      "canonical_title": "按岗位维护简历版本",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "明确目标求职赛道",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3478,
+    "chunk_id": "d60bf40e-6b19-406a-a9c8-24799e67cc30-2026-04-03-Risk-方向-&-Data-方向-简历迭代辅导_chunk_011",
+    "topic": "ATS机筛策略",
+    "L1": "求职策略",
+    "L2": "ATS机筛机制",
+    "problem_tags": "missing_portfolio",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者同时申请Credit Risk、Fraud/...",
+    "user_problem_summary": "求职者同时申请Credit Risk、Fraud/AML、Risk Consulting三个方向，",
+    "A_action": "为三个方向分别准备简历版本：Credit Risk版强调portfolio monitoring、delinquency、default、PD/LGD/EAD、roll rate、vintage等；Fraud/AML版强调fraud detection、transaction monitoring、AML、KYC、suspicious activity、pattern anomaly monitoring；Risk Consulting版强调internal control、process improvement、governance、regulatory compliance、RCSA、control framework，同时弱化Python及modeling相关内容。",
+    "action_summary": "为三个方向分别准备简历版本：Credit Risk版强调portfolio monitoring、delinquency、de...",
+    "current": {
+      "canonical_title": "按岗位维护简历版本",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "明确目标求职赛道",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3479,
+    "chunk_id": "d60bf40e-6b19-406a-a9c8-24799e67cc30-2026-04-03-Risk-方向-&-Data-方向-简历迭代辅导_chunk_011",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "low_soft_skill_match,keywords_only_in_skills,generic_resume_positioning",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历中Python及quantitative...",
+    "user_problem_summary": "求职者简历中Python及quantitative modeling内容较重，",
+    "A_action": "针对Risk Consulting方向，将简历中Python、statistical modeling等技术描述弱化或移至技能列表次要位置，工作经历bullet point改为突出internal control、RCSA、control framework、process improvement、governance、regulatory compliance等关键词，体现咨询思维与风险治理能力。",
+    "action_summary": "针对Risk Consulting方向，",
+    "current": {
+      "canonical_title": "删除干扰定位内容",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "删除干扰定位内容",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3480,
+    "chunk_id": "d60bf40e-6b19-406a-a9c8-24799e67cc30-2026-04-03-Risk-方向-&-Data-方向-简历迭代辅导_chunk_012",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,low_hard_skill_match,keywords_only_in_skills",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "structure",
+    "advice_card_title": "求职者同时申请risk consulting、ri...",
+    "user_problem_summary": "求职者同时申请risk consulting、risk分析和fraud三个方向，",
+    "A_action": "针对risk合规/审计类岗位强调RCSA control framework、state code等合规框架关键词；针对data/modeling类岗位保留Python和建模相关内容；根据不同投递方向准备差异化版本简历",
+    "action_summary": "针对risk合规/审计类岗位强调RCSA control framework、state code等合规框架关键词；",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "明确目标求职赛道",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3487,
+    "chunk_id": "d60bf40e-6b19-406a-a9c8-24799e67cc30-2026-04-03-Risk-方向-&-Data-方向-简历迭代辅导_chunk_020",
+    "topic": "投递渠道规划",
+    "L1": "求职策略",
+    "L2": "投递渠道",
+    "problem_tags": "generic_resume_positioning,weak_target_role_alignment",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者不清楚每周应保持多少投递量",
+    "user_problem_summary": "求职者不清楚每周应保持多少投递量，可能投递数量不足导致面试机会稀少",
+    "A_action": "保持每天投递20个职位，每周累计100个，三个方向合计达到该数量，以确保足够的面试漏斗基数",
+    "action_summary": "保持每天投递20个职位，每周累计100个，三个方向合计达到该数量，以确保足够的面试漏斗基数",
+    "current": {
+      "canonical_title": "聚焦目标岗位定位",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3489,
+    "chunk_id": "e190fb73-af04-4e4b-8fe5-8139a32cf556-2026-04-06-简历细节讲述梳理及一面辅导_chunk_005",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "low_soft_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者担心面试中被问到cost model、gen...",
+    "user_problem_summary": "求职者担心面试中被问到cost model、general entry等深度技术问题，",
+    "A_action": "将面试准备重心放在简历上已有的经历和基础会计概念（如accounts payable流程、基本journal entry）即可，不必深入备考cost model构建或复杂会计准则；同时针对简历中提到的每项技能，准备一个对应的经历说明。",
+    "action_summary": "将面试准备重心放在简历上已有的经历和基础会计概念（如accounts payable流程、基本journal entry）即可，",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3495,
+    "chunk_id": "e190fb73-af04-4e4b-8fe5-8139a32cf556-2026-04-06-简历细节讲述梳理及一面辅导_chunk_004",
+    "topic": "技术面试备考",
+    "L1": "面试准备",
+    "L2": "技术面试",
+    "problem_tags": "low_hard_skill_match,education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者担心面试中被问到技术性问题（如如何建cost...",
+    "user_problem_summary": "求职者担心面试中被问到技术性问题（如如何建cost model、制造业主要cost drivers是什么），",
+    "A_action": "提前准备cost model的基本构建逻辑（核心inputs是什么）以及制造业主要cost drivers（如原材料、人工、制造费用等），以防面试官抛出tactical question，同时心理上接受此类问题有可能出现。",
+    "action_summary": "提前准备cost model的基本构建逻辑（核心inputs是什么）以及制造业主要cost drivers（如原材料、人工、制...",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  },
+  {
+    "id": 3509,
+    "chunk_id": "e190fb73-af04-4e4b-8fe5-8139a32cf556-2026-04-06-简历细节讲述梳理及一面辅导_chunk_006",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "problem_tags": "low_hard_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者被面试官问及Quickbooks使用经验但坦言没用过",
+    "user_problem_summary": "求职者被面试官问及Quickbooks使用经验但坦言没用过，对会计软件类问题缺乏应对准备。",
+    "A_action": "不需购买软件，直接在YouTube搜索Quickbooks操作视频，了解基本的posting entry等核心功能逻辑，能在面试中展示基本认知即可。",
+    "action_summary": "不需购买软件，",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": "0.9"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "auto_classified",
+      "title_source": "rule",
+      "title_confidence": 0.9,
+      "titleFlags": [
+        "high_frequency_title"
+      ]
+    }
+  }
+]

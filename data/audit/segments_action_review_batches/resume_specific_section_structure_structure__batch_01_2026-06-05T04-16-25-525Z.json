@@ -1,0 +1,92 @@
+[
+  {
+    "id": 26582,
+    "chunk_id": "9d767219-6e6b-40c3-bc6d-2c947c997273-2025-05-16-Session-01-gap分析报告+简历润色_chunk_007",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "retrieval_scope": "resume_edit",
+    "role_family": "marketing",
+    "target_roles": "marketing,marketing_analyst,digital_marketing,marketing_research",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "ats_dimensions": "C_content_quality,F_role_fit",
+    "advice_card_title": "求职者简历存在版块命名冗余（如「Research...",
+    "user_problem_summary": "求职者简历存在版块命名冗余（如「Research Projects」与「Work Experience」重叠），",
+    "A_action": "将姓名居中显示，其余所有模块（Education、Career Objective、Work Experience）统一左对齐；删除独立的「Research Projects」模块，将相关内容并入「Work Experience」，简化版块命名。",
+    "action_summary": "将姓名居中显示，其余所有模块（Education、Career Objective、Work Experience）统一左对齐；",
+    "I_insight": "简历格式的核心原则是易读性，HR扫描时间极短，模块命名越简洁越好；重复或冗余的版块会分散注意力，降低信息传达效率。",
+    "HR_os": "简历结构清楚时，HR 才能把注意力放在能力上；排版混乱会先消耗耐心。",
+    "current": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果简历里 Research Projects、Work Experience 或 Projects 之间内容重叠，先统一版块逻辑和对齐方式；只把能证明目标岗位能力的内容放在最容易被 HR 扫到的位置。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "Research Projects,Work Experience",
+      "canonical_action_family": "section_structure",
+      "action_depth": "structure",
+      "action_review_status": "approved"
+    },
+    "proposed": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果简历里 Research Projects、Work Experience 或 Projects 之间内容重叠，先统一版块逻辑和对齐方式；只把能证明目标岗位能力的内容放在最容易被 HR 扫到的位置。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "Research Projects,Work Experience",
+      "canonical_action_family": "section_structure",
+      "action_depth": "structure",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:resume_specific;has_grounding_terms"
+    },
+    "review_priority_score": 80,
+    "review_priority_reasons": [
+      "resume_specific action needs resume grounding before showing raw text"
+    ]
+  },
+  {
+    "id": 26586,
+    "chunk_id": "9d767219-6e6b-40c3-bc6d-2c947c997273-2025-05-16-Session-01-gap分析报告+简历润色_chunk_006",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "retrieval_scope": "resume_edit",
+    "role_family": "marketing",
+    "target_roles": "marketing,marketing_analyst,digital_marketing,marketing_research",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "ats_dimensions": "C_content_quality,F_role_fit",
+    "advice_card_title": "求职者简历单独列出「Research Projects」板块",
+    "user_problem_summary": "求职者简历单独列出「Research Projects」板块，但其内容与工作经历重叠，造成结构冗余，增加阅读负担",
+    "A_action": "删除独立的「Research Projects」板块，将相关内容合并至「Work Experience」板块，统一用「Work Experience」命名，使简历结构更简洁易读",
+    "action_summary": "删除独立的「Research Projects」板块，",
+    "I_insight": "简历板块越精简，阅读体验越好。研究项目若已体现在工作经历中，单独列出反而显得重复，HR更倾向于清晰直接的结构",
+    "HR_os": "经历如果只写做了什么，我很难判断你做得多深、成果多大、是否值得面试。",
+    "current": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果 Research Projects 与目标岗位关系弱，不要让它单独占一个板块；把相关项目并入 Projects、Education 或 Experience，并保留能支撑 JD 的证据。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "Research Projects",
+      "canonical_action_family": "section_structure",
+      "action_depth": "structure",
+      "action_review_status": "approved"
+    },
+    "proposed": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果 Research Projects 与目标岗位关系弱，不要让它单独占一个板块；把相关项目并入 Projects、Education 或 Experience，并保留能支撑 JD 的证据。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "Research Projects",
+      "canonical_action_family": "section_structure",
+      "action_depth": "structure",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:resume_specific;has_grounding_terms"
+    },
+    "review_priority_score": 80,
+    "review_priority_reasons": [
+      "resume_specific action needs resume grounding before showing raw text"
+    ]
+  }
+]

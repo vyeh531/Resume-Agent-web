@@ -1,0 +1,48 @@
+[
+  {
+    "id": 2815,
+    "chunk_id": "8d35952e-7e3c-46d9-adbe-5b388642f730-2026-04-17-简历内容梳理更新及后续项目安排_chunk_001",
+    "topic": "ATS机筛策略",
+    "L1": "求职策略",
+    "L2": "ATS机筛机制",
+    "retrieval_scope": "resume_edit",
+    "role_family": "marketing",
+    "target_roles": "universal",
+    "problem_tags": "low_jd_keyword_match,low_role_specificity",
+    "ats_dimensions": "D_keyword_match,F_role_fit",
+    "advice_card_title": "求职者投递岗位过于分散（SDR、client re...",
+    "user_problem_summary": "求职者投递岗位过于分散（SDR、client relationship、marketing等），",
+    "A_action": "聚焦目标岗位方向，针对每类岗位的JD提取核心关键词，并将对应词汇嵌入简历相应板块，确保ATS关键词匹配率提升后再批量投递。",
+    "action_summary": "聚焦目标岗位方向，针对每类岗位的JD提取核心关键词，并将对应词汇嵌入简历相应板块，确保ATS关键词匹配率提升后再批量投递。",
+    "I_insight": "ATS系统会将简历中的关键词与JD要求进行反向比对，只有通过机器筛选后HR才会人工审核。投递岗位越杂，简历越难针对性适配，通过率越低。",
+    "HR_os": "如果关键技能词扫不到，我会先担心你和岗位要求差一截，而不是主动替你补充想象。",
+    "current": {
+      "action_specificity": "jd_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "先把 Summary / Objective 改成目标岗位导向：写出目标岗位原词，并用一句话连接你已有经历与 JD 的核心职责。",
+      "activation_role_family": "marketing",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "summary_positioning",
+      "action_depth": "proof",
+      "action_review_status": "approved"
+    },
+    "proposed": {
+      "action_specificity": "jd_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "先把 Summary / Objective 改成目标岗位导向：写出目标岗位原词，并用一句话连接你已有经历与 JD 的核心职责。",
+      "activation_role_family": "marketing",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "summary_positioning",
+      "action_depth": "proof",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:jd_specific;has_activation_conditions"
+    },
+    "review_priority_score": 70,
+    "review_priority_reasons": [
+      "jd_specific action needs target JD grounding",
+      "high-frequency family: summary_positioning"
+    ]
+  }
+]

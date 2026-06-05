@@ -1,0 +1,137 @@
+[
+  {
+    "id": 13914,
+    "chunk_id": "4eac5ef6-084d-4085-bae0-402cf6adea5e-2025-09-12-分析技能评估-&-简历修改沟通_chunk_021",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "retrieval_scope": "resume_edit",
+    "role_family": "data_analyst",
+    "target_roles": "data_analyst",
+    "problem_tags": "low_hard_skill_match,education_details_missing",
+    "ats_dimensions": "B_contact",
+    "advice_card_title": "求职者声称会Excel但实际上未掌握VLOOKUP...",
+    "user_problem_summary": "求职者声称会Excel但实际上未掌握VLOOKUP、SUMIF、COUNTIF等核心函数，",
+    "A_action": "实际动手做Excel函数练习题（practice），重点补充VLOOKUP、SUMIF、COUNTIF、INDEX/MATCH等公式的写法，而非仅快速浏览课程视频",
+    "action_summary": "实际动手做Excel函数练习题（practice），",
+    "I_insight": "数据分析类岗位的Excel考核几乎必考VLOOKUP等函数公式，HR和面试官会区分'操作过'和'真正掌握'，仅看过课程而未练习等于未学",
+    "HR_os": "经验还不长时，我会看课程、证书和训练能不能补足岗位信号；相关内容别藏太深。",
+    "current": {
+      "action_specificity": "",
+      "display_action_mode": "",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "",
+      "action_depth": "",
+      "action_review_status": ""
+    },
+    "proposed": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "为核心 bullet 补充数量、频率、规模、效率或结果，让 HR 能判断你实际带来的影响。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "VLOOKUP,SUMIF,COUNTIF,INDEX/MATCH",
+      "canonical_action_family": "quantified_impact",
+      "action_depth": "rewrite",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:resume_specific;has_grounding_terms"
+    },
+    "review_priority_score": 80,
+    "review_priority_reasons": [
+      "resume_specific action needs resume grounding before showing raw text"
+    ]
+  },
+  {
+    "id": 16855,
+    "chunk_id": "627aa08d-a054-45ab-a3b2-336192587526-2024-10-24-GAP分析+简历调整(邵可馨)_chunk_008",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "retrieval_scope": "resume_edit",
+    "role_family": "machine_learning,data_analyst",
+    "target_roles": "data_analyst",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills",
+    "ats_dimensions": "D_keyword_match",
+    "advice_card_title": "求职者对Excel的核心功能（Pivot Tabl...",
+    "user_problem_summary": "求职者对Excel的核心功能（Pivot Table、SUMIF、COUNTIF、VLOOKUP等）掌握不足，",
+    "A_action": "系统学习Excel基础核心函数：Pivot Table、SUMIF、COUNTIF、VLOOKUP，建议通过导师提供的课程材料进行针对性补强，确保能熟练运用后再列入简历技能栏。",
+    "action_summary": "系统学习Excel基础核心函数：Pivot Table、SUMIF、COUNTIF、VLOOKUP，",
+    "I_insight": "Excel虽不需要系统性深度学习，但Pivot Table及常用函数（SUMIF、VLOOKUP等）是数据分析岗位的基本门槛，HR默认候选人应具备。",
+    "HR_os": "教育背景不是只写学校名称，相关课程和训练能帮我判断你是否有基础准备。",
+    "current": {
+      "action_specificity": "",
+      "display_action_mode": "",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "",
+      "action_depth": "",
+      "action_review_status": ""
+    },
+    "proposed": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "为核心 bullet 补充数量、频率、规模、效率或结果，让 HR 能判断你实际带来的影响。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "SUMIF,COUNTIF,VLOOKUP",
+      "canonical_action_family": "quantified_impact",
+      "action_depth": "rewrite",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:resume_specific;has_grounding_terms"
+    },
+    "review_priority_score": 80,
+    "review_priority_reasons": [
+      "resume_specific action needs resume grounding before showing raw text"
+    ]
+  },
+  {
+    "id": 16890,
+    "chunk_id": "62a67421-ec20-4274-9dcd-62f0e69c1430-2026-01-05-简历修改课程_chunk_010",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "retrieval_scope": "resume_edit",
+    "role_family": "software_engineer,data_analyst",
+    "target_roles": "data_analyst",
+    "problem_tags": "low_hard_skill_match,education_details_missing",
+    "ats_dimensions": "B_contact",
+    "advice_card_title": "学校SQL课程只教基础语法（select/from...",
+    "user_problem_summary": "学校SQL课程只教基础语法（select/from/where/group by/having），",
+    "A_action": "系统补充SQL进阶知识点，重点掌握窗口函数（如ROW_NUMBER、RANK、LAG/LEAD等），结合LeetCode题目练习，不能仅依赖学校课程",
+    "action_summary": "系统补充SQL进阶知识点，",
+    "I_insight": "数据分析岗位技术面试中SQL窗口函数为高频考点，学校课程普遍停留在基础查询层面，与实际面试要求存在明显差距，需主动自学补充",
+    "HR_os": "经验还不长时，我会看课程、证书和训练能不能补足岗位信号；相关内容别藏太深。",
+    "current": {
+      "action_specificity": "",
+      "display_action_mode": "",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "",
+      "action_depth": "",
+      "action_review_status": ""
+    },
+    "proposed": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "为核心 bullet 补充数量、频率、规模、效率或结果，让 HR 能判断你实际带来的影响。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "SQL,RANK,LAG/LEAD",
+      "canonical_action_family": "quantified_impact",
+      "action_depth": "rewrite",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:resume_specific;has_grounding_terms"
+    },
+    "review_priority_score": 80,
+    "review_priority_reasons": [
+      "resume_specific action needs resume grounding before showing raw text"
+    ]
+  }
+]

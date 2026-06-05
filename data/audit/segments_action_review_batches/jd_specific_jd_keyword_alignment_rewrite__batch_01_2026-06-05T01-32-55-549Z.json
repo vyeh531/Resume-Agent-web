@@ -1,0 +1,95 @@
+[
+  {
+    "id": 13481,
+    "chunk_id": "4b4eb6b3-5d17-410a-8347-8b4bd1bec2ae-2024-12-14-GAP分析+简历修改_chunk_029",
+    "topic": "ATS机筛策略",
+    "L1": "求职策略",
+    "L2": "ATS机筛机制",
+    "retrieval_scope": "resume_edit",
+    "role_family": "finance",
+    "target_roles": "financial_analyst,investment_analyst,risk_analyst,fp_and_a",
+    "problem_tags": "weak_summary_role_alignment,resume_not_tailored_to_jd",
+    "ats_dimensions": "D_keyword_match",
+    "advice_card_title": "部分公司的职位描述写得极为笼统甚至具有误导性",
+    "user_problem_summary": "部分公司的职位描述写得极为笼统甚至具有误导性，",
+    "A_action": "阅读JD时跳过笼统的开头描述，重点关注\"What role will you play\"等具体职责板块，提取其中的专业词汇（如risk profile、trading book、limits monitoring）作为简历关键词对标来源。",
+    "action_summary": "阅读JD时跳过笼统的开头描述，",
+    "I_insight": "部分公司JD措辞刻意模糊，表层描述几乎不透露行业属性，但在具体职责条目中会出现行业专属术语。求职者若只看表层描述来定制简历，会错失真正的关键词匹配机会。",
+    "HR_os": "关键词不是堆给机器看的，它也帮我快速确认你是不是这类岗位的直接人选。",
+    "current": {
+      "action_specificity": "",
+      "display_action_mode": "",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "",
+      "action_depth": "",
+      "action_review_status": ""
+    },
+    "proposed": {
+      "action_specificity": "jd_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "对照 JD 提取真实掌握的核心关键词，把它们分配到 Summary、Skills 和最相关的 Experience bullet 中。",
+      "activation_role_family": "trading_quant",
+      "activation_keywords": "risk profile,trading book,limits monitoring",
+      "grounding_terms": "risk profile,trading book,limits monitoring",
+      "canonical_action_family": "jd_keyword_alignment",
+      "action_depth": "rewrite",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:jd_specific;has_grounding_terms;has_activation_conditions"
+    },
+    "review_priority_score": 100,
+    "review_priority_reasons": [
+      "jd_specific action needs target JD grounding",
+      "high-frequency family: jd_keyword_alignment",
+      "contains high-risk role/project/tool terms"
+    ]
+  },
+  {
+    "id": 9698,
+    "chunk_id": "324895f8-50da-4f3a-ad87-a34fb029a042-2024-10-19-GAP分析+简历修改(高煜林)_chunk_008",
+    "topic": "ATS机筛策略",
+    "L1": "求职策略",
+    "L2": "ATS机筛机制",
+    "retrieval_scope": "resume_edit",
+    "role_family": "data_analyst,product_manager",
+    "target_roles": "data_analyst",
+    "problem_tags": "missing_priority_keywords",
+    "ats_dimensions": "D_keyword_match",
+    "advice_card_title": "求职者简历尚未针对ATS机器筛选进行优化",
+    "user_problem_summary": "求职者简历尚未针对ATS机器筛选进行优化，关键词匹配度不足，导致简历无法通过大公司HR系统的第一轮筛选。",
+    "A_action": "针对每个目标职位的JD，提取高频关键词并将其自然融入简历各板块，最大化关键词匹配度，以通过ATS机器筛选进入人工审核环节。",
+    "action_summary": "针对每个目标职位的JD，提取高频关键词并将其自然融入简历各板块，最大化关键词匹配度，以通过ATS机器筛选进入人工审核环节。",
+    "I_insight": "大公司的HR管理系统（ATS）会对简历进行机器关键词匹配作为第一道筛选，简历写作的核心目标是达成与JD的高关键词匹配度，而非仅仅展示经历。",
+    "HR_os": "关键词不是堆给机器看的，它也帮我快速确认你是不是这类岗位的直接人选。",
+    "current": {
+      "action_specificity": "",
+      "display_action_mode": "",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "",
+      "action_depth": "",
+      "action_review_status": ""
+    },
+    "proposed": {
+      "action_specificity": "jd_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "对照 JD 提取真实掌握的核心关键词，把它们分配到 Summary、Skills 和最相关的 Experience bullet 中。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "jd_keyword_alignment",
+      "action_depth": "rewrite",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:jd_specific"
+    },
+    "review_priority_score": 70,
+    "review_priority_reasons": [
+      "jd_specific action needs target JD grounding",
+      "high-frequency family: jd_keyword_alignment"
+    ]
+  }
+]

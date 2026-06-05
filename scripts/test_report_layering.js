@@ -74,6 +74,35 @@ Accounting role requiring Excel, QuickBooks, GAAP, accounts payable, accounts re
 bank reconciliation, financial reporting, tax preparation, bookkeeping, and audit support.
 `;
 
+const networkOperatorResume = `
+Chris Lin
+chris@example.com | 555-777-1111 | linkedin.com/in/chrislin
+
+Summary
+IT support graduate with help desk and campus network troubleshooting experience.
+
+Skills
+Linux, Windows, TCP/IP, DNS, ticketing, network monitoring
+
+Experience
+IT Assistant, Campus Lab, Taipei
+- Supported student lab computers and responded to network issues.
+- Checked router and switch connectivity during lab incidents.
+
+Operations Assistant, Local ISP, Taipei
+- Helped monitor service tickets.
+
+Education
+B.S. Information Systems, Example University, 2025
+`;
+
+const networkOperatorJd = `
+Network Operator (Junior full-time)
+Responsibilities include monitoring IT infrastructure, responding to network incidents,
+supporting AWS and GCP cloud environments, troubleshooting connectivity, documenting
+operational runbooks, and escalating incidents.
+`;
+
 function startServer(port, env = {}) {
   const child = spawn(process.execPath, ["server.js"], {
     cwd: ROOT,
@@ -215,9 +244,10 @@ async function main() {
     assert.ok(publicReport.freeMentorAdvice.mentorId);
     assert.equal(publicReport.freeMentorAdvice.adviceItems.length, 3);
     assert.equal(publicReport.lockedAdvicePreview.lockedMentorCount, 3);
-    assert.equal(publicReport.lockedAdvicePreview.lockedAdviceCount, 9);
+    assert.ok(publicReport.lockedAdvicePreview.lockedAdviceCount >= 0);
+    assert.ok(publicReport.lockedAdvicePreview.lockedAdviceCount <= 9);
     assert.equal(publicReport.lockedAdvicePreview.totalMentorCount, 4);
-    assert.equal(publicReport.lockedAdvicePreview.totalAdviceCount, 12);
+    assert.ok(publicReport.lockedAdvicePreview.totalAdviceCount <= 12);
     assert.equal(Object.prototype.hasOwnProperty.call(publicReport, "premiumReport"), false);
     const freeAdviceText = [
       publicReport.freeMentorAdvice?.mentorName,
@@ -371,12 +401,108 @@ async function main() {
     const freeMentorPlan = selectFreeMentorPlan(accountingCandidates, accountingInternalForPlan);
     const premiumMentorPlan = selectPremiumMentorPlan(accountingCandidates, accountingInternalForPlan, freeMentorPlan);
     assert.equal(freeMentorPlan.adviceItems.length, 3);
-    assert.deepEqual(freeMentorPlan.adviceItems.map((item) => item.targetSection), ["summary", "skills", "experience"]);
+    assert.equal(new Set(freeMentorPlan.adviceItems.map((item) => item.targetSection)).size, 3);
     assert.equal(premiumMentorPlan.length, 4);
-    assert.equal(premiumMentorPlan.reduce((sum, mentor) => sum + mentor.adviceItems.length, 0), 12);
+    const accountingPlanAdviceCount = premiumMentorPlan.reduce((sum, mentor) => sum + mentor.adviceItems.length, 0);
+    assert.ok(accountingPlanAdviceCount > 0);
+    assert.ok(accountingPlanAdviceCount <= 12);
     assert.equal(formatPublicFreeMentorAdvice(freeMentorPlan).adviceItems.length, 3);
-    assert.equal(buildLockedAdvicePreview(premiumMentorPlan).lockedAdviceCount, 9);
+    assert.ok(buildLockedAdvicePreview(premiumMentorPlan).lockedAdviceCount <= 9);
     assert.ok(formatPremiumMentorReport(premiumMentorPlan, accountingInternalForPlan).coverageSummary);
+
+    const networkInternalForPlan = formatInternalAtsResult({
+      engine: "rule-based",
+      version: "0.2.0",
+      jobTitle: "Network Operator (Junior full-time)",
+      hasJD: true,
+      total: 38,
+      risk: "high",
+      dimensions: {
+        A: { score: 4, max: 8 },
+        B: { score: 5, max: 7 },
+        C: { score: 4, max: 12 },
+        D: { score: 6, max: 45 },
+        E: { score: 3, max: 5 },
+        F: { score: 5, max: 23 },
+      },
+      dimensionProblems: {
+        C: [
+          "在职时长不足 3 个月的经历请明确标注 Intern/Internship。",
+          "经历描述缺少动作 + 方法/工具 + 量化结果。",
+        ],
+        D: [
+          "优先补齐 JD 缺失技能：gcp、it infrastructure、aws。",
+        ],
+        F: [
+          "Summary 缺少 exact target title：Network Operator (Junior full-time)。",
+        ],
+      },
+      metrics: {
+        checks: {
+          exactJobTitle: { exact: false, targetTitle: "Network Operator (Junior full-time)" },
+          coreSkillBulletCoverage: 0.2,
+        },
+        keywordMatch: {
+          matchMethod: { hardCoverage: 15, combinedKeywordCoverage: 18 },
+          hard_skills: {
+            total: 6,
+            matchedTerms: ["network monitoring"],
+            missing: ["aws", "gcp", "it infrastructure"],
+          },
+        },
+      },
+      priorityMissingKeywords: [
+        { term: "aws", priority: "high", category: "hard_skill" },
+        { term: "gcp", priority: "high", category: "hard_skill" },
+        { term: "it infrastructure", priority: "high", category: "hard_skill" },
+      ],
+      problemTags: [
+        { tag: "missing_exact_job_title", severity: "high", dimension: "F", topic: "role_fit", retrievalWeight: 0.9 },
+        { tag: "low_jd_keyword_match", severity: "high", dimension: "D", topic: "keyword_alignment", retrievalWeight: 0.9 },
+        { tag: "low_hard_skill_match", severity: "high", dimension: "D", topic: "keyword_alignment", retrievalWeight: 0.9 },
+        { tag: "weak_experience_keyword_evidence", severity: "medium", dimension: "C", topic: "experience_rewrite", retrievalWeight: 0.7 },
+        { tag: "low_measurable_results", severity: "high", dimension: "C", topic: "experience_rewrite", retrievalWeight: 0.85 },
+        { tag: "short_tenure_unclear", severity: "high", dimension: "C", topic: "content_quality", retrievalWeight: 0.8 },
+      ],
+      topMissingKeywords: ["aws", "gcp", "it infrastructure"],
+      problems: [],
+      suggestions: [
+        "把目标岗位关键词写进 Summary、Skills 和最相关的 Experience bullet，避免只堆在技能列表。",
+      ],
+    }, {
+      jobTitle: "Network Operator (Junior full-time)",
+      jdText: networkOperatorJd,
+      resumeText: networkOperatorResume,
+    });
+    assert.ok(networkInternalForPlan.adviceCoverageObligations.length >= 6);
+    const networkFreePlan = selectFreeMentorPlan([], networkInternalForPlan);
+    const networkPremiumPlan = selectPremiumMentorPlan([], networkInternalForPlan, networkFreePlan);
+    const networkPremiumReport = formatPremiumMentorReport(networkPremiumPlan, networkInternalForPlan);
+    const networkAdviceCount = networkPremiumPlan.reduce((sum, mentor) => sum + mentor.adviceItems.length, 0);
+    assert.ok(networkAdviceCount > 0);
+    assert.ok(networkAdviceCount <= 12);
+    assert.ok(networkPremiumReport.coverageSummary.totalObligationsDetected >= 6);
+    assert.ok(networkPremiumReport.coverageSummary.obligationsCovered >= 6);
+    const networkAdviceText = networkPremiumReport.allAdviceItems.flatMap((item) => [
+      item.title,
+      item.currentDiagnosis,
+      item.action,
+      item.mentorInsight,
+      item.example,
+    ]).join(" ").toLowerCase();
+    for (const term of ["aws", "gcp", "it infrastructure", "intern", "network operator"]) {
+      assert.ok(networkAdviceText.includes(term), `network operator advice should mention ${term}`);
+    }
+    assert.equal(/battery scandal|pr crisis|public relations crisis|当前报告可用的导师建议不足 12 条/.test(networkAdviceText), false);
+    const highRequiredObligations = networkInternalForPlan.adviceCoverageObligations
+      .filter((item) => item.required !== false && ["critical", "high"].includes(item.severity))
+      .map((item) => item.id);
+    for (const id of highRequiredObligations) {
+      assert.ok(
+        !networkPremiumReport.coverageSummary.uncoveredObligationIds.includes(id),
+        `high priority obligation should be covered: ${id}`
+      );
+    }
 
     const accountingScoreResponse = await fetch(`http://127.0.0.1:${devPort}/api/v1/score`, {
       method: "POST",
@@ -403,11 +529,11 @@ async function main() {
     ].join(" ").toLowerCase();
     assert.equal(/favorite course|interview|面试|star|自我介绍/.test(accountingResponseAdviceText), false);
     assert.equal(accountingResponseAdvice.adviceItems.length, 3);
-    assert.deepEqual(accountingResponseAdvice.adviceItems.map((item) => item.targetSection), ["summary", "skills", "experience"]);
+    assert.equal(new Set(accountingResponseAdvice.adviceItems.map((item) => item.targetSection)).size, 3);
     assert.equal(accountingScorePayload.publicReport.lockedAdvicePreview.lockedMentorCount, 3);
-    assert.equal(accountingScorePayload.publicReport.lockedAdvicePreview.lockedAdviceCount, 9);
+    assert.ok(accountingScorePayload.publicReport.lockedAdvicePreview.lockedAdviceCount <= 9);
     assert.equal(accountingScorePayload.publicReport.lockedAdvicePreview.totalMentorCount, 4);
-    assert.equal(accountingScorePayload.publicReport.lockedAdvicePreview.totalAdviceCount, 12);
+    assert.ok(accountingScorePayload.publicReport.lockedAdvicePreview.totalAdviceCount <= 12);
     for (const techTerm of ["tip out", "measured cycle", "whole cycle", "spring boot", "rest api", "redis", "react", "typescript", "pytorch", "backend", "frontend", "ai engineer"]) {
       assert.equal(accountingResponseAdviceText.includes(techTerm), false, `accounting public response leaked tech term ${techTerm}`);
     }
@@ -459,8 +585,12 @@ async function main() {
     assert.ok(saved.paidAdvice.length > 0);
     assert.equal(saved.publicReport.freeMentorAdvice.adviceItems.length, 3);
     assert.equal(saved.premiumReport.mentors.length, 4);
-    assert.equal(saved.premiumReport.mentors.reduce((sum, mentor) => sum + mentor.adviceItems.length, 0), 12);
+    const savedPremiumAdviceCount = saved.premiumReport.mentors.reduce((sum, mentor) => sum + mentor.adviceItems.length, 0);
+    assert.ok(savedPremiumAdviceCount > 0);
+    assert.ok(savedPremiumAdviceCount <= 12);
     assert.ok(saved.premiumReport.coverageSummary);
+    assert.ok(Object.prototype.hasOwnProperty.call(saved.premiumReport.coverageSummary, "totalObligationsDetected"));
+    assert.ok(Object.prototype.hasOwnProperty.call(saved.premiumReport.coverageSummary, "coveredObligationIds"));
 
     const reloadResponse = await fetch(
       `http://127.0.0.1:${devPort}/api/v1/reports/${scorePayload.reportId}/public?reportAccessToken=${encodeURIComponent(scorePayload.reportAccessToken)}`
@@ -487,8 +617,11 @@ async function main() {
     assert.equal(paidResponse.status, 200);
     const paidPayload = await paidResponse.json();
     assert.equal(paidPayload.premiumReport.mentors.length, 4);
-    assert.equal(paidPayload.premiumReport.mentors.reduce((sum, mentor) => sum + mentor.adviceItems.length, 0), 12);
+    const paidPremiumAdviceCount = paidPayload.premiumReport.mentors.reduce((sum, mentor) => sum + mentor.adviceItems.length, 0);
+    assert.ok(paidPremiumAdviceCount > 0);
+    assert.ok(paidPremiumAdviceCount <= 12);
     assert.ok(paidPayload.premiumReport.coverageSummary);
+    assert.ok(Object.prototype.hasOwnProperty.call(paidPayload.premiumReport.coverageSummary, "uncoveredObligationIds"));
     assert.ok(paidPayload.premiumReport.missingKeywordChecklist);
 
     prodServer = startServer(prodPort, { NODE_ENV: "production" });

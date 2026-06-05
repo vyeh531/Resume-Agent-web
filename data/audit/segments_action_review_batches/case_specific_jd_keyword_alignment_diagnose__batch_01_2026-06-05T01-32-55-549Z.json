@@ -1,0 +1,141 @@
+[
+  {
+    "id": 26614,
+    "chunk_id": "manual_issue_tag_gap_2026_06_03:file_naming_issue",
+    "topic": "Resume file hygiene",
+    "L1": "Resume ATS issue",
+    "L2": "Resume file name is not professional",
+    "retrieval_scope": "resume_edit",
+    "role_family": "universal",
+    "target_roles": "universal",
+    "problem_tags": "file_naming_issue",
+    "ats_dimensions": "A_format",
+    "advice_card_title": "把简历文件名改成专业格式",
+    "user_problem_summary": "简历文件名过于随意、含版本备注或无法识别姓名岗位时，会影响招聘者下载、转发和归档。",
+    "A_action": "把上传文件名改成清楚的专业格式，建议使用 FirstName_LastName_Resume_TargetRole.pdf。删除 final、new、copy、修改版、最新版、v3 这类内部版本词，并确认最终上传的是 PDF。",
+    "action_summary": "把上传文件名改成清楚的专业格式，建议使用 FirstName_LastName_Resume_TargetRole.pdf。删除 final、new、copy、修改版、最新版、v3 这类内部版本词，并确认最终上传的是 PDF。",
+    "I_insight": "文件名本身不是能力问题，但它会影响第一印象和招聘流程中的可管理性。",
+    "HR_os": "格式不是小事，版面一乱，我会更难快速抓到经历顺序和最相关的内容。",
+    "current": {
+      "action_specificity": "",
+      "display_action_mode": "",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "",
+      "action_depth": "",
+      "action_review_status": ""
+    },
+    "proposed": {
+      "action_specificity": "case_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "把近期最相关的课程、项目或训练成果整理进 Projects / Education，并优先保留能证明目标岗位能力的任务、方法和产出。",
+      "activation_role_family": "education_research",
+      "activation_keywords": "final",
+      "grounding_terms": "",
+      "canonical_action_family": "jd_keyword_alignment",
+      "action_depth": "diagnose",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:case_specific;has_activation_conditions"
+    },
+    "review_priority_score": 150,
+    "review_priority_reasons": [
+      "case_specific action is most likely to contain a previous student's context",
+      "high-frequency family: jd_keyword_alignment",
+      "contains high-risk role/project/tool terms"
+    ]
+  },
+  {
+    "id": 1571,
+    "chunk_id": "11dcab6e-e510-43af-8f9d-a42711fe696f-2024-12-08-GAP-Analysis+Resume-Polishing-Session_chunk_006",
+    "topic": "ATS机筛策略",
+    "L1": "求职策略",
+    "L2": "ATS机筛机制",
+    "retrieval_scope": "resume_edit",
+    "role_family": "data_analyst",
+    "target_roles": "data_analyst",
+    "problem_tags": "missing_priority_keywords",
+    "ats_dimensions": "D_keyword_match",
+    "advice_card_title": "求职者投递250+份简历仅获2次面试",
+    "user_problem_summary": "求职者投递250+份简历仅获2次面试，根本原因是简历关键词覆盖不足，无法通过ATS机器筛选进入HR视野",
+    "A_action": "针对每个目标职位的JD，识别强必须关键词和软关键词，确保这些词在简历中有所体现；改简历的最终目标就是尽可能让关键词覆盖目标JD",
+    "action_summary": "针对每个目标职位的JD，识别强必须关键词和软关键词，确保这些词在简历中有所体现；改简历的最终目标就是尽可能让关键词覆盖目标JD",
+    "I_insight": "ATS系统流程：hiring manager与HR finalize JD并定义强弱关键词→系统对所有申请做关键词匹配→HR按匹配度从高到低审阅；200份申请中系统通常只推送前30份给HR人工审阅",
+    "HR_os": "关键词不是堆给机器看的，它也帮我快速确认你是不是这类岗位的直接人选。",
+    "current": {
+      "action_specificity": "",
+      "display_action_mode": "",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "",
+      "action_depth": "",
+      "action_review_status": ""
+    },
+    "proposed": {
+      "action_specificity": "case_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "把近期最相关的课程、项目或训练成果整理进 Projects / Education，并优先保留能证明目标岗位能力的任务、方法和产出。",
+      "activation_role_family": "education_research",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "jd_keyword_alignment",
+      "action_depth": "diagnose",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:case_specific;has_activation_conditions"
+    },
+    "review_priority_score": 120,
+    "review_priority_reasons": [
+      "case_specific action is most likely to contain a previous student's context",
+      "high-frequency family: jd_keyword_alignment"
+    ]
+  },
+  {
+    "id": 1760,
+    "chunk_id": "017d1d79-b1dc-4905-8900-7905e40df51a-2026-04-01-简历定稿辅导_chunk_017",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "retrieval_scope": "resume_edit",
+    "role_family": "machine_learning",
+    "target_roles": "data_analyst",
+    "problem_tags": "education_details_missing",
+    "ats_dimensions": "B_contact",
+    "advice_card_title": "学生误以为每个项目只需写两到三个bullet point",
+    "user_problem_summary": "学生误以为每个项目只需写两到三个bullet point，",
+    "A_action": "确认学生是否因字数/条数限制而压缩了项目描述，若是则建议展开写，确保每个有价值的技术点和成果都有独立的bullet point呈现。",
+    "action_summary": "确认学生是否因字数/条数限制而压缩了项目描述，若是则建议展开写，确保每个有价值的技术点和成果都有独立的bullet point呈现。",
+    "I_insight": "课程项目的bullet point数量应以充分展示技术深度和成果为准，不必人为压缩；尤其是ML等技术项目，细节描述有助于通过ATS并体现能力。",
+    "HR_os": "一段经历要让我看出你承担了什么价值，否则很容易被当成普通参与者。",
+    "current": {
+      "action_specificity": "",
+      "display_action_mode": "",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "",
+      "action_depth": "",
+      "action_review_status": ""
+    },
+    "proposed": {
+      "action_specificity": "case_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "把近期最相关的课程、项目或训练成果整理进 Projects / Education，并优先保留能证明目标岗位能力的任务、方法和产出。",
+      "activation_role_family": "education_research",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "jd_keyword_alignment",
+      "action_depth": "diagnose",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:case_specific;has_activation_conditions"
+    },
+    "review_priority_score": 120,
+    "review_priority_reasons": [
+      "case_specific action is most likely to contain a previous student's context",
+      "high-frequency family: jd_keyword_alignment"
+    ]
+  }
+]

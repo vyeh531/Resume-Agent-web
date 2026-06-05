@@ -1,0 +1,47 @@
+[
+  {
+    "id": 25462,
+    "chunk_id": "985322ae-aebe-4403-bcab-afe89e70c5eb-2025-01-03-Session-02-FA方向gap-report+简历润色_chunk_013",
+    "topic": "技能栏优化",
+    "L1": "简历内容",
+    "L2": "技能列表",
+    "retrieval_scope": "resume_edit",
+    "role_family": "data_analyst",
+    "target_roles": "data_analyst",
+    "problem_tags": "keywords_only_in_skills,low_hard_skill_match,weak_target_role_alignment",
+    "ats_dimensions": "D_keyword_match",
+    "advice_card_title": "求职者有意向从事FA方向但简历未体现CPA相关进展",
+    "user_problem_summary": "求职者有意向从事FA方向但简历未体现CPA相关进展，HR无法判断求职者对该领域的决心与投入程度",
+    "A_action": "在简历技能或证书栏注明「CPA Level 1 Registered」并附上预计考试月份，或注明「正在复习CPA」，以体现对FA方向的主动投入",
+    "action_summary": "在简历技能或证书栏注明「CPA Level 1 Registered」并附上预计考试月份，",
+    "I_insight": "CPA共有4个level，即使尚未通过，登记注册或备考状态也能向招聘方传递求职者的职业方向认同感和行动力，有助于通过初步筛选",
+    "HR_os": "教育背景不是只写学校名称，相关课程和训练能帮我判断你是否有基础准备。",
+    "current": {
+      "action_specificity": "",
+      "display_action_mode": "",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "",
+      "action_depth": "",
+      "action_review_status": ""
+    },
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "围绕目标金融岗位保持真实匹配，把最相关的分析、沟通、客户或报告经验写清楚，避免为了包装而夸大职责或成果。",
+      "activation_role_family": "finance",
+      "activation_keywords": "FA",
+      "grounding_terms": "CPA",
+      "canonical_action_family": "skills_section",
+      "action_depth": "rewrite",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:role_specific;has_grounding_terms;has_activation_conditions"
+    },
+    "review_priority_score": 60,
+    "review_priority_reasons": [
+      "role_specific action is valuable but must be role/JD gated"
+    ]
+  }
+]

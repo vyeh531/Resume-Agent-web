@@ -153,7 +153,16 @@ function formatJdKeywordCount(ats) {
 }
 function getTargetJobTitle() {
   const candidates = [s.jobTitle, atsResult.jobTitle, atsResult.raw && atsResult.raw.jobTitle];
-  return candidates.find(v => v && !/依\s*JD|自动识别|unknown|^目标岗位$/i.test(String(v))) || "";
+  const raw = candidates.find(v => v && !/依\s*JD|自动识别|unknown|^目标岗位$/i.test(String(v))) || "";
+  return normalizeDisplayTargetJob(raw);
+}
+function normalizeDisplayTargetJob(value) {
+  return String(value || "")
+    .replace(/^\s*【(?:岗位|职位|职称|职务|招聘岗位|应聘岗位)】\s*[：:]\s*/i, "")
+    .replace(/^\s*(?:目标岗位|岗位|职位|职称|职务|招聘岗位|应聘岗位)\s*[：:\-–]\s*/i, "")
+    .replace(/\s*\((?:junior|senior|entry[-\s]?level|full[-\s]?time|part[-\s]?time|internship|intern|co-?op|new\s*grad)[^)]*\)\s*$/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 function formatTargetJobForProblem(jobTitle) {
   const cleaned = String(jobTitle || "")
@@ -555,14 +564,43 @@ const FIT_TYPE_CONFIG = {
   same_function:            { label:"同职能导师",  bg:"#F0FDF4", color:"#166534", border:"#BBF7D0" },
   cross_domain_high_relevance: { label:"跨领域高相关", bg:"#FFF7ED", color:"#92400E", border:"#FDE68A" },
   ats_universal:            { label:"ATS 通用建议", bg:"#F5F3FF", color:"#5B21B6", border:"#DDD6FE" },
-  recruiter_perspective:    { label:"HR 视角",     bg:"#FFF1F2", color:"#9F1239", border:"#FECDD3" },
+  recruiter_perspective:    { label:"HR",          bg:"#FFF1F2", color:"#9F1239", border:"#FECDD3" },
 };
+
+function resultAdviceIdentity(item) {
+  return String(item?.adviceId || item?.id || `${item?.title || ""}|${item?.action || item?.actionSummary || ""}`).trim();
+}
+function collectResultHrPerspectiveLookup() {
+  const lookup = new Map();
+  const sources = [
+    ...(s.premiumAdviceItems || []),
+    ...(atsResult.raw?.premiumAdviceItems || []),
+    ...((s.premiumMentors || []).flatMap(m => m.adviceItems || m.adviceList || [])),
+    ...((atsResult.raw?.premiumMentors || []).flatMap(m => m.adviceItems || m.adviceList || [])),
+    ...(s.freeMentorAdvice?.adviceItems || []),
+    ...(atsResult.raw?.freeMentorAdvice?.adviceItems || []),
+    ...((s.mentorAdvice || []).flatMap(m => m.adviceItems || m.adviceList || [])),
+  ];
+  sources.forEach((item) => {
+    const hr = item?.hrPerspective || item?.HR_os || item?.hrPov || item?.recruiterPerspective || "";
+    if (!hr) return;
+    [item.adviceId, item.id, resultAdviceIdentity(item)].filter(Boolean).forEach((key) => {
+      if (!lookup.has(String(key))) lookup.set(String(key), hr);
+    });
+  });
+  return lookup;
+}
+const HR_PERSPECTIVE_LOOKUP = collectResultHrPerspectiveLookup();
+function fallbackHrPerspective(item = {}) {
+  const action = item.action || item.actionSummary || item.title || "这条修改建议";
+  return `HR 会把这里当作快速筛选信号：如果简历没有体现「${String(action).slice(0, 42)}」这一点，候选人与 JD 的匹配感会被削弱。`;
+}
 
 function renderApiAdviceItem(item, i) {
   const diagnosis   = item.currentDiagnosis || item.problemSummary || "";
   const action      = item.action || item.actionSummary || "";
-  const insight     = item.mentorInsight || "";
-  const hrPov       = item.hrPerspective || "";
+  const insight     = item.mentorInsight || item.mentorLens || item.reason || item.I_insight || item.P_mentor || "";
+  const hrPov       = item.hrPerspective || item.HR_os || item.hrPov || item.recruiterPerspective || HR_PERSPECTIVE_LOOKUP.get(String(item.adviceId || "")) || HR_PERSPECTIVE_LOOKUP.get(resultAdviceIdentity(item)) || fallbackHrPerspective(item);
   const matchReason = item.matchReason || "";
   const fitType     = item.mentorFitType || "";
   const topicCluster = item.topicCluster || sectionLabel(item.targetSection);

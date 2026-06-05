@@ -159,6 +159,15 @@ export default function AnalyzingPage() {
             setTimeout(pollJob, 1200);
           } catch (error) {
             console.warn("[Analysis Job] poll failed", error.message);
+            if (error.code === "JOB_NOT_FOUND" || error.message === "JOB_NOT_FOUND") {
+              Store.set({
+                analysisJobId: null,
+                analysisJobStatus: "failed",
+                analysisJobError: "分析任务已中断，请返回首页重新提交。",
+              });
+              subStatusEl.textContent = "分析任务已中断，请返回首页重新提交。";
+              return;
+            }
             setTimeout(pollJob, 1800);
           }
         }

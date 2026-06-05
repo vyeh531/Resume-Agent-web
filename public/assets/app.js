@@ -24,8 +24,13 @@ const ANALYSIS_MESSAGES = [
   ["正在组装免费诊断…",    "只返回免费可见的问题、建议与导师建议"],
   ["正在保存报告…",        "生成结果页与后续解锁凭证"],
 ];
+const PAYMENT_MESSAGES = [
+  ["正在确认支付…", "正在校验支付状态与报告权限"],
+  ["正在解锁导师建议…", "释放 12 条完整导师建议与 HR 视角"],
+  ["正在生成完整报告…", "同步技能清单、改写路径和公司导师背景"],
+];
 
-function showLoader(text, subtext, rotate) {
+function showLoader(text, subtext, rotate, options = {}) {
   let o = document.querySelector(".loader-overlay");
   if (!o) {
     o = document.createElement("div");
@@ -54,30 +59,58 @@ function showLoader(text, subtext, rotate) {
     window.__resumeAppState.loaderProgressTimer = null;
   }
 
-  let progress = rotate ? 8 : (text && text.includes("完成") ? 100 : 18);
+  const mode = options.mode || (rotate === "payment" ? "payment" : "analysis");
+  const shouldRotate = Boolean(rotate);
+  const isPayment = mode === "payment";
+  let progress = isPayment ? 35 : (shouldRotate ? 8 : (text && text.includes("完成") ? 100 : 18));
   if (progressEl) progressEl.style.width = progress + "%";
   if (progressLabelEl) progressLabelEl.textContent = progress + "%";
 
-  if (rotate) {
+  if (shouldRotate) {
+    const messages = isPayment ? PAYMENT_MESSAGES : ANALYSIS_MESSAGES;
     let idx = 0;
     window.__resumeAppState.loaderRotateTimer = setInterval(() => {
-      idx = (idx + 1) % ANALYSIS_MESSAGES.length;
+      idx = (idx + 1) % messages.length;
       // Fade out → update → fade in
       textEl.style.opacity = "0";
       subtextEl.style.opacity = "0";
       setTimeout(() => {
-        textEl.textContent    = ANALYSIS_MESSAGES[idx][0];
-        subtextEl.textContent = ANALYSIS_MESSAGES[idx][1];
+        textEl.textContent    = messages[idx][0];
+        subtextEl.textContent = messages[idx][1];
         textEl.style.opacity = "1";
         subtextEl.style.opacity = "0.7";
       }, 300);
-    }, 3200);
+    }, isPayment ? 1800 : 3200);
     window.__resumeAppState.loaderProgressTimer = setInterval(() => {
-      progress = Math.min(92, progress + Math.max(1, Math.round((92 - progress) * 0.08)));
+      if (isPayment) {
+        progress = Math.min(97, progress + Math.max(2, Math.round((98 - progress) * 0.18)));
+      } else {
+        progress = Math.min(92, progress + Math.max(1, Math.round((92 - progress) * 0.08)));
+      }
       if (progressEl) progressEl.style.width = progress + "%";
       if (progressLabelEl) progressLabelEl.textContent = progress + "%";
-    }, 900);
+    }, isPayment ? 280 : 900);
   }
+}
+function completeLoader(text, subtext) {
+  if (window.__resumeAppState.loaderRotateTimer) {
+    clearInterval(window.__resumeAppState.loaderRotateTimer);
+    window.__resumeAppState.loaderRotateTimer = null;
+  }
+  if (window.__resumeAppState.loaderProgressTimer) {
+    clearInterval(window.__resumeAppState.loaderProgressTimer);
+    window.__resumeAppState.loaderProgressTimer = null;
+  }
+  const o = document.querySelector(".loader-overlay");
+  if (!o) return;
+  const textEl = o.querySelector(".loader-text");
+  const subtextEl = o.querySelector(".loader-subtext");
+  const progressEl = o.querySelector(".loader-progress-fill");
+  const progressLabelEl = o.querySelector(".loader-progress-label");
+  if (textEl) textEl.textContent = text || "已完成";
+  if (subtextEl) subtextEl.textContent = subtext || "";
+  if (progressEl) progressEl.style.width = "100%";
+  if (progressLabelEl) progressLabelEl.textContent = "100%";
 }
 function hideLoader() {
   if (window.__resumeAppState.loaderRotateTimer) {
@@ -112,6 +145,54 @@ function inferTargetJobFromJD(jdText) {
   return "";
 }
 
+function normalizeTargetJobTitle(value) {
+  return String(value || "")
+    .replace(/^\s*【(?:岗位|职位|职称|职务|招聘岗位|应聘岗位)】\s*[：:]\s*/i, "")
+    .replace(/^\s*(?:目标岗位|岗位|职位|职称|职务|招聘岗位|应聘岗位)\s*[：:\-–]\s*/i, "")
+    .replace(/\s*\((?:junior|senior|entry[-\s]?level|full[-\s]?time|part[-\s]?time|internship|intern|co-?op|new\s*grad)[^)]*\)\s*$/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function normalizeExtractedTargetJobTitle(value) {
+  return String(value || "")
+    .replace(/^\s*\u3010(?:\u76ee\u6807\u5c97\u4f4d|\u5c97\u4f4d|\u804c\u4f4d|\u804c\u79f0|\u804c\u52a1|\u62db\u8058\u5c97\u4f4d|\u5e94\u8058\u5c97\u4f4d)\u3011\s*[\uff1a:]\s*/i, "")
+    .replace(/^\s*(?:\u76ee\u6807\u5c97\u4f4d|\u5c97\u4f4d|\u804c\u4f4d|\u804c\u79f0|\u804c\u52a1|\u62db\u8058\u5c97\u4f4d|\u5e94\u8058\u5c97\u4f4d)\s*[\uff1a:\-–]\s*/i, "")
+    .replace(/\s*\((?:junior|senior|entry[-\s]?level|full[-\s]?time|part[-\s]?time|internship|intern|co-?op|new\s*grad)[^)]*\)\s*$/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function extractTargetJobFromJD(jdText) {
+  const text = String(jdText || "").replace(/\r/g, "\n").trim();
+  if (!text) return "";
+  const clean = (value) => normalizeExtractedTargetJobTitle(String(value || "")
+    .replace(/\s*\u3010.*$/, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 80));
+  const labeledPatterns = [
+    /^\s*(?:\u3010\s*)?(?:job\s*title|position\s*title|role\s*title|target\s*(?:role|position)|\u76ee\u6807\u5c97\u4f4d|\u5c97\u4f4d|\u804c\u4f4d|\u804c\u79f0|\u804c\u52a1|\u62db\u8058\u5c97\u4f4d|\u5e94\u8058\u5c97\u4f4d)(?:\s*\u3011)?\s*[:\uff1a\-–]\s*([^\n|;\uff1b]+)/i,
+    /^\s*(?:job\s*title|position\s*title|role\s*title|target\s*(?:role|position))\s*[:\-]\s*([^\n|;]+)/i,
+  ];
+  for (const pattern of labeledPatterns) {
+    const match = text.match(pattern);
+    const title = match && clean(match[1]);
+    if (title) return title;
+  }
+  const roleWords = /(engineer|developer|scientist|analyst|manager|management\s+trainee|trainee|designer|consultant|researcher|architect|specialist|associate|intern|\u5b9e\u4e60|\u7ba1\u57f9\u751f|\u5de5\u7a0b\u5e08|\u5206\u6790\u5e08|\u7ecf\u7406|\u987e\u95ee|\u7814\u7a76\u5458|\u8bbe\u8ba1\u5e08|\u4ea7\u54c1|\u8fd0\u8425|\u6570\u636e|\u7b97\u6cd5|\u673a\u5668\u5b66\u4e60|\u8f6f\u4ef6|\u524d\u7aef|\u540e\u7aef)/i;
+  const noiseWords = /(responsibilities|requirements|qualifications|about us|description|summary|duties|tasks|projects|policies|procedures|goals|\u85aa\u8d44|\u804c\u8d23|\u8981\u6c42|\u8d44\u683c|\u798f\u5229|\u516c\u53f8|\u6211\u4eec|\u5de5\u4f5c\u5185\u5bb9)/i;
+  const dutyLeadWords = /^(rotate|assist|participate|develop|analy[sz]e|complete|provide|learn|create|help|support|work|collaborate|manage\s+day[-\s]?to[-\s]?day)\b/i;
+  const lines = text.split("\n").map((line) => line.trim()).filter(Boolean).slice(0, 18);
+  for (const line of lines) {
+    const cleaned = line.replace(/^[#*\-\s]+/, "").replace(/\s+/g, " ").trim();
+    if (cleaned.length < 3 || cleaned.length > 90) continue;
+    if (noiseWords.test(cleaned) || dutyLeadWords.test(cleaned)) continue;
+    if (roleWords.test(cleaned)) return clean(cleaned);
+  }
+  return normalizeExtractedTargetJobTitle(inferTargetJobFromJD(text));
+}
+
 async function submitResume(form) {
   if (window.__resumeAppState.isSubmitting) return false;
   const file     = form.elements["resume"].files[0];
@@ -126,8 +207,8 @@ async function submitResume(form) {
   if (btn) btn.disabled = true;
   try {
     const resumeText = await readResumeFile(file);
-    const analysisJob = await startAnalysisJobAPI(resumeText, job || null, jd, file.name);
-    const targetJob = job || inferTargetJobFromJD(jd);
+    const targetJob = normalizeTargetJobTitle(job || extractTargetJobFromJD(jd));
+    const analysisJob = await startAnalysisJobAPI(resumeText, targetJob || null, jd, file.name);
     window.Store.set({
       resumeName: file.name,
       jobTitle: targetJob,
@@ -198,7 +279,7 @@ function storeAnalysisJobResult(result) {
     sessionId: result?.reportId || publicReport.reportId || null,
     reportAccessToken: result?.reportAccessToken || null,
     atsResult,
-    targetLabel: atsResult.jobTitle || publicReport.jobTitle || window.Store.get().targetLabel || window.Store.get().jobTitle || null,
+    targetLabel: window.Store.get().targetLabel || window.Store.get().jobTitle || publicReport.jobTitle || atsResult.jobTitle || null,
     freeMentorAdvice: publicReport.freeMentorAdvice || null,
     lockedAdvicePreview: publicReport.lockedAdvicePreview || null,
     mentorLogoPool: publicReport.lockedAdvicePreview?.mentorLogoPool || publicReport.freeMentorAdvice?.mentorLogoPool || null,
@@ -249,7 +330,7 @@ function mockLogin(btn) {
 }
 function mockPayment(btn) {
   btn.disabled = true;
-  showLoader("正在确认支付…", "解锁全部 4 位导师建议");
+  showLoader("正在确认支付…", "正在校验支付状态与报告权限", true, { mode: "payment" });
   setTimeout(async () => {
     try {
       const s = window.Store.get();
@@ -287,7 +368,8 @@ function mockPayment(btn) {
         sectionFixPlan: premiumReport.sectionFixPlan || null,
         mentorLogoPool: premiumReport.mentorLogoPool || s.mentorLogoPool || null,
       });
-      window.location.href = "/report";
+      completeLoader("解锁完成！", "完整报告已生成，正在进入报告页…");
+      setTimeout(() => { window.location.href = "/report"; }, 350);
     } catch (err) {
       hideLoader();
       btn.disabled = false;

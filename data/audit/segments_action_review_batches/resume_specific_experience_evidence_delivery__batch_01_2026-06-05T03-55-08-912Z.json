@@ -1,0 +1,94 @@
+[
+  {
+    "id": 10432,
+    "chunk_id": "36b5e142-50a3-421a-ac08-b907e63b5ab6-2025-09-28-GAP分析和简历修改_chunk_027",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "retrieval_scope": "resume_edit",
+    "role_family": "software_engineer,machine_learning,data_analyst,marketing",
+    "target_roles": "data_scientist",
+    "problem_tags": "low_hard_skill_match",
+    "ats_dimensions": "A_format",
+    "advice_card_title": "求职者缺乏对非结构化数据（JSON格式）及NoSQ...",
+    "user_problem_summary": "求职者缺乏对非结构化数据（JSON格式）及NoSQL数据库的了解，",
+    "A_action": "了解JSON格式数据处理方式及MongoDB等NoSQL（Not Only SQL）数据库的基本概念；学习ETL流程（Extract、Transform、Load），并结合Python等脚本语言将整个数据管道串联起来，作为简历中的技术加分项。",
+    "action_summary": "了解JSON格式数据处理方式及MongoDB等NoSQL（Not Only SQL）数据库的基本概念；",
+    "I_insight": "医疗行业的patient-level数据、科技公司广告系统的后台数据普遍以JSON/XML格式存储；掌握NoSQL+ETL+脚本能力，可显著提升在数据工程师及数据科学家岗位上的竞争力。",
+    "HR_os": "格式不是小事，版面一乱，我会更难快速抓到经历顺序和最相关的内容。",
+    "current": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "选择最相关的经历，把 bullet 改成「动作 + 方法/工具 + 结果」结构，让关键词有真实证据支撑。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "JSON,SQL,ETL",
+      "canonical_action_family": "experience_evidence",
+      "action_depth": "delivery",
+      "action_review_status": "approved"
+    },
+    "proposed": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "选择最相关的经历，把 bullet 改成「动作 + 方法/工具 + 结果」结构，让关键词有真实证据支撑。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "JSON,SQL,ETL",
+      "canonical_action_family": "experience_evidence",
+      "action_depth": "delivery",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:resume_specific;has_grounding_terms"
+    },
+    "review_priority_score": 100,
+    "review_priority_reasons": [
+      "resume_specific action needs resume grounding before showing raw text",
+      "high-frequency family: experience_evidence"
+    ]
+  },
+  {
+    "id": 26583,
+    "chunk_id": "9d767219-6e6b-40c3-bc6d-2c947c997273-2025-05-16-Session-01-gap分析报告+简历润色_chunk_007",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "retrieval_scope": "resume_edit",
+    "role_family": "marketing",
+    "target_roles": "product_manager",
+    "problem_tags": "missing_portfolio",
+    "ats_dimensions": "B_contact,F_role_fit",
+    "advice_card_title": "求职者设计作品集内容过多",
+    "user_problem_summary": "求职者设计作品集内容过多，未经筛选地展示所有项目，会给浏览者（未来经理）造成认知过载，反而无法突出核心竞争力。",
+    "A_action": "精简作品集展示数量，聚焦目标岗位最相关的代表性项目；可将其余项目归入「Other Projects」分类区；针对不同求职方向（如UIUX、Product Branding）分别建立独立版本的作品集。",
+    "action_summary": "精简作品集展示数量，聚焦目标岗位最相关的代表性项目；",
+    "I_insight": "设计领域有「认知负荷（cognitive load）」概念：作品集页面呈现越多内容，浏览者大脑需处理的信息量越大，越难留下深刻印象。精简反而能传递「会取舍」的设计思维。",
+    "HR_os": "缺少可验证链接时，我会少一个快速确认背景和作品可信度的入口。",
+    "current": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "作品集或项目列表不要一次性堆满；优先展示最贴近目标岗位的代表作，把其他项目收进次级分类，让招聘方先看到你的核心能力。",
+      "activation_role_family": "product_design,uiux",
+      "activation_keywords": "UIUX, product design, portfolio",
+      "grounding_terms": "UIUX",
+      "canonical_action_family": "experience_evidence",
+      "action_depth": "delivery",
+      "action_review_status": "approved"
+    },
+    "proposed": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "作品集或项目列表不要一次性堆满；优先展示最贴近目标岗位的代表作，把其他项目收进次级分类，让招聘方先看到你的核心能力。",
+      "activation_role_family": "product_design,uiux",
+      "activation_keywords": "UIUX,product design,portfolio",
+      "grounding_terms": "UIUX",
+      "canonical_action_family": "experience_evidence",
+      "action_depth": "delivery",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:resume_specific;has_grounding_terms;has_activation_conditions"
+    },
+    "review_priority_score": 100,
+    "review_priority_reasons": [
+      "resume_specific action needs resume grounding before showing raw text",
+      "high-frequency family: experience_evidence"
+    ]
+  }
+]

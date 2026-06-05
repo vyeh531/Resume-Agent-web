@@ -1,0 +1,49 @@
+[
+  {
+    "id": 72,
+    "chunk_id": "2cbb2c20-7975-4fb2-83be-1e77cb8d1041-2026-03-31-数据分析方向求职差距分析&简历修改辅导_chunk_009",
+    "topic": "技能综合提升",
+    "L1": "技能提升",
+    "L2": "数据分析",
+    "retrieval_scope": "resume_edit",
+    "role_family": "machine_learning,data_analyst",
+    "target_roles": "data_analyst",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills",
+    "ats_dimensions": "D_keyword_match",
+    "advice_card_title": "Candidate and mentor are...",
+    "user_problem_summary": "Candidate and mentor are doing a structured skill gap assessmen...",
+    "A_action": "对四个工具进行自我评估（1-5分）：(1)Excel——数据透视表、SUMIF/COUNTIF/VLOOKUP/INDEX-MATCH、跨表公式；(2)SQL——SELECT/JOIN/GROUP BY/子查询；(3)Python——pandas、matplotlib、sklearn基础；(4)Tableau/PowerBI——仪表板构建、计算字段；找出评分最低的工具，从那里开始",
+    "action_summary": "对四个工具进行自我评估（1-5分）：(1)Excel——数据透视表、SUMIF/COUNTIF/VLOOKUP/INDEX-M...",
+    "I_insight": "数据分析师职位始终需要这四个工具，频率大致为：Excel > SQL > Python > Tableau/PowerBI。对其中任何一个自评低于3分的候选人都有重大差距。评估创造了具体的、可操作的学习计划，而非模糊的\"提升数据技能\"建议。",
+    "HR_os": "日期和版面不稳，我会先担心细节感；ATS 解析错，也会影响人工判断。",
+    "current": {
+      "action_specificity": "",
+      "display_action_mode": "",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "",
+      "action_depth": "",
+      "action_review_status": ""
+    },
+    "proposed": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "对照 JD 提取真实掌握的核心关键词，把它们分配到 Summary、Skills 和最相关的 Experience bullet 中。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "SUMIF/COUNTIF/VLOOKUP/INDEX-MATCH,SQL,SELECT/JOIN/GROUP,SUMIF/COUNTIF/VLOOKUP/INDEX-M",
+      "canonical_action_family": "jd_keyword_alignment",
+      "action_depth": "diagnose",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:resume_specific;has_grounding_terms"
+    },
+    "review_priority_score": 130,
+    "review_priority_reasons": [
+      "resume_specific action needs resume grounding before showing raw text",
+      "high-frequency family: jd_keyword_alignment",
+      "contains high-risk role/project/tool terms"
+    ]
+  }
+]

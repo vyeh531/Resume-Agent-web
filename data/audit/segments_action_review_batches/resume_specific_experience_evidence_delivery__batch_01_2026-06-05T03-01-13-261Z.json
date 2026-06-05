@@ -1,0 +1,48 @@
+[
+  {
+    "id": 10432,
+    "chunk_id": "36b5e142-50a3-421a-ac08-b907e63b5ab6-2025-09-28-GAP分析和简历修改_chunk_027",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "retrieval_scope": "resume_edit",
+    "role_family": "software_engineer,machine_learning,data_analyst,marketing",
+    "target_roles": "data_scientist",
+    "problem_tags": "low_hard_skill_match",
+    "ats_dimensions": "A_format",
+    "advice_card_title": "求职者缺乏对非结构化数据（JSON格式）及NoSQ...",
+    "user_problem_summary": "求职者缺乏对非结构化数据（JSON格式）及NoSQL数据库的了解，",
+    "A_action": "了解JSON格式数据处理方式及MongoDB等NoSQL（Not Only SQL）数据库的基本概念；学习ETL流程（Extract、Transform、Load），并结合Python等脚本语言将整个数据管道串联起来，作为简历中的技术加分项。",
+    "action_summary": "了解JSON格式数据处理方式及MongoDB等NoSQL（Not Only SQL）数据库的基本概念；",
+    "I_insight": "医疗行业的patient-level数据、科技公司广告系统的后台数据普遍以JSON/XML格式存储；掌握NoSQL+ETL+脚本能力，可显著提升在数据工程师及数据科学家岗位上的竞争力。",
+    "HR_os": "格式不是小事，版面一乱，我会更难快速抓到经历顺序和最相关的内容。",
+    "current": {
+      "action_specificity": "",
+      "display_action_mode": "",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "",
+      "action_depth": "",
+      "action_review_status": ""
+    },
+    "proposed": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "选择最相关的经历，把 bullet 改成「动作 + 方法/工具 + 结果」结构，让关键词有真实证据支撑。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "JSON,SQL,ETL",
+      "canonical_action_family": "experience_evidence",
+      "action_depth": "delivery",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:resume_specific;has_grounding_terms"
+    },
+    "review_priority_score": 100,
+    "review_priority_reasons": [
+      "resume_specific action needs resume grounding before showing raw text",
+      "high-frequency family: experience_evidence"
+    ]
+  }
+]

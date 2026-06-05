@@ -1,0 +1,47 @@
+[
+  {
+    "id": 17599,
+    "chunk_id": "66681a7f-b006-42a6-b280-1e83d085c8c4-2025-12-24-岗位差距分析&简历修改课程_chunk_019",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "retrieval_scope": "resume_edit",
+    "role_family": "ai_engineer,machine_learning",
+    "target_roles": "ai_engineer",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills",
+    "ats_dimensions": "D_keyword_match",
+    "advice_card_title": "求职者选课时可能倾向于选择HCI或AI使用入门类水课",
+    "user_problem_summary": "求职者选课时可能倾向于选择HCI或AI使用入门类水课，",
+    "A_action": "选课时避开HCI、AI工具使用类水课，优先选择NLP、Deep Learning等核心技术课程；若学校无Generative AI课程，可以NLP作为替代，同时通过自学补充Gen AI相关知识。",
+    "action_summary": "选课时避开HCI、AI工具使用类水课，优先选择NLP、Deep Learning等核心技术课程；",
+    "I_insight": "当前学校课程设置普遍滞后于业界需求，Generative AI等热门方向许多学校尚未开设对应课程，求职者需主动识别哪些课程对简历和技能有实际价值，而非只看课程名称是否时髦。",
+    "HR_os": "教育背景不是只写学校名称，相关课程和训练能帮我判断你是否有基础准备。",
+    "current": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "选择最贴近目标岗位的一段项目经历，按「数据来源/任务背景 → 方法或工具 → 分析过程 → 结果或业务意义」重写，避免只列工具名。",
+      "activation_role_family": "data_scientist",
+      "activation_keywords": "",
+      "grounding_terms": "HCI,NLP",
+      "canonical_action_family": "education_signal",
+      "action_depth": "evidence",
+      "action_review_status": "approved"
+    },
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "选择最贴近目标岗位的一段项目经历，按「数据来源/任务背景 → 方法或工具 → 分析过程 → 结果或业务意义」重写，避免只列工具名。",
+      "activation_role_family": "data_scientist",
+      "activation_keywords": "",
+      "grounding_terms": "HCI,NLP",
+      "canonical_action_family": "education_signal",
+      "action_depth": "evidence",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:role_specific;has_grounding_terms;has_activation_conditions"
+    },
+    "review_priority_score": 60,
+    "review_priority_reasons": [
+      "role_specific action is valuable but must be role/JD gated"
+    ]
+  }
+]

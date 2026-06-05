@@ -287,6 +287,7 @@ function buildProfile(rawScoreResult, input = {}) {
   const targetRole = canonicalRole.role || rawProfile.targetRole || snakeCase(title);
   const roleText = `${title} ${input.jdText || ""}`.toLowerCase();
   const roleFamilyByTarget = {
+    management_trainee: "management_trainee",
     machine_learning_engineer: "machine_learning",
     ai_engineer: "ai_engineer",
     data_scientist: "data_scientist",
@@ -298,7 +299,9 @@ function buildProfile(rawScoreResult, input = {}) {
     full_stack_engineer: "software_engineer",
   };
   const roleFamily = roleFamilyByTarget[targetRole]
-    || (/\b(machine learning engineer|ml engineer|mle|deep learning engineer)\b/.test(roleText)
+    || (/\b(management trainee|graduate trainee|leadership development program|rotational program)\b/.test(roleText) || /管培/.test(roleText)
+      ? "management_trainee"
+      : /\b(machine learning engineer|ml engineer|mle|deep learning engineer)\b/.test(roleText)
       ? "machine_learning"
       : /\b(ai engineer|artificial intelligence engineer|llm engineer|generative ai engineer)\b/.test(roleText)
         ? "ai_engineer"
@@ -610,11 +613,29 @@ function problemTitle(item) {
 
 function problemMessage(item) {
   if (item.tag === "missing_exact_job_title") return "\u7b80\u5386\u4e2d\u672a\u7a33\u5b9a\u51fa\u73b0\u76ee\u6807\u5c97\u4f4d\u539f\u8bcd\uff0c\u53ef\u80fd\u5f71\u54cd ATS \u5bf9\u804c\u4f4d\u5b9a\u4f4d\u7684\u5224\u65ad\u3002";
+  if (item.tag === "missing_priority_keywords") return "\u7b80\u5386\u7f3a\u5c11\u76ee\u6807 JD \u4e2d\u4f18\u5148\u7ea7\u8f83\u9ad8\u7684\u5173\u952e\u8bcd\uff0c\u9700\u8981\u5148\u8865\u771f\u5b9e\u638c\u63e1\u3001\u4e14\u80fd\u7528\u7ecf\u5386\u652f\u6491\u7684\u6280\u80fd\u8bcd\u3002";
+  if (item.tag === "low_jd_keyword_match") return "\u7b80\u5386\u548c\u76ee\u6807 JD \u7684\u8bed\u8a00\u5339\u914d\u8fd8\u4e0d\u591f\uff0cATS \u53ef\u80fd\u65e0\u6cd5\u5feb\u901f\u8bc6\u522b\u4f60\u548c\u8fd9\u4e2a\u5c97\u4f4d\u7684\u76f4\u63a5\u5173\u8054\u3002";
   if (item.tag === "low_measurable_results") return "\u7ecf\u5386\u4e2d\u7684\u7ed3\u679c\u8bc1\u636e\u504f\u5c11\uff0c\u5efa\u8bae\u63d0\u5347\u767e\u5206\u6bd4\u3001\u89c4\u6a21\u3001\u6548\u7387\u7b49\u91cf\u5316\u8868\u8fbe\u3002";
   if (item.tag === "low_hard_skill_match") return "\u6838\u5fc3\u786c\u6280\u80fd\u8986\u76d6\u4e0d\u8db3\uff0c\u9700\u8981\u628a\u6709\u771f\u5b9e\u7ecf\u9a8c\u652f\u6491\u7684\u5de5\u5177\u3001\u6280\u80fd\u548c\u573a\u666f\u5199\u8fdb\u7ecf\u5386\u8bc1\u636e\u91cc\u3002";
+  if (item.tag === "weak_summary_role_alignment") return "Summary \u548c\u76ee\u6807\u5c97\u4f4d\u7684\u5173\u8054\u4e0d\u591f\u76f4\u63a5\uff0cHR \u521d\u7b5b\u65f6\u53ef\u80fd\u770b\u4e0d\u51fa\u4f60\u6b63\u5728\u6295\u8fd9\u4e2a\u65b9\u5411\u3002";
+  if (item.tag === "weak_target_role_alignment") return "\u7b80\u5386\u6574\u4f53\u8fd8\u6ca1\u6709\u56f4\u7ed5\u76ee\u6807\u5c97\u4f4d\u91cd\u65b0\u7ec4\u7ec7\uff0c\u76f8\u5173\u6280\u80fd\u3001\u7ecf\u5386\u548c\u6210\u679c\u4e4b\u95f4\u7684\u4e3b\u7ebf\u4e0d\u591f\u6e05\u695a\u3002";
+  if (item.tag === "weak_experience_keyword_evidence") return "\u76ee\u6807\u5c97\u4f4d\u7684\u5173\u952e\u8bcd\u5728\u7ecf\u5386\u91cc\u7f3a\u5c11\u5bf9\u5e94\u8bc1\u636e\uff0c\u53ea\u770b Skills \u5f88\u96be\u5224\u65ad\u4f60\u662f\u5426\u771f\u7684\u505a\u8fc7\u76f8\u5173\u5de5\u4f5c\u3002";
+  if (item.tag === "short_tenure_unclear") return "\u7b80\u5386\u4e2d\u6709\u65f6\u957f\u8f83\u77ed\u7684\u7ecf\u5386\uff0c\u5982\u679c\u4e0d\u6807\u6ce8 Intern / Internship \u6216\u8bf4\u660e\u9879\u76ee\u5468\u671f\uff0cHR \u53ef\u80fd\u4f1a\u5bf9\u7a33\u5b9a\u6027\u4ea7\u751f\u7591\u8651\u3002";
+  if (item.tag === "partial_china_experience") return "\u7b80\u5386\u4e2d\u6709\u90e8\u5206\u7ecf\u5386\u6765\u81ea\u4e2d\u56fd\u6216\u975e\u76ee\u6807\u5e02\u573a\uff0c\u9700\u8981\u8865\u5145\u66f4\u5bb9\u6613\u88ab\u76ee\u6807\u5e02\u573a HR \u7406\u89e3\u7684\u5de5\u5177\u3001\u573a\u666f\u548c\u6210\u679c\u8868\u8fbe\u3002";
+  if (item.tag === "all_china_experience") return "\u7b80\u5386\u7684\u6838\u5fc3\u7ecf\u5386\u4e3b\u8981\u6765\u81ea\u4e2d\u56fd\u6216\u975e\u76ee\u6807\u5e02\u573a\uff0c\u5efa\u8bae\u5f3a\u5316\u53ef\u8fc1\u79fb\u7684\u80fd\u529b\u8bc1\u636e\uff0c\u964d\u4f4e HR \u5bf9\u5e02\u573a\u9002\u914d\u5ea6\u7684\u7591\u8651\u3002";
   if (item.tag === "missing_portfolio") return "\u76ee\u6807\u5c97\u4f4d\u9700\u8981\u901a\u8fc7\u4f5c\u54c1\u96c6\u5224\u65ad\u8bbe\u8ba1\u80fd\u529b\uff0c\u4f46\u7b80\u5386\u5934\u90e8\u672a\u68c0\u6d4b\u5230\u53ef\u70b9\u51fb\u7684\u4f5c\u54c1\u96c6\u94fe\u63a5\u3002";
   if (item.tag === "missing_github_link") return "\u76ee\u6807\u5c97\u4f4d\u9700\u8981\u9879\u76ee\u6216\u4ee3\u7801\u8bc1\u636e\uff0c\u4f46\u7b80\u5386\u4e2d\u672a\u68c0\u6d4b\u5230 GitHub \u6216\u76f8\u5173\u4ee3\u7801\u94fe\u63a5\u3002";
   return "\u4f60\u7684\u7b80\u5386\u7f3a\u5c11\u591a\u4e2a\u76ee\u6807\u5c97\u4f4d\u6838\u5fc3\u5173\u952e\u8bcd\uff0c\u53ef\u80fd\u5f71\u54cd ATS \u521d\u7b5b\u3002";
+}
+
+function looksLikeRawAtsDiagnostic(value = "") {
+  return /detected by ATS rules|not found in resume|must-have keywords missing|keyword_gap_|^target title\b|^partial_china_experience\b|^all_china_experience\b/i.test(String(value || "").trim());
+}
+
+function userFacingProblemMessage(item = {}, fallback = "") {
+  const raw = String(item.message || item.evidence || fallback || "").trim();
+  if (!raw || looksLikeRawAtsDiagnostic(raw)) return problemMessage(item);
+  return raw;
 }
 
 function buildStructuredSuggestions(internalAtsResult) {
@@ -639,6 +660,207 @@ function buildStructuredSuggestions(internalAtsResult) {
   }
 
   return suggestions;
+}
+
+function coverageFamilyForTag(tagName = "", dimension = "overall") {
+  if (/exact_job_title|summary|target_role|role_alignment|position|role_specificity/.test(tagName)) return "positioning";
+  if (/keyword|hard_skill|priority_keyword|jd_match/.test(tagName)) return "keywords";
+  if (/experience|evidence|skills_only|bullet|project_details/.test(tagName)) return "experience_evidence";
+  if (/measurable|result|impact|action_verbs/.test(tagName)) return "impact";
+  if (/short_tenure|intern|internship/.test(tagName)) return "tenure_clarity";
+  if (/linkedin|github|portfolio|contact|link/.test(tagName)) return "profile_links";
+  if (/education|gpa|coursework/.test(tagName)) return "education";
+  if (/format|date|file|section|chronological|readability/.test(tagName)) return "format";
+  if (dimension === "D") return "keywords";
+  if (dimension === "F") return "positioning";
+  if (dimension === "C") return "impact";
+  if (dimension === "B") return "profile_completeness";
+  if (dimension === "A") return "format";
+  return "overall";
+}
+
+function targetSectionForTag(tagName = "", dimension = "overall") {
+  if (/exact_job_title|summary|target_role|role_alignment|position/.test(tagName)) return "summary";
+  if (/keyword|hard_skill|priority_keyword/.test(tagName)) return "skills";
+  if (/experience|evidence|skills_only|measurable|result|impact|action_verbs|short_tenure|intern/.test(tagName)) return "experience";
+  if (/github|portfolio|project/.test(tagName)) return "projects";
+  if (/linkedin|contact|email|phone/.test(tagName)) return "header";
+  if (/education|gpa|coursework/.test(tagName)) return "education";
+  if (/format|date|file|chronological/.test(tagName)) return "overall";
+  if (dimension === "D") return "skills";
+  if (dimension === "F") return "summary";
+  if (dimension === "C") return "experience";
+  if (dimension === "B") return "header";
+  return "overall";
+}
+
+function inferTagFromProblemText(value = "", dimension = "overall") {
+  const text = String(value || "").toLowerCase();
+  if (/intern|internship|short tenure|不足\s*3\s*个月|短期|在职时长/.test(text)) return "short_tenure_unclear";
+  if (/exact title|job title|target title|岗位原词|职位名称/.test(text)) return "missing_exact_job_title";
+  if (/keyword|jd|关键词|技能词|hard skill|aws|gcp|infrastructure/.test(text)) return "missing_priority_keywords";
+  if (/summary|定位|求职方向/.test(text)) return "weak_summary_role_alignment";
+  if (/experience|bullet|经历|证据|skills.*only|技能.*经历/.test(text)) return "weak_experience_keyword_evidence";
+  if (/quant|metric|measurable|数字|量化|结果|成果/.test(text)) return "low_measurable_results";
+  if (/linkedin/.test(text)) return "missing_linkedin";
+  if (/github|repo|repository|代码/.test(text)) return "missing_github_link";
+  if (/portfolio|作品集/.test(text)) return "missing_portfolio";
+  if (/date|日期|时间线/.test(text)) return "missing_section_dates";
+  if (/gpa|coursework|课程|教育/.test(text)) return "education_details_missing";
+  if (dimension === "D") return "low_jd_keyword_match";
+  if (dimension === "F") return "weak_target_role_alignment";
+  if (dimension === "C") return "weak_result_orientation";
+  if (dimension === "B") return "profile_completeness_gap";
+  if (dimension === "A") return "format_structure_gap";
+  return "resume_optimization_gap";
+}
+
+function weakDimensionMessage(key, dimension = {}) {
+  const labels = {
+    A: "文件与格式规范维度偏低，需要修复影响 ATS 读取和 HR 扫读的格式问题。",
+    B: "基本资料完整性维度偏低，需要补齐联系方式、链接、教育或日期等基础可信信息。",
+    C: "内容质量与成果表达维度偏低，需要把经历改成动作、方法/工具和量化结果结构。",
+    D: "JD 关键词匹配维度偏低，需要补齐真实掌握的岗位关键词并放到合适位置。",
+    E: "地域与市场适配维度偏低，需要补充能降低市场/地区疑虑的可信信号。",
+    F: "职位相关性维度偏低，需要让 Summary 和核心经历更像目标岗位。",
+  };
+  return labels[key] || `${dimension.label || key} 维度得分偏低，需要针对这个维度补强简历证据。`;
+}
+
+function buildAdviceCoverageObligations(internalAtsResult) {
+  const obligations = [];
+  const add = (raw = {}) => {
+    const tagName = raw.tag || inferTagFromProblemText(raw.message, raw.dimension);
+    const dimension = raw.dimension || "overall";
+    const severity = normalizeSeverity(raw.severity || (raw.required ? "high" : "medium"));
+    const id = raw.id || `${raw.source || "ats"}:${dimension}:${tagName}:${obligations.length}`;
+    if (obligations.some((item) => item.id === id)) return;
+    obligations.push({
+      id,
+      tag: tagName,
+      dimension,
+      severity,
+      targetSection: raw.targetSection || targetSectionForTag(tagName, dimension),
+      message: userFacingProblemMessage({ tag: tagName, message: raw.message, evidence: raw.evidence, dimension }),
+      keywords: asArray(raw.keywords).filter(Boolean),
+      coverageFamily: raw.coverageFamily || coverageFamilyForTag(tagName, dimension),
+      source: raw.source || "ats",
+      required: raw.required !== false && ["critical", "high", "medium"].includes(severity),
+    });
+  };
+
+  for (const item of asArray(internalAtsResult.problemTags)) {
+    add({
+      id: `problem:${item.tag}`,
+      tag: item.tag,
+      dimension: item.dimension,
+      severity: item.severity,
+      message: userFacingProblemMessage(item),
+      source: "problemTags",
+      required: ["critical", "high"].includes(item.severity),
+    });
+  }
+
+  for (const item of asArray(internalAtsResult.topProblems)) {
+    const relatedTag = asArray(item.relatedTags)[0] || inferTagFromProblemText(item.message, item.dimension);
+    add({
+      id: `topProblem:${relatedTag}`,
+      tag: relatedTag,
+      dimension: item.dimension,
+      severity: item.severity,
+      message: userFacingProblemMessage({ tag: relatedTag, message: item.message, dimension: item.dimension }),
+      source: "topProblems",
+      required: true,
+    });
+  }
+
+  for (const item of asArray(internalAtsResult.structuredSuggestions)) {
+    const relatedTag = asArray(item.relatedTags)[0] || inferTagFromProblemText(item.message, item.targetSection);
+    add({
+      id: `suggestion:${item.priority}:${relatedTag}`,
+      tag: relatedTag,
+      dimension: relatedTag === "missing_exact_job_title" ? "F" : undefined,
+      severity: item.unlockTier === "free" ? "high" : "medium",
+      targetSection: item.targetSection,
+      message: userFacingProblemMessage({ tag: relatedTag, message: item.message }),
+      keywords: item.relatedKeywords,
+      coverageFamily: coverageFamilyForTag(relatedTag),
+      source: "structuredSuggestions",
+      required: true,
+    });
+  }
+
+  for (const item of asArray(internalAtsResult.priorityMissingKeywords)) {
+    add({
+      id: `keyword:${String(item.term || "").toLowerCase()}`,
+      tag: "missing_priority_keywords",
+      dimension: "D",
+      severity: item.priority === "high" ? "high" : "medium",
+      targetSection: item.category === "hard_skill" ? "experience" : "skills",
+      message: `简历中还缺少 JD 明确要求的关键词「${item.term}」，建议只在你真实掌握、且有经历可以支撑时补进简历。`,
+      keywords: [item.term],
+      coverageFamily: "keywords",
+      source: "priorityMissingKeywords",
+      required: item.priority === "high" || item.priority === "medium",
+    });
+  }
+
+  for (const [dimensionKey, problems] of Object.entries(internalAtsResult.dimensionProblems || {})) {
+    asArray(problems).forEach((problem, index) => {
+      const message = typeof problem === "string" ? problem : (problem.message || problem.title || problem.evidence || "");
+      const tagName = (problem && typeof problem === "object" && problem.tag) || inferTagFromProblemText(message, dimensionKey);
+      add({
+        id: `dimensionProblem:${dimensionKey}:${index}:${tagName}`,
+        tag: tagName,
+        dimension: dimensionKey,
+        severity: (problem && typeof problem === "object" && problem.severity) || "medium",
+        message,
+        keywords: problem && typeof problem === "object" ? problem.keywords : [],
+        source: "dimensionProblems",
+        required: true,
+      });
+    });
+  }
+
+  const titleMatch = internalAtsResult.diagnostics?.jobTitleMatch;
+  if (titleMatch?.exactMatch === false) {
+    add({
+      id: "diagnostic:missing_exact_job_title",
+      tag: "missing_exact_job_title",
+      dimension: "F",
+      severity: titleMatch.severity || "medium",
+      targetSection: "summary",
+      message: userFacingProblemMessage({ tag: "missing_exact_job_title" }),
+      keywords: [titleMatch.targetTitle].filter(Boolean),
+      coverageFamily: "positioning",
+      source: "diagnostics.jobTitleMatch",
+      required: true,
+    });
+  }
+
+  for (const [key, dimension] of Object.entries(internalAtsResult.dimensions || {})) {
+    const percentage = Number(dimension.percentage || 0);
+    if (dimension.max > 0 && percentage < 0.65) {
+      const tagName = inferTagFromProblemText("", key);
+      add({
+        id: `weakDimension:${key}`,
+        tag: tagName,
+        dimension: key,
+        severity: percentage < 0.45 ? "high" : "medium",
+        message: weakDimensionMessage(key, dimension),
+        coverageFamily: coverageFamilyForTag(tagName, key),
+        source: "dimensions",
+        required: true,
+      });
+    }
+  }
+
+  return obligations.sort((a, b) => {
+    const severityDiff = severityRank(a.severity) - severityRank(b.severity);
+    if (severityDiff !== 0) return severityDiff;
+    if (a.required !== b.required) return a.required ? -1 : 1;
+    return String(a.id).localeCompare(String(b.id));
+  }).slice(0, 24);
 }
 
 function buildRetrievalQuery(internalAtsResult) {
@@ -702,6 +924,8 @@ function buildInternalAtsResult(rawScoreResult, input = {}) {
     version: REPORT_VERSION,
     scoringMode: SCORING_MODE,
     jobTitle: buildInternalJobTitle(rawScoreResult, input),
+    resumeText: input.resumeText || rawScoreResult.resumeText || "",
+    jdText: input.jdText || rawScoreResult.jdText || "",
     hasJD: Boolean(rawScoreResult.hasJD ?? input.jdText),
     total: scores.overall.score,
     jdMatchRatio,
@@ -717,6 +941,7 @@ function buildInternalAtsResult(rawScoreResult, input = {}) {
     keywordMatch: buildKeywordMatchV2(rawScoreResult),
     priorityMissingKeywords: buildPriorityMissingKeywords(rawScoreResult),
     problemTags: asArray(rawScoreResult.problemTags),
+    adviceCoverageObligations: [],
     topInsights: [],
     topProblems: [],
     structuredSuggestions: [],
@@ -737,6 +962,7 @@ function buildInternalAtsResult(rawScoreResult, input = {}) {
   result.topProblems = buildTopProblems(result);
   result.topInsights = buildTopInsights(result);
   result.structuredSuggestions = buildStructuredSuggestions(result);
+  result.adviceCoverageObligations = buildAdviceCoverageObligations(result);
   result.retrievalQuery = buildRetrievalQuery(result);
   return result;
 }
@@ -906,11 +1132,12 @@ function stripFreeAdvice(item) {
         title: advice.title,
         currentDiagnosis: advice.currentDiagnosis || advice.problemSummary,
         action: advice.action || advice.actionSummary,
-        mentorLens: advice.mentorLens || "",
-        reason: advice.reason || "",
-        mentorInsight: advice.mentorInsight || "",
+        mentorLens: advice.mentorLens || advice.P_mentor || "",
+        reason: advice.reason || advice.I_insight || "",
+        mentorInsight: advice.mentorInsight || advice.I_insight || advice.mentorLens || advice.P_mentor || "",
         example: advice.example || "",
-        hrPerspective: advice.hrPerspective || "",
+        hrPerspective: advice.hrPerspective || advice.HR_os || "",
+        HR_os: advice.HR_os || advice.hrPerspective || "",
         targetSection: advice.targetSection || "overall",
         priority: advice.priority || "medium",
         priorityLabel: advice.priorityLabel || (advice.priority === "high" ? "必改" : advice.priority === "medium" ? "建议改" : "补充"),
@@ -962,11 +1189,13 @@ function formatPremiumUnlockedReport(internalAtsResult, paidAdviceOrMentorReport
       actionSummary: item.actionSummary || item.action,
       currentDiagnosis: item.currentDiagnosis || item.problemSummary,
       action: item.action || item.actionSummary,
-      reason: item.reason || "",
+      mentorLens: item.mentorLens || item.P_mentor || "",
+      reason: item.reason || item.I_insight || "",
       evidence: asArray(item.evidence).slice(0, 3),
-      mentorInsight: item.mentorInsight,
+      mentorInsight: item.mentorInsight || item.I_insight || item.mentorLens || item.P_mentor || "",
       example: item.example,
-      hrPerspective: item.hrPerspective,
+      hrPerspective: item.hrPerspective || item.HR_os || "",
+      HR_os: item.HR_os || item.hrPerspective || "",
       targetSection: item.targetSection || "overall",
       topicCluster: item.topicCluster || "",
       matchReason: item.matchReason || "",
@@ -1002,6 +1231,10 @@ function formatPremiumUnlockedReport(internalAtsResult, paidAdviceOrMentorReport
         coverageRatio: 1,
         coveredProblemTags: [],
         uncoveredProblemTags: [],
+        totalObligationsDetected: 0,
+        obligationsCovered: 0,
+        coveredObligationIds: [],
+        uncoveredObligationIds: [],
       },
       keywordBreakdown: premiumKeywordBreakdown,
       missingKeywordChecklist: checklist,
@@ -1084,6 +1317,7 @@ module.exports = {
   buildKeywordMatchV2,
   buildPriorityMissingKeywords,
   buildProblemTags,
+  buildAdviceCoverageObligations,
   buildTopInsights,
   buildTopProblems,
   buildStructuredSuggestions,

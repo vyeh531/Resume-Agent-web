@@ -1,0 +1,3 @@
+{"type":"validation","id":1,"issues":["ollama_error"],"error":"Could not parse JSON array from Ollama response: {\"id\": 1, \"HR_os\": \"为了提高机器筛选通过率，我会先看你是否采用多版本简历策略，投递不同岗位时分别突出相应技能和经验。\"}"}
+{"type":"validation","id":2,"issues":["ollama_error"],"error":"Could not parse JSON array from Ollama response: {\"id\": 2, \"HR_os\": \"ATS机筛是我们首先看到的东西，所以关键词匹配很重要。简历应该精心编写，确保在整个文本中反复出现JD中提到的技术关键词。这可以帮助简历更好地与职位相对应，增加被选中的机会。\"}"}
+{"type":"validation","id":3,"issues":["ollama_error"],"error":"Could not parse JSON array from Ollama response: {\"id\": 3, \"HR_os\": \"按属性重组技能板块可以让面试官和ATS更快速定位候选人的技术栈，同时也使简历初筛更清晰明了。\"}"}

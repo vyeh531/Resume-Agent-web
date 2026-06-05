@@ -37,7 +37,7 @@ const mentorsSection = document.getElementById("mentors");
 if (mentorsSection) {
   const num = mentorsSection.querySelector(".section-num");
   const title = mentorsSection.querySelector(".section-title");
-  if (num) num.textContent = "03 · 12 条导师建议";
+  if (num) num.textContent = "03 · 导师建议";
   if (title) title.textContent = "按你的简历问题优先匹配";
 }
 
@@ -173,7 +173,16 @@ function formatJdKeywordCount(ats) {
 }
 function getTargetJobTitle() {
   const candidates = [s.jobTitle, atsResult.jobTitle, atsResult.raw && atsResult.raw.jobTitle];
-  return candidates.find(v => v && !/依\s*JD|自动识别|unknown|^目标岗位$/i.test(String(v))) || "";
+  const raw = candidates.find(v => v && !/依\s*JD|自动识别|unknown|^目标岗位$/i.test(String(v))) || "";
+  return normalizeDisplayTargetJob(raw);
+}
+function normalizeDisplayTargetJob(value) {
+  return String(value || "")
+    .replace(/^\s*【(?:岗位|职位|职称|职务|招聘岗位|应聘岗位)】\s*[：:]\s*/i, "")
+    .replace(/^\s*(?:目标岗位|岗位|职位|职称|职务|招聘岗位|应聘岗位)\s*[：:\-–]\s*/i, "")
+    .replace(/\s*\((?:junior|senior|entry[-\s]?level|full[-\s]?time|part[-\s]?time|internship|intern|co-?op|new\s*grad)[^)]*\)\s*$/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 function formatTargetJobForProblem(jobTitle) {
   const cleaned = String(jobTitle || "")
@@ -278,6 +287,13 @@ function renderMentorLogoMarquee(pool) {
     </div>
   `).join("");
   return `<div class="logo-marquee" aria-label="Mentor company logos"><div class="logo-marquee-track">${chips}</div></div>`;
+}
+function renderMentorLogoIntro(pool) {
+  return `
+    <div class="mentor-logo-intro" id="mentorLogoIntro">
+      <p class="mentor-logo-copy">由 MentorX 导师知识库中的真实大厂经验交叉匹配，系统会优先挑出最贴合你简历问题的建议。</p>
+      ${renderMentorLogoMarquee(STATIC_MENTOR_COMPANY_LOGOS)}
+    </div>`;
 }
 
 function collectMentorLogoPool() {
@@ -542,7 +558,7 @@ function priorityBadge(p){
 function renderAdviceItem(item, idx) {
   const insight = item.mentorInsight || "";
   const example = item.example || "";
-  const hrPerspective = item.hrPerspective || "";
+  const hrPerspective = item.hrPerspective || item.HR_os || item.hrPov || item.recruiterPerspective || HR_PERSPECTIVE_LOOKUP.get(String(item.adviceId || "")) || HR_PERSPECTIVE_LOOKUP.get(adviceIdentity(item)) || fallbackHrPerspective(item);
   const divider = idx > 0
     ? `<div style="height:1px;background:linear-gradient(to right,transparent,#DDD6CA,transparent);margin:24px 0;"></div>`
     : "";
@@ -561,7 +577,7 @@ function renderAdviceItem(item, idx) {
       ${actionSummary ? `<div style="display:flex;gap:10px;background:#F0FDF4;border-left:3px solid #4ADE80;border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:10px;"><span style="font-size:15px;flex-shrink:0;margin-top:1px;">⚡</span><div><div style="font-size:11px;font-weight:700;color:#15803D;margin-bottom:4px;">建议你先做</div><p style="margin:0;font-size:13px;line-height:1.65;color:#166534;">${escapeHtml(actionSummary)}</p></div></div>` : ""}
       ${insight ? `<div style="background:#F5F3FF;border-left:3px solid #C4B5FD;border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:10px;"><div style="font-size:11px;font-weight:700;color:#6D28D9;margin-bottom:4px;">导师视角</div><p style="margin:0;font-size:13px;line-height:1.65;color:#4C1D95;">${escapeHtml(insight)}</p></div>` : ""}
       ${example ? `<div class="advice-example"><div class="advice-example-head"><div class="title"><span class="check">✓</span><span>改写示例</span></div><button class="copy-btn" onclick="copyMentorExample(this)" data-content='${escapeAttr(example)}'>📋 复制</button></div><div class="advice-example-body"><span style="font-size:13px;font-weight:500;line-height:1.6;font-family:var(--mono,monospace);">${escapeHtml(example)}</span></div></div>` : ""}
-      ${hrPerspective ? `<div style="background:#F5F3FF;border-left:3px solid #C4B5FD;border-radius:0 10px 10px 0;padding:12px 14px;margin-top:8px;"><div style="font-size:11px;font-weight:700;color:#6D28D9;margin-bottom:4px;">HR 视角</div><p style="margin:0;font-size:13px;line-height:1.65;color:#4C1D95;">${escapeHtml(hrPerspective)}</p></div>` : ""}
+      ${hrPerspective ? `<div style="background:#F5F3FF;border-left:3px solid #C4B5FD;border-radius:0 10px 10px 0;padding:12px 14px;margin-top:8px;"><div style="font-size:11px;font-weight:700;color:#6D28D9;margin-bottom:4px;">HR</div><p style="margin:0;font-size:13px;line-height:1.65;color:#4C1D95;">${escapeHtml(hrPerspective)}</p></div>` : ""}
     </div>
   `;
 }
@@ -599,7 +615,6 @@ function renderPremiumMentorCard(m, idx) {
 function renderAdviceBundle(items, logoPool) {
   const advice = (items || []).slice(0, 12).map((item, i) => renderAdviceItem(item, i)).join("");
   return `
-    ${renderMentorLogoMarquee(logoPool)}
     <article style="background:#FFFDF6;border:1px solid #EDE9DC;border-radius:22px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:16px;">
       <div>${advice}</div>
     </article>
@@ -609,6 +624,31 @@ function renderAdviceBundle(items, logoPool) {
 function adviceIdentity(item) {
   return String(item?.adviceId || item?.id || `${item?.title || ""}|${item?.action || item?.actionSummary || ""}`).trim();
 }
+function collectHrPerspectiveLookup() {
+  const lookup = new Map();
+  const sources = [
+    ...(s.premiumAdviceItems || []),
+    ...(atsResult.raw?.premiumAdviceItems || []),
+    ...((s.premiumMentors || []).flatMap(m => m.adviceItems || m.adviceList || [])),
+    ...((atsResult.raw?.premiumMentors || []).flatMap(m => m.adviceItems || m.adviceList || [])),
+    ...(s.freeMentorAdvice?.adviceItems || []),
+    ...(atsResult.raw?.freeMentorAdvice?.adviceItems || []),
+    ...((s.mentorAdvice || []).flatMap(m => m.adviceItems || m.adviceList || [])),
+  ];
+  sources.forEach((item) => {
+    const hr = item?.hrPerspective || item?.HR_os || item?.hrPov || item?.recruiterPerspective || "";
+    if (!hr) return;
+    [item.adviceId, item.id, adviceIdentity(item)].filter(Boolean).forEach((key) => {
+      if (!lookup.has(String(key))) lookup.set(String(key), hr);
+    });
+  });
+  return lookup;
+}
+const HR_PERSPECTIVE_LOOKUP = collectHrPerspectiveLookup();
+function fallbackHrPerspective(item = {}) {
+  const action = item.action || item.actionSummary || item.title || "这条修改建议";
+  return `HR 会把这里当作快速筛选信号：如果简历没有体现「${String(action).slice(0, 42)}」这一点，候选人与 JD 的匹配感会被削弱。`;
+}
 function isUnsafeReportAdvice(item) {
   const text = [
     item?.title,
@@ -617,8 +657,12 @@ function isUnsafeReportAdvice(item) {
     item?.action,
     item?.actionSummary,
     item?.mentorInsight,
+    item?.mentorLens,
+    item?.I_insight,
+    item?.P_mentor,
     item?.example,
     item?.hrPerspective,
+    item?.HR_os,
   ].filter(Boolean).join(" ").toLowerCase();
   return /绿卡|green card|工作身份|work authorization|holder|quant research|risk quant|mfe|sharpe ratio|embedded system|computer vision|ba方向|ba\s*\/\s*da|da\s*\/\s*ba/i.test(text);
 }
@@ -642,21 +686,6 @@ function collectReportAdviceItems() {
     items.push(item);
     if (items.length >= 12) break;
   }
-  const fallbackSuggestions = normalizeSuggestionList();
-  let fallbackIndex = 0;
-  while (items.length < 12 && fallbackSuggestions.length) {
-    const text = fallbackSuggestions[fallbackIndex % fallbackSuggestions.length];
-    items.push({
-      adviceId: `report-fallback-${items.length + 1}`,
-      title: `简历优化建议 ${items.length + 1}`,
-      currentDiagnosis: "当前报告可用的导师建议不足 12 条，系统基于 ATS 诊断补充了这一条优先行动。",
-      action: text,
-      targetSection: "overall",
-      priority: items.length < 4 ? "high" : "medium",
-      topicCluster: "ATS 诊断",
-    });
-    fallbackIndex += 1;
-  }
   return items.slice(0, 12);
 }
 
@@ -665,14 +694,14 @@ const FIT_TYPE_CONFIG = {
   same_industry: { label:"同产业导师", bg:"#F0FDF4", color:"#15803D", border:"#BBF7D0" },
   same_function: { label:"同职能导师", bg:"#F0FDF4", color:"#166534", border:"#BBF7D0" },
   cross_domain_high_relevance: { label:"跨领域高相关", bg:"#FFF7ED", color:"#92400E", border:"#FDE68A" },
-  recruiter_perspective: { label:"HR 视角", bg:"#FFF1F2", color:"#9F1239", border:"#FECDD3" },
+  recruiter_perspective: { label:"HR", bg:"#FFF1F2", color:"#9F1239", border:"#FECDD3" },
 };
 
 function renderAdviceItem(item, i) {
   const diagnosis = item.currentDiagnosis || item.problemSummary || "";
   const action = item.action || item.actionSummary || "";
-  const insight = item.mentorInsight || "";
-  const hrPov = item.hrPerspective || "";
+  const insight = item.mentorInsight || item.mentorLens || item.reason || item.I_insight || item.P_mentor || "";
+  const hrPov = item.hrPerspective || item.HR_os || item.hrPov || item.recruiterPerspective || HR_PERSPECTIVE_LOOKUP.get(String(item.adviceId || "")) || HR_PERSPECTIVE_LOOKUP.get(adviceIdentity(item)) || fallbackHrPerspective(item);
   const fitType = item.mentorFitType || "";
   const rawTopicCluster = item.topicCluster || sectionLabel(item.targetSection);
   const topicCluster = /ATS\s*通用建议/i.test(String(rawTopicCluster)) ? "" : rawTopicCluster;
@@ -724,6 +753,19 @@ const premiumMentors = s.premiumMentors;
 const premiumAdviceItems = collectReportAdviceItems();
 const mentorLogoPool = collectMentorLogoPool();
 const legacyMentors = s.mentorAdvice;
+if (mentorsSection) {
+  const num = mentorsSection.querySelector(".section-num");
+  if (num) {
+    const legacyAdviceCount = (legacyMentors || []).reduce((sum, mentor) =>
+      sum + ((mentor.adviceItems || mentor.adviceList || []).length), 0);
+    const adviceCount = (premiumAdviceItems || []).length || legacyAdviceCount;
+    num.textContent = adviceCount ? `03 · ${adviceCount} 条导师建议` : "03 · 导师建议";
+  }
+}
+const mentorLogoIntroSlot = document.getElementById("mentorLogoIntroSlot");
+if (mentorLogoIntroSlot) {
+  mentorLogoIntroSlot.innerHTML = renderMentorLogoIntro(mentorLogoPool);
+}
 const mentorsListEl = document.getElementById("mentorsList");
 if (mentorsListEl) {
   if (premiumAdviceItems && premiumAdviceItems.length > 0) {

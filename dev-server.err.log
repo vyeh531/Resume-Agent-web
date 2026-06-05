@@ -1,0 +1,18 @@
+[Analysis Job] failed 9775fd32-4283-43ef-98ba-9a00bb64cf4a Reduce of empty array with no initial value
+(node:76312) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 SIGINT listeners added to [process]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:76312) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 SIGTERM listeners added to [process]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+(node:76312) MaxListenersExceededWarning: Possible EventEmitter memory leak detected. 11 exit listeners added to [process]. MaxListeners is 10. Use emitter.setMaxListeners() to increase limit
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\viviy\Documents\GitHub\Resume-Agent-MVP\.next\server\app\api\v1\analysis-jobs\[jobId]\route.js'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\.next\\server\\app\\api\\v1\\analysis-jobs\\[jobId]\\route.js',
+  page: '/api/v1/analysis-jobs/440d8187-de56-4b46-b9d3-e1a941ffa7e2'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open 'C:\Users\viviy\Documents\GitHub\Resume-Agent-MVP\.next\server\pages\_document.js'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\.next\\server\\pages\\_document.js'
+}

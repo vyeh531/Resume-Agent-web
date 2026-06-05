@@ -1,0 +1,629 @@
+{
+  "generatedAt": "2026-06-05T02:54:16.040Z",
+  "reviewLimit": 0,
+  "batchSize": 80,
+  "rowCount": 1146,
+  "allReviewPath": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\segments_action_governance_review_all_2026-06-05T02-54-15-872Z.json",
+  "batches": [
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\case_specific_experience_evidence_evidence__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "case_specific__experience_evidence__evidence",
+      "batchIndex": 1,
+      "rowCount": 80,
+      "specificity": "case_specific",
+      "canonicalActionFamily": "experience_evidence",
+      "actionDepth": "evidence",
+      "topPriorityScore": 150
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\case_specific_experience_evidence_evidence__batch_02_2026-06-05T02-54-15-872Z.json",
+      "group": "case_specific__experience_evidence__evidence",
+      "batchIndex": 2,
+      "rowCount": 62,
+      "specificity": "case_specific",
+      "canonicalActionFamily": "experience_evidence",
+      "actionDepth": "evidence",
+      "topPriorityScore": 120
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_summary_positioning_evidence__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__summary_positioning__evidence",
+      "batchIndex": 1,
+      "rowCount": 80,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "summary_positioning",
+      "actionDepth": "evidence",
+      "topPriorityScore": 110
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_summary_positioning_evidence__batch_02_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__summary_positioning__evidence",
+      "batchIndex": 2,
+      "rowCount": 31,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "summary_positioning",
+      "actionDepth": "evidence",
+      "topPriorityScore": 80
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_experience_evidence_evidence__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__experience_evidence__evidence",
+      "batchIndex": 1,
+      "rowCount": 80,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "experience_evidence",
+      "actionDepth": "evidence",
+      "topPriorityScore": 110
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_experience_evidence_evidence__batch_02_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__experience_evidence__evidence",
+      "batchIndex": 2,
+      "rowCount": 12,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "experience_evidence",
+      "actionDepth": "evidence",
+      "topPriorityScore": 80
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\case_specific_summary_positioning_evidence__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "case_specific__summary_positioning__evidence",
+      "batchIndex": 1,
+      "rowCount": 69,
+      "specificity": "case_specific",
+      "canonicalActionFamily": "summary_positioning",
+      "actionDepth": "evidence",
+      "topPriorityScore": 150
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_jd_keyword_alignment_evidence__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__jd_keyword_alignment__evidence",
+      "batchIndex": 1,
+      "rowCount": 64,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "jd_keyword_alignment",
+      "actionDepth": "evidence",
+      "topPriorityScore": 110
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_summary_positioning_rewrite__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__summary_positioning__rewrite",
+      "batchIndex": 1,
+      "rowCount": 57,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "summary_positioning",
+      "actionDepth": "rewrite",
+      "topPriorityScore": 110
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\resume_specific_summary_positioning_evidence__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "resume_specific__summary_positioning__evidence",
+      "batchIndex": 1,
+      "rowCount": 53,
+      "specificity": "resume_specific",
+      "canonicalActionFamily": "summary_positioning",
+      "actionDepth": "evidence",
+      "topPriorityScore": 130
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\resume_specific_experience_evidence_evidence__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "resume_specific__experience_evidence__evidence",
+      "batchIndex": 1,
+      "rowCount": 52,
+      "specificity": "resume_specific",
+      "canonicalActionFamily": "experience_evidence",
+      "actionDepth": "evidence",
+      "topPriorityScore": 130
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_experience_evidence_rewrite__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__experience_evidence__rewrite",
+      "batchIndex": 1,
+      "rowCount": 52,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "experience_evidence",
+      "actionDepth": "rewrite",
+      "topPriorityScore": 110
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\resume_specific_jd_keyword_alignment_evidence__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "resume_specific__jd_keyword_alignment__evidence",
+      "batchIndex": 1,
+      "rowCount": 39,
+      "specificity": "resume_specific",
+      "canonicalActionFamily": "jd_keyword_alignment",
+      "actionDepth": "evidence",
+      "topPriorityScore": 130
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_jd_keyword_alignment_rewrite__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__jd_keyword_alignment__rewrite",
+      "batchIndex": 1,
+      "rowCount": 37,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "jd_keyword_alignment",
+      "actionDepth": "rewrite",
+      "topPriorityScore": 110
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_summary_positioning_diagnose__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__summary_positioning__diagnose",
+      "batchIndex": 1,
+      "rowCount": 33,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "summary_positioning",
+      "actionDepth": "diagnose",
+      "topPriorityScore": 110
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_experience_evidence_diagnose__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__experience_evidence__diagnose",
+      "batchIndex": 1,
+      "rowCount": 29,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "experience_evidence",
+      "actionDepth": "diagnose",
+      "topPriorityScore": 110
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\case_specific_jd_keyword_alignment_evidence__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "case_specific__jd_keyword_alignment__evidence",
+      "batchIndex": 1,
+      "rowCount": 27,
+      "specificity": "case_specific",
+      "canonicalActionFamily": "jd_keyword_alignment",
+      "actionDepth": "evidence",
+      "topPriorityScore": 150
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\resume_specific_experience_evidence_rewrite__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "resume_specific__experience_evidence__rewrite",
+      "batchIndex": 1,
+      "rowCount": 27,
+      "specificity": "resume_specific",
+      "canonicalActionFamily": "experience_evidence",
+      "actionDepth": "rewrite",
+      "topPriorityScore": 130
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_summary_positioning_delivery__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__summary_positioning__delivery",
+      "batchIndex": 1,
+      "rowCount": 27,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "summary_positioning",
+      "actionDepth": "delivery",
+      "topPriorityScore": 110
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\case_specific_experience_evidence_rewrite__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "case_specific__experience_evidence__rewrite",
+      "batchIndex": 1,
+      "rowCount": 26,
+      "specificity": "case_specific",
+      "canonicalActionFamily": "experience_evidence",
+      "actionDepth": "rewrite",
+      "topPriorityScore": 150
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\resume_specific_jd_keyword_alignment_rewrite__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "resume_specific__jd_keyword_alignment__rewrite",
+      "batchIndex": 1,
+      "rowCount": 21,
+      "specificity": "resume_specific",
+      "canonicalActionFamily": "jd_keyword_alignment",
+      "actionDepth": "rewrite",
+      "topPriorityScore": 130
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\resume_specific_summary_positioning_rewrite__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "resume_specific__summary_positioning__rewrite",
+      "batchIndex": 1,
+      "rowCount": 20,
+      "specificity": "resume_specific",
+      "canonicalActionFamily": "summary_positioning",
+      "actionDepth": "rewrite",
+      "topPriorityScore": 130
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_jd_keyword_alignment_diagnose__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__jd_keyword_alignment__diagnose",
+      "batchIndex": 1,
+      "rowCount": 17,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "jd_keyword_alignment",
+      "actionDepth": "diagnose",
+      "topPriorityScore": 110
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\case_specific_experience_evidence_diagnose__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "case_specific__experience_evidence__diagnose",
+      "batchIndex": 1,
+      "rowCount": 12,
+      "specificity": "case_specific",
+      "canonicalActionFamily": "experience_evidence",
+      "actionDepth": "diagnose",
+      "topPriorityScore": 150
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\resume_specific_experience_evidence_diagnose__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "resume_specific__experience_evidence__diagnose",
+      "batchIndex": 1,
+      "rowCount": 11,
+      "specificity": "resume_specific",
+      "canonicalActionFamily": "experience_evidence",
+      "actionDepth": "diagnose",
+      "topPriorityScore": 130
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\case_specific_summary_positioning_rewrite__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "case_specific__summary_positioning__rewrite",
+      "batchIndex": 1,
+      "rowCount": 11,
+      "specificity": "case_specific",
+      "canonicalActionFamily": "summary_positioning",
+      "actionDepth": "rewrite",
+      "topPriorityScore": 120
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_summary_positioning_proof__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__summary_positioning__proof",
+      "batchIndex": 1,
+      "rowCount": 11,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "summary_positioning",
+      "actionDepth": "proof",
+      "topPriorityScore": 110
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\case_specific_summary_positioning_diagnose__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "case_specific__summary_positioning__diagnose",
+      "batchIndex": 1,
+      "rowCount": 9,
+      "specificity": "case_specific",
+      "canonicalActionFamily": "summary_positioning",
+      "actionDepth": "diagnose",
+      "topPriorityScore": 150
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\resume_specific_summary_positioning_diagnose__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "resume_specific__summary_positioning__diagnose",
+      "batchIndex": 1,
+      "rowCount": 8,
+      "specificity": "resume_specific",
+      "canonicalActionFamily": "summary_positioning",
+      "actionDepth": "diagnose",
+      "topPriorityScore": 130
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\case_specific_jd_keyword_alignment_rewrite__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "case_specific__jd_keyword_alignment__rewrite",
+      "batchIndex": 1,
+      "rowCount": 7,
+      "specificity": "case_specific",
+      "canonicalActionFamily": "jd_keyword_alignment",
+      "actionDepth": "rewrite",
+      "topPriorityScore": 150
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_jd_keyword_alignment_structure__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__jd_keyword_alignment__structure",
+      "batchIndex": 1,
+      "rowCount": 7,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "jd_keyword_alignment",
+      "actionDepth": "structure",
+      "topPriorityScore": 110
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_summary_positioning_structure__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__summary_positioning__structure",
+      "batchIndex": 1,
+      "rowCount": 7,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "summary_positioning",
+      "actionDepth": "structure",
+      "topPriorityScore": 110
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_experience_evidence_proof__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__experience_evidence__proof",
+      "batchIndex": 1,
+      "rowCount": 6,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "experience_evidence",
+      "actionDepth": "proof",
+      "topPriorityScore": 110
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_jd_keyword_alignment_proof__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__jd_keyword_alignment__proof",
+      "batchIndex": 1,
+      "rowCount": 6,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "jd_keyword_alignment",
+      "actionDepth": "proof",
+      "topPriorityScore": 110
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\resume_specific_jd_keyword_alignment_diagnose__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "resume_specific__jd_keyword_alignment__diagnose",
+      "batchIndex": 1,
+      "rowCount": 5,
+      "specificity": "resume_specific",
+      "canonicalActionFamily": "jd_keyword_alignment",
+      "actionDepth": "diagnose",
+      "topPriorityScore": 130
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\resume_specific_jd_keyword_alignment_structure__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "resume_specific__jd_keyword_alignment__structure",
+      "batchIndex": 1,
+      "rowCount": 5,
+      "specificity": "resume_specific",
+      "canonicalActionFamily": "jd_keyword_alignment",
+      "actionDepth": "structure",
+      "topPriorityScore": 130
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_jd_keyword_alignment_delivery__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__jd_keyword_alignment__delivery",
+      "batchIndex": 1,
+      "rowCount": 4,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "jd_keyword_alignment",
+      "actionDepth": "delivery",
+      "topPriorityScore": 80
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\jd_specific_summary_positioning_evidence__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "jd_specific__summary_positioning__evidence",
+      "batchIndex": 1,
+      "rowCount": 4,
+      "specificity": "jd_specific",
+      "canonicalActionFamily": "summary_positioning",
+      "actionDepth": "evidence",
+      "topPriorityScore": 70
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\case_specific_jd_keyword_alignment_diagnose__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "case_specific__jd_keyword_alignment__diagnose",
+      "batchIndex": 1,
+      "rowCount": 3,
+      "specificity": "case_specific",
+      "canonicalActionFamily": "jd_keyword_alignment",
+      "actionDepth": "diagnose",
+      "topPriorityScore": 150
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\resume_specific_summary_positioning_proof__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "resume_specific__summary_positioning__proof",
+      "batchIndex": 1,
+      "rowCount": 3,
+      "specificity": "resume_specific",
+      "canonicalActionFamily": "summary_positioning",
+      "actionDepth": "proof",
+      "topPriorityScore": 130
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\resume_specific_jd_keyword_alignment_proof__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "resume_specific__jd_keyword_alignment__proof",
+      "batchIndex": 1,
+      "rowCount": 3,
+      "specificity": "resume_specific",
+      "canonicalActionFamily": "jd_keyword_alignment",
+      "actionDepth": "proof",
+      "topPriorityScore": 100
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\resume_specific_quantified_impact_rewrite__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "resume_specific__quantified_impact__rewrite",
+      "batchIndex": 1,
+      "rowCount": 3,
+      "specificity": "resume_specific",
+      "canonicalActionFamily": "quantified_impact",
+      "actionDepth": "rewrite",
+      "topPriorityScore": 80
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\jd_specific_jd_keyword_alignment_evidence__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "jd_specific__jd_keyword_alignment__evidence",
+      "batchIndex": 1,
+      "rowCount": 3,
+      "specificity": "jd_specific",
+      "canonicalActionFamily": "jd_keyword_alignment",
+      "actionDepth": "evidence",
+      "topPriorityScore": 70
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_education_signal_rewrite__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__education_signal__rewrite",
+      "batchIndex": 1,
+      "rowCount": 3,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "education_signal",
+      "actionDepth": "rewrite",
+      "topPriorityScore": 60
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\jd_specific_jd_keyword_alignment_rewrite__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "jd_specific__jd_keyword_alignment__rewrite",
+      "batchIndex": 1,
+      "rowCount": 2,
+      "specificity": "jd_specific",
+      "canonicalActionFamily": "jd_keyword_alignment",
+      "actionDepth": "rewrite",
+      "topPriorityScore": 100
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_education_signal_diagnose__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__education_signal__diagnose",
+      "batchIndex": 1,
+      "rowCount": 2,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "education_signal",
+      "actionDepth": "diagnose",
+      "topPriorityScore": 90
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_experience_evidence_structure__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__experience_evidence__structure",
+      "batchIndex": 1,
+      "rowCount": 1,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "experience_evidence",
+      "actionDepth": "structure",
+      "topPriorityScore": 110
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_experience_evidence_delivery__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__experience_evidence__delivery",
+      "batchIndex": 1,
+      "rowCount": 1,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "experience_evidence",
+      "actionDepth": "delivery",
+      "topPriorityScore": 110
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\resume_specific_summary_positioning_delivery__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "resume_specific__summary_positioning__delivery",
+      "batchIndex": 1,
+      "rowCount": 1,
+      "specificity": "resume_specific",
+      "canonicalActionFamily": "summary_positioning",
+      "actionDepth": "delivery",
+      "topPriorityScore": 100
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\resume_specific_experience_evidence_delivery__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "resume_specific__experience_evidence__delivery",
+      "batchIndex": 1,
+      "rowCount": 1,
+      "specificity": "resume_specific",
+      "canonicalActionFamily": "experience_evidence",
+      "actionDepth": "delivery",
+      "topPriorityScore": 100
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\resume_specific_summary_positioning_structure__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "resume_specific__summary_positioning__structure",
+      "batchIndex": 1,
+      "rowCount": 1,
+      "specificity": "resume_specific",
+      "canonicalActionFamily": "summary_positioning",
+      "actionDepth": "structure",
+      "topPriorityScore": 100
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_quantified_impact_evidence__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__quantified_impact__evidence",
+      "batchIndex": 1,
+      "rowCount": 1,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "quantified_impact",
+      "actionDepth": "evidence",
+      "topPriorityScore": 90
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_quantified_impact_proof__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__quantified_impact__proof",
+      "batchIndex": 1,
+      "rowCount": 1,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "quantified_impact",
+      "actionDepth": "proof",
+      "topPriorityScore": 90
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_education_signal_delivery__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__education_signal__delivery",
+      "batchIndex": 1,
+      "rowCount": 1,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "education_signal",
+      "actionDepth": "delivery",
+      "topPriorityScore": 90
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_quantified_impact_rewrite__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__quantified_impact__rewrite",
+      "batchIndex": 1,
+      "rowCount": 1,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "quantified_impact",
+      "actionDepth": "rewrite",
+      "topPriorityScore": 90
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\resume_specific_overall_positioning_rewrite__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "resume_specific__overall_positioning__rewrite",
+      "batchIndex": 1,
+      "rowCount": 1,
+      "specificity": "resume_specific",
+      "canonicalActionFamily": "overall_positioning",
+      "actionDepth": "rewrite",
+      "topPriorityScore": 80
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\resume_specific_education_signal_proof__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "resume_specific__education_signal__proof",
+      "batchIndex": 1,
+      "rowCount": 1,
+      "specificity": "resume_specific",
+      "canonicalActionFamily": "education_signal",
+      "actionDepth": "proof",
+      "topPriorityScore": 80
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\jd_specific_jd_keyword_alignment_diagnose__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "jd_specific__jd_keyword_alignment__diagnose",
+      "batchIndex": 1,
+      "rowCount": 1,
+      "specificity": "jd_specific",
+      "canonicalActionFamily": "jd_keyword_alignment",
+      "actionDepth": "diagnose",
+      "topPriorityScore": 70
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\jd_specific_summary_positioning_proof__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "jd_specific__summary_positioning__proof",
+      "batchIndex": 1,
+      "rowCount": 1,
+      "specificity": "jd_specific",
+      "canonicalActionFamily": "summary_positioning",
+      "actionDepth": "proof",
+      "topPriorityScore": 70
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\jd_specific_summary_positioning_rewrite__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "jd_specific__summary_positioning__rewrite",
+      "batchIndex": 1,
+      "rowCount": 1,
+      "specificity": "jd_specific",
+      "canonicalActionFamily": "summary_positioning",
+      "actionDepth": "rewrite",
+      "topPriorityScore": 70
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_education_signal_evidence__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__education_signal__evidence",
+      "batchIndex": 1,
+      "rowCount": 1,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "education_signal",
+      "actionDepth": "evidence",
+      "topPriorityScore": 60
+    },
+    {
+      "file": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP\\data\\audit\\segments_action_review_batches\\role_specific_skills_section_rewrite__batch_01_2026-06-05T02-54-15-872Z.json",
+      "group": "role_specific__skills_section__rewrite",
+      "batchIndex": 1,
+      "rowCount": 1,
+      "specificity": "role_specific",
+      "canonicalActionFamily": "skills_section",
+      "actionDepth": "rewrite",
+      "topPriorityScore": 60
+    }
+  ]
+}

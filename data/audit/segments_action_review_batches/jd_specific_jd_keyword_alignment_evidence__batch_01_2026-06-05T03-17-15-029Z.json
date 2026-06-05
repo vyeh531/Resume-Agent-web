@@ -1,0 +1,140 @@
+[
+  {
+    "id": 6961,
+    "chunk_id": "232668b5-65df-4b3b-8efd-b92281575ef3-2024-11-02-简历修改沟通_chunk_016",
+    "topic": "技能栏优化",
+    "L1": "简历内容",
+    "L2": "技能列表",
+    "retrieval_scope": "resume_edit",
+    "role_family": "machine_learning",
+    "target_roles": "data_analyst",
+    "problem_tags": "missing_priority_keywords,keywords_only_in_skills,low_jd_keyword_match",
+    "ats_dimensions": "D_keyword_match",
+    "advice_card_title": "求职者Skills板块中Python相关工具和pa...",
+    "user_problem_summary": "求职者Skills板块中Python相关工具和package（如Spider等）未充分列出，",
+    "A_action": "将Skills板块中所有用过的Python相关package和工具（包括Spider等）逐一展开列出，提高与目标职位JD的关键词匹配度，以通过ATS机筛第一关",
+    "action_summary": "将Skills板块中所有用过的Python相关package和工具（包括Spider等）逐一展开列出，",
+    "I_insight": "企业HR系统对简历的第一道筛选永远是关键词匹配机筛，关键词覆盖率越高，简历通过机筛的概率越大，因此Skills板块需要尽可能详尽列出相关技术词汇",
+    "HR_os": "如果关键技能词扫不到，我会先担心你和岗位要求差一截，而不是主动替你补充想象。",
+    "current": {
+      "action_specificity": "",
+      "display_action_mode": "",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "",
+      "action_depth": "",
+      "action_review_status": ""
+    },
+    "proposed": {
+      "action_specificity": "jd_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "对照 JD 提取真实掌握的核心关键词，把它们分配到 Summary、Skills 和最相关的 Experience bullet 中。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "jd_keyword_alignment",
+      "action_depth": "evidence",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:jd_specific"
+    },
+    "review_priority_score": 70,
+    "review_priority_reasons": [
+      "jd_specific action needs target JD grounding",
+      "high-frequency family: jd_keyword_alignment"
+    ]
+  },
+  {
+    "id": 8139,
+    "chunk_id": "2a2f1e44-6de6-493c-a73e-5e46eb0443a2-2025-03-26-GAP岗位差距分析+简历修改_chunk_015",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "retrieval_scope": "resume_edit",
+    "role_family": "data_analyst",
+    "target_roles": "data_analyst",
+    "problem_tags": "low_jd_keyword_match,low_role_specificity,resume_not_tailored_to_jd",
+    "ats_dimensions": "D_keyword_match,F_role_fit",
+    "advice_card_title": "求职者将学校学术项目（research proje...",
+    "user_problem_summary": "求职者将学校学术项目（research project）放入简历占据大量篇幅，",
+    "A_action": "删除简历中学校academic项目板块，将节省出的篇幅用于丰富工作经历内容，并根据JD进行针对性优化",
+    "action_summary": "删除简历中学校academic项目板块，将节省出的篇幅用于丰富工作经历内容，并根据JD进行针对性优化",
+    "I_insight": "HR对学术项目持保留态度，认为学校项目有academic agenda，与行业实际工作存在本质差异，不认为其具有实际参考价值；只有申请PhD时学术项目才有展示意义",
+    "HR_os": "经验还不长时，我会看课程、证书和训练能不能补足岗位信号；相关内容别藏太深。",
+    "current": {
+      "action_specificity": "",
+      "display_action_mode": "",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "",
+      "action_depth": "",
+      "action_review_status": ""
+    },
+    "proposed": {
+      "action_specificity": "jd_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "对照 JD 提取真实掌握的核心关键词，把它们分配到 Summary、Skills 和最相关的 Experience bullet 中。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "jd_keyword_alignment",
+      "action_depth": "evidence",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:jd_specific"
+    },
+    "review_priority_score": 70,
+    "review_priority_reasons": [
+      "jd_specific action needs target JD grounding",
+      "high-frequency family: jd_keyword_alignment"
+    ]
+  },
+  {
+    "id": 13201,
+    "chunk_id": "494657d3-ee84-4d04-bedb-a5d59dea83f1-2025-01-30-GAP分析+简历修改沟通_chunk_010",
+    "topic": "简历结构调整",
+    "L1": "简历内容",
+    "L2": "结构调整",
+    "retrieval_scope": "resume_edit",
+    "role_family": "marketing",
+    "target_roles": "marketing,marketing_analyst,digital_marketing,marketing_research",
+    "problem_tags": "education_details_missing",
+    "ats_dimensions": "A_format,D_keyword_match,E_market_fit",
+    "advice_card_title": "求职者缺乏美国本地工作经历但有丰富海外实习经历",
+    "user_problem_summary": "求职者缺乏美国本地工作经历但有丰富海外实习经历，",
+    "A_action": "根据求职者背景灵活调整简历板块顺序：若职业经历丰富则将 Professional Experience 置顶；若为应届生或在校生则可单独列出课外活动/社团经历，并针对每个 JD 微调简历内容。",
+    "action_summary": "根据求职者背景灵活调整简历板块顺序：若职业经历丰富则将 Professional Experience 置顶；",
+    "I_insight": "简历没有统一标准——找10个人改可能得到10个不同版本。关键在于根据自身背景（是否有本地经历、经验丰富程度）和目标 JD 来决定模块排列优先级，而非套用固定模板。",
+    "HR_os": "我扫经历时会找任务、方法和结果；只看到职责描述，会觉得信息还不够扎实。",
+    "current": {
+      "action_specificity": "",
+      "display_action_mode": "",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "",
+      "action_depth": "",
+      "action_review_status": ""
+    },
+    "proposed": {
+      "action_specificity": "jd_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "对照 JD 提取真实掌握的核心关键词，把它们分配到 Summary、Skills 和最相关的 Experience bullet 中。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "jd_keyword_alignment",
+      "action_depth": "evidence",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:jd_specific"
+    },
+    "review_priority_score": 70,
+    "review_priority_reasons": [
+      "jd_specific action needs target JD grounding",
+      "high-frequency family: jd_keyword_alignment"
+    ]
+  }
+]

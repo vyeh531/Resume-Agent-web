@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "retrieval_scope": "resume_edit",
+    "title": "不要一份简历投所有岗位",
+    "old_HR_os": "HR或机筛系统会逐项匹配JD要求的技能关键词，命中越多排名越靠前，通用简历容易被精准竞争对手挤出。",
+    "new_HR_os": "在多个岗位投递时要注意分别制作针对性简历版本，否则可能因为关键词匹配不高而被机筛过滤。",
+    "source": "ollama"
+  },
+  {
+    "id": 2,
+    "retrieval_scope": "resume_edit",
+    "title": "关键词匹配是ATS机筛的核心",
+    "old_HR_os": "ATS系统做关键词匹配后会给候选人打分排序，人工只看排名靠前的；机筛阶段HR不介入，完全由系统决定。",
+    "new_HR_os": "在简历初筛时，我会先看你是否在关键词方面与职位描述匹配得当，因为ATS机器筛选的核心就是关键词匹配。",
+    "source": "ollama"
+  },
+  {
+    "id": 3,
+    "retrieval_scope": "resume_edit",
+    "title": "按属性重组你的技能板块",
+    "old_HR_os": "清晰的Skills分类让HR一眼看清技术栈覆盖面和深度层次；ATS在四类结构中也能更精准匹配JD关键词，避免混乱分组导致的漏匹配。",
+    "new_HR_os": "统一属性分类可以让技能板块结构清晰，提高面试官和ATS快速定位候选人技术栈。",
+    "source": "ollama"
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "contextName": "software_engineer",
+  "sampled": 667,
+  "counts": {
+    "generalized": 350,
+    "exclude": 38,
+    "raw": 279
+  },
+  "badRawCount": 0,
+  "badRaw": []
+}

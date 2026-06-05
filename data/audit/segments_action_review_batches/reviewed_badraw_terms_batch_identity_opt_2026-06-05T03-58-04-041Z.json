@@ -1,0 +1,102 @@
+[
+  {
+    "id": 6,
+    "proposed": {
+      "action_specificity": "case_specific",
+      "display_action_mode": "exclude",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_identity_opt: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_exclude",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 235,
+    "proposed": {
+      "action_specificity": "case_specific",
+      "display_action_mode": "exclude",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_identity_opt: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_exclude",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 3195,
+    "proposed": {
+      "action_specificity": "case_specific",
+      "display_action_mode": "exclude",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_identity_opt: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_exclude",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 10338,
+    "proposed": {
+      "action_specificity": "case_specific",
+      "display_action_mode": "exclude",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_identity_opt: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_exclude",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 25083,
+    "proposed": {
+      "action_specificity": "case_specific",
+      "display_action_mode": "exclude",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_identity_opt: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_exclude",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  }
+]

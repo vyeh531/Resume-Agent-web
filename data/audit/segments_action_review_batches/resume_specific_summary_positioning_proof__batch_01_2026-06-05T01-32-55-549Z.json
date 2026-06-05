@@ -1,0 +1,141 @@
+[
+  {
+    "id": 10092,
+    "chunk_id": "34e9ea77-3014-4af0-a4ba-3de7b23484fd-2025-02-02-Resume-修改定稿_chunk_000",
+    "topic": "关键词布局",
+    "L1": "简历内容",
+    "L2": "关键词匹配",
+    "retrieval_scope": "resume_edit",
+    "role_family": "ai_engineer,machine_learning,data_analyst",
+    "target_roles": "machine_learning_engineer,data_analyst",
+    "problem_tags": "low_hard_skill_match,low_jd_keyword_match",
+    "ats_dimensions": "D_keyword_match,F_role_fit",
+    "advice_card_title": "求职者目标岗位为MLE",
+    "user_problem_summary": "求职者目标岗位为MLE，",
+    "A_action": "梳理简历中所有技能和经验关键词，将DA导向的词（如SQL、Tableau、Power BI、EMA、EDA）降低比重或移除，补充MLE岗位核心关键词（如模型训练、部署、推理优化、大模型相关技术栈），使简历整体方向与MLE职位描述高度匹配。",
+    "action_summary": "梳理简历中所有技能和经验关键词，",
+    "I_insight": "面试官平均只花约一分钟扫描简历，视觉焦点集中在高亮关键词。若简历关键词集中于DA领域，MLE招聘方会直接判断候选人方向不符，导致简历被过滤，即使候选人实际具备MLE能力也难以被发现。",
+    "HR_os": "HR 初筛其实很看 JD 原词；核心技能没出现，我很难放心把你推进下一轮。",
+    "current": {
+      "action_specificity": "",
+      "display_action_mode": "",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "",
+      "action_depth": "",
+      "action_review_status": ""
+    },
+    "proposed": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "先把 Summary / Objective 改成目标岗位导向：写出目标岗位原词，并用一句话连接你已有经历与 JD 的核心职责。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "SQL,EMA,EDA,MLE",
+      "canonical_action_family": "summary_positioning",
+      "action_depth": "proof",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:resume_specific;has_grounding_terms"
+    },
+    "review_priority_score": 130,
+    "review_priority_reasons": [
+      "resume_specific action needs resume grounding before showing raw text",
+      "high-frequency family: summary_positioning",
+      "contains high-risk role/project/tool terms"
+    ]
+  },
+  {
+    "id": 8191,
+    "chunk_id": "2b75f09e-2589-4d06-9f80-260b5b0827c8-2025-11-07-GAP分析+简历修改沟通_chunk_011",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "retrieval_scope": "resume_edit",
+    "role_family": "data_analyst",
+    "target_roles": "universal",
+    "problem_tags": "weak_action_verbs",
+    "ats_dimensions": "C_content_quality,D_keyword_match,F_role_fit",
+    "advice_card_title": "求职者具备量化背景",
+    "user_problem_summary": "求职者具备量化背景，",
+    "A_action": "将目标岗位聚焦于Operations、Performance Analyst、投资组合分析等量化相关中台岗位，避免申请纯研究类岗位（宏观经济研究、Equity Research）；同时主动浏览各大行官网，发掘如'Performance Analyst'等名称不常见但高度匹配的岗位。",
+    "action_summary": "将目标岗位聚焦于Operations、Performance Analyst、投资组合分析等量化相关中台岗位，",
+    "I_insight": "金融机构岗位五花八门，部分高度匹配的岗位（如Performance Analyst）不在常见岗位清单中，需主动探索。量化背景在买方机构（Blackrock、Fidelity等）的中台Operations、风控分析等岗位同样有需求，与卖方银行中台逻辑相通。",
+    "HR_os": "量化结果能帮我快速判断工作强度和影响范围，没有结果的 bullet 说服力会弱很多。",
+    "current": {
+      "action_specificity": "",
+      "display_action_mode": "",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "",
+      "action_depth": "",
+      "action_review_status": ""
+    },
+    "proposed": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "先把 Summary / Objective 改成目标岗位导向：写出目标岗位原词，并用一句话连接你已有经历与 JD 的核心职责。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "summary_positioning",
+      "action_depth": "proof",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:resume_specific"
+    },
+    "review_priority_score": 100,
+    "review_priority_reasons": [
+      "resume_specific action needs resume grounding before showing raw text",
+      "high-frequency family: summary_positioning"
+    ]
+  },
+  {
+    "id": 17439,
+    "chunk_id": "65adaac4-324e-4bc5-95b1-4fbcb7b58823-2025-09-08-ssion-01-岗位GAP分析+简历修改_chunk_016",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "retrieval_scope": "resume_edit",
+    "role_family": "data_analyst",
+    "target_roles": "data_analyst",
+    "problem_tags": "weak_target_role_alignment",
+    "ats_dimensions": "C_content_quality,D_keyword_match,F_role_fit",
+    "advice_card_title": "求职者实习title与目标申请岗位相关性不强",
+    "user_problem_summary": "求职者实习title与目标申请岗位相关性不强，",
+    "A_action": "在不失真的前提下，将实习title调整为更贴近目标岗位的表述，例如将泛化的研究类title改为\"Equity Research Intern\"，以提升简历与目标岗位的关键词匹配度",
+    "action_summary": "在不失真的前提下，",
+    "I_insight": "简历中的title是HR和ATS最先扫描的字段之一，title与目标岗位的相关性直接影响简历是否被继续阅读；在不造假的前提下，选用行业通用且与目标方向对齐的title可有效提升通过率",
+    "HR_os": "经历如果只写做了什么，我很难判断你做得多深、成果多大、是否值得面试。",
+    "current": {
+      "action_specificity": "",
+      "display_action_mode": "",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "",
+      "action_depth": "",
+      "action_review_status": ""
+    },
+    "proposed": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "先把 Summary / Objective 改成目标岗位导向：写出目标岗位原词，并用一句话连接你已有经历与 JD 的核心职责。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "summary_positioning",
+      "action_depth": "proof",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:resume_specific"
+    },
+    "review_priority_score": 100,
+    "review_priority_reasons": [
+      "resume_specific action needs resume grounding before showing raw text",
+      "high-frequency family: summary_positioning"
+    ]
+  }
+]

@@ -1,0 +1,92 @@
+[
+  {
+    "id": 10989,
+    "chunk_id": "3b251363-26a8-4c22-a82f-c512952897d2-2026-03-17-SDE方向技能辅导和简历深挖_chunk_026",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "retrieval_scope": "resume_edit",
+    "role_family": "software_engineer,data_analyst",
+    "target_roles": "backend_engineer,data_analyst",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "ats_dimensions": "C_content_quality,F_role_fit",
+    "advice_card_title": "求职者在后端工作中使用了已有API做数据处理",
+    "user_problem_summary": "求职者在后端工作中使用了已有API做数据处理，未将其包装成主动开发行为，导致简历无法体现后端贡献。",
+    "A_action": "将后端数据处理工作改写为『Developed/Implemented API for data upload and JSON transformation』，将使用或对接 API 的行为包装为主动开发，后端给1-2条 bullet point。",
+    "action_summary": "将后端数据处理工作改写为『Developed/Implemented API for data upload and JSON...",
+    "I_insight": "简历中的措辞应强调主动性与所有权（ownership），即使是对接或调用已有 API，也可以用『Developed』『Implemented』等动词表达，重点在于体现技术参与度。",
+    "HR_os": "日期和版面不稳，我会先担心细节感；ATS 解析错，也会影响人工判断。",
+    "current": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "检查简历头部和链接信息，只保留真实、稳定、可验证且与求职相关的内容，避免放入可能引发误读或不必要筛选风险的信息。",
+      "activation_role_family": "software_engineer",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "profile_links",
+      "action_depth": "diagnose",
+      "action_review_status": "approved"
+    },
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "检查简历头部和链接信息，只保留真实、稳定、可验证且与求职相关的内容，避免放入可能引发误读或不必要筛选风险的信息。",
+      "activation_role_family": "software_engineer",
+      "activation_keywords": "",
+      "grounding_terms": "JSON",
+      "canonical_action_family": "profile_links",
+      "action_depth": "diagnose",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:role_specific;has_grounding_terms;has_activation_conditions"
+    },
+    "review_priority_score": 60,
+    "review_priority_reasons": [
+      "role_specific action is valuable but must be role/JD gated"
+    ]
+  },
+  {
+    "id": 24483,
+    "chunk_id": "92bcbe79-62d4-4bef-835b-3d54489c41d5-2025-04-11-Gap分析+简历修改-session-02_chunk_013",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "retrieval_scope": "resume_edit",
+    "role_family": "data_analyst",
+    "target_roles": "universal",
+    "problem_tags": "missing_linkedin,missing_portfolio,education_details_missing",
+    "ats_dimensions": "A_format,B_contact",
+    "advice_card_title": "求职者作品集展示不够清晰",
+    "user_problem_summary": "求职者作品集展示不够清晰，缺少目标用户、数据结构、优化过程等关键信息，HR和面试官无法全面评估其设计能力与思维过程。",
+    "A_action": "在作品集每个项目中补充完整说明：明确目标用户是谁、课程数据结构如何设计、迭代优化的过程与依据，并将作品集链接（如Google Drive或个人网站）放在LinkedIn个人资料显眼位置。",
+    "action_summary": "在作品集每个项目中补充完整说明：明确目标用户是谁、课程数据结构如何设计、迭代优化的过程与依据，",
+    "I_insight": "eLearning Designer的作品集不应只展示最终成品，评审者更关注候选人的设计决策过程——为什么这样设计、数据如何支撑、如何基于反馈优化，这才能体现专业深度。",
+    "HR_os": "缺少可验证链接时，我会少一个快速确认背景和作品可信度的入口。",
+    "current": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "profile_links",
+      "action_depth": "diagnose",
+      "action_review_status": "approved"
+    },
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "profile_links",
+      "action_depth": "diagnose",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:role_specific"
+    },
+    "review_priority_score": 60,
+    "review_priority_reasons": [
+      "role_specific action is valuable but must be role/JD gated"
+    ]
+  }
+]

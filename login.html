@@ -1,10 +1,10 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
 <meta name="theme-color" content="#f6f3ec" />
-<title>登录 · MentorX</title>
+<title>ç™»å½• Â· MentorX</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+SC:wght@500;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -101,7 +101,7 @@
 
   <div class="brandbar">
     <div class="brand">
-      <img src="logo/cropped-cropped-WechatIMG231-1.png" alt="MentorX 蔓藤教育" class="brand-img" />
+      <img src="logo/cropped-cropped-WechatIMG231-1.png" alt="MentorX è”“è—¤æ•™è‚²" class="brand-img" />
     </div>
     <div class="brand-meta" style="font-size:10px;letter-spacing:.08em;">2 / 5</div>
   </div>
@@ -116,33 +116,33 @@
       <span></span>
     </div>
 
-    <div class="wechat-icon">微</div>
+    <div class="wechat-icon">å¾®</div>
 
-    <h1 class="login-title">最后一步,登录领报告</h1>
-    <p class="login-sub">用微信登录,3 秒到诊断结果</p>
+    <h1 class="login-title">æœ€åŽä¸€æ­¥,ç™»å½•é¢†æŠ¥å‘Š</h1>
+    <p class="login-sub">ç”¨å¾®ä¿¡ç™»å½•,3 ç§’åˆ°è¯Šæ–­ç»“æžœ</p>
 
     <!-- Mini resume context -->
     <div class="login-resume-mini" id="resumeMini">
-      <div class="icon">📄</div>
+      <div class="icon">ðŸ“„</div>
       <div class="info">
-        <div class="name" id="resumeFileName">简历加载中…</div>
-        <div class="meta" id="resumeJobTitle">目标岗位</div>
+        <div class="name" id="resumeFileName">ç®€åŽ†åŠ è½½ä¸­â€¦</div>
+        <div class="meta" id="resumeJobTitle">ç›®æ ‡å²—ä½</div>
       </div>
-      <span class="pill pill-jade"><span class="dot"></span>已分析</span>
+      <span class="pill pill-jade"><span class="dot"></span>å·²åˆ†æž</span>
     </div>
 
     <button class="btn btn-jade btn-block" onclick="mockLogin(this)">
-      <span style="font-size:18px;">微</span> 微信一键登录
+      <span style="font-size:18px;">å¾®</span> å¾®ä¿¡ä¸€é”®ç™»å½•
     </button>
 
     <div class="login-tip">
-      <span style="flex-shrink:0;">🔒</span>
-      <span>我们不会公开你的简历,所有内容仅用于本次诊断。</span>
+      <span style="flex-shrink:0;">ðŸ”’</span>
+      <span>æˆ‘ä»¬ä¸ä¼šå…¬å¼€ä½ çš„ç®€åŽ†,æ‰€æœ‰å†…å®¹ä»…ç”¨äºŽæœ¬æ¬¡è¯Šæ–­ã€‚</span>
     </div>
 
     <div class="login-foot">
-      登录代表你同意 <a href="#">《用户协议》</a> 和 <a href="#">《隐私政策》</a><br/>
-      遇到问题?联系客服 <span style="color:var(--rose);">mentorx-zhushou</span>
+      ç™»å½•ä»£è¡¨ä½ åŒæ„ <a href="#">ã€Šç”¨æˆ·åè®®ã€‹</a> å’Œ <a href="#">ã€Šéšç§æ”¿ç­–ã€‹</a><br/>
+      é‡åˆ°é—®é¢˜?è”ç³»å®¢æœ <span style="color:var(--rose);">mentorx-zhushou</span>
     </div>
 
   </div>
@@ -151,28 +151,29 @@
 
 <script src="assets/app.js"></script>
 <script>
-  // 显示用户上传的简历信息
+  // æ˜¾ç¤ºç”¨æˆ·ä¸Šä¼ çš„ç®€åŽ†ä¿¡æ¯
   (function(){
     const s = JSON.parse(localStorage.getItem("resumeFixMVP") || "{}");
     if (s.resumeName){
       document.getElementById("resumeFileName").textContent = s.resumeName;
     } else {
-      document.getElementById("resumeFileName").textContent = "(未检测到简历,请回到首页上传)";
+      document.getElementById("resumeFileName").textContent = "(æœªæ£€æµ‹åˆ°ç®€åŽ†,è¯·å›žåˆ°é¦–é¡µä¸Šä¼ )";
     }
     if (s.jobTitle){
-      document.getElementById("resumeJobTitle").textContent = "目标岗位:" + s.jobTitle;
+      document.getElementById("resumeJobTitle").textContent = "ç›®æ ‡å²—ä½:" + s.jobTitle;
     }
   })();
 
-  // 改进的登录流程
+  // æ”¹è¿›çš„ç™»å½•æµç¨‹
   window.mockLogin = function(btn){
     btn.disabled = true;
-    showLoader("正在登录…", "3 秒即将跳转…");
     Store.set({ userId: "mock_" + Date.now(), loginAt: Date.now() });
-    setTimeout(() => {
-      hideLoader();
-      window.location.href = "result.html";
-    }, 800);
+    if (typeof waitForAnalysisJobAndRedirect === "function") {
+      waitForAnalysisJobAndRedirect(btn);
+    } else {
+      showLoader("正在登录…", "分析完成后将进入结果页…");
+      setTimeout(() => { window.location.href = "/result"; }, 800);
+    }
   };
 </script>
 </body>

@@ -135,6 +135,16 @@
   .toc a{ color: var(--ink-soft); text-decoration: none; }
   .toc a:hover{ color: var(--ink); }
 
+  .logo-marquee{ overflow:hidden; border:1px solid var(--line); border-radius:12px; background:#fffdf7; margin:0 0 16px; padding:10px 0; }
+  .logo-marquee-track{ display:flex; gap:14px; width:max-content; animation:logo-scroll 72s linear infinite; }
+  .logo-marquee:hover .logo-marquee-track{ animation-play-state: paused; }
+  .mentor-logo-chip{ width:72px; height:42px; border:1px solid #ede9dc; border-radius:8px; background:#fff; display:flex; align-items:center; justify-content:center; padding:7px; flex:0 0 auto; }
+  .mentor-logo-chip img{ max-width:100%; max-height:100%; object-fit:contain; display:block; }
+  .mentor-logo-chip span{ font-size:11px; font-weight:700; color:#57534E; text-align:center; line-height:1.2; }
+  .mentor-logo-intro{ margin:4px 0 14px; }
+  .mentor-logo-copy{ font-size:12.5px; line-height:1.55; color:var(--ink-soft); margin:0 0 8px; }
+  @keyframes logo-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
   /* === Service section v2 (替代旧 contact) === */
   .service-card{
     background: linear-gradient(135deg, var(--paper-warm) 0%, var(--paper-deep) 100%);
@@ -393,9 +403,10 @@
 
   <!-- ============ 3. MENTORS (全部 4 位) ============ -->
   <section class="section" id="mentors">
-    <div class="section-num">03 · 4 位大厂导师建议</div>
+    <div class="section-num">03 · 12 条导师建议</div>
     <h2 class="section-title" style="font-size: 22px;">每个角度都有人帮你看过了</h2>
 
+    <div id="mentorLogoIntroSlot"></div>
     <div class="stack-16" id="mentorsList"></div>
   </section>
 
@@ -615,6 +626,131 @@
   function escapeHtml(s){
     return String(s||"").replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   }
+  function escapeAttr(s){
+    return String(s||"").replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  }
+
+  const STATIC_MENTOR_COMPANY_LOGOS = [
+    { company: "Amazon", companyLogo: "/logos/Amazon.png" },
+    { company: "Amazon Web Services", companyLogo: "/logos/Amazon Web Services, Inc.png" },
+    { company: "Google", companyLogo: "/logos/google.png" },
+    { company: "Meta", companyLogo: "/logos/Meta.png" },
+    { company: "Microsoft", companyLogo: "/logos/Microsoft.png" },
+    { company: "Apple", companyLogo: "/logos/Apple.png" },
+    { company: "NVIDIA", companyLogo: "/logos/NVIDIA.png" },
+    { company: "Intel", companyLogo: "/logos/Intel.png" },
+    { company: "Qualcomm", companyLogo: "/logos/Qualcomm.png" },
+    { company: "Cisco", companyLogo: "/logos/Cisco.png" },
+    { company: "IBM", companyLogo: "/logos/IBM.jpg" },
+    { company: "Oracle", companyLogo: "/logos/Oracle.png" },
+    { company: "Salesforce", companyLogo: "/logos/Salesforce.png" },
+    { company: "Adobe", companyLogo: "/logos/Adobe.png" },
+    { company: "Intuit", companyLogo: "/logos/Intuit.png" },
+    { company: "Snowflake", companyLogo: "/logos/Snowflake.png" },
+    { company: "Spotify", companyLogo: "/logos/Spotify.png" },
+    { company: "Uber", companyLogo: "/logos/Uber.jpg" },
+    { company: "Robinhood", companyLogo: "/logos/Robinhood.png" },
+    { company: "OpenAI", companyLogo: "/logos/OpenAI.png" },
+    { company: "ByteDance", companyLogo: "/logos/ByteDance.png" },
+    { company: "TikTok", companyLogo: "/logos/Tiktok.png" },
+    { company: "SAP", companyLogo: "/logos/SAP.png" },
+    { company: "Goldman Sachs", companyLogo: "/logos/Goldman Sachs.png" },
+    { company: "JPMorgan Chase", companyLogo: "/logos/JPMorganChase.png" },
+    { company: "Morgan Stanley", companyLogo: "/logos/Morgan Stanley.png" },
+    { company: "BlackRock", companyLogo: "/logos/BlackRock.png" },
+    { company: "Capital One", companyLogo: "/logos/Capital One.png" },
+    { company: "Bank of America", companyLogo: "/logos/Bank of America.png" },
+    { company: "Citigroup", companyLogo: "/logos/Citigroup.png" },
+    { company: "American Express", companyLogo: "/logos/American Express.png" },
+    { company: "McKinsey", companyLogo: "/logos/McKinsey & Company.png" },
+    { company: "Deloitte", companyLogo: "/logos/Deloitte.png" },
+    { company: "KPMG", companyLogo: "/logos/KPMG.png" },
+    { company: "EY", companyLogo: "/logos/EY.png" },
+    { company: "PwC", companyLogo: "/logos/PRICE WATERHOUSE COOPERS.png" },
+    { company: "Accenture", companyLogo: "/logos/Accenture.png" },
+    { company: "TSMC", companyLogo: "/logos/TSMC.png" },
+    { company: "Tesla", companyLogo: "/logos/Tesla.png" },
+    { company: "Walmart", companyLogo: "/logos/Walmart.png" },
+    { company: "Target", companyLogo: "/logos/Target.png" },
+    { company: "Disney", companyLogo: "/logos/Disney.png" },
+  ];
+
+  function normalizeLogoEntry(entry) {
+    if (!entry) return null;
+    if (typeof entry === "string") return { company: entry, companyLogo: "" };
+    const company = entry.company || entry.name || entry.employer || entry.companyName || "";
+    const companyLogo = entry.companyLogo || entry.logo || entry.logoUrl || entry.logo_url || "";
+    if (!company && !companyLogo) return null;
+    return { company, companyLogo };
+  }
+
+  function collectMentorLogoPool() {
+    const pools = [
+      s.mentorLogoPool,
+      s.lockedAdvicePreview && s.lockedAdvicePreview.mentorLogoPool,
+      s.freeMentorAdvice && s.freeMentorAdvice.mentorLogoPool,
+      Array.isArray(s.premiumMentors) ? s.premiumMentors : null,
+      Array.isArray(s.mentorAdvice) ? s.mentorAdvice : null,
+    ].filter(Array.isArray);
+    const seen = new Set();
+    const items = [];
+    pools.flat().forEach(entry => {
+      const normalized = normalizeLogoEntry(entry);
+      if (!normalized) return;
+      const key = `${normalized.company}|${normalized.companyLogo}`.toLowerCase();
+      if (seen.has(key)) return;
+      seen.add(key);
+      items.push(normalized);
+    });
+    return items.length ? items : STATIC_MENTOR_COMPANY_LOGOS;
+  }
+
+  function renderMentorLogoMarquee(pool) {
+    const items = (pool && pool.length ? pool : STATIC_MENTOR_COMPANY_LOGOS).slice(0, 48);
+    const loop = items.concat(items);
+    const chips = loop.map(item => {
+      const company = escapeHtml(item.company || "Company");
+      const logo = item.companyLogo || "";
+      return `<div class="mentor-logo-chip" title="${escapeAttr(item.company || "")}">
+        ${logo ? `<img src="${escapeAttr(logo)}" alt="${escapeAttr(item.company || "Company")} logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block';"><span style="display:none;">${company}</span>` : `<span>${company}</span>`}
+      </div>`;
+    }).join("");
+    return `<div class="logo-marquee" aria-label="Mentor company logos"><div class="logo-marquee-track">${chips}</div></div>`;
+  }
+
+  function renderMentorLogoIntro(pool) {
+    return `<div class="mentor-logo-intro">
+      <p class="mentor-logo-copy">由 MentorX 导师知识库中的真实大厂经验交叉匹配，系统会优先挑出最贴合你简历问题的建议。</p>
+      ${renderMentorLogoMarquee(STATIC_MENTOR_COMPANY_LOGOS)}
+    </div>`;
+  }
+
+  function adviceIdentityForHr(item) {
+    return String(item?.adviceId || item?.id || `${item?.title || ""}|${item?.action || item?.actionSummary || ""}`).trim();
+  }
+  function findHrPerspectiveForAdvice(target) {
+    const targetKeys = [target?.adviceId, target?.id, adviceIdentityForHr(target)].filter(Boolean).map(String);
+    const sources = [
+      ...(s.premiumAdviceItems || []),
+      ...((s.premiumMentors || []).flatMap(m => m.adviceItems || m.adviceList || [])),
+      ...(s.freeMentorAdvice?.adviceItems || []),
+      ...((s.mentorAdvice || []).flatMap(m => m.adviceItems || m.adviceList || [])),
+      ...(atsResult.raw?.premiumAdviceItems || []),
+      ...((atsResult.raw?.premiumMentors || []).flatMap(m => m.adviceItems || m.adviceList || [])),
+      ...(atsResult.raw?.freeMentorAdvice?.adviceItems || []),
+    ];
+    for (const item of sources) {
+      const hr = item?.hrPerspective || item?.HR_os || item?.hrPov || item?.recruiterPerspective || "";
+      if (!hr) continue;
+      const keys = [item.adviceId, item.id, adviceIdentityForHr(item)].filter(Boolean).map(String);
+      if (keys.some((key) => targetKeys.includes(key))) return hr;
+    }
+    return "";
+  }
+  function fallbackHrPerspective(item) {
+    const action = item?.action || item?.actionSummary || item?.title || "这条修改建议";
+    return `HR 会把这里当作快速筛选信号：如果简历没有体现「${String(action).slice(0, 42)}」这一点，候选人与 JD 的匹配感会被削弱。`;
+  }
 
   const sectionLabelMap = {
     summary:"Summary", skills:"Skills", experience:"Experience",
@@ -676,8 +812,9 @@
   function renderAdviceItem(item, idx) {
     const currentDiagnosis = item.problemSummary || item.currentDiagnosis || "";
     const action = item.actionSummary || item.action || "";
-    const insight = item.mentorInsight || item.mentorLens || item.reason || "";
-    const hrPerspective = item.hrPerspective || item.HR_os || "";
+    const insight = item.mentorInsight || item.mentorLens || item.reason || item.I_insight || item.P_mentor || "";
+    const hrPerspective = item.hrPerspective || item.HR_os || item.hrPov || item.recruiterPerspective ||
+      findHrPerspectiveForAdvice(item) || fallbackHrPerspective(item);
     const divider = idx > 0
       ? `<div style="height:1px;background:linear-gradient(to right,transparent,#DDD6CA,transparent);margin:20px 0;"></div>`
       : "";
@@ -704,8 +841,21 @@
 
     const hrHtml = hrPerspective ? `
       <div style="background:#FFF7ED;border-left:3px solid #FCA5A5;border-radius:0 8px 8px 0;padding:10px 12px;margin-bottom:8px;">
-        <div style="font-size:11px;font-weight:700;color:#9A3412;margin-bottom:3px;">HR 视角</div>
+        <div style="font-size:11px;font-weight:700;color:#9A3412;margin-bottom:3px;">HR</div>
         <p style="margin:0;font-size:13px;line-height:1.65;color:#7C2D12;">${escapeHtml(hrPerspective)}</p>
+      </div>` : "";
+
+    const supplementalHtml = (insight || hrPerspective) ? `
+      <div style="background:#FAFAF9;border:1px solid #E7E2D6;border-radius:10px;padding:12px 14px;margin-bottom:8px;">
+        <div style="font-size:11px;font-weight:800;color:#57534E;margin-bottom:8px;letter-spacing:.08em;">补充视角</div>
+        ${insight ? `<div style="display:grid;grid-template-columns:48px 1fr;gap:10px;margin-bottom:${hrPerspective ? "8px" : "0"};">
+          <span style="font-size:11px;font-weight:800;color:#6D28D9;">导师</span>
+          <p style="margin:0;font-size:13px;line-height:1.65;color:#4C1D95;">${escapeHtml(insight)}</p>
+        </div>` : ""}
+        ${hrPerspective ? `<div style="display:grid;grid-template-columns:48px 1fr;gap:10px;">
+          <span style="font-size:11px;font-weight:800;color:#9A3412;">HR</span>
+          <p style="margin:0;font-size:13px;line-height:1.65;color:#7C2D12;">${escapeHtml(hrPerspective)}</p>
+        </div>` : ""}
       </div>` : "";
 
     return `
@@ -716,7 +866,7 @@
           <span style="font-size:11px;color:#9CA3AF;font-weight:500;">建议 ${idx + 1}</span>
         </div>
         <h4 style="margin:0 0 10px;font-size:15px;font-weight:700;color:#111827;line-height:1.45;">${escapeHtml(item.title || "")}</h4>
-        ${diagnosisHtml}${actionHtml}${insightHtml}${hrHtml}
+        ${diagnosisHtml}${actionHtml}${supplementalHtml}
         ${renderRewriteBlock(item, item.example || "")}
       </div>
     `;
@@ -815,6 +965,10 @@
   // Prefer new premium format; fall back to legacy AI format
   const premiumMentors = s.premiumMentors;
   const legacyMentors = s.mentorAdvice;
+  const mentorLogoIntroSlot = document.getElementById("mentorLogoIntroSlot");
+  if (mentorLogoIntroSlot) {
+    mentorLogoIntroSlot.innerHTML = renderMentorLogoIntro(collectMentorLogoPool());
+  }
 
   function renderMentors(rewrites) {
     // Build a map of adviceId → rewrite
@@ -852,7 +1006,7 @@
 
   const reportId = s.reportId || s.sessionId;
   const reportToken = s.reportAccessToken;
-  if (reportId) {
+  if (reportId && window.ENABLE_AI_REWRITE_ON_REPORT === true) {
     fetch(`/api/v1/reports/${reportId}/ai-rewrite`, {
       method: "POST",
       headers: Object.assign(

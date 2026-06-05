@@ -1,0 +1,1602 @@
+[
+  {
+    "id": 1,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少关键技能信号，先补齐真实掌握的工具和方法，再把它们放进 Skills 与对应项目证据里；不要为了匹配 JD 写入无法解释的技能。",
+      "activation_role_family": "software_engineer,machine_learning",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "rewrite",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 19,
+    "proposed": {
+      "action_specificity": "case_specific",
+      "display_action_mode": "exclude",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "marketing",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_exclude",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 29,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "machine_learning",
+      "activation_keywords": "Kaggle",
+      "grounding_terms": "",
+      "canonical_action_family": "education_signal",
+      "action_depth": "structure",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 182,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "先根据目标岗位重新确认简历主线：保留最能支撑该方向的经历，弱化干扰定位的内容，并把可迁移能力改写成岗位能理解的证据。",
+      "activation_role_family": "software_engineer",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 293,
+    "proposed": {
+      "action_specificity": "case_specific",
+      "display_action_mode": "exclude",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_exclude",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 413,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "software_engineer,machine_learning",
+      "activation_keywords": "Kaggle",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 414,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "data_analytics,machine_learning",
+      "activation_keywords": "Kaggle,SQL",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 1135,
+    "proposed": {
+      "action_specificity": "case_specific",
+      "display_action_mode": "exclude",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "marketing",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_exclude",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 1342,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少关键技能信号，先补齐真实掌握的工具和方法，再把它们放进 Skills 与对应项目证据里；不要为了匹配 JD 写入无法解释的技能。",
+      "activation_role_family": "data_analytics",
+      "activation_keywords": "SQL",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "proof",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 1349,
+    "proposed": {
+      "action_specificity": "case_specific",
+      "display_action_mode": "exclude",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "marketing",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_exclude",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 1428,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "先根据目标岗位重新确认简历主线：保留最能支撑该方向的经历，弱化干扰定位的内容，并把可迁移能力改写成岗位能理解的证据。",
+      "activation_role_family": "marketing,finance",
+      "activation_keywords": "competitive analysis,marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 1429,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "先根据目标岗位重新确认简历主线：保留最能支撑该方向的经历，弱化干扰定位的内容，并把可迁移能力改写成岗位能理解的证据。",
+      "activation_role_family": "marketing",
+      "activation_keywords": "marketing,customer",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 1448,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少关键技能信号，先补齐真实掌握的工具和方法，再把它们放进 Skills 与对应项目证据里；不要为了匹配 JD 写入无法解释的技能。",
+      "activation_role_family": "marketing,software_engineer,machine_learning",
+      "activation_keywords": "marketing,consumer,customer,Marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "proof",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 1451,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "把真实经历中与用户、市场、渠道或协作相关的部分提炼出来，按「任务背景 + 方法 + 产出 + 业务影响」重写，不要把没有做过的职责写成事实。",
+      "activation_role_family": "marketing,software_engineer",
+      "activation_keywords": "marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "profile_links",
+      "action_depth": "structure",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 1462,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少关键技能信号，先补齐真实掌握的工具和方法，再把它们放进 Skills 与对应项目证据里；不要为了匹配 JD 写入无法解释的技能。",
+      "activation_role_family": "data_analytics,machine_learning",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 1699,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少关键技能信号，先补齐真实掌握的工具和方法，再把它们放进 Skills 与对应项目证据里；不要为了匹配 JD 写入无法解释的技能。",
+      "activation_role_family": "software_engineer,machine_learning",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 1733,
+    "proposed": {
+      "action_specificity": "case_specific",
+      "display_action_mode": "exclude",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "marketing",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_exclude",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 1739,
+    "proposed": {
+      "action_specificity": "case_specific",
+      "display_action_mode": "exclude",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "marketing",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_exclude",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 1844,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少关键技能信号，先补齐真实掌握的工具和方法，再把它们放进 Skills 与对应项目证据里；不要为了匹配 JD 写入无法解释的技能。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "rewrite",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 2099,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "software_engineer,machine_learning",
+      "activation_keywords": "Kaggle",
+      "grounding_terms": "",
+      "canonical_action_family": "education_signal",
+      "action_depth": "proof",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 2476,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "experience_evidence",
+      "action_depth": "proof",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 2642,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 2698,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "先根据目标岗位重新确认简历主线：保留最能支撑该方向的经历，弱化干扰定位的内容，并把可迁移能力改写成岗位能理解的证据。",
+      "activation_role_family": "software_engineer",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 2704,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "先根据目标岗位重新确认简历主线：保留最能支撑该方向的经历，弱化干扰定位的内容，并把可迁移能力改写成岗位能理解的证据。",
+      "activation_role_family": "software_engineer",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 2738,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "marketing",
+      "activation_keywords": "Marketing,marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "experience_evidence",
+      "action_depth": "rewrite",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 2780,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少关键技能信号，先补齐真实掌握的工具和方法，再把它们放进 Skills 与对应项目证据里；不要为了匹配 JD 写入无法解释的技能。",
+      "activation_role_family": "data_analytics,software_engineer",
+      "activation_keywords": "Lambda,AWS",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 2832,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "marketing,machine_learning",
+      "activation_keywords": "campaign,marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 2914,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "把这段经历改写成更可验证的简历证据：说明真实任务、使用的方法或工具、你的具体贡献，以及能支撑目标岗位的结果。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "experience_evidence",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 3039,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果某段经历无法背调或容易被误解，不要放大成雇佣经历或虚构职责；改用真实可核验的项目、课程或作品表述，并写清任务、方法和产出。",
+      "activation_role_family": "marketing",
+      "activation_keywords": "Marketing,marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 3058,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少关键技能信号，先补齐真实掌握的工具和方法，再把它们放进 Skills 与对应项目证据里；不要为了匹配 JD 写入无法解释的技能。",
+      "activation_role_family": "marketing,machine_learning",
+      "activation_keywords": "campaign,marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "structure",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 3067,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "先根据目标岗位重新确认简历主线：保留最能支撑该方向的经历，弱化干扰定位的内容，并把可迁移能力改写成岗位能理解的证据。",
+      "activation_role_family": "software_engineer",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "proof",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 3235,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "先根据目标岗位重新确认简历主线：保留最能支撑该方向的经历，弱化干扰定位的内容，并把可迁移能力改写成岗位能理解的证据。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 3291,
+    "proposed": {
+      "action_specificity": "case_specific",
+      "display_action_mode": "exclude",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_exclude",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 3415,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少关键技能信号，先补齐真实掌握的工具和方法，再把它们放进 Skills 与对应项目证据里；不要为了匹配 JD 写入无法解释的技能。",
+      "activation_role_family": "marketing,machine_learning",
+      "activation_keywords": "customer,marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 3724,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果某段经历无法背调或容易被误解，不要放大成雇佣经历或虚构职责；改用真实可核验的项目、课程或作品表述，并写清任务、方法和产出。",
+      "activation_role_family": "software_engineer,machine_learning",
+      "activation_keywords": "Kaggle",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 3727,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "marketing,software_engineer,machine_learning",
+      "activation_keywords": "Kaggle,LLM,marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 3844,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "先根据目标岗位重新确认简历主线：保留最能支撑该方向的经历，弱化干扰定位的内容，并把可迁移能力改写成岗位能理解的证据。",
+      "activation_role_family": "data_analytics",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 3904,
+    "proposed": {
+      "action_specificity": "case_specific",
+      "display_action_mode": "exclude",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_exclude",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 4083,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少关键技能信号，先补齐真实掌握的工具和方法，再把它们放进 Skills 与对应项目证据里；不要为了匹配 JD 写入无法解释的技能。",
+      "activation_role_family": "marketing,machine_learning",
+      "activation_keywords": "DeepSeek,OpenAI,marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "rewrite",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 4153,
+    "proposed": {
+      "action_specificity": "case_specific",
+      "display_action_mode": "exclude",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_exclude",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 4186,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "先根据目标岗位重新确认简历主线：保留最能支撑该方向的经历，弱化干扰定位的内容，并把可迁移能力改写成岗位能理解的证据。",
+      "activation_role_family": "finance,accounting",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 4783,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少关键技能信号，先补齐真实掌握的工具和方法，再把它们放进 Skills 与对应项目证据里；不要为了匹配 JD 写入无法解释的技能。",
+      "activation_role_family": "marketing,data_analytics,software_engineer,machine_learning",
+      "activation_keywords": "SQL,Python,Tableau,Marketing,campaign,social media,marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 4807,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少关键技能信号，先补齐真实掌握的工具和方法，再把它们放进 Skills 与对应项目证据里；不要为了匹配 JD 写入无法解释的技能。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "proof",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 4818,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "把真实经历中与用户、市场、渠道或协作相关的部分提炼出来，按「任务背景 + 方法 + 产出 + 业务影响」重写，不要把没有做过的职责写成事实。",
+      "activation_role_family": "marketing",
+      "activation_keywords": "social media,marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "experience_evidence",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 5344,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "先根据目标岗位重新确认简历主线：保留最能支撑该方向的经历，弱化干扰定位的内容，并把可迁移能力改写成岗位能理解的证据。",
+      "activation_role_family": "marketing",
+      "activation_keywords": "Marketing,marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 5541,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 5624,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少关键技能信号，先补齐真实掌握的工具和方法，再把它们放进 Skills 与对应项目证据里；不要为了匹配 JD 写入无法解释的技能。",
+      "activation_role_family": "machine_learning",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 5721,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "education_signal",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 5937,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "把真实经历中与用户、市场、渠道或协作相关的部分提炼出来，按「任务背景 + 方法 + 产出 + 业务影响」重写，不要把没有做过的职责写成事实。",
+      "activation_role_family": "marketing",
+      "activation_keywords": "marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "experience_evidence",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 6135,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "software_engineer,machine_learning",
+      "activation_keywords": "OpenAI,DeepSeek",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "proof",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 6204,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "把真实经历中与用户、市场、渠道或协作相关的部分提炼出来，按「任务背景 + 方法 + 产出 + 业务影响」重写，不要把没有做过的职责写成事实。",
+      "activation_role_family": "marketing",
+      "activation_keywords": "marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "experience_evidence",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 6205,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "data_analytics,machine_learning",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 6276,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少关键技能信号，先补齐真实掌握的工具和方法，再把它们放进 Skills 与对应项目证据里；不要为了匹配 JD 写入无法解释的技能。",
+      "activation_role_family": "marketing,data_analytics,software_engineer",
+      "activation_keywords": "SQL,marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 6424,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "software_engineer,machine_learning",
+      "activation_keywords": "Kaggle",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 6427,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "software_engineer,machine_learning",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 6681,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "先根据目标岗位重新确认简历主线：保留最能支撑该方向的经历，弱化干扰定位的内容，并把可迁移能力改写成岗位能理解的证据。",
+      "activation_role_family": "marketing",
+      "activation_keywords": "marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 6905,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "先根据目标岗位重新确认简历主线：保留最能支撑该方向的经历，弱化干扰定位的内容，并把可迁移能力改写成岗位能理解的证据。",
+      "activation_role_family": "software_engineer",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 7172,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "把这段经历改写成更可验证的简历证据：说明真实任务、使用的方法或工具、你的具体贡献，以及能支撑目标岗位的结果。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "experience_evidence",
+      "action_depth": "structure",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 7254,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "把这段经历改写成更可验证的简历证据：说明真实任务、使用的方法或工具、你的具体贡献，以及能支撑目标岗位的结果。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "experience_evidence",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 7255,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "先根据目标岗位重新确认简历主线：保留最能支撑该方向的经历，弱化干扰定位的内容，并把可迁移能力改写成岗位能理解的证据。",
+      "activation_role_family": "machine_learning",
+      "activation_keywords": "DeepSeek",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "proof",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 7256,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少关键技能信号，先补齐真实掌握的工具和方法，再把它们放进 Skills 与对应项目证据里；不要为了匹配 JD 写入无法解释的技能。",
+      "activation_role_family": "machine_learning",
+      "activation_keywords": "DeepSeek",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 7264,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "把真实经历中与用户、市场、渠道或协作相关的部分提炼出来，按「任务背景 + 方法 + 产出 + 业务影响」重写，不要把没有做过的职责写成事实。",
+      "activation_role_family": "marketing",
+      "activation_keywords": "marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "experience_evidence",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 7330,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "data_analytics,software_engineer,machine_learning",
+      "activation_keywords": "SQL",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "proof",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 7408,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "machine_learning",
+      "activation_keywords": "Kaggle",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "proof",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 7691,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "marketing,machine_learning",
+      "activation_keywords": "marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 7704,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "data_analytics",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "proof",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 7754,
+    "proposed": {
+      "action_specificity": "case_specific",
+      "display_action_mode": "exclude",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_exclude",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 7824,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "machine_learning",
+      "activation_keywords": "Kaggle",
+      "grounding_terms": "",
+      "canonical_action_family": "education_signal",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 7825,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "machine_learning",
+      "activation_keywords": "Kaggle",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 7826,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "machine_learning",
+      "activation_keywords": "Kaggle",
+      "grounding_terms": "",
+      "canonical_action_family": "education_signal",
+      "action_depth": "rewrite",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 8049,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少关键技能信号，先补齐真实掌握的工具和方法，再把它们放进 Skills 与对应项目证据里；不要为了匹配 JD 写入无法解释的技能。",
+      "activation_role_family": "marketing",
+      "activation_keywords": "marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 8059,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "marketing",
+      "activation_keywords": "Marketing,social media,marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 8122,
+    "proposed": {
+      "action_specificity": "case_specific",
+      "display_action_mode": "exclude",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_exclude",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 8207,
+    "proposed": {
+      "action_specificity": "case_specific",
+      "display_action_mode": "exclude",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_exclude",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 8237,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少关键技能信号，先补齐真实掌握的工具和方法，再把它们放进 Skills 与对应项目证据里；不要为了匹配 JD 写入无法解释的技能。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "proof",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 8515,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "software_engineer,machine_learning",
+      "activation_keywords": "Kaggle",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 8641,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果某段经历无法背调或容易被误解，不要放大成雇佣经历或虚构职责；改用真实可核验的项目、课程或作品表述，并写清任务、方法和产出。",
+      "activation_role_family": "marketing",
+      "activation_keywords": "marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 8957,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "data_analytics",
+      "activation_keywords": "Tableau,GitHub",
+      "grounding_terms": "",
+      "canonical_action_family": "skills_section",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 9288,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "先根据目标岗位重新确认简历主线：保留最能支撑该方向的经历，弱化干扰定位的内容，并把可迁移能力改写成岗位能理解的证据。",
+      "activation_role_family": "marketing,software_engineer",
+      "activation_keywords": "Marketing,marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "diagnose",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  },
+  {
+    "id": 9293,
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "marketing",
+      "activation_keywords": "marketing",
+      "grounding_terms": "",
+      "canonical_action_family": "experience_evidence",
+      "action_depth": "rewrite",
+      "action_review_status": "approved",
+      "review_reason": "badraw_terms_batch_01: broad raw-risk cleanup; keep useful advice generalized, exclude identity/visa/work-authorization content."
+    },
+    "review_decision": {
+      "reviewer": "chat_context",
+      "decision": "approved_generalized",
+      "notes": "Generated from bad-raw audit. This keeps career/project/skill-gap advice reusable while preventing prior-student raw details or identity/visa advice from surfacing."
+    }
+  }
+]

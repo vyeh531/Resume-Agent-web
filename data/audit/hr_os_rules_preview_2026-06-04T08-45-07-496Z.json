@@ -1,0 +1,242 @@
+[
+  {
+    "id": 1,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "不要一份简历投所有岗位",
+    "old_HR_os": "HR或机筛系统会逐项匹配JD要求的技能关键词，命中越多排名越靠前，通用简历容易被精准竞争对手挤出。",
+    "new_HR_os": "格式不是小事，版面一乱，我会更难快速抓到经历顺序和最相关的内容。"
+  },
+  {
+    "id": 2,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "关键词匹配是ATS机筛的核心",
+    "old_HR_os": "ATS系统做关键词匹配后会给候选人打分排序，人工只看排名靠前的；机筛阶段HR不介入，完全由系统决定。",
+    "new_HR_os": "简历结构清楚时，HR 才能把注意力放在能力上；排版混乱会先消耗耐心。"
+  },
+  {
+    "id": 3,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "按属性重组你的技能板块",
+    "old_HR_os": "清晰的Skills分类让HR一眼看清技术栈覆盖面和深度层次；ATS在四类结构中也能更精准匹配JD关键词，避免混乱分组导致的漏匹配。",
+    "new_HR_os": "日期和版面不稳，我会先担心细节感；ATS 解析错，也会影响人工判断。"
+  },
+  {
+    "id": 4,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "在项目描述中显性写出框架和模型",
+    "old_HR_os": "技术面试官看项目描述时会关注具体技术选型，写出模型类型和框架能让对方快速判断候选人的ML实践深度，也是AI岗位的加分项。",
+    "new_HR_os": "格式不是小事，版面一乱，我会更难快速抓到经历顺序和最相关的内容。"
+  },
+  {
+    "id": 5,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "应届生简历：Education应置顶",
+    "old_HR_os": "HR看到Education在首位会快速确认学历背景，有助于缩短判断时间；对有空白期的候选人，置顶Education也能缓和疑虑。",
+    "new_HR_os": "简历结构清楚时，HR 才能把注意力放在能力上；排版混乱会先消耗耐心。"
+  },
+  {
+    "id": 6,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "毕业后有超过一年空白期会被机筛和HR扣分",
+    "old_HR_os": "简历时间空白会被ATS标记、被HR关注；OPT在读实操中普遍被视为延续学生状态，这种写法在业内不罕见，属可接受范围。",
+    "new_HR_os": "日期和版面不稳，我会先担心细节感；ATS 解析错，也会影响人工判断。"
+  },
+  {
+    "id": 7,
+    "retrieval_scope": "resume_edit",
+    "category": "profile_links",
+    "title": "应届生的课程区域是低风险高收益的关键词扩展区：面试...",
+    "old_HR_os": "ATS扫描Coursework中的关键词；HR看到完整课程列表会对候选人技术广度有更正面评价，尤其是与投递岗位相关的课程名称。",
+    "new_HR_os": "LinkedIn、GitHub 或作品集能降低验证成本；没有入口时，很多亮点就只能停在描述里。"
+  },
+  {
+    "id": 8,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "写了某技术但实际掌握很浅，面试被问到时很被动",
+    "old_HR_os": "技术面试官会深追项目技术细节，用词过度（designed/architected）会引发更高难度追问；保守措辞能控制面试风险同时保留技术曝光度。",
+    "new_HR_os": "简历结构清楚时，HR 才能把注意力放在能力上；排版混乱会先消耗耐心。"
+  },
+  {
+    "id": 9,
+    "retrieval_scope": "interview",
+    "category": "interview_depth",
+    "title": "很多新人害怕简历里写了没真正做过的技术被深问",
+    "old_HR_os": "技术面试官了解new grad技术深度有限，其筛选标准更多基于coding能力和基本技术素养，而非简历技术点的逐一核实。",
+    "new_HR_os": "面试时我会顺着经历继续追问；如果准备不扎实，很容易让人觉得经验停在表面。"
+  },
+  {
+    "id": 10,
+    "retrieval_scope": "interview",
+    "category": "interview_depth",
+    "title": "应对Resume Deep Dive的正确方式不是...",
+    "old_HR_os": "技术面试官通过「为什么选X技术」的问题来判断候选人是否真正理解技术选型的trade-off，而非验证项目真实性。能说出技术对比和权衡的候选人得分远高于说「大家都这么用」的。",
+    "new_HR_os": "简历写出来只是第一步，面试能讲清楚细节，才会让我相信这段经历是真的有深度。"
+  },
+  {
+    "id": 11,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "项目bullet point过多（5条+）、字号偏...",
+    "old_HR_os": "HR和面试官的简历扫描时间平均6-10秒，技术关键词加粗是在极短时间内让对方捕获信息的最有效手段。",
+    "new_HR_os": "简历结构清楚时，HR 才能把注意力放在能力上；排版混乱会先消耗耐心。"
+  },
+  {
+    "id": 12,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "所有项目都集中在同一个方向（如全是backend）...",
+    "old_HR_os": "HR在看简历时会对照JD的技术方向进行初步判断；项目覆盖多个方向的候选人被不同招聘方选中的概率更高。",
+    "new_HR_os": "日期和版面不稳，我会先担心细节感；ATS 解析错，也会影响人工判断。"
+  },
+  {
+    "id": 13,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "简历只写Azure会显著缩小能匹配的公司范围——A...",
+    "old_HR_os": "HR和ATS在筛选云平台技能时，AWS相关关键词出现在JD中的频率远高于Azure，后者更多见于金融、政府、传统企业的岗位。",
+    "new_HR_os": "格式不是小事，版面一乱，我会更难快速抓到经历顺序和最相关的内容。"
+  },
+  {
+    "id": 14,
+    "retrieval_scope": "other_non_resume",
+    "category": "interview_general",
+    "title": "Library、Framework、Tools三者...",
+    "old_HR_os": "Skills版块的清晰分类不影响ATS匹配（关键词存在即可），但可以提升面试官阅读体验，显示候选人有良好的技术认知条理。",
+    "new_HR_os": "面试里表达的稳定度很重要，准备越具体，越能降低用人团队的不确定感。"
+  },
+  {
+    "id": 15,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "简历中放大量metrics（百分比、提升数字）是把...",
+    "old_HR_os": "两派观点：一派认为metrics体现数据驱动思维（加分）；另一派认为数字水分大、无法验证（扣分）。折中原则：只保留能逻辑自洽的，删去模糊数字。",
+    "new_HR_os": "日期和版面不稳，我会先担心细节感；ATS 解析错，也会影响人工判断。"
+  },
+  {
+    "id": 16,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "简历排版的首要问题是行距过大、段落间距未清零、页边距过宽",
+    "old_HR_os": "HR看到内容稀疏的简历会有候选人经历不足的第一印象；合理紧凑的排版能在一页内展示更多实质内容，同时保持专业观感。",
+    "new_HR_os": "格式不是小事，版面一乱，我会更难快速抓到经历顺序和最相关的内容。"
+  },
+  {
+    "id": 17,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "12号字会让简历显得内容偏空",
+    "old_HR_os": "ATS系统对Times New Roman解析兼容性最佳；HR看纸质或PDF版简历时，serif字体（如TNR）在专业性观感上优于无衬线字体。",
+    "new_HR_os": "简历结构清楚时，HR 才能把注意力放在能力上；排版混乱会先消耗耐心。"
+  },
+  {
+    "id": 18,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "用空格来实现日期右对齐是最常见的错误操作——加粗、...",
+    "old_HR_os": "排版整洁的简历体现候选人的细节注意力；格式混乱（空格对齐导致的错位）是技术类岗位HR眼中的减分项。",
+    "new_HR_os": "日期和版面不稳，我会先担心细节感；ATS 解析错，也会影响人工判断。"
+  },
+  {
+    "id": 19,
+    "retrieval_scope": "resume_edit",
+    "category": "profile_links",
+    "title": "当前就业市场对需要sponsorship的候选人有明显偏见",
+    "old_HR_os": "HR在初筛时常常会先问「是否需要sponsorship」，无需担保的候选人进入下一轮的概率显著更高，尤其在经济不确定时期。",
+    "new_HR_os": "LinkedIn、GitHub 或作品集能降低验证成本；没有入口时，很多亮点就只能停在描述里。"
+  },
+  {
+    "id": 20,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "常见误解是bullet point越少越精练",
+    "old_HR_os": "HR扫描简历时对bullet数量有隐性期望：太少显得经历浅，太多显得缺乏重点。3-5条是被招聘从业者普遍认可的最优区间。",
+    "new_HR_os": "简历结构清楚时，HR 才能把注意力放在能力上；排版混乱会先消耗耐心。"
+  },
+  {
+    "id": 21,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "很多候选人忽视将行业专有工具（Bloomberg、...",
+    "old_HR_os": "金融/投资类岗位的HR在初筛时会特别查看候选人是否熟悉Bloomberg或Pitchbook，这是这类岗位的基本工具门槛，写与不写差别明显。",
+    "new_HR_os": "日期和版面不稳，我会先担心细节感；ATS 解析错，也会影响人工判断。"
+  },
+  {
+    "id": 22,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "数据分析岗位的经历若只写「analyzed dat...",
+    "old_HR_os": "数据分析岗位HR会特别关注候选人是否展示了数据pipeline各环节的能力；只有分析结果、没有数据处理过程的简历，在数据分析岗面试中会显得功底不够扎实。",
+    "new_HR_os": "格式不是小事，版面一乱，我会更难快速抓到经历顺序和最相关的内容。"
+  },
+  {
+    "id": 23,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "很多学生保留Leadership和Activiti...",
+    "old_HR_os": "HR扫描简历时，Leadership版块在tech岗位中几乎不产生正向影响；它占据的空间如果换成多一个技术项目，实质收益大得多。",
+    "new_HR_os": "简历结构清楚时，HR 才能把注意力放在能力上；排版混乱会先消耗耐心。"
+  },
+  {
+    "id": 24,
+    "retrieval_scope": "interview",
+    "category": "interview_general",
+    "title": "很多人误以为内推就能直接获得面试机会",
+    "old_HR_os": "在职工程师内推有财务激励，大多数人愿意接内推请求；但最终简历是否进入面试流程，由hiring manager决定，与推荐人关系不大。",
+    "new_HR_os": "面试准备不足时，候选人常常不是不会做，而是讲不清；这会直接影响录用信心。"
+  },
+  {
+    "id": 25,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "2024-2025年RAG系统、LLM Agent...",
+    "old_HR_os": "面试官和HR在AI项目泛滥的背景下，已对RAG/LLM项目产生审美疲劳；有真实工作经历的候选人更受青睐，工作经历中展示技术深度比项目列表更有说服力。",
+    "new_HR_os": "格式不是小事，版面一乱，我会更难快速抓到经历顺序和最相关的内容。"
+  },
+  {
+    "id": 26,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "应届生简历：Education应置顶",
+    "old_HR_os": "技术面试官扫描简历时，眼睛首先落在Work Experience的公司名和职位，然后才看bullet内容。Skills版块通常在确认候选人有足够工作经历后才仔细看。",
+    "new_HR_os": "简历结构清楚时，HR 才能把注意力放在能力上；排版混乱会先消耗耐心。"
+  },
+  {
+    "id": 27,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "大量ML术语（RAG、fine-tuning、ve...",
+    "old_HR_os": "技术面试官在扫描简历时，会对「有技术词但无业务价值描述」的bullet快速跳过；对「清楚说明了解决问题价值」的bullet停留更久，甚至在面试中主动追问。",
+    "new_HR_os": "日期和版面不稳，我会先担心细节感；ATS 解析错，也会影响人工判断。"
+  },
+  {
+    "id": 28,
+    "retrieval_scope": "resume_edit",
+    "category": "profile_links",
+    "title": "项目部分的排序不应该随意",
+    "old_HR_os": "面试官点击GitHub链接主要是看代码规模、README完整度、前端截图——不会深读代码逻辑。有10个commit的仓库不如有完整README+截图的仓库说服力强。",
+    "new_HR_os": "LinkedIn、GitHub 或作品集能降低验证成本；没有入口时，很多亮点就只能停在描述里。"
+  },
+  {
+    "id": 29,
+    "retrieval_scope": "resume_edit",
+    "category": "format_structure",
+    "title": "Candidate uses Kaggle/toy...",
+    "old_HR_os": "面试官和技术HR在审阅ML简历时会特别留意数据集规模的描述，使用真实或大规模数据集是区分严肃工程师的重要信号。",
+    "new_HR_os": "简历结构清楚时，HR 才能把注意力放在能力上；排版混乱会先消耗耐心。"
+  },
+  {
+    "id": 30,
+    "retrieval_scope": "resume_edit",
+    "category": "profile_links",
+    "title": "Candidate worries about c...",
+    "old_HR_os": "HR在初筛AI/ML简历时会快速确认是否附有GitHub链接；缺少链接会被认为缺乏实际编码能力，直接影响进入面试的概率。",
+    "new_HR_os": "缺少可验证链接时，我会少一个快速确认背景和作品可信度的入口。"
+  }
+]

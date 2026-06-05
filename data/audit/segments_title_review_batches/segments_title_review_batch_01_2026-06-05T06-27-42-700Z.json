@@ -1,0 +1,2918 @@
+[
+  {
+    "id": 6,
+    "chunk_id": "001fb46f-2c54-4dc7-8320-2f01ba74e06a-2026-04-17-简历精修_chunk_003",
+    "topic": "简历格式规范",
+    "L1": "简历内容",
+    "L2": "Education时间填写技巧",
+    "problem_tags": "education_details_missing",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "毕业后有超过一年空白期会被机筛和HR扣分",
+    "user_problem_summary": "毕业后有超过一年空白期会被机筛和HR扣分。",
+    "A_action": "OPT未用完时，Education结束时间可写为Present（如2023-Present）；背调时以毕业证上的实际毕业日期为准填写，两者不矛盾。注意：三年OPT全用完再这样写就过于牵强，不建议。",
+    "action_summary": "OPT未用完时，Education结束时间可写为Present（如2023-Present）；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms",
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 19,
+    "chunk_id": "017d1d79-b1dc-4905-8900-7905e40df51a-2026-04-01-简历定稿辅导_chunk_002",
+    "topic": "简历格式规范",
+    "L1": "简历内容",
+    "L2": "Header信息优化",
+    "problem_tags": "missing_linkedin",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "当前就业市场对需要sponsorship的候选人有明显偏见",
+    "user_problem_summary": "当前就业市场对需要sponsorship的候选人有明显偏见，很多公司会因为签证风险直接跳过相关候选人。",
+    "A_action": "若候选人已持有绿卡或工作许可（如EAD）：在简历header联系方式行加入「Green Card Holder」或「No Sponsorship Required」。注意只在事实情况下标注，OPT/H1B持有者不适用。",
+    "action_summary": "若候选人已持有绿卡或工作许可（如EAD）：在简历header联系方式行加入「Green Card Holder」或「No Sp...",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms",
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 65,
+    "chunk_id": "2580aed3-6f95-487c-9243-0540516fbd38-2026-03-31-GAP-分析+提升方案+简历分析_chunk_006",
+    "topic": "技能综合提升",
+    "L1": "技能提升",
+    "L2": "金融岗位",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills",
+    "canonical_action_family": "quantified_impact",
+    "action_depth": "evidence",
+    "advice_card_title": "Candidate interested in b...",
+    "user_problem_summary": "Candidate interested in business analyst or financial analyst r...",
+    "A_action": "同时发展三项技能以在BA/FA/FP&A职位中具有竞争力：(1)财务报表素养（读懂P&L、资产负债表、现金流），(2)数据可视化工具（Power BI、Tableau或至少高级Excel），(3)跨职能沟通（将数据洞察翻译成非技术语言）",
+    "action_summary": "同时发展三项技能以在BA/FA/FP&A职位中具有竞争力：(1)财务报表素养（读懂P&L、资产负债表、现金流），",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化 bullet 量化结果",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 182,
+    "chunk_id": "83764b1f-e004-42ca-929b-1cfadf09b67c-2026-04-14-Gap-Analysis+简历经历深挖-Yellow-Huang&潇文_chunk_601",
+    "topic": "求职综合策略",
+    "L1": "求职策略",
+    "L2": "经历包装",
+    "problem_tags": "weak_experience_keyword_evidence,vague_project_details",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "候选人的简历缺少项目经历",
+    "user_problem_summary": "候选人的简历缺少项目经历，但有相关实习背景可以转化；",
+    "A_action": "将实习期间参与的工作包装为\"校企合作项目经历\"放入简历；保持技术方向一致性（硬件简历不写软件实习）",
+    "action_summary": "将实习期间参与的工作包装为\"校企合作项目经历\"放入简历；保持技术方向一致性（硬件简历不写软件实习）",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 235,
+    "chunk_id": "b9f9ef2f-9cc8-4f0e-9066-41aa067f069b-2026-03-26-Gap分析+简历指导_chunk_851",
+    "topic": "求职综合策略",
+    "L1": "求职策略",
+    "L2": "简历优化",
+    "problem_tags": "missing_portfolio",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "候选人在简历中对身份状态处理模糊",
+    "user_problem_summary": "候选人在简历中对身份状态处理模糊，既不明确说明也不完全隐去；",
+    "A_action": "关于STEM OPT身份：要么不在简历上提及，要么就明确写'STEM OPT eligible'；含糊其辞反而引起误解",
+    "action_summary": "关于STEM OPT身份：要么不在简历上提及，要么就明确写'STEM OPT eligible'；含糊其辞反而引起误解",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms",
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 270,
+    "chunk_id": "d60bf40e-6b19-406a-a9c8-24799e67cc30-2026-04-03-Risk-方向-&-Data-方向-简历迭代辅导_chunk_991",
+    "topic": "求职综合策略",
+    "L1": "求职策略",
+    "L2": "简历优化",
+    "problem_tags": "generic_resume_positioning,low_role_specificity,missing_portfolio",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "rewrite",
+    "advice_card_title": "候选人用一份简历投递各类风险管理岗位",
+    "user_problem_summary": "候选人用一份简历投递各类风险管理岗位；",
+    "A_action": "根据目标岗位调整简历重点：Fraud/AML/Credit Risk等合规类要强调RCSA/control framework；Data Risk/Portfolio Risk等技术类要强调Python和modeling",
+    "action_summary": "根据目标岗位调整简历重点：Fraud/AML/Credit Risk等合规类要强调RCSA/control framework；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "聚焦目标岗位定位",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 293,
+    "chunk_id": "fa2f8ec3-c21f-4e9c-97f3-196e5eac36af-2026-03-28-gap分析和简历修改_chunk_1090",
+    "topic": "求职综合策略",
+    "L1": "求职策略",
+    "L2": "签证身份",
+    "problem_tags": "low_role_specificity",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "候选人在申请语言类教师岗位时没有事先核查签证担保政策",
+    "user_problem_summary": "候选人在申请语言类教师岗位时没有事先核查签证担保政策；",
+    "A_action": "申请语言类教师岗位前，仔细阅读JD中的签证政策；若明确写了'no sponsorship'则跳过，避免浪费时间",
+    "action_summary": "申请语言类教师岗位前，仔细阅读JD中的签证政策；若明确写了'no sponsorship'则跳过，避免浪费时间",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms",
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 413,
+    "chunk_id": "03219acf-5954-4c2e-ae49-5076ddd8783b-2025-02-12-GAP分析和简历修改_chunk_002",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "学员简历基本是高中申请大学的版本改的",
+    "user_problem_summary": "学员简历基本是高中申请大学的版本改的，项目经历和data science方向相关度很低，无法用于找数据分析类工作",
+    "A_action": "将现有项目按数据角度重新挖掘和描述；并行积累新的数据项目（如联系教授做研究助理、做TA、或自己做Kaggle项目）；先改写现有项目内容，后续用新项目替换或补充",
+    "action_summary": "将现有项目按数据角度重新挖掘和描述；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 1135,
+    "chunk_id": "0c826dce-8f81-4414-b998-31215be37f35-2025-03-26-EA岗位面试辅导-&-简历修改沟通_chunk_028",
+    "topic": "个人总结撰写",
+    "L1": "简历内容",
+    "L2": "个人总结",
+    "problem_tags": "missing_relocation_signal",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者有绿卡但简历上未标注",
+    "user_problem_summary": "求职者有绿卡但简历上未标注，之前机构帮改简历时也没有加上，可能导致雇主误以为需要visa sponsorship而直接筛掉。",
+    "A_action": "在简历中明确标注拥有绿卡（永久居留权），告知雇主无需sponsorship，消除HR筛选时的顾虑，提升简历通过率。",
+    "action_summary": "在简历中明确标注拥有绿卡（永久居留权），告知雇主无需sponsorship，消除HR筛选时的顾虑，提升简历通过率。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 1349,
+    "chunk_id": "0c826dce-8f81-4414-b998-31215be37f35-2025-03-26-EA岗位面试辅导-&-简历修改沟通_chunk_028",
+    "topic": "个人总结撰写",
+    "L1": "简历内容",
+    "L2": "个人总结",
+    "problem_tags": "missing_relocation_signal",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者有绿卡但简历上未注明",
+    "user_problem_summary": "求职者有绿卡但简历上未注明，之前机构帮改简历时也未写，可能导致雇主因工作授权不确定而跳过简历。",
+    "A_action": "在简历上明确标注绿卡（Permanent Resident）身份，消除雇主对工签/Visa sponsorship的顾虑，提高简历通过率。",
+    "action_summary": "在简历上明确标注绿卡（Permanent Resident）身份，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 1428,
+    "chunk_id": "0f56346d-d390-4df9-9553-0030bbc3e15f-2025-12-14-GAP分析和简历修改_chunk_009",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者认为银行实习经历与marketing无关",
+    "user_problem_summary": "求职者认为银行实习经历与marketing无关，不知如何关联，导致简历方向错位",
+    "A_action": "将对花旗、BOA、富国、摩根大通4家银行的call report分析包装为竞品分析（competitive analysis），强调提取financial metrics、分析季度增长率、生成insights并支持marketing team决策的完整链条",
+    "action_summary": "将对花旗、BOA、富国、摩根大通4家银行的call report分析包装为竞品分析（competitive analysis），",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 1429,
+    "chunk_id": "0f56346d-d390-4df9-9553-0030bbc3e15f-2025-12-14-GAP分析和简历修改_chunk_010",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者认为自己只是打杂收集weekly plan、安排会议",
+    "user_problem_summary": "求职者认为自己只是打杂收集weekly plan、安排会议，经历价值低，不知如何往marketing方向靠拢",
+    "A_action": "将'收集各部门weekly plan'包装为'supporting marketing team收集、整理、分析用户/部门反馈'；将meeting安排改写为'协助组织管理层会议并准备汇报材料'；将内部意见收集升级为customer survey分析，增加customer-facing视角",
+    "action_summary": "将'收集各部门weekly plan'包装为'supporting marketing team收集、整理、分析用户/部门反馈'；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 1712,
+    "chunk_id": "001fb46f-2c54-4dc7-8320-2f01ba74e06a-2026-04-17-简历精修_chunk_003",
+    "topic": "ATS机筛策略",
+    "L1": "求职策略",
+    "L2": "ATS机筛机制",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "rewrite",
+    "advice_card_title": "关键词匹配是ATS机筛的核心",
+    "user_problem_summary": "求职者OPT期间存在时间空白，简历若直接显示结束时间会被机筛识别为空窗期，影响通过率。",
+    "A_action": "将简历中在读/OPT期间的时间段结束时间写为\"now\"，利用OPT属于学生签证延续的模糊地带，规避空窗期扣分；背调时按毕业证实际时间填写。",
+    "action_summary": "将简历中在读/OPT期间的时间段结束时间写为\"now\"，利用OPT属于学生签证延续的模糊地带，规避空窗期扣分；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "补齐 JD 关键词证据",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 1718,
+    "chunk_id": "001fb46f-2c54-4dc7-8320-2f01ba74e06a-2026-04-17-简历精修_chunk_002",
+    "topic": "教育背景优化",
+    "L1": "简历内容",
+    "L2": "教育背景",
+    "problem_tags": "education_details_missing",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者明确写毕业时间为2025年6月",
+    "user_problem_summary": "求职者明确写毕业时间为2025年6月，导致简历出现近一年空档期印象，可能被ATS和HR标记为非在校生或有就业gap，影响机筛通过率。",
+    "A_action": "OPT期间可将教育经历结束时间写为'Present'或'Now'，因OPT属于F签证延伸，具有一定模糊地带；背调时单独向背调公司如实填写毕业证上的时间，两者不矛盾。同时将Education移至简历第一位，Skills置第二，最近经历优先展示。",
+    "action_summary": "OPT期间可将教育经历结束时间写为'Present'或'Now'，因OPT属于F签证延伸，具有一定模糊地带；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 1733,
+    "chunk_id": "017d1d79-b1dc-4905-8900-7905e40df51a-2026-04-01-简历定稿辅导_chunk_002",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "formatting_penalty_triggered,missing_relocation_signal",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "持有绿卡或即将拿到绿卡的候选人若未在简历上注明",
+    "user_problem_summary": "持有绿卡或即将拿到绿卡的候选人若未在简历上注明，可能错失大量机会，因为雇主普遍对sponsorship存在顾虑。",
+    "A_action": "在简历适当位置注明\"Green Card Holder\"或无需sponsorship，缩短GML等字段以腾出空间，同时在申请问卷中也据实填写。",
+    "action_summary": "在简历适当位置注明\"Green Card Holder\"或无需sponsorship，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms",
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 1739,
+    "chunk_id": "017d1d79-b1dc-4905-8900-7905e40df51a-2026-04-01-简历定稿辅导_chunk_001",
+    "topic": "个人总结撰写",
+    "L1": "简历内容",
+    "L2": "个人总结",
+    "problem_tags": "missing_linkedin,formatting_penalty_triggered",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "LinkedIn链接末尾为系统随机分配的乱码字符",
+    "user_problem_summary": "LinkedIn链接末尾为系统随机分配的乱码字符，显得不专业；同时未充分利用头部空间展示身份优势信息（如绿卡持有者）。",
+    "A_action": "在LinkedIn设置中自定义个人主页URL（如linkedin.com/in/jessica-cao），去除系统乱码后缀；在简历头部加注\"Green Card Holder\"，向雇主表明无需签证担保。",
+    "action_summary": "在LinkedIn设置中自定义个人主页URL（如linkedin.com/in/jessica-cao），去除系统乱码后缀；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms",
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 1958,
+    "chunk_id": "2580aed3-6f95-487c-9243-0540516fbd38-2026-03-31-GAP-分析+提升方案+简历分析_chunk_022",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "problem_tags": "low_hard_skill_match,education_details_missing",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "delivery",
+    "advice_card_title": "学生担心SQL和Python已生疏",
+    "user_problem_summary": "学生担心SQL和Python已生疏，不确定是否需要系统复习，存在对技能要求的焦虑",
+    "A_action": "无需深度复习SQL与Python，能看懂基础语法即可；BA/FA岗位面试不常考编程题，将精力聚焦于简历优化和岗位投递",
+    "action_summary": "无需深度复习SQL与Python，能看懂基础语法即可；BA/FA岗位面试不常考编程题，将精力聚焦于简历优化和岗位投递",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 2642,
+    "chunk_id": "834f0ee2-7a02-4659-bf01-e0e29f127c49-2026-04-10-GAP分析+简历指导_chunk_013",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者目前简历项目数量不足",
+    "user_problem_summary": "求职者目前简历项目数量不足，导师主动引导求职者回忆是否有与数据相关的经历，以便补充进简历，增强数据分析方向的竞争力。",
+    "A_action": "回忆并整理所有与数据沾边的项目或文章（如分析企业年报、量化评分等），将其包装为简历项目，发给导师审阅后决定是否纳入简历。",
+    "action_summary": "回忆并整理所有与数据沾边的项目或文章（如分析企业年报、量化评分等），将其包装为简历项目，发给导师审阅后决定是否纳入简历。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 2698,
+    "chunk_id": "83764b1f-e004-42ca-929b-1cfadf09b67c-2026-04-14-Gap-Analysis+简历经历深挖-Yellow-Huang&潇文_chunk_017",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者简历整体偏硬件方向",
+    "user_problem_summary": "求职者简历整体偏硬件方向，但有软件实习经历，若直接写实习工作经历容易让HR产生方向误解，需重新包装以保持简历定位一致性。",
+    "A_action": "将软件实习经历包装为\"校企合作项目\"，列入项目经历模块，避免与硬件求职方向产生冲突；项目总数控制在2至3个，选择自己最熟悉且有实物成果的硬件项目。",
+    "action_summary": "将软件实习经历包装为\"校企合作项目\"，列入项目经历模块，避免与硬件求职方向产生冲突；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 2704,
+    "chunk_id": "83764b1f-e004-42ca-929b-1cfadf09b67c-2026-04-14-Gap-Analysis+简历经历深挖-Yellow-Huang&潇文_chunk_016",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_action_verbs",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者简历整体定位偏硬件",
+    "user_problem_summary": "求职者简历整体定位偏硬件，但有一段软件方向实习经历，直接写为实习会让面试官对求职方向产生误解，影响硬件岗位申请。",
+    "A_action": "将软件实习（VisionX相关）包装为「校企合作项目」，以项目经历形式呈现，同时保留技术内容，避免让面试官误判求职者的方向为软件，维护简历整体硬件定位。",
+    "action_summary": "将软件实习（VisionX相关）包装为「校企合作项目」，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 2889,
+    "chunk_id": "987572d0-5047-4eaf-bbd0-027100a5c448-2026-04-13-简历Bullet-point梳理_chunk_009",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "low_soft_skill_match,weak_action_verbs",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者对analyst不同岗位方向（BA、RA、F...",
+    "user_problem_summary": "求职者对analyst不同岗位方向（BA、RA、FA、DA等）的区别和技能要求缺乏清晰认知，",
+    "A_action": "明确区分Business方向（BA/RA/FA/BIE）与Tech方向（DA等），根据自身技能背景选择匹配方向：若soft skills强、tech skills一般，优先投BA；若coding能力强，考虑DA或量化风险方向。投递前研究JD中BA与DA的技能比例，识别BDA、FDA等混合岗位。",
+    "action_summary": "明确区分Business方向（BA/RA/FA/BIE）与Tech方向（DA等），",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "重排定位相关技能",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 2907,
+    "chunk_id": "987572d0-5047-4eaf-bbd0-027100a5c448-2026-04-13-简历Bullet-point梳理_chunk_015",
+    "topic": "多版本简历策略",
+    "L1": "简历内容",
+    "L2": "简历版本规划",
+    "problem_tags": "generic_resume_positioning,low_role_specificity,resume_not_tailored_to_jd",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "delivery",
+    "advice_card_title": "不要一份简历投所有岗位",
+    "user_problem_summary": "求职者目前只有一份通用简历，无法同时有效覆盖FA、BA等不同方向的岗位需求，各岗位对技能和经历的侧重点不同，通用版难以突出匹配度。",
+    "A_action": "针对FA和BA分别修改一份定制简历，若保留IA方向投递，则IA版本同样需要单独修改优化，不得直接沿用现有版本。",
+    "action_summary": "针对FA和BA分别修改一份定制简历，若保留IA方向投递，则IA版本同样需要单独修改优化，不得直接沿用现有版本。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "按岗位维护简历版本",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3039,
+    "chunk_id": "aa9bac7a-e659-4d7a-b209-d570d899d8e0-2026-03-26-MKT方向gap分析和简历修改_chunk_011",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者的银行实习实际上只是学习产品知识",
+    "user_problem_summary": "求职者的银行实习实际上只是学习产品知识，",
+    "A_action": "将银行实习岗位包装为Marketing Intern，重点写：1）梳理理财产品核心卖点与产品定位；2）协助Marketing team制作pitch deck材料；3）支持Sales team进行客户触达准备。确保围绕实际接触过的产品知识展开，避免凭空捏造。",
+    "action_summary": "将银行实习岗位包装为Marketing Intern，重点写：1）梳理理财产品核心卖点与产品定位；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 3067,
+    "chunk_id": "af2a6c3e-a43c-4171-bb4a-7348c2102c3a-2026-04-11-AI-ML方向技能提升和简历修改_chunk_002",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_target_role_alignment",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "proof",
+    "advice_card_title": "求职者有多段实习经历但均以数据分析角度呈现",
+    "user_problem_summary": "求职者有多段实习经历但均以数据分析角度呈现，",
+    "A_action": "梳理现有实习经历中涉及系统集成、方案搭建、跨部门/客户协作的内容，将bullet point重新包装为Solution Engineer视角，突出解决方案交付和技术集成成果。",
+    "action_summary": "梳理现有实习经历中涉及系统集成、方案搭建、跨部门/客户协作的内容，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 3195,
+    "chunk_id": "b9f9ef2f-9cc8-4f0e-9066-41aa067f069b-2026-03-26-Gap分析+简历指导_chunk_003",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "missing_relocation_signal",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "简历要清晰展示你的目标岗位",
+    "user_problem_summary": "求职者简历未注明STEM OPT签证状态，HR可能误判为普通OPT，影响雇主对雇佣可行性的判断",
+    "A_action": "在简历中明确标注STEM OPT身份，避免HR产生误判；若不想写则直接省略，但写了就要写完整",
+    "action_summary": "在简历中明确标注STEM OPT身份，避免HR产生误判；若不想写则直接省略，但写了就要写完整",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms",
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 3235,
+    "chunk_id": "bbd0ce7b-81a5-4c98-adfd-70cfa85165c4-2026-04-21-Mock-Interview-(-BQ-+-Tech-+-简历熟悉度)_chunk_003",
+    "topic": "ATS机筛策略",
+    "L1": "求职策略",
+    "L2": "ATS机筛机制",
+    "problem_tags": "missing_relocation_signal",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者不清楚简历通过ATS机筛后HR人工筛选的具体逻辑",
+    "user_problem_summary": "求职者不清楚简历通过ATS机筛后HR人工筛选的具体逻辑，",
+    "A_action": "在投递前仔细核对JD中的硬性要求：是否提供sponsorship、是否接受relocation、工作地点是否匹配；在申请表中如实填写，避免因信息不符在HR人工初筛阶段被直接刷掉。",
+    "action_summary": "在投递前仔细核对JD中的硬性要求：是否提供sponsorship、是否接受relocation、工作地点是否匹配；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 3291,
+    "chunk_id": "bf36b5fc-6902-4028-b6cf-b1dc297b3881-2026-03-31-项目梳理+简历指导_chunk_004",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "简历要清晰展示你的目标岗位",
+    "user_problem_summary": "H1B持有者若考取门槛不高的金融类细分证书（如非CFA），",
+    "A_action": "评估目标岗位是否属于H1B友好类型，优先考虑CFA等高门槛且H1B相对友好的证书；若坚持进入证券行业，需将简历每一段工作经历全面改写以匹配该行业要求，确保本硕专业及工作经历与目标岗位高度相关。",
+    "action_summary": "评估目标岗位是否属于H1B友好类型，优先考虑CFA等高门槛且H1B相对友好的证书；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms",
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 3415,
+    "chunk_id": "d00edafa-b90d-4132-874c-70814611c0a2-2026-04-15-简历梳理和模拟面试_chunk_006",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者的Amazon ADS经历停留在方案层面",
+    "user_problem_summary": "求职者的Amazon ADS经历停留在方案层面，",
+    "A_action": "在简历中明确区分「方案设计」与「实际投放」的边界，同时将方案中的具体策略细节写入bullet point，如：按customer journey划分5个投放阶段、brand awareness阶段采用sponsor brand视频广告、daily budget $200-300、目标ROI 1.3-1.5，以体现方法论深度。",
+    "action_summary": "在简历中明确区分「方案设计」与「实际投放」的边界，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 3463,
+    "chunk_id": "d60bf40e-6b19-406a-a9c8-24799e67cc30-2026-04-03-Risk-方向-&-Data-方向-简历迭代辅导_chunk_005",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者的RCSA项目简历描述缺乏量化结果",
+    "user_problem_summary": "求职者的RCSA项目简历描述缺乏量化结果，",
+    "A_action": "深入追问项目中的KRI指标数值，将likelihood从once a quarter降至once a year、impact从$15M-$200M降至$5M-$15M等量化结果提炼为bullet point中的量化成果，体现风险控制效果。",
+    "action_summary": "深入追问项目中的KRI指标数值，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3476,
+    "chunk_id": "d60bf40e-6b19-406a-a9c8-24799e67cc30-2026-04-03-Risk-方向-&-Data-方向-简历迭代辅导_chunk_010",
+    "topic": "多版本简历策略",
+    "L1": "求职策略",
+    "L2": "简历版本规划",
+    "problem_tags": "generic_resume_positioning,missing_portfolio",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "proof",
+    "advice_card_title": "不要一份简历投所有岗位",
+    "user_problem_summary": "求职者准备投递多个方向（Risk Control、Consulting、Fraud/AML等），",
+    "A_action": "针对每个目标方向（Risk Consulting、Credit/Data/Portfolio Risk、Fraud AML）分别准备一份简历，在每份简历中加入该方向对应的行业关键词，以提升ATS机筛通过率。",
+    "action_summary": "针对每个目标方向（Risk Consulting、Credit/Data/Portfolio Risk、Fraud AML）分...",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "按岗位维护简历版本",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3478,
+    "chunk_id": "d60bf40e-6b19-406a-a9c8-24799e67cc30-2026-04-03-Risk-方向-&-Data-方向-简历迭代辅导_chunk_011",
+    "topic": "ATS机筛策略",
+    "L1": "求职策略",
+    "L2": "ATS机筛机制",
+    "problem_tags": "missing_portfolio",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者同时申请Credit Risk、Fraud/...",
+    "user_problem_summary": "求职者同时申请Credit Risk、Fraud/AML、Risk Consulting三个方向，",
+    "A_action": "为三个方向分别准备简历版本：Credit Risk版强调portfolio monitoring、delinquency、default、PD/LGD/EAD、roll rate、vintage等；Fraud/AML版强调fraud detection、transaction monitoring、AML、KYC、suspicious activity、pattern anomaly monitoring；Risk Consulting版强调internal control、process improvement、governance、regulatory compliance、RCSA、control framework，同时弱化Python及modeling相关内容。",
+    "action_summary": "为三个方向分别准备简历版本：Credit Risk版强调portfolio monitoring、delinquency、de...",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "按岗位维护简历版本",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3479,
+    "chunk_id": "d60bf40e-6b19-406a-a9c8-24799e67cc30-2026-04-03-Risk-方向-&-Data-方向-简历迭代辅导_chunk_011",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "low_soft_skill_match,keywords_only_in_skills,generic_resume_positioning",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历中Python及quantitative...",
+    "user_problem_summary": "求职者简历中Python及quantitative modeling内容较重，",
+    "A_action": "针对Risk Consulting方向，将简历中Python、statistical modeling等技术描述弱化或移至技能列表次要位置，工作经历bullet point改为突出internal control、RCSA、control framework、process improvement、governance、regulatory compliance等关键词，体现咨询思维与风险治理能力。",
+    "action_summary": "针对Risk Consulting方向，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "删除干扰定位内容",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3480,
+    "chunk_id": "d60bf40e-6b19-406a-a9c8-24799e67cc30-2026-04-03-Risk-方向-&-Data-方向-简历迭代辅导_chunk_012",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,low_hard_skill_match,keywords_only_in_skills",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "structure",
+    "advice_card_title": "求职者同时申请risk consulting、ri...",
+    "user_problem_summary": "求职者同时申请risk consulting、risk分析和fraud三个方向，",
+    "A_action": "针对risk合规/审计类岗位强调RCSA control framework、state code等合规框架关键词；针对data/modeling类岗位保留Python和建模相关内容；根据不同投递方向准备差异化版本简历",
+    "action_summary": "针对risk合规/审计类岗位强调RCSA control framework、state code等合规框架关键词；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3802,
+    "chunk_id": "128ef4e3-a9c8-404a-8d44-7cd6e5bbd64c-2025-09-13-GAP岗位差距分析+简历修改_chunk_013",
+    "topic": "技能栏优化",
+    "L1": "简历内容",
+    "L2": "技能列表",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills,low_jd_keyword_match",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者技术技能栏只写了笼统的\"Microsoft...",
+    "user_problem_summary": "求职者技术技能栏只写了笼统的\"Microsoft Office/computer\"，",
+    "A_action": "根据投递方向分版本替换技术技能栏：若投BA/MA方向，填入SQL、Python、Tableau、Power BI、Google Analytics、Colab、Kaggle、Snowflake等数据相关工具；若投FA/Accounting方向，填入Oracle及财务建模工具（3-statement model、DCF、IRR等），彻底删除\"Microsoft Office\"等泛化描述。",
+    "action_summary": "根据投递方向分版本替换技术技能栏：若投BA/MA方向，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "按岗位维护简历版本",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 3844,
+    "chunk_id": "129bfa58-1a45-4e5d-9879-faf0a9fdc2e5-2025-01-16-GAP分析+简历修改_chunk_014",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者有处理数据的工作经历但未曾系统包装为Data...",
+    "user_problem_summary": "求职者有处理数据的工作经历但未曾系统包装为Data Engineer所需的ETL/大数据经验，导致方向转型缺乏简历支撑。",
+    "A_action": "梳理现有工作经历中涉及数据处理、ETL及大数据相关内容，在简历中增加对应bullet point，将背景包装成符合Data Engineer要求的经验描述，同时提升该方向求职的可能性。",
+    "action_summary": "梳理现有工作经历中涉及数据处理、ETL及大数据相关内容，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 3904,
+    "chunk_id": "13bb7f8b-835e-43f1-baab-76bd9d27f38c-2025-04-23-SDE-差距分析+简历修改_chunk_027",
+    "topic": "个人总结撰写",
+    "L1": "简历内容",
+    "L2": "个人总结",
+    "problem_tags": "missing_relocation_signal",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "部分求职者会在简历上标注green card持有者...",
+    "user_problem_summary": "部分求职者会在简历上标注green card持有者身份以减少HR顾虑，",
+    "A_action": "可选择性在简历中注明green card持有者（无需sponsor），但需衡量个人风险偏好；若担忧种族偏见，可考虑使用英文名。最终影响因公司文化而异，不必强制标注。",
+    "action_summary": "可选择性在简历中注明green card持有者（无需sponsor），但需衡量个人风险偏好；若担忧种族偏见，可考虑使用英文名。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms",
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 4143,
+    "chunk_id": "15707052-46a2-4d6f-a86c-9a21a3ebd52a-2026-01-27-简历内容修改沟通_chunk_001",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "rewrite",
+    "advice_card_title": "简历要清晰展示你的目标岗位",
+    "user_problem_summary": "求职者误以为FA岗位简历需要写得非常亮眼，导致改出的版本显得夸张失真，反而适得其反",
+    "A_action": "针对FA（Financial Advisor/Financial Analyst入门）岗位，保持简历内容真实，不必过度夸大成就，聚焦岗位实际要求进行匹配即可",
+    "action_summary": "针对FA（Financial Advisor/Financial Analyst入门）岗位，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 4147,
+    "chunk_id": "15707052-46a2-4d6f-a86c-9a21a3ebd52a-2026-01-27-简历内容修改沟通_chunk_006",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历中项目内容与金融方向相关度不足",
+    "user_problem_summary": "求职者简历中项目内容与金融方向相关度不足，未能体现解决了何种finance问题，导致简历与目标FA岗位匹配度偏低。",
+    "A_action": "梳理现有项目经历，明确每段经历与finance的关联点，在简历中突出所解决的金融业务问题或与财务/投资相关的成果，提升简历与FA岗位的匹配度。",
+    "action_summary": "梳理现有项目经历，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 4148,
+    "chunk_id": "15707052-46a2-4d6f-a86c-9a21a3ebd52a-2026-01-27-简历内容修改沟通_chunk_003",
+    "topic": "技能栏优化",
+    "L1": "简历内容",
+    "L2": "技能列表",
+    "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,low_hard_skill_match,keywords_only_in_skills",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "structure",
+    "advice_card_title": "求职者技能区将编程语言（Python、SQL、R）...",
+    "user_problem_summary": "求职者技能区将编程语言（Python、SQL、R）、办公软件（Microsoft Office、Adobe）以及金融专业技能混...",
+    "A_action": "将技能区拆分为至少三个子类别：①Programming Languages（Python、SQL、R等）；②Tools（Microsoft Office、Adobe等）；③Financial Skills（Financial Analysis、Portfolio Management、DCF Financial Modeling等），针对FA或HR方向分别补充相关专业技能关键词。",
+    "action_summary": "将技能区拆分为至少三个子类别：①Programming Languages（Python、SQL、R等）；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "按岗位维护简历版本",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 4149,
+    "chunk_id": "15707052-46a2-4d6f-a86c-9a21a3ebd52a-2026-01-27-简历内容修改沟通_chunk_003",
+    "topic": "ATS机筛策略",
+    "L1": "求职策略",
+    "L2": "ATS机筛机制",
+    "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,weak_experience_keyword_evidence,weak_result_orientation",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历缺乏足够的行业关键词",
+    "user_problem_summary": "求职者简历缺乏足够的行业关键词，在中大型公司投递时容易被ATS机器筛选直接过滤，无法进入HR人工审阅环节。",
+    "A_action": "根据目标岗位（FA或HR方向）在技能区及工作经历中主动补充相关专业关键词。FA方向补充：Financial Analysis、Portfolio Management、DCF、Financial Modeling等；HR方向补充对应HR专业术语，确保关键词覆盖目标JD中的核心词汇。",
+    "action_summary": "根据目标岗位（FA或HR方向）在技能区及工作经历中主动补充相关专业关键词。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "按岗位维护简历版本",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 4153,
+    "chunk_id": "15707052-46a2-4d6f-a86c-9a21a3ebd52a-2026-01-27-简历内容修改沟通_chunk_002",
+    "topic": "ATS机筛策略",
+    "L1": "求职策略",
+    "L2": "ATS机筛机制",
+    "problem_tags": "keywords_only_in_skills",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "许多大型公司使用机器筛选系统过滤非工作身份合规的候选人",
+    "user_problem_summary": "许多大型公司使用机器筛选系统过滤非工作身份合规的候选人，未注明绿卡持有状态会被系统直接淘汰",
+    "A_action": "在简历头部或技能区明确标注「Green Card Holder」，确保ATS及HR第一时间识别工作身份合规性，避免被机筛淘汰",
+    "action_summary": "在简历头部或技能区明确标注「Green Card Holder」，确保ATS及HR第一时间识别工作身份合规性，避免被机筛淘汰",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms",
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 4154,
+    "chunk_id": "15707052-46a2-4d6f-a86c-9a21a3ebd52a-2026-01-27-简历内容修改沟通_chunk_002",
+    "topic": "教育背景优化",
+    "L1": "简历内容",
+    "L2": "教育背景",
+    "problem_tags": "education_details_missing,weak_target_role_alignment",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者以为Coursework只能填学校正式课程",
+    "user_problem_summary": "求职者以为Coursework只能填学校正式课程，导致相关课程不足，无法体现与目标岗位的匹配度",
+    "A_action": "在Coursework区域填写与目标岗位（FA/Supply Chain）相关的课程，包括线上自学课程；面试官不会核查成绩单，只会询问学到了什么",
+    "action_summary": "在Coursework区域填写与目标岗位（FA/Supply Chain）相关的课程，包括线上自学课程；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "聚焦目标岗位定位",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 4156,
+    "chunk_id": "15707052-46a2-4d6f-a86c-9a21a3ebd52a-2026-01-27-简历内容修改沟通_chunk_002",
+    "topic": "技能栏优化",
+    "L1": "简历内容",
+    "L2": "技能列表",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "structure",
+    "advice_card_title": "求职者Technical Skills将编程语言、...",
+    "user_problem_summary": "求职者Technical Skills将编程语言、Office工具、设计软件混在一起，分类不清晰；",
+    "A_action": "将Technical Skills拆分为至少两类：①Programming Languages（Python、SQL、R）②Tools（Microsoft Office、Adobe等）；再单独添加Financial Skills类别，列出Financial Analysis、Portfolio Management、DCF/Financial Modeling等技能；删除中英文语言技能（在美国申请非华人公司无实际意义）",
+    "action_summary": "将Technical Skills拆分为至少两类：①Programming Languages（Python、SQL、R）②T...",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 4184,
+    "chunk_id": "15707052-46a2-4d6f-a86c-9a21a3ebd52a-2026-01-27-简历内容修改沟通_chunk_020",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,low_hard_skill_match,weak_target_role_alignment",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者国泰实习的bullet point数量过多且过于琐碎",
+    "user_problem_summary": "求职者国泰实习的bullet point数量过多且过于琐碎，",
+    "A_action": "将多条数据相关的bullet point合并压缩为1-2条，突出数据工作的规模或成果；增加finance相关内容（如行业研究、估值、财务分析），使经历更符合FA岗位的关键词期望",
+    "action_summary": "将多条数据相关的bullet point合并压缩为1-2条，突出数据工作的规模或成果；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "重排定位相关技能",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 4186,
+    "chunk_id": "15a853fa-2631-4c32-8e1e-2e123ad3b868-2025-02-12-GAP分析+简历修改_chunk_006",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者的财富管理经历描述过于笼统",
+    "user_problem_summary": "求职者的财富管理经历描述过于笼统，",
+    "A_action": "将相关工作经历重新包装为Private Banking方向，突出服务客户类型（如family office、ultra-high-net-worth client），并描述曾涉及的复杂策略，如tax loss harvesting、derivative对冲、另类资产配置（private equity、private credit、real estate）等，以体现量化和高净值客户服务能力。",
+    "action_summary": "将相关工作经历重新包装为Private Banking方向，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 4830,
+    "chunk_id": "19a9bfef-52dd-4aca-a0b9-4da8967e0ac2-2025-11-08-金融Account简历内容修改添加_chunk_001",
+    "topic": "多版本简历策略",
+    "L1": "求职策略",
+    "L2": "简历版本规划",
+    "problem_tags": "low_jd_keyword_match,generic_resume_positioning,low_role_specificity",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "proof",
+    "advice_card_title": "不要一份简历投所有岗位",
+    "user_problem_summary": "求职者同时投递Financial Analyst和Accounting等不同岗位，",
+    "A_action": "将现有简历作为主版本，针对FA相关岗位重新润色，提升关键词与岗位描述的匹配度；同时为Accounting等其他方向制作独立简历分支，做到一岗一版",
+    "action_summary": "将现有简历作为主版本，针对FA相关岗位重新润色，提升关键词与岗位描述的匹配度；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "按岗位维护简历版本",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 5225,
+    "chunk_id": "1b1fa644-9892-4885-bd40-d1c73bdbc181-2025-06-04-Session-06-市场分析方向的技能提升,简历润色和近期的情况分析_chunk_017",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_target_role_alignment,education_details_missing",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历中第一段professional exp...",
+    "user_problem_summary": "求职者简历中第一段professional experience与目标岗位FA（Financial Analyst）方向不相关，",
+    "A_action": "若目标岗位为FA，将与FA无关的第一段professional experience从简历中删除，保留与财务分析、valuation等直接相关的经历，确保简历方向聚焦。",
+    "action_summary": "若目标岗位为FA，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "删除干扰定位内容",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 5234,
+    "chunk_id": "1b1fa644-9892-4885-bd40-d1c73bdbc181-2025-06-04-Session-06-市场分析方向的技能提升,简历润色和近期的情况分析_chunk_018",
+    "topic": "多版本简历策略",
+    "L1": "简历内容",
+    "L2": "简历版本规划",
+    "problem_tags": "generic_resume_positioning,resume_not_tailored_to_jd",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "evidence",
+    "advice_card_title": "不要一份简历投所有岗位",
+    "user_problem_summary": "求职者同时申请marketing和finance两个方向，",
+    "A_action": "针对不同方向准备两个简历版本：投marketing时保留当前样式并可补充marketing项目；投finance/FA时删除与finance无关的marketing经历，保留三家知名金融/咨询公司经历作为核心内容。",
+    "action_summary": "针对不同方向准备两个简历版本：投marketing时保留当前样式并可补充marketing项目；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "按岗位维护简历版本",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 5344,
+    "chunk_id": "1b3ab54e-b198-43ed-b08b-2f94d1c1aa32-2025-03-28-GAP分析和简历修改-MKT_chunk_014",
+    "topic": "金融成果改写为 Marketing 指标",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "role_language_mismatch,metric_not_target_role_relevant,weak_target_role_alignment",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者以'日均收益3%'作为项目成果",
+    "user_problem_summary": "求职者以'日均收益3%'作为项目成果，",
+    "A_action": "将项目结果重新包装为Marketing维度的量化指标：例如策略上线后带动新用户购买数量增长X%、产品转化率从10%提升至50%、用户满意度评分达X分等，替代纯金融收益数据。",
+    "action_summary": "将项目结果重新包装为Marketing维度的量化指标：例如策略上线后带动新用户购买数量增长X%、产品转化率从10%提升至50%...",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 5541,
+    "chunk_id": "1bb88167-f5e6-45a9-b144-6ef6b48df080-2025-10-06-岗位差距分析&简历修改课程_chunk_005",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者背景偏非数据方向",
+    "user_problem_summary": "求职者背景偏非数据方向，简历中数据相关内容极少，与目标数据分析岗位存在明显gap，难以与有大量数据项目和实习经验的竞争者抗衡。",
+    "A_action": "梳理已有实习和项目经历，挖掘其中与数据相关的工作内容（如数字化整合、流程分析、时间统计等），将其重新包装为数据分析视角的描述，添加量化指标，并通过共同完成行业项目补充简历中的数据背景。",
+    "action_summary": "梳理已有实习和项目经历，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 6512,
+    "chunk_id": "20969ed8-ed96-4011-98e0-0f902a94eb40-2025-11-08-金融Account简历内容修改添加_chunk_000",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者简历偏data方向",
+    "user_problem_summary": "求职者简历偏data方向，投递反响不佳，导师建议将简历重新定位为Accounting或FA方向，并补充相关技能，以提升简历竞争力。",
+    "A_action": "将简历内容从data导向改写为偏Accounting/FA方向，同时在技能板块补充会计、财务分析相关工具与知识点，并调整投递策略。",
+    "action_summary": "将简历内容从data导向改写为偏Accounting/FA方向，同时在技能板块补充会计、财务分析相关工具与知识点，并调整投递策略。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "重排定位相关技能",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6681,
+    "chunk_id": "21ae9120-e8a1-410c-8f15-c5b6f8c83fa7-2025-11-11-MKT面试辅导和实习简历修改更新_chunk_010",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者将学生访谈定位为简单的信息收集",
+    "user_problem_summary": "求职者将学生访谈定位为简单的信息收集，未能将其与产品优化、pitch deck卖点提炼等上游产出关联，导致这段经历的价值被严重低估。",
+    "A_action": "将用户访谈经历重新包装为产品改进环节：强调通过访谈收集end user痛点，整理反馈并输出给产品团队，协助优化产品卖点与pitch deck内容，最终目标是提升成交率。",
+    "action_summary": "将用户访谈经历重新包装为产品改进环节：强调通过访谈收集end user痛点，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 6766,
+    "chunk_id": "21fb9d01-e6f2-4c44-be35-588f2377a353-2026-01-16-GAP分析+简历修改沟通_chunk_012",
+    "topic": "咨询/投资与技术方向双版本简历",
+    "L1": "简历内容",
+    "L2": "简历版本规划",
+    "problem_tags": "generic_resume_positioning,resume_not_tailored_to_jd,multi_target_resume_needed",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "delivery",
+    "advice_card_title": "国际生申请MBB及四大等前端咨询岗位难度较大",
+    "user_problem_summary": "国际生申请MBB及四大等前端咨询岗位难度较大，需同时准备投资/咨询方向与技术方向两份简历，兼顾兴趣与现实",
+    "A_action": "制作两版简历：一版针对investment/前端咨询方向（兴趣驱动），一版针对技术方向（结合现实背景与未来发展）；根据投递岗位分别投送",
+    "action_summary": "制作两版简历：一版针对investment/前端咨询方向（兴趣驱动），一版针对技术方向（结合现实背景与未来发展）；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 6872,
+    "chunk_id": "22c76ef0-8529-427f-afa6-c076522c44c1-2024-11-11-GAP分析+简历修改_chunk_004",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "missing_relocation_signal",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者有真实的创业/电商经营经历但未通过CPT等正...",
+    "user_problem_summary": "求职者有真实的创业/电商经营经历但未通过CPT等正规身份在美经营，担心能否将该经历写入简历；导师需判断其是否具备背调可验证性。",
+    "A_action": "确认能否提供可联系的reference（如合作伙伴/朋友），只要有人能为你的实际工作经历作证，即可将该经历写入简历；背调核心是验证\"是否真实共事\"，并非核查工作签证状态。",
+    "action_summary": "确认能否提供可联系的reference（如合作伙伴/朋友），只要有人能为你的实际工作经历作证，即可将该经历写入简历；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "改写工作经历 bullet",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6905,
+    "chunk_id": "22c76ef0-8529-427f-afa6-c076522c44c1-2024-11-11-GAP分析+简历修改_chunk_022",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_target_role_alignment",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者的电商相关实习经历偏向销售",
+    "user_problem_summary": "求职者的电商相关实习经历偏向销售，与目标岗位匹配度不高，需要重新定位包装方向以提升与运营类岗位的相关性。",
+    "A_action": "将电商销售实习重新包装为Operation Assistant方向，突出offline event组织、展会等运营相关内容，强调B2B客户拓展及综合客户管理经验。",
+    "action_summary": "将电商销售实习重新包装为Operation Assistant方向，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 6918,
+    "chunk_id": "231b18fc-18e6-4e03-821c-791358e0a84a-2026-03-07-GAP分析+简历指导_chunk_002",
+    "topic": "个人总结撰写",
+    "L1": "简历内容",
+    "L2": "个人总结",
+    "problem_tags": "low_soft_skill_match,formatting_penalty_triggered,missing_contact_info",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者简历中缺少美国本地联系电话",
+    "user_problem_summary": "求职者简历中缺少美国本地联系电话，HR在初步筛选或面试安排时可能无法直接电话联系，影响求职流程推进。",
+    "A_action": "在简历联系信息栏填写美国本地电话号码，确保HR可通过电话直接reach out。",
+    "action_summary": "在简历联系信息栏填写美国本地电话号码，确保HR可通过电话直接reach out。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 7255,
+    "chunk_id": "25757141-5a05-4702-a7bb-6e1b6c433d12-2025-10-15-简历修改(中文)_chunk_013",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "proof",
+    "advice_card_title": "求职者简历中的实习内容描述模糊、缺乏深度",
+    "user_problem_summary": "求职者简历中的实习内容描述模糊、缺乏深度，",
+    "A_action": "用 DeepSeek 或 ChatGPT 查询目标岗位（证券投行）真实工作内容，与简历现有描述对比；若不一致，将简历内容向目标岗位靠拢，同时确保自己能在脑子里建立对该岗位工作框架的基本理解。",
+    "action_summary": "用 DeepSeek 或 ChatGPT 查询目标岗位（证券投行）真实工作内容，与简历现有描述对比；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 7296,
+    "chunk_id": "25cd043d-e310-4c40-9fdd-bd98193c335f-2025-08-30-Gap分析和简历修改_chunk_014",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "problem_tags": "missing_portfolio",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者建筑作品集中的设计方案（如地下采光、天窗等）...",
+    "user_problem_summary": "求职者建筑作品集中的设计方案（如地下采光、天窗等）缺乏construction detail和节点图支撑，",
+    "A_action": "补充作品集中关键设计决策的construction detail或节点图，例如天窗防水处理、屋顶坡度排水等，说明设计背后的技术依据，展示对建造可实施性的理解。",
+    "action_summary": "补充作品集中关键设计决策的construction detail或节点图，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 7603,
+    "chunk_id": "27cbed97-601f-4f51-8289-2ba06313362c-2025-03-02-SDE方向求职岗位差距分析&简历修改沟通_chunk_003",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title,education_details_missing",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者误以为毕业后超过一定时间就无法投递new g...",
+    "user_problem_summary": "求职者误以为毕业后超过一定时间就无法投递new graduate岗位，产生不必要的焦虑，影响求职规划。",
+    "A_action": "继续以new graduate身份投递SDE岗位，无需担心毕业年限问题；同时利用剩余时间做项目补充简历空白期，并关注OPT续签的合规时间窗口。",
+    "action_summary": "继续以new graduate身份投递SDE岗位，无需担心毕业年限问题；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 7691,
+    "chunk_id": "27d8593c-07dc-45e8-81a2-4f8c37e2e820-2024-12-14-Session-01-gap分析报告+简历润色_chunk_006",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_action_verbs",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者的实习经历描述过于笼统",
+    "user_problem_summary": "求职者的实习经历描述过于笼统，",
+    "A_action": "深度挖掘实习中的具体任务细节：明确sponsorship服务的对象（运动员类型/赛事名称）、使用的工具（AI工具如ChatGPT/Gemini、Slack、Google Sheets）、以及具体交付物（如banner、promotional package），将这些细节转化为简历bullet point，取代模糊的职责描述。",
+    "action_summary": "深度挖掘实习中的具体任务细节：明确sponsorship服务的对象（运动员类型/赛事名称）、使用的工具（AI工具如ChatGP...",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 7704,
+    "chunk_id": "27d8593c-07dc-45e8-81a2-4f8c37e2e820-2024-12-14-Session-01-gap分析报告+简历润色_chunk_013",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "proof",
+    "advice_card_title": "求职者最早的 eSports 工作经历与近期三段经历高度重叠",
+    "user_problem_summary": "求职者最早的 eSports 工作经历与近期三段经历高度重叠，",
+    "A_action": "审视最早一段 eSports 经历，识别其中与近期经历不重叠的独特技能或项目（如 sponsorship rights activation、data-driven sponsorship recommendation、viewership analytics），仅保留能补充简历技能矩阵的 bullet point，删除重复内容",
+    "action_summary": "审视最早一段 eSports 经历，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 7754,
+    "chunk_id": "28002e13-ccdf-4c66-8df6-622b97462579-2025-05-20-GAP分析和简历修改_chunk_004",
+    "topic": "个人总结撰写",
+    "L1": "简历内容",
+    "L2": "个人总结",
+    "problem_tags": "missing_relocation_signal",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者已获得绿卡身份",
+    "user_problem_summary": "求职者已获得绿卡身份，但简历上未体现，导致HR可能对工作授权存在疑虑，影响面试转化率",
+    "A_action": "在简历显眼位置标注绿卡身份（如 Green Card Holder / Permanent Resident），消除雇主对工作签证的顾虑，提升简历通过率",
+    "action_summary": "在简历显眼位置标注绿卡身份（如 Green Card Holder / Permanent Resident），",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms",
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 7759,
+    "chunk_id": "28002e13-ccdf-4c66-8df6-622b97462579-2025-05-20-GAP分析和简历修改_chunk_005",
+    "topic": "个人总结撰写",
+    "L1": "简历内容",
+    "L2": "个人总结",
+    "problem_tags": "missing_relocation_signal",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "delivery",
+    "advice_card_title": "求职者简历上只写了'work authorization'",
+    "user_problem_summary": "求职者简历上只写了'work authorization'，",
+    "A_action": "将简历顶部的身份标注改为'GREEN CARD HOLDER'并加粗放大，明确区别于H1B等其他工作授权类型，以吸引偏好无需sponsorship候选人的雇主",
+    "action_summary": "将简历顶部的身份标注改为'GREEN CARD HOLDER'并加粗放大，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms",
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 8059,
+    "chunk_id": "29afde3c-ed51-4d91-8bef-80aeb0232367-2026-03-19-GAP分析+简历深挖_chunk_014",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "low_soft_skill_match,weak_action_verbs",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者的项目经历停留在「做了research、写了...",
+    "user_problem_summary": "求职者的项目经历停留在「做了research、写了paper」的学术层面，",
+    "A_action": "将经历重新包装为Product Marketing Specialist角色：①以用户调研（interview/survey/focus group）切入，挖掘上下级沟通痛点；②整理用户需求关键词并输出给产品部门；③负责产品定位（如「一键读懂老板的心」）；④梳理核心卖点；⑤制定社交媒体推广方案（social media post）。以具体可量化的角色职责替代「写了一篇paper」的表述。",
+    "action_summary": "将经历重新包装为Product Marketing Specialist角色：①以用户调研（interview/survey/...",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 8122,
+    "chunk_id": "2a2f1e44-6de6-493c-a73e-5e46eb0443a2-2025-03-26-GAP岗位差距分析+简历修改_chunk_001",
+    "topic": "个人总结撰写",
+    "L1": "简历内容",
+    "L2": "个人总结",
+    "problem_tags": "missing_relocation_signal",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者简历上写了EAD相关说明",
+    "user_problem_summary": "求职者简历上写了EAD相关说明，但实际已持有绿卡（combo card），写法不够简洁清晰，可能引起雇主不必要的疑虑。",
+    "A_action": "将简历中身份说明改为直接写\"permanent resident\"，无需写EAD或复杂说明，雇主只关心是否需要sponsorship。",
+    "action_summary": "将简历中身份说明改为直接写\"permanent resident\"，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 8207,
+    "chunk_id": "2b91675f-0c9b-42c9-afd3-dbc7d7feb1d7-2025-02-13-Session-01-gap分析报告+简历润色_chunk_008",
+    "topic": "个人总结撰写",
+    "L1": "简历内容",
+    "L2": "个人总结",
+    "problem_tags": "formatting_penalty_triggered,missing_relocation_signal",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "持有绿卡的求职者若未在简历上注明身份状态",
+    "user_problem_summary": "持有绿卡的求职者若未在简历上注明身份状态，",
+    "A_action": "在简历顶部联系方式（电话、Email）下方新增一行，注明「US Permanent Resident」或「Green Card Holder」，并在申请系统填写不需要sponsorship，帮助顺利通过HR初筛。",
+    "action_summary": "在简历顶部联系方式（电话、Email）下方新增一行，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms",
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 8515,
+    "chunk_id": "2d2f9991-18f1-4f21-9082-767901166ca3-2025-03-23-DS方向简历修改(30分钟)_chunk_014",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "problem_tags": "low_role_specificity",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者担心非CS/DS专业背景会影响求职竞争力",
+    "user_problem_summary": "求职者担心非CS/DS专业背景会影响求职竞争力，对能否申请SDE/DS岗位存在疑虑。",
+    "A_action": "通过多做Data Science相关项目（如Kaggle竞赛、个人项目）来证明学习能力；同时针对目标公司的JD定向修改简历，强化与岗位描述的关键词匹配度。",
+    "action_summary": "通过多做Data Science相关项目（如Kaggle竞赛、个人项目）来证明学习能力；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 8602,
+    "chunk_id": "2def1682-6a37-48df-873c-77ccf0101e4e-2025-06-04-Session-09-简历的讲解梳理-在面试的时候如何更好的阐述面试问题_chunk_003",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_experience_keyword_evidence,vague_project_details",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "evidence",
+    "advice_card_title": "Marketing岗位面试官不聚焦于简历上的具体经历",
+    "user_problem_summary": "Marketing岗位面试官不聚焦于简历上的具体经历，",
+    "A_action": "准备Marketing面试时，重点阐述自己在岗位上积累的营销能力和学习成长，而非逐条解释简历上的具体项目细节。",
+    "action_summary": "准备Marketing面试时，重点阐述自己在岗位上积累的营销能力和学习成长，而非逐条解释简历上的具体项目细节。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "重排定位相关技能",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8610,
+    "chunk_id": "2def1682-6a37-48df-873c-77ccf0101e4e-2025-06-04-Session-09-简历的讲解梳理-在面试的时候如何更好的阐述面试问题_chunk_005",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,education_details_missing",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者对FA经历中各bullet point（du...",
+    "user_problem_summary": "求职者对FA经历中各bullet point（due diligence、strategic analysis、advance...",
+    "A_action": "逐条梳理FA简历中每个bullet point的核心逻辑：due sourcing=数据收集服务尽调；strategic analysis=基于估值给出具体建议；advanced valuation=在DCF基础上结合基本面指标做更细化估值；risk-advised=在模型结果中加入风险调整系数（scenario分析+期望回报）。面试时按此逻辑向面试官阐述。",
+    "action_summary": "逐条梳理FA简历中每个bullet point的核心逻辑：due sourcing=数据收集服务尽调；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "改写工作经历 bullet",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8641,
+    "chunk_id": "2e14404c-6512-429e-afd4-a231b0a1de9f-2025-09-09-Session-03-gap-analysis+resume-further-polishment_chunk_006",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者的交易经历仅停留在'做了很多亚洲市场交易'层面",
+    "user_problem_summary": "求职者的交易经历仅停留在'做了很多亚洲市场交易'层面，",
+    "A_action": "将交易经历包装为资管一年级分析师视角，添加：1）支持组合管理与再平衡策略；2）风险评估与仓位限额监控；3）宏观指标与地缘政治事件跟踪；4）月度/日度基金业绩报告与深度持仓分析（利率相关性、标准差等）；5）基于价值/成长投资原则的股票研究与stock pitch",
+    "action_summary": "将交易经历包装为资管一年级分析师视角，添加：1）支持组合管理与再平衡策略；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 8950,
+    "chunk_id": "2fc369db-095b-4d43-a648-b0797886b87f-2025-09-03-Session-10-近期技术复盘-gap-analysis-以及简历润色_chunk_002",
+    "topic": "多版本简历策略",
+    "L1": "简历内容",
+    "L2": "简历版本规划",
+    "problem_tags": "generic_resume_positioning",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "delivery",
+    "advice_card_title": "不要一份简历投所有岗位",
+    "user_problem_summary": "求职者同时投递FA与DA/BA两个方向，但两者侧重点和关键词差异显著，用同一份简历投递会导致匹配度不足。",
+    "A_action": "针对FA方向和DA/BA方向分别制作两个版本的简历，每个版本突出对应岗位的关键词和相关经验侧重点，避免用同一份简历投递不同方向。",
+    "action_summary": "针对FA方向和DA/BA方向分别制作两个版本的简历，每个版本突出对应岗位的关键词和相关经验侧重点，避免用同一份简历投递不同方向。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "按岗位维护简历版本",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8955,
+    "chunk_id": "2fc369db-095b-4d43-a648-b0797886b87f-2025-09-03-Session-10-近期技术复盘-gap-analysis-以及简历润色_chunk_006",
+    "topic": "证书资质规划",
+    "L1": "技能提升",
+    "L2": "证书资质",
+    "problem_tags": "education_details_missing,weak_target_role_alignment",
+    "canonical_action_family": "education_signal",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者简历在FA方向缺少CFA或FRM证书",
+    "user_problem_summary": "求职者简历在FA方向缺少CFA或FRM证书，而竞争者中大量中国人持有此类证书，若无证书将在筛选中处于劣势。",
+    "A_action": "优先考取CFA或FRM至少之一；若时间精力有限，FRM相对CFA一级更易通过，可优先备考FRM，同时尽快在简历中补充备考状态。",
+    "action_summary": "优先考取CFA或FRM至少之一；若时间精力有限，FRM相对CFA一级更易通过，可优先备考FRM，同时尽快在简历中补充备考状态。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "补强教育背景信号",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8959,
+    "chunk_id": "2fc369db-095b-4d43-a648-b0797886b87f-2025-09-03-Session-10-近期技术复盘-gap-analysis-以及简历润色_chunk_005",
+    "topic": "技能栏优化",
+    "L1": "简历内容",
+    "L2": "技能列表",
+    "problem_tags": "keywords_only_in_skills,education_details_missing",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "delivery",
+    "advice_card_title": "求职者简历Skills区全为Financial A...",
+    "user_problem_summary": "求职者简历Skills区全为Financial Analysis相关技能，",
+    "A_action": "将Skills区重构为多个子模块：Programming、Certificate、Methodology等；同时准备至少两个简历版本（FA版和DA版），在Relevant Courses栏分别列3~4门最匹配目标岗位的课程，以适配不同投递方向。",
+    "action_summary": "将Skills区重构为多个子模块：Programming、Certificate、Methodology等；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "按岗位维护简历版本",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8962,
+    "chunk_id": "2fc369db-095b-4d43-a648-b0797886b87f-2025-09-03-Session-10-近期技术复盘-gap-analysis-以及简历润色_chunk_008",
+    "topic": "技能栏优化",
+    "L1": "简历内容",
+    "L2": "技能列表",
+    "problem_tags": "missing_priority_keywords,keywords_only_in_skills,education_details_missing",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历偏FA方向",
+    "user_problem_summary": "求职者简历偏FA方向，",
+    "A_action": "将所有学过或用过的ML相关关键词（如machine learning、XGBoost、PyTorch等）补充进简历技能列表，即使只是课程项目中使用过也可以写出来。",
+    "action_summary": "将所有学过或用过的ML相关关键词（如machine learning、XGBoost、PyTorch等）补充进简历技能列表，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "重排定位相关技能",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8966,
+    "chunk_id": "2fc369db-095b-4d43-a648-b0797886b87f-2025-09-03-Session-10-近期技术复盘-gap-analysis-以及简历润色_chunk_004",
+    "topic": "技能栏优化",
+    "L1": "简历内容",
+    "L2": "技能列表",
+    "problem_tags": "keywords_only_in_skills,low_jd_keyword_match,education_details_missing",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历的Skills区块全部是Financia...",
+    "user_problem_summary": "求职者简历的Skills区块全部是Financial Analysis相关技能，",
+    "A_action": "将Skills区块重新架构为：Programming技能 + Certificate + Methodology/工具 + Relevant Courses（3-4门与目标岗位最相关的课程）。根据不同目标岗位（FA vs DA/DS）准备不同版本的Skills区块，确保关键词与JD匹配。",
+    "action_summary": "将Skills区块重新架构为：Programming技能 + Certificate + Methodology/工具 + R...",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "按岗位维护简历版本",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8967,
+    "chunk_id": "2fc369db-095b-4d43-a648-b0797886b87f-2025-09-03-Session-10-近期技术复盘-gap-analysis-以及简历润色_chunk_004",
+    "topic": "教育背景优化",
+    "L1": "简历内容",
+    "L2": "教育背景",
+    "problem_tags": "education_details_missing",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "proof",
+    "advice_card_title": "应届生工作经验有限",
+    "user_problem_summary": "应届生工作经验有限，简历内容单薄，无法充分体现与目标岗位的相关性，导致匹配度偏低。",
+    "A_action": "在简历教育背景或Skills区块下增加「Relevant Courses」子项，根据投递的不同岗位类型（FA、DA、Risk Management）各选3-4门最相关的研究生课程列出，以此补充经验空白并提升关键词覆盖率。",
+    "action_summary": "在简历教育背景或Skills区块下增加「Relevant Courses」子项，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "重排定位相关技能",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8993,
+    "chunk_id": "2fc369db-095b-4d43-a648-b0797886b87f-2025-09-03-Session-10-近期技术复盘-gap-analysis-以及简历润色_chunk_019",
+    "topic": "多版本简历策略",
+    "L1": "简历内容",
+    "L2": "简历版本规划",
+    "problem_tags": "generic_resume_positioning,universal_resume_problem,education_details_missing",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "evidence",
+    "advice_card_title": "不要一份简历投所有岗位",
+    "user_problem_summary": "求职者需要同时申请金融分析（FA）和数据分析（DA）两个方向，现有简历未按方向区分，需要分别整理课程、技能关键词并制作两个版本。",
+    "A_action": "将课程分为适合Finance和适合DA两类分别提交；将简历上未提及的DA相关技能关键词整理发送；将项目内容发给导师补充到简历中；完成后由导师针对两个方向分别修改简历。",
+    "action_summary": "将课程分为适合Finance和适合DA两类分别提交；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "按岗位维护简历版本",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 9245,
+    "chunk_id": "3125f067-8518-45ed-a5ba-2a9f9ed2d9b9-2025-04-23-岗位差距分析+简历修改沟通_chunk_016",
+    "topic": "个人总结撰写",
+    "L1": "简历内容",
+    "L2": "个人总结",
+    "problem_tags": "weak_summary_role_alignment,low_role_specificity,weak_target_role_alignment",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者尚未通过Bar考试",
+    "user_problem_summary": "求职者尚未通过Bar考试，律所招聘通常要求持牌，在未获得执照前需在简历中以适当方式注明身份，降低筛选障碍。",
+    "A_action": "在简历中明确标注\"bar candidate\"，表明正在备考Bar考试，让律所了解求职者的执照进度，争取在正式持牌前获得面试机会。",
+    "action_summary": "在简历中明确标注\"bar candidate\"，表明正在备考Bar考试，让律所了解求职者的执照进度，争取在正式持牌前获得面试机会。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 9248,
+    "chunk_id": "3125f067-8518-45ed-a5ba-2a9f9ed2d9b9-2025-04-23-岗位差距分析+简历修改沟通_chunk_018",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者持有OPT且缺乏美国law firm经验",
+    "user_problem_summary": "求职者持有OPT且缺乏美国law firm经验，",
+    "A_action": "先用OPT完成一段律所实习替换现有经历，同时备考bar；求职顺序依次为：①中资所 ②有中国背景的美国本地注册律所 ③小型律师楼（注意筛选有实质业务的，避免闭户业务）。",
+    "action_summary": "先用OPT完成一段律所实习替换现有经历，同时备考bar；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 9250,
+    "chunk_id": "3125f067-8518-45ed-a5ba-2a9f9ed2d9b9-2025-04-23-岗位差距分析+简历修改沟通_chunk_017",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者即将毕业",
+    "user_problem_summary": "求职者即将毕业，简历中现有实习为中国国内律所经历，缺乏美国本地律所工作背景，竞争力不足；同时尚未通过bar考试，导致求职路径受限。",
+    "A_action": "申请OPT后先做美国律所实习，将简历中的国内实习经历替换为美国律所职位；实习期间同步备考bar；求职优先顺序：中资所→有中国背景的美国本地注册律所→小型律师楼，规避纯离岸业务岗位。",
+    "action_summary": "申请OPT后先做美国律所实习，将简历中的国内实习经历替换为美国律所职位；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "聚焦目标岗位定位",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 9262,
+    "chunk_id": "3125f067-8518-45ed-a5ba-2a9f9ed2d9b9-2025-04-23-岗位差距分析+简历修改沟通_chunk_023",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历中的中国律所经历（如江苏金正平律所）对美...",
+    "user_problem_summary": "求职者简历中的中国律所经历（如江苏金正平律所）对美国招聘方来说完全陌生，缺乏背书效果，反而不如替换为美国本地实习经历更有说服力。",
+    "A_action": "利用OPT期间积极寻找美国律所实习机会，将简历中知名度低的中国律所经历替换为美国律所实习经历，全面更新简历后再继续投递目标岗位。",
+    "action_summary": "利用OPT期间积极寻找美国律所实习机会，将简历中知名度低的中国律所经历替换为美国律所实习经历，全面更新简历后再继续投递目标岗位。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "聚焦目标岗位定位",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 9288,
+    "chunk_id": "315f1c20-ce5a-4954-b327-86afdb846c0c-2025-09-08-GAP岗位差距分析+简历修改_chunk_012",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "missing_distributed_systems,weak_action_verbs",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者实际只发了一条小红书帖子",
+    "user_problem_summary": "求职者实际只发了一条小红书帖子，",
+    "A_action": "将菜鸟校园大使经历重新包装为：负责品牌特定地区社交媒体账号，分三个维度展开——①前期粉丝画像分析；②内容方向A/B测试（口吻风格、图文vs视频）；③内容创作与发布执行，并注明assets来源（自制或品牌提供均可如实说明）。",
+    "action_summary": "将菜鸟校园大使经历重新包装为：负责品牌特定地区社交媒体账号，分三个维度展开——①前期粉丝画像分析；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 9371,
+    "chunk_id": "31926193-fcf5-40eb-bc38-87bc61e738ec-2024-12-19-Session-01-gap分析报告+简历润色_chunk_013",
+    "topic": "个人总结撰写",
+    "L1": "简历内容",
+    "L2": "个人总结",
+    "problem_tags": "missing_relocation_signal",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者拥有绿卡但未在简历中注明",
+    "user_problem_summary": "求职者拥有绿卡但未在简历中注明，错失降低雇主顾虑、提升筛选通过率的机会。",
+    "A_action": "在简历顶部个人信息区或技能/其他信息区明确注明「Authorized to work in the US (Green Card holder)」，让HR第一时间了解无需sponsor。",
+    "action_summary": "在简历顶部个人信息区或技能/其他信息区明确注明「Authorized to work in the US (Green Car...",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms",
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 9376,
+    "chunk_id": "31926193-fcf5-40eb-bc38-87bc61e738ec-2024-12-19-Session-01-gap分析报告+简历润色_chunk_012",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "formatting_penalty_triggered,missing_relocation_signal",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者未在简历中注明绿卡身份",
+    "user_problem_summary": "求职者未在简历中注明绿卡身份，HR会默认需要sponsorship，导致简历被提前筛掉",
+    "A_action": "在简历中明确标注绿卡（Green Card）身份，消除HR对工作身份的顾虑，提高简历通过率",
+    "action_summary": "在简历中明确标注绿卡（Green Card）身份，消除HR对工作身份的顾虑，提高简历通过率",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms",
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 9667,
+    "chunk_id": "322fa694-3ff4-4e7b-aafa-66be6aa3cbb2-2026-02-03-简历深挖课程_chunk_020",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者缺乏可写入简历的实际项目经验",
+    "user_problem_summary": "求职者缺乏可写入简历的实际项目经验，导师建议通过练习平台（computation题目）自主完成项目，形成简历素材",
+    "A_action": "在练习平台（如Kaggle等）挑选与目标方向相关的题目独立完成，将完成的项目写入简历，确保内容真实且与求职方向一致",
+    "action_summary": "在练习平台（如Kaggle等）挑选与目标方向相关的题目独立完成，将完成的项目写入简历，确保内容真实且与求职方向一致",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 9843,
+    "chunk_id": "338d1ed7-7ed5-4e0d-a63e-f5bf798b2d87-2025-07-01-Session-04-会计方向的技术提升点以及简历润色_chunk_009",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "problem_tags": "low_role_specificity,resume_not_tailored_to_jd,weak_target_role_alignment,missing_exact_job_title",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "delivery",
+    "advice_card_title": "求职者投递方向过于分散（BA、FA、Data、Ma...",
+    "user_problem_summary": "求职者投递方向过于分散（BA、FA、Data、Marketing均有投），缺乏明确定位，导致求职效率低、回应率差",
+    "A_action": "先聚焦修改简历，确定一个主攻方向；投递一个月后若百试百不中，进行SWOT自我分析，复盘投递JD与个人能力的匹配度，再针对性调整策略",
+    "action_summary": "先聚焦修改简历，确定一个主攻方向；投递一个月后若百试百不中，进行SWOT自我分析，复盘投递JD与个人能力的匹配度，再针对性调整策略",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 9888,
+    "chunk_id": "33ed0acc-7200-4bd0-b2c2-7beb0cbc2d19-2025-10-30-Technical-水平测评+Resume-修改定稿_chunk_000",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者将NLP情感分析与MACD结合的Alpha...",
+    "user_problem_summary": "求职者将NLP情感分析与MACD结合的Alpha research项目写成单一条目，",
+    "A_action": "将Alpha research项目拆分为两个bullet point：第一点专写NLP情感分析的独立处理流程，第二点写NLP结果与MACD baseline的结合与对比，使每个技术环节独立呈现。",
+    "action_summary": "将Alpha research项目拆分为两个bullet point：第一点专写NLP情感分析的独立处理流程，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "补清工具和方法证据",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 9889,
+    "chunk_id": "33ed0acc-7200-4bd0-b2c2-7beb0cbc2d19-2025-10-30-Technical-水平测评+Resume-修改定稿_chunk_003",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者将两个不同项目（NLP+MACD回测 和 C...",
+    "user_problem_summary": "求职者将两个不同项目（NLP+MACD回测 和 Correlation Analysis）混写在同一段落内，",
+    "A_action": "将不同项目分别用独立的bullet point描述，明确告知读者这是两个separate project，避免混在一个bullet内。着重突出NLP与MACD结合及back test这两到三件核心事项。",
+    "action_summary": "将不同项目分别用独立的bullet point描述，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "改写工作经历 bullet",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 9890,
+    "chunk_id": "33ed0acc-7200-4bd0-b2c2-7beb0cbc2d19-2025-10-30-Technical-水平测评+Resume-修改定稿_chunk_001",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者将NLP建模与MACD baseline对比...",
+    "user_problem_summary": "求职者将NLP建模与MACD baseline对比两个独立步骤合并为一条bullet point，",
+    "A_action": "将NLP项目拆分为两个独立bullet point：第一条描述NLP建模过程，第二条描述与MACD baseline的对比及结合，使内容更充实、逻辑更清晰。",
+    "action_summary": "将NLP项目拆分为两个独立bullet point：第一条描述NLP建模过程，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "改写工作经历 bullet",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 9892,
+    "chunk_id": "33ed0acc-7200-4bd0-b2c2-7beb0cbc2d19-2025-10-30-Technical-水平测评+Resume-修改定稿_chunk_005",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_summary_role_alignment",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者在Alpha Research项目下仅笼统写...",
+    "user_problem_summary": "求职者在Alpha Research项目下仅笼统写了使用NLP，",
+    "A_action": "将Alpha Research项目拆分为两段：第一段专写NLP pipeline，按四步结构展开：①爬虫数据采集（data acquisition）→②数据预处理（pre-processing headlines and article summary）→③用VADER生成compound sentiment scores→④结果聚合并量化市场趋势（quantify market trends）；第二段写MACD与NLP的结合。",
+    "action_summary": "将Alpha Research项目拆分为两段：第一段专写NLP pipeline，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "让 Summary 指向目标岗位",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 9894,
+    "chunk_id": "33ed0acc-7200-4bd0-b2c2-7beb0cbc2d19-2025-10-30-Technical-水平测评+Resume-修改定稿_chunk_006",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_summary_role_alignment,low_role_specificity,weak_target_role_alignment,weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者的NLP项目经历描述过于笼统",
+    "user_problem_summary": "求职者的NLP项目经历描述过于笼统，",
+    "A_action": "将NLP项目拆解为四个步骤写入简历bullet point：1）data acquisition（爬虫获取数据）；2）pre-processing headlines and article summaries；3）generating compound sentiment scores with VADER；4）aggregating results to quantify market movements，形成完整的end-to-end NLP pipeline描述。",
+    "action_summary": "将NLP项目拆解为四个步骤写入简历bullet point：1）data acquisition（爬虫获取数据）；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "补清工具和方法证据",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 9895,
+    "chunk_id": "33ed0acc-7200-4bd0-b2c2-7beb0cbc2d19-2025-10-30-Technical-水平测评+Resume-修改定稿_chunk_006",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者将Alpha Research项目中的NLP...",
+    "user_problem_summary": "求职者将Alpha Research项目中的NLP模块与MACD+NLP结合模块混在一起描述，结构不清晰，无法突出各模块的独立价值。",
+    "A_action": "将Alpha Research项目拆分为两个独立段落：第一段专门描述NLP pipeline的构建；第二段描述MACD与NLP的结合应用，使每个技术模块的贡献更清晰突出。",
+    "action_summary": "将Alpha Research项目拆分为两个独立段落：第一段专门描述NLP pipeline的构建；",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "补清工具和方法证据",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 9896,
+    "chunk_id": "33ed0acc-7200-4bd0-b2c2-7beb0cbc2d19-2025-10-30-Technical-水平测评+Resume-修改定稿_chunk_004",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者将两个独立项目（NLP+MACD量化策略 与...",
+    "user_problem_summary": "求职者将两个独立项目（NLP+MACD量化策略 与 correlation analysis）混写在同一bullet point中，",
+    "A_action": "将不同项目分拆为独立bullet point，确保每条bullet只描述一个项目，让阅读者清晰识别项目数量和范围。面试时若被问及，可说明这是两个独立项目。",
+    "action_summary": "将不同项目分拆为独立bullet point，确保每条bullet只描述一个项目，让阅读者清晰识别项目数量和范围。",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 9900,
+    "chunk_id": "33ed0acc-7200-4bd0-b2c2-7beb0cbc2d19-2025-10-30-Technical-水平测评+Resume-修改定稿_chunk_008",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,weak_experience_keyword_evidence",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "rewrite",
+    "advice_card_title": "简历中直接写明具体技术指标（如MACD）",
+    "user_problem_summary": "简历中直接写明具体技术指标（如MACD），会让面试官认为候选人只用了这一种方法，限制了对其技术广度的想象空间。",
+    "A_action": "将具体技术名称改写为更泛化的类别描述（如'price volume based technical signals'），再在括号或后文中以'for example MACD'的形式举例，面试时可借此展开说明做过更多工作。",
+    "action_summary": "将具体技术名称改写为更泛化的类别描述（如'price volume based technical signals'），",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把经历改成任务-方法-结果",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 9901,
+    "chunk_id": "33ed0acc-7200-4bd0-b2c2-7beb0cbc2d19-2025-10-30-Technical-水平测评+Resume-修改定稿_chunk_009",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills,weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者简历中直接点名 MACD 这一具体技术指标",
+    "user_problem_summary": "求职者简历中直接点名 MACD 这一具体技术指标，",
+    "A_action": "将 bullet point 中的具体指标名称（如 MACD）替换为更通用的表述（如 price/volume-based technical signals），再用括号或 for example 补充 MACD 作为示例，既暗示做过更多工作，又保留具体性；面试被追问时再举 MACD、RSI 等多个例子作回应。",
+    "action_summary": "将 bullet point 中的具体指标名称（如 MACD）替换为更通用的表述（如 price/volume-based t...",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把项目关键词写成证据",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 9902,
+    "chunk_id": "33ed0acc-7200-4bd0-b2c2-7beb0cbc2d19-2025-10-30-Technical-水平测评+Resume-修改定稿_chunk_011",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "problem_tags": "weak_experience_keyword_evidence",
+    "canonical_action_family": "jd_keyword_alignment",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者在量化策略项目的bullet point中只...",
+    "user_problem_summary": "求职者在量化策略项目的bullet point中只写了单一指标（如MACD），未体现回测框架的完整性和多维度指标，显得项目深度不足。",
+    "A_action": "在项目描述中补充多个回测指标关键词，如turnover、Sharpe ratio、max drawdown等，用'etc'暗示覆盖更多指标；同时加入backtesting and visualization说明，并将对比基准统一表述为'against the benchmark strategy'，避免重复提及具体策略名称。",
+    "action_summary": "在项目描述中补充多个回测指标关键词，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把项目关键词写成证据",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 10180,
+    "chunk_id": "34fba6ca-4fa8-4f86-bc8a-f739237f73e5-2025-06-18-刷题辅导和简历更新_chunk_020",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "missing_relocation_signal",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "proof",
+    "advice_card_title": "求职者的Capstone项目有sponsor公司",
+    "user_problem_summary": "求职者的Capstone项目有sponsor公司，可包装为实习经历，但简历中目前以project形式呈现，未能最大化其含金量。",
+    "A_action": "将简历中Capstone project条目改为「Software Engineer Intern」，删除项目名称，填写sponsor公司名称、地点（可写Remote US或实际城市），时间格式与其他实习条目保持一致；bullet point内容暂不需大改，改完后发回给导师进一步修改。",
+    "action_summary": "将简历中Capstone project条目改为「Software Engineer Intern」，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 10338,
+    "chunk_id": "35ea50b7-8b42-484a-8146-1bd59312f929-2026-04-22-简历更新和面试BQ辅导_chunk_012",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "missing_linkedin,missing_relocation_signal",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者面临OPT身份压力",
+    "user_problem_summary": "求职者面临OPT身份压力，理想方向（纯analyst）岗位难找，若拒绝return offer可能导致失业期开始，损害签证状态",
+    "A_action": "若实习机构提供return offer，优先接受以保留OPT激活状态，同时并行在LinkedIn、Handshake主动投递目标岗位，以广撒网方式寻找更匹配的机会，不放弃理想方向",
+    "action_summary": "若实习机构提供return offer，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "优化简历与目标岗位的匹配度",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms",
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 10511,
+    "chunk_id": "36f59427-47d1-493e-b179-7856ee37c82d-2025-01-12-Session-01-gap分析报告+简历润色_chunk_009",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "missing_linkedin,education_details_missing",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "简历要清晰展示你的目标岗位",
+    "user_problem_summary": "求职者尚未了解UX Research方向，但其背景（心理学、人机交互相关课程、OPT身份）与UX技术岗位有一定匹配度，值得探索",
+    "A_action": "去LinkedIn搜索UX Researcher职位JD，阅读几个后对比自身课程（social psychology、quantitative/qualitative research等）的相关性，判断是否感兴趣并具备竞争力",
+    "action_summary": "去LinkedIn搜索UX Researcher职位JD，",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "聚焦目标岗位定位",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 10785,
+    "chunk_id": "39e6b8ed-9293-42bd-8652-2cf717499a77-2025-03-20-简历修改_chunk_025",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者FA相关工作经历的bullet point缺...",
+    "user_problem_summary": "求职者FA相关工作经历的bullet point缺少总结性开篇句，直接罗列细节，HR难以快速抓取核心贡献",
+    "A_action": "将FA经历的第一条bullet point改写为总结性句子，提炼该段经历的核心价值，再展开具体内容",
+    "action_summary": "将FA经历的第一条bullet point改写为总结性句子，提炼该段经历的核心价值，再展开具体内容",
+    "current": {
+      "canonical_title": "",
+      "title_review_status": "",
+      "title_source": "",
+      "title_confidence": null
+    },
+    "proposed": {
+      "canonical_title": "把经历改成任务-方法-结果",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  }
+]

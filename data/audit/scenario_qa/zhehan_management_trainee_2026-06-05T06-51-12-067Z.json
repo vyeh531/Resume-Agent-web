@@ -1,0 +1,464 @@
+{
+  "generatedAt": "2026-06-05T06:51:12.033Z",
+  "scenario": "zhehan_management_trainee",
+  "jobTitle": "Management Trainee",
+  "counts": {
+    "totalAdvice": 6,
+    "freeAdvice": 3,
+    "paidAdvice": 3,
+    "mentorCandidates": 31,
+    "forbiddenHits": 0
+  },
+  "score": {
+    "total": 12,
+    "risk": "高",
+    "jdMatchRatio": 4
+  },
+  "familyStats": {
+    "counts": {
+      "summary_positioning": 2,
+      "experience_evidence": 2,
+      "jd_keyword_alignment": 2
+    },
+    "depths": {
+      "summary_positioning": [
+        "delivery",
+        "rewrite"
+      ],
+      "experience_evidence": [
+        "diagnose",
+        "evidence"
+      ],
+      "jd_keyword_alignment": [
+        "rewrite",
+        "evidence"
+      ]
+    }
+  },
+  "violations": {
+    "duplicateFamily": [],
+    "sameFamilyDepth": [],
+    "incompleteTwelve": true,
+    "emptyPaidBuckets": [
+      "paid_advice_bundle_2",
+      "paid_advice_bundle_3"
+    ]
+  },
+  "items": [
+    {
+      "index": 1,
+      "adviceId": "seg_10212",
+      "source": "db_adapted",
+      "title": "把术语改成 JD 语言",
+      "currentDiagnosis": "简历与目标 JD 的关键词匹配偏低（当前 4/23），ATS 扫描时匹配信号不够强，容易在第一轮被过滤。",
+      "action": "将简历中不熟悉的行业词汇（如石油相关术语）删除，并根据目标岗位所属行业替换对应关键词，例如投递 realty 岗位则改为 realty，投递 energy 岗位则改为 energy。",
+      "mentorLens": "简历应随投递方向灵活调整行业关键词，使用不熟悉领域的术语反而会在面试中造成风险，删除后以目标行业词替换既安全又能提升匹配度。",
+      "hrPerspective": "HR 初筛其实很看 JD 原词；核心技能没出现，我很难放心把你推进下一轮。",
+      "relatedProblemTags": [
+        "low_jd_keyword_match",
+        "low_measurable_results",
+        "weak_target_role_alignment"
+      ],
+      "family": "summary_positioning",
+      "depth": "delivery",
+      "displayMode": "raw",
+      "forbiddenHits": [],
+      "expectedHits": 1,
+      "pass": true
+    },
+    {
+      "index": 2,
+      "adviceId": "seg_11766",
+      "source": "db_adapted",
+      "title": "把项目证据写进 bullet",
+      "currentDiagnosis": "经历描述里可量化结果不足，HR 很难判断你具体带来了什么影响或产出。",
+      "action": "在每条bullet中补充两个要素：①量化成果（impact），说明工作产生了什么效果、是否被认可；②行业背景（context），注明项目所属治疗领域或业务场景，帮助recruiter快速判断岗位匹配度。",
+      "mentorLens": "Recruiter阅读简历时，仅凭动作描述无法评估你价值；缺少impact等于让HR自行脑补结果，风险极高。行业背景信息尤其关键——若公司专注oncology，你未注明自己的cardiovascular经验，可能被直接错过。",
+      "hrPerspective": "经历如果只写做了什么，我很难判断你做得多深、成果多大、是否值得面试。",
+      "relatedProblemTags": [
+        "low_measurable_results",
+        "low_jd_keyword_match",
+        "low_hard_skill_match"
+      ],
+      "family": "experience_evidence",
+      "depth": "diagnose",
+      "displayMode": "raw",
+      "forbiddenHits": [],
+      "expectedHits": 1,
+      "pass": true
+    },
+    {
+      "index": 3,
+      "adviceId": "seg_12248",
+      "source": "db_adapted",
+      "title": "整理 Skills 关键词",
+      "currentDiagnosis": "目标岗位的核心技能词（如 problem-solving、strategic planning、process improvement）在简历中出现不足，ATS 难以确认你的技能匹配度。",
+      "action": "将所有掌握的语言加入简历，按熟练程度注明 fluent 或 native，例如：Native in Mandarin, Native in Chaoshan, Fluent in English，确保所有语言能力均有体现。",
+      "mentorLens": "多语言能力在求职中是加分项，尤其对于需要跨文化沟通的岗位，HR 看到你会多种语言会留下更深印象，应在简历中完整呈现。",
+      "hrPerspective": "关键词不是堆给机器看的，它也帮我快速确认你是不是这类岗位的直接人选。",
+      "relatedProblemTags": [
+        "low_hard_skill_match",
+        "weak_target_role_alignment",
+        "weak_summary_role_alignment"
+      ],
+      "family": "jd_keyword_alignment",
+      "depth": "rewrite",
+      "displayMode": "raw",
+      "forbiddenHits": [],
+      "expectedHits": 2,
+      "pass": true
+    },
+    {
+      "index": 4,
+      "adviceId": "seg_872",
+      "source": "db_adapted",
+      "title": "补上目标岗位原词",
+      "currentDiagnosis": "简历整体对\"Management Trainee\"的方向匹配度偏弱，需要更系统地对照 JD 调整定位和关键词。",
+      "action": "先把 Summary / Objective 改成目标岗位导向：写出目标岗位原词，并用一句话连接你已有经历与 JD 的核心职责。",
+      "mentorLens": "简历开头要先帮招聘方判断方向。定位清楚后，后面的项目、技能和经历才会被放在正确语境里理解。",
+      "hrPerspective": "如果一条经历缺少上下文和结果，我会先把它当成弱信号，除非你能给出更具体的证据。",
+      "relatedProblemTags": [
+        "weak_target_role_alignment",
+        "missing_exact_job_title",
+        "weak_summary_role_alignment"
+      ],
+      "family": "summary_positioning",
+      "depth": "rewrite",
+      "displayMode": "raw",
+      "forbiddenHits": [],
+      "expectedHits": 3,
+      "pass": true
+    },
+    {
+      "index": 5,
+      "adviceId": "fb_obligation_weakdimensionb",
+      "source": "fallback",
+      "title": "补齐可验证资料入口",
+      "currentDiagnosis": "基本资料完整性维度偏低，需要补齐联系方式、链接、教育或日期等基础可信信息。",
+      "action": "在简历头部补齐邮箱、电话、LinkedIn；技术或项目相关岗位补 GitHub / portfolio / project link，并确保链接可点击。",
+      "mentorLens": "ATS 和 HR 都会优先读取简历头部的联系方式与可验证链接，缺失会降低可信度和后续联系效率。",
+      "hrPerspective": "",
+      "relatedProblemTags": [
+        "profile_completeness_gap"
+      ],
+      "family": "experience_evidence",
+      "depth": "evidence",
+      "displayMode": "raw",
+      "forbiddenHits": [],
+      "expectedHits": 0,
+      "pass": false
+    },
+    {
+      "index": 6,
+      "adviceId": "seg_4425",
+      "source": "db_adapted",
+      "title": "把关键词嵌入经历 bullet",
+      "currentDiagnosis": "简历与目标 JD 的关键词匹配偏低（当前 4/23），ATS 扫描时匹配信号不够强，容易在第一轮被过滤。",
+      "action": "将当前实习岗位职责描述输入GPT，同时粘贴目标JD信息，让GPT辅助润色简历；但最终内容必须以你实际经历为准，不可脱离真实情况",
+      "mentorLens": "用GPT润色简历时，必须以你真实经历为基础，过度美化或捏造经历虽然短期看起来更好，但不符合现实，在面试中会被识破",
+      "hrPerspective": "HR 初筛其实很看 JD 原词；核心技能没出现，我很难放心把你推进下一轮。",
+      "relatedProblemTags": [
+        "low_jd_keyword_match",
+        "missing_priority_keywords",
+        "low_hard_skill_match"
+      ],
+      "family": "jd_keyword_alignment",
+      "depth": "evidence",
+      "displayMode": "raw",
+      "forbiddenHits": [],
+      "expectedHits": 1,
+      "pass": true
+    }
+  ],
+  "pass": false,
+  "publicReport": {
+    "engine": "rule-based",
+    "version": "0.2.0",
+    "schemaVersion": "ats_response_v0.2.0",
+    "scoringMode": "external_ats_like",
+    "jobTitle": "Management Trainee",
+    "hasJD": true,
+    "total": 12,
+    "jdMatchRatio": 4,
+    "risk": "高",
+    "scores": {
+      "overall": {
+        "score": 12,
+        "max": 100,
+        "risk": "高"
+      },
+      "resumeQuality": {
+        "score": 19,
+        "max": 100
+      },
+      "jdMatch": {
+        "score": 4,
+        "max": 100
+      },
+      "searchability": {
+        "score": 22,
+        "max": 100
+      }
+    },
+    "dimensions": {
+      "A": {
+        "score": 4,
+        "max": 8,
+        "percentage": 0.5,
+        "label": "文件与格式规范"
+      },
+      "B": {
+        "score": 0,
+        "max": 7,
+        "percentage": 0,
+        "label": "基本资料完整性"
+      },
+      "C": {
+        "score": 1,
+        "max": 12,
+        "percentage": 0.083,
+        "label": "内容质量与成果表达"
+      },
+      "D": {
+        "score": 2,
+        "max": 45,
+        "percentage": 0.044,
+        "label": "JD 关键词匹配度"
+      },
+      "E": {
+        "score": 4,
+        "max": 5,
+        "percentage": 0.8,
+        "label": "地域与市场适配度"
+      },
+      "F": {
+        "score": 1,
+        "max": 23,
+        "percentage": 0.043,
+        "label": "职位相关性 / 经验匹配度"
+      }
+    },
+    "diagnostics": {
+      "jobTitleMatch": {
+        "exactMatch": false,
+        "targetTitle": "Management Trainee",
+        "severity": "low"
+      }
+    },
+    "topInsights": [],
+    "topProblems": [
+      {
+        "title": "JD 关键词匹配度偏低",
+        "severity": "critical",
+        "message": "简历和目标 JD 的语言匹配还不够，ATS 可能无法快速识别你和这个岗位的直接关联。"
+      },
+      {
+        "title": "核心硬技能匹配偏低",
+        "severity": "high",
+        "message": "核心硬技能覆盖不足，需要把有真实经验支撑的工具、技能和场景写进经历证据里。"
+      },
+      {
+        "title": "可量化成果不足",
+        "severity": "high",
+        "message": "经历中的结果证据偏少，建议提升百分比、规模、效率等量化表达。"
+      }
+    ],
+    "freeMentorAdvice": {
+      "mentorId": "mentor_7_t導師",
+      "mentorName": "T導師",
+      "company": "JP Morgan Chase",
+      "companyLogo": null,
+      "mentorTitle": "VP Credit Risk",
+      "badges": [
+        "现 JP Morgan Chase",
+        "VP Credit Risk"
+      ],
+      "matchReason": "这位导师最匹配你当前的 JD 关键词和岗位匹配问题。",
+      "mentorLogoPool": [
+        {
+          "company": "Amazon",
+          "companyLogo": "/logos/Amazon.png"
+        },
+        {
+          "company": "Morgan Stanley",
+          "companyLogo": "/logos/Morgan Stanley.png"
+        }
+      ],
+      "adviceItems": [
+        {
+          "adviceId": "seg_10212",
+          "title": "把术语改成 JD 语言",
+          "currentDiagnosis": "简历与目标 JD 的关键词匹配偏低（当前 4/23），ATS 扫描时匹配信号不够强，容易在第一轮被过滤。",
+          "action": "将简历中不熟悉的行业词汇（如石油相关术语）删除，并根据目标岗位所属行业替换对应关键词，例如投递 realty 岗位则改为 realty，投递 energy 岗位则改为 energy。",
+          "mentorLens": "",
+          "reason": "",
+          "mentorInsight": "简历应随投递方向灵活调整行业关键词，使用不熟悉领域的术语反而会在面试中造成风险，删除后以目标行业词替换既安全又能提升匹配度。",
+          "example": "改前：real estate 和 TMT；改后（投递 energy 行业）：energy；改后（投递 realty 行业）：realty。同时删除不熟悉的石油行业专有术语，保留通用表述如 complete investment disclosure。",
+          "hrPerspective": "HR 初筛其实很看 JD 原词；核心技能没出现，我很难放心把你推进下一轮。",
+          "HR_os": "HR 初筛其实很看 JD 原词；核心技能没出现，我很难放心把你推进下一轮。",
+          "targetSection": "summary",
+          "priority": "high",
+          "priorityLabel": "必改",
+          "source": "db_adapted",
+          "mentorSource": {
+            "mentorName": "X導師",
+            "company": "Amazon",
+            "companyLogo": "/logos/Amazon.png",
+            "mentorTitle": "Vice President"
+          }
+        },
+        {
+          "adviceId": "seg_11766",
+          "title": "把项目证据写进 bullet",
+          "currentDiagnosis": "经历描述里可量化结果不足，HR 很难判断你具体带来了什么影响或产出。",
+          "action": "在每条bullet中补充两个要素：①量化成果（impact），说明工作产生了什么效果、是否被认可；②行业背景（context），注明项目所属治疗领域或业务场景，帮助recruiter快速判断岗位匹配度。",
+          "mentorLens": "",
+          "reason": "",
+          "mentorInsight": "Recruiter阅读简历时，仅凭动作描述无法评估你价值；缺少impact等于让HR自行脑补结果，风险极高。行业背景信息尤其关键——若公司专注oncology，你未注明自己的cardiovascular经验，可能被直接错过。",
+          "example": "改前：Developed and executed a patient engagement framework. 改后：Developed and executed a patient engagement framework in cardiovascular trials, increasing patient retention rate by 25% across 3 clinical sites.",
+          "hrPerspective": "经历如果只写做了什么，我很难判断你做得多深、成果多大、是否值得面试。",
+          "HR_os": "经历如果只写做了什么，我很难判断你做得多深、成果多大、是否值得面试。",
+          "targetSection": "experience",
+          "priority": "medium",
+          "priorityLabel": "建议改",
+          "source": "db_adapted",
+          "mentorSource": {
+            "mentorName": "L導師",
+            "company": "IQVIA",
+            "companyLogo": null,
+            "mentorTitle": "Strategy/Life-science Associate"
+          }
+        },
+        {
+          "adviceId": "seg_12248",
+          "title": "整理 Skills 关键词",
+          "currentDiagnosis": "目标岗位的核心技能词（如 problem-solving、strategic planning、process improvement）在简历中出现不足，ATS 难以确认你的技能匹配度。",
+          "action": "将所有掌握的语言加入简历，按熟练程度注明 fluent 或 native，例如：Native in Mandarin, Native in Chaoshan, Fluent in English，确保所有语言能力均有体现。",
+          "mentorLens": "",
+          "reason": "",
+          "mentorInsight": "多语言能力在求职中是加分项，尤其对于需要跨文化沟通的岗位，HR 看到你会多种语言会留下更深印象，应在简历中完整呈现。",
+          "example": "修改前：Skilled in English 修改后：Fluent in English, Native in Mandarin, Native in Chaoshan",
+          "hrPerspective": "关键词不是堆给机器看的，它也帮我快速确认你是不是这类岗位的直接人选。",
+          "HR_os": "关键词不是堆给机器看的，它也帮我快速确认你是不是这类岗位的直接人选。",
+          "targetSection": "skills",
+          "priority": "low",
+          "priorityLabel": "补充",
+          "source": "db_adapted",
+          "mentorSource": {
+            "mentorName": "A導師",
+            "company": "Morgan Stanley",
+            "companyLogo": "/logos/Morgan Stanley.png",
+            "mentorTitle": "Director"
+          }
+        }
+      ],
+      "careerPathDisplay": "JP Morgan Chase（现）"
+    },
+    "lockedAdvicePreview": {
+      "lockedMentorCount": 3,
+      "lockedAdviceCount": 3,
+      "totalMentorCount": 4,
+      "totalAdviceCount": 6,
+      "topics": [
+        "Accounting 关键词补充位置",
+        "Summary 岗位定位强化",
+        "Experience bullet 优化",
+        "岗位匹配与投递策略"
+      ],
+      "lockedMentors": [
+        {
+          "mentorId": "paid_advice_bundle_1",
+          "mentorName": "付费建议 1",
+          "company": "MentorX",
+          "companyLogo": null,
+          "mentorTitle": "简历策略组",
+          "careerPathDisplay": null,
+          "lockedAdviceCount": 3,
+          "previewTopics": [
+            "Summary 定位",
+            "岗位匹配策略",
+            "关键词策略"
+          ]
+        },
+        {
+          "mentorId": "paid_advice_bundle_2",
+          "mentorName": "付费建议 2",
+          "company": "MentorX",
+          "companyLogo": null,
+          "mentorTitle": "简历策略组",
+          "careerPathDisplay": null,
+          "lockedAdviceCount": 0,
+          "previewTopics": []
+        },
+        {
+          "mentorId": "paid_advice_bundle_3",
+          "mentorName": "付费建议 3",
+          "company": "MentorX",
+          "companyLogo": null,
+          "mentorTitle": "简历策略组",
+          "careerPathDisplay": null,
+          "lockedAdviceCount": 0,
+          "previewTopics": []
+        }
+      ],
+      "mentorLogoPool": [
+        {
+          "company": "Amazon",
+          "companyLogo": "/logos/Amazon.png",
+          "mentorName": "X導師",
+          "mentorTitle": "Vice President"
+        },
+        {
+          "company": "Morgan Stanley",
+          "companyLogo": "/logos/Morgan Stanley.png",
+          "mentorName": "A導師",
+          "mentorTitle": "Director"
+        },
+        {
+          "company": "Tesla",
+          "companyLogo": "/logos/Tesla.png",
+          "mentorName": "D導師",
+          "mentorTitle": "Product manager"
+        }
+      ],
+      "message": "解锁后查看 3 条付费深度建议，与免费建议共同覆盖你的主要 ATS 问题与分段修改路径。"
+    },
+    "keywordBreakdown": [
+      {
+        "key": "core_skills",
+        "label": "核心技能",
+        "matched": [],
+        "missing": [
+          "problem-solving",
+          "strategic planning",
+          "process improvement"
+        ],
+        "total": 6
+      }
+    ],
+    "keywordMatchCount": {
+      "matched": 4,
+      "total": 23
+    },
+    "topMissingKw": [
+      "problem-solving",
+      "strategic planning",
+      "process improvement"
+    ],
+    "topMissingKeywords": [
+      "problem-solving",
+      "strategic planning",
+      "process improvement"
+    ],
+    "problems": [
+      "简历和目标 JD 的语言匹配还不够，ATS 可能无法快速识别你和这个岗位的直接关联。",
+      "核心硬技能覆盖不足，需要把有真实经验支撑的工具、技能和场景写进经历证据里。",
+      "经历中的结果证据偏少，建议提升百分比、规模、效率等量化表达。"
+    ],
+    "suggestions": [
+      "添加 Summary / 个人简介段落：用 2–3 句话说明你的背景、核心技能和目标岗位，这是 ATS 和 HR 第一眼读到的内容，也有助于提升关键词密度。",
+      "你已经有类似概念，但缺少 exact phrase：management trainee。建议只在真实经历对应的 Summary、Experience bullet 或 Skills 中补入原词，不要只靠同义词。",
+      "优先补齐 JD 匹配缺口：核心技能：problem-solving、strategic planning、process improvement、decision-making、excel；工具：excel；领域关键词：operations、customer service、business process、excel。"
+    ]
+  }
+}

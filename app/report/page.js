@@ -50,6 +50,8 @@ export default function ReportPage() {
         .logo-marquee:hover .logo-marquee-track{animation-play-state:paused}
         .mentor-logo-chip{width:72px;height:42px;border:1px solid #ede9dc;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;padding:7px;flex:0 0 auto}
         .mentor-logo-chip img{max-width:100%;max-height:100%;object-fit:contain}
+        .mentor-logo-intro{margin:4px 0 14px}
+        .mentor-logo-copy{font-size:12.5px;line-height:1.55;color:var(--ink-soft);margin:0 0 8px}
         @keyframes logo-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
         body.exporting .banner, body.exporting .export-card, body.exporting .footnote{display:none!important;}
         body.exporting .page{box-shadow:none!important;border:none!important;margin:0 auto!important;}
@@ -126,8 +128,9 @@ export default function ReportPage() {
         <hr className="divider" />
 
         <section className="section" id="mentors">
-          <div className="section-num">03 · 4 位大厂导师建议</div>
+          <div className="section-num">03 · 12 条导师建议</div>
           <h2 className="section-title" style={{fontSize:'22px'}}>每个角度都有人帮你看过了</h2>
+          <div id="mentorLogoIntroSlot"></div>
           <div id="mentorsList"></div>
         </section>
 

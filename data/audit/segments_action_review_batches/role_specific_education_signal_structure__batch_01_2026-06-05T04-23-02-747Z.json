@@ -1,0 +1,92 @@
+[
+  {
+    "id": 29,
+    "chunk_id": "04ad713b-0588-4b82-a828-fc119b92ebac-2026-03-28-AI-简历版本熟悉度辅导-with-Mentor-Kunling_chunk_066",
+    "topic": "简历定向策略",
+    "L1": "简历内容",
+    "L2": "项目展示",
+    "retrieval_scope": "resume_edit",
+    "role_family": "machine_learning",
+    "target_roles": "universal",
+    "problem_tags": "generic_resume_positioning,low_role_specificity,weak_target_role_alignment,low_measurable_results",
+    "ats_dimensions": "C_content_quality",
+    "advice_card_title": "Candidate uses Kaggle/toy...",
+    "user_problem_summary": "Candidate uses Kaggle/toy datasets which signal academic-level...",
+    "A_action": "将玩具数据集替换为真实或大规模数据引用；若项目使用了Kaggle数据，强调工程流水线而非数据集来源",
+    "action_summary": "将玩具数据集替换为真实或大规模数据引用；若项目使用了Kaggle数据，强调工程流水线而非数据集来源",
+    "I_insight": "招聘人员和招聘经理将数据集规模作为工程成熟度的代理指标。玩具数据集意味着候选人未处理过真实世界的复杂性，如数据漂移、模式变化或数据量问题。工程复杂性比机器学习模型本身更重要。",
+    "HR_os": "简历结构清楚时，HR 才能把注意力放在能力上；排版混乱会先消耗耐心。",
+    "current": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "machine_learning",
+      "activation_keywords": "Kaggle",
+      "grounding_terms": "",
+      "canonical_action_family": "education_signal",
+      "action_depth": "structure",
+      "action_review_status": "approved"
+    },
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "machine_learning",
+      "activation_keywords": "Kaggle",
+      "grounding_terms": "",
+      "canonical_action_family": "education_signal",
+      "action_depth": "structure",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:role_specific;has_activation_conditions"
+    },
+    "review_priority_score": 60,
+    "review_priority_reasons": [
+      "role_specific action is valuable but must be role/JD gated"
+    ]
+  },
+  {
+    "id": 16401,
+    "chunk_id": "60ba53ab-483c-4235-b8b8-d124e7704fc4-2025-02-18-面试辅导+简历精修_chunk_027",
+    "topic": "项目经历描述",
+    "L1": "简历内容",
+    "L2": "项目描述",
+    "retrieval_scope": "resume_edit",
+    "role_family": "data_analyst",
+    "target_roles": "data_analyst",
+    "problem_tags": "weak_experience_keyword_evidence,weak_result_orientation,vague_project_details",
+    "ats_dimensions": "C_content_quality,F_role_fit",
+    "advice_card_title": "求职者认为只有动手实操的课程才能写进简历",
+    "user_problem_summary": "求职者认为只有动手实操的课程才能写进简历，忽视了录播课程或直播课相关项目也可以包装成简历项目经历。",
+    "A_action": "梳理曾参加的录播课、直播课（包括商业课程）中完成的project或案例分析，将其包装为简历上的项目经历，补充项目模块内容。",
+    "action_summary": "梳理曾参加的录播课、直播课（包括商业课程）中完成的project或案例分析，将其包装为简历上的项目经历，补充项目模块内容。",
+    "I_insight": "简历项目不限于学校正式课程，商业培训课程中完成的项目同样具有展示价值，关键在于是否有可描述的成果或方法论。",
+    "HR_os": "经验还不长时，我会看课程、证书和训练能不能补足岗位信号；相关内容别藏太深。",
+    "current": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "education_signal",
+      "action_depth": "structure",
+      "action_review_status": "approved"
+    },
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位缺少项目证据，可以补一个真实可解释的项目或作品；写进简历时要说明数据来源、方法、交付物和结果，不要把练习项目包装成真实工作经历。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "education_signal",
+      "action_depth": "structure",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:role_specific"
+    },
+    "review_priority_score": 60,
+    "review_priority_reasons": [
+      "role_specific action is valuable but must be role/JD gated"
+    ]
+  }
+]

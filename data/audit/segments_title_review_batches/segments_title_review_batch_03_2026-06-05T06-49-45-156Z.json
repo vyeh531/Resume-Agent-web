@@ -1,0 +1,2903 @@
+[
+  {
+    "id": 6092,
+    "chunk_id": "1ebe69c1-e75e-4dea-8c72-7217f005ad54-2025-02-13-GAP分析+简历修改_chunk_000",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "当前CS行业竞争极为激烈",
+    "user_problem_summary": "当前CS行业竞争极为激烈，大厂持续裁员导致人才积压，new grad求职难度高；",
+    "A_action": "聚焦LLM相关方向，重点了解RAG和Agent两大热门应用场景，将技能积累和简历内容向这两个方向靠拢，提升市场竞争力。",
+    "action_summary": "聚焦LLM相关方向，重点了解RAG和Agent两大热门应用场景，将技能积累和简历内容向这两个方向靠拢，提升市场竞争力。",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 6099,
+    "chunk_id": "1ebe69c1-e75e-4dea-8c72-7217f005ad54-2025-02-13-GAP分析+简历修改_chunk_001",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "missing_code_review_documentation",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者背景偏传统NLP",
+    "user_problem_summary": "求职者背景偏传统NLP，",
+    "A_action": "将技术重心从传统NLP转向大模型相关应用，重点学习RAG、Agent、大模型fine-tuning及部署，扩大求职面，不局限于声音等小众细分领域。",
+    "action_summary": "将技术重心从传统NLP转向大模型相关应用，",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 6127,
+    "chunk_id": "1ebe69c1-e75e-4dea-8c72-7217f005ad54-2025-02-13-GAP分析+简历修改_chunk_012",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者持F1签证",
+    "user_problem_summary": "求职者持F1签证，H1B抽签概率极低，身份问题可能成为长期职业发展的瓶颈。",
+    "A_action": "了解H1B抽签机制；进入公司后凭借publication记录与公司谈NIW（National Interest Waiver）绿卡申请，利用学术背景争取绿卡路径。",
+    "action_summary": "了解H1B抽签机制；",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6131,
+    "chunk_id": "1ebe69c1-e75e-4dea-8c72-7217f005ad54-2025-02-13-GAP分析+简历修改_chunk_013",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者持F1签证",
+    "user_problem_summary": "求职者持F1签证，H-1B抽签难度极高，需了解替代身份路径以提升在美就业稳定性",
+    "A_action": "入职后凭借研究成果（publication及专利）申请NIW绿卡；短期过渡可考虑申请O-1签证",
+    "action_summary": "入职后凭借研究成果（publication及专利）申请NIW绿卡；短期过渡可考虑申请O-1签证",
+    "current": {
+      "canonical_title": "强化 bullet 量化结果",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6182,
+    "chunk_id": "1f291a32-8269-4285-8f2f-76918a3c0a97-2024-11-01-GAP分析+简历修改+DA&DS岗位分析_chunk_017",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者担心先准备DA方向会浪费时间，认为以后转DS会走弯路",
+    "user_problem_summary": "求职者担心先准备DA方向会浪费时间，认为以后转DS会走弯路。",
+    "A_action": "先系统准备DA所需技能，达到基础水平后逐步深入，进阶到DS要求的技能层级。学习路径按beginner→intermediate→advanced分阶段推进，不需要重新选方向，只需在原有基础上加深。",
+    "action_summary": "先系统准备DA所需技能，达到基础水平后逐步深入，进阶到DS要求的技能层级。",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 6188,
+    "chunk_id": "1f2bec31-a6de-40da-977c-33d9d09d6c32-2025-07-31-计为-0.5-Consulting-方向简历修改沟通_chunk_001",
+    "topic": "职业方向选择",
+    "L1": "职业规划",
+    "L2": "方向定位",
+    "problem_tags": "education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者持F1/OPT身份",
+    "user_problem_summary": "求职者持F1/OPT身份，",
+    "A_action": "将目标方向从management consulting调整为digital and technology consulting，优先投递提供国际学生sponsorship的数字化咨询岗位，同时兼投甲方公司（如AWS）内部的consulting部门职位以提升面试率。",
+    "action_summary": "将目标方向从management consulting调整为digital and technology consulting，",
+    "current": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位案例面试",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6223,
+    "chunk_id": "1fc09212-2b13-4a83-8b85-d1707536f16d-2025-07-22-GAP分析+简历修改沟通_chunk_003",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "weak_target_role_alignment,short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者持F1签证",
+    "user_problem_summary": "求职者持F1签证，",
+    "A_action": "若长期目标是做CS方向工作，建议尽早评估并尝试将学位title从Computer Engineering转换为Computer Science，降低CPT/OPT审查风险。",
+    "action_summary": "若长期目标是做CS方向工作，",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms",
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 6228,
+    "chunk_id": "1fc09212-2b13-4a83-8b85-d1707536f16d-2025-07-22-GAP分析+简历修改沟通_chunk_004",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "short_tenure_unclear,education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者专业为Computer Engineerin...",
+    "user_problem_summary": "求职者专业为Computer Engineering而非Computer Science，",
+    "A_action": "如有条件，尽量将专业title转为Computer Science；若无法转换，则在被RFE时依赖律所提交材料证明专业与岗位的相关性；求职时优先考虑大厂，因大厂对专业限制相对宽松。",
+    "action_summary": "如有条件，尽量将专业title转为Computer Science；",
+    "current": {
+      "canonical_title": "补强教育背景信号",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补强教育背景信号",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6340,
+    "chunk_id": "200371ad-1098-4557-b472-2d6ffd00b96c-2025-05-16-Session-01-gap分析报告+简历润色_chunk_002",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "missing_linkedin",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "需要H-1B sponsor的国际学生",
+    "user_problem_summary": "需要H-1B sponsor的国际学生，",
+    "A_action": "投递目标聚焦在中大型公司，优先选择有H-1B sponsor历史记录的雇主，避免将精力浪费在无法或不愿sponsor的小型公司上。",
+    "action_summary": "投递目标聚焦在中大型公司，优先选择有H-1B sponsor历史记录的雇主，避免将精力浪费在无法或不愿sponsor的小型公司上。",
+    "current": {
+      "canonical_title": "聚焦目标岗位定位",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6343,
+    "chunk_id": "200371ad-1098-4557-b472-2d6ffd00b96c-2025-05-16-Session-01-gap分析报告+简历润色_chunk_004",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "low_soft_skill_match,short_tenure_unclear,education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者就读非STEM硕士（MBA）",
+    "user_problem_summary": "求职者就读非STEM硕士（MBA），毕业后OPT仅一年，相比STEM的三年OPT大幅压缩在美求职时间窗口，影响长期留美就业竞争力。",
+    "A_action": "与学校沟通是否可将现有MBA项目转为STEM认定项目，或询问是否有STEM MBA选项；确认offer中是否标注STEM；若可行，申请从非STEM program转至STEM program，加修相关理工/数据分析课程满足STEM课程比例要求。",
+    "action_summary": "与学校沟通是否可将现有MBA项目转为STEM认定项目，或询问是否有STEM MBA选项；",
+    "current": {
+      "canonical_title": "把项目关键词写成证据",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6344,
+    "chunk_id": "200371ad-1098-4557-b472-2d6ffd00b96c-2025-05-16-Session-01-gap分析报告+简历润色_chunk_005",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者的offer所在项目可能不是STEM认证专业",
+    "user_problem_summary": "求职者的offer所在项目可能不是STEM认证专业，",
+    "A_action": "回学校确认offer对应项目是否为STEM认证；若不是，向学校申请从当前program转至STEM program；提前规划大四选修所需先修课，必要时多付学费多修credit hours，确保满足转项目条件。",
+    "action_summary": "回学校确认offer对应项目是否为STEM认证；",
+    "current": {
+      "canonical_title": "把项目证据写进 bullet",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6346,
+    "chunk_id": "200371ad-1098-4557-b472-2d6ffd00b96c-2025-05-16-Session-01-gap分析报告+简历润色_chunk_003",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "low_soft_skill_match,weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者担心大公司竞争激烈、背景不够",
+    "user_problem_summary": "求职者担心大公司竞争激烈、背景不够，",
+    "A_action": "优先投递有意愿承担H-1B申请费的中大型公司，不必因为竞争激烈而退缩；同时确认硕士项目是否属于STEM，若非STEM则与学校沟通是否可转换为STEM方向，以争取三年OPT延期资格。",
+    "action_summary": "优先投递有意愿承担H-1B申请费的中大型公司，不必因为竞争激烈而退缩；",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6347,
+    "chunk_id": "200371ad-1098-4557-b472-2d6ffd00b96c-2025-05-16-Session-01-gap分析报告+简历润色_chunk_003",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "low_soft_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者硕士项目可能非STEM",
+    "user_problem_summary": "求职者硕士项目可能非STEM，",
+    "A_action": "立即确认当前已有offer的硕士项目CIP代码是否属于STEM认定范围；若非STEM，在正式入学前与招生办沟通是否可申请转换专业方向或重新申请STEM项目，以获得3年OPT资格。",
+    "action_summary": "立即确认当前已有offer的硕士项目CIP代码是否属于STEM认定范围；",
+    "current": {
+      "canonical_title": "把项目关键词写成证据",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "明确目标求职赛道",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6350,
+    "chunk_id": "200371ad-1098-4557-b472-2d6ffd00b96c-2025-05-16-Session-01-gap分析报告+简历润色_chunk_006",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title,education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "简历要清晰展示你的目标岗位",
+    "user_problem_summary": "求职者若只有一年OPT，在当前美国就业市场压力下时间极为紧迫，无法充分应对求职周期的不确定性；",
+    "A_action": "确保就读项目具备STEM OPT资格以获得三年工作授权；若当前项目不支持，考虑转学或补录有三年OPT的项目，哪怕支付违约金；毕业后若暂无合适offer，可通过OPT挂靠机构为自己争取额外时间，在全美范围内持续寻找机会。",
+    "action_summary": "确保就读项目具备STEM OPT资格以获得三年工作授权；",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6373,
+    "chunk_id": "200371ad-1098-4557-b472-2d6ffd00b96c-2025-05-16-Session-01-gap分析报告+简历润色_chunk_021",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者尚未确定方向（BA分析、IT信息技术、Mar...",
+    "user_problem_summary": "求职者尚未确定方向（BA分析、IT信息技术、Marketing），需在实习中验证兴趣后再聚焦",
+    "A_action": "利用假期分别尝试BA或Marketing实习，根据实际体验决定主攻方向；若对BA感兴趣则深化分析技能，若对Marketing感兴趣则专注Social Media或SEO方向",
+    "action_summary": "利用假期分别尝试BA或Marketing实习，根据实际体验决定主攻方向；",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 6376,
+    "chunk_id": "200f6a25-ec65-4066-8621-4cc7c66e3af1-2026-02-25-GAP分析+简历指导_chunk_003",
+    "topic": "市场竞争分析",
+    "L1": "求职策略",
+    "L2": "竞争分析",
+    "problem_tags": "low_soft_skill_match,missing_linkedin",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者有绿卡但尚未充分意识到这一身份优势对求职的实质帮助",
+    "user_problem_summary": "求职者有绿卡但尚未充分意识到这一身份优势对求职的实质帮助，",
+    "A_action": "在求职材料和沟通中主动标注无需visa sponsorship，在筛选JD时优先投递注明'no sponsorship'的岗位以外的职位，提升简历通过初筛的概率。",
+    "action_summary": "在求职材料和沟通中主动标注无需visa sponsorship，",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6512,
+    "chunk_id": "20969ed8-ed96-4011-98e0-0f902a94eb40-2025-11-08-金融Account简历内容修改添加_chunk_000",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "方向定位",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "rewrite",
+    "advice_card_title": "求职者简历偏data方向",
+    "user_problem_summary": "求职者简历偏data方向，投递反响不佳，导师建议将简历重新定位为Accounting或FA方向，并补充相关技能，以提升简历竞争力。",
+    "A_action": "将简历内容从data导向改写为偏Accounting/FA方向，同时在技能板块补充会计、财务分析相关工具与知识点，并调整投递策略。",
+    "action_summary": "将简历内容从data导向改写为偏Accounting/FA方向，同时在技能板块补充会计、财务分析相关工具与知识点，并调整投递策略。",
+    "current": {
+      "canonical_title": "重排定位相关技能",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "明确目标求职赛道",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6515,
+    "chunk_id": "20969ed8-ed96-4011-98e0-0f902a94eb40-2025-11-08-金融Account简历内容修改添加_chunk_001",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者背景涵盖银行风险、PwC咨询、数据等方向",
+    "user_problem_summary": "求职者背景涵盖银行风险、PwC咨询、数据等方向，",
+    "A_action": "根据自身经历中台风险建模与PwC咨询背景，聚焦FA和Accounting相关全职岗位投递，减少分散投递数据类岗位的精力消耗。",
+    "action_summary": "根据自身经历中台风险建模与PwC咨询背景，聚焦FA和Accounting相关全职岗位投递，减少分散投递数据类岗位的精力消耗。",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6672,
+    "chunk_id": "21ae9120-e8a1-410c-8f15-c5b6f8c83fa7-2025-11-11-MKT面试辅导和实习简历修改更新_chunk_013",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "weak_action_verbs,short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "学生实习已满一个月",
+    "user_problem_summary": "学生实习已满一个月，",
+    "A_action": "主动梳理并搞清楚三件事：①自己的核心岗位职责是什么；②公司其他同事（尤其marketing team）各自负责什么；③公司的业务模式和客户是谁。同时在现有环境中主动争取尝试自己想做的事情，而非仅完成分配任务。",
+    "action_summary": "主动梳理并搞清楚三件事：①自己的核心岗位职责是什么；",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 6675,
+    "chunk_id": "21ae9120-e8a1-410c-8f15-c5b6f8c83fa7-2025-11-11-MKT面试辅导和实习简历修改更新_chunk_014",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "low_hard_skill_match,short_tenure_unclear,education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者偏向general marketing方向",
+    "user_problem_summary": "求职者偏向general marketing方向，",
+    "A_action": "即使主攻marketing方向，也应利用现有课程学习SQL、Tableau、AB testing等数据分析工具，将其作为竞争差异化优势写入简历技能栏，提升OPT可匹配岗位的广度。",
+    "action_summary": "即使主攻marketing方向，",
+    "current": {
+      "canonical_title": "补齐课程关键词信号",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补齐课程关键词信号",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6677,
+    "chunk_id": "21ae9120-e8a1-410c-8f15-c5b6f8c83fa7-2025-11-11-MKT面试辅导和实习简历修改更新_chunk_012",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "low_role_specificity,short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者尚未明确自己在市场营销各细分方向（SEO、社...",
+    "user_problem_summary": "求职者尚未明确自己在市场营销各细分方向（SEO、社交媒体、付费广告、品牌策略、内容、产品营销）中的目标方向，",
+    "A_action": "列出市场营销主要方向（SEO/SEM、社交媒体、付费广告投放、品牌策略、内容营销、产品营销），确认自己感兴趣的1-2个方向，识别对应技能缺口，再回到现有实习公司中寻找机会主动补齐这些缺口。",
+    "action_summary": "列出市场营销主要方向（SEO/SEM、社交媒体、付费广告投放、品牌策略、内容营销、产品营销），",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 6734,
+    "chunk_id": "21bef383-5ffa-4aa8-9487-4ddd371ec236-2025-07-30-GAP分析+简历修改沟通_chunk_020",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者OPT剩余约80天",
+    "user_problem_summary": "求职者OPT剩余约80天，时间紧迫，仅投全职竞争压力大，错失实习机会可能导致身份断档。",
+    "A_action": "立即开始投递，实习与全职同步投，不要只盯全职；先通过实习解决身份问题，后续再转正或寻找其他机会；同时向Mentor机构咨询实习身份解决方案。",
+    "action_summary": "立即开始投递，实习与全职同步投，不要只盯全职；",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6749,
+    "chunk_id": "21fb9d01-e6f2-4c44-be35-588f2377a353-2026-01-16-GAP分析+简历修改沟通_chunk_007",
+    "topic": "职业方向选择",
+    "L1": "职业规划",
+    "L2": "方向定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,low_measurable_results",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者为FN（外国国籍）身份",
+    "user_problem_summary": "求职者为FN（外国国籍）身份，",
+    "A_action": "鉴于FN身份及当前签证政策利空，优先考虑技术顾问（Technical Consultant）或数字顾问（Digital Consultant）方向，而非纯文科/client facing岗位，以提升签证获批概率。",
+    "action_summary": "鉴于FN身份及当前签证政策利空，",
+    "current": {
+      "canonical_title": "强化 bullet 量化结果",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "明确目标求职赛道",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6779,
+    "chunk_id": "21fb9d01-e6f2-4c44-be35-588f2377a353-2026-01-16-GAP分析+简历修改沟通_chunk_016",
+    "topic": "职业方向选择",
+    "L1": "职业规划",
+    "L2": "目标岗位定位",
+    "problem_tags": "low_soft_skill_match,weak_summary_role_alignment,weak_target_role_alignment,low_role_specificity",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者对金融前台岗位了解模糊",
+    "user_problem_summary": "求职者对金融前台岗位了解模糊，",
+    "A_action": "根据自身对客户沟通频率的偏好，明确锁定前台中客户接触频率适中的岗位（如Product Analyst），在简历和求职目标中聚焦该方向。",
+    "action_summary": "根据自身对客户沟通频率的偏好，",
+    "current": {
+      "canonical_title": "重排定位相关技能",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "明确目标求职赛道",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6866,
+    "chunk_id": "22c76ef0-8529-427f-afa6-c076522c44c1-2024-11-11-GAP分析+简历修改_chunk_002",
+    "topic": "市场竞争分析",
+    "L1": "求职策略",
+    "L2": "竞争分析",
+    "problem_tags": "low_role_specificity,weak_target_role_alignment,education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者是留学生身份",
+    "user_problem_summary": "求职者是留学生身份，需要公司支持H1B抽签及绿卡担保，身份问题增加求职难度，需提前评估自身优劣势",
+    "A_action": "进行SWOT分析，梳理自身优势（跨文化跨语言背景、Marketing硕士专业与电商高度匹配）、劣势（需身份担保）、机会（电商岗位需求旺盛）、威胁，制定有针对性的求职策略",
+    "action_summary": "进行SWOT分析，",
+    "current": {
+      "canonical_title": "补强教育背景信号",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6870,
+    "chunk_id": "22c76ef0-8529-427f-afa6-c076522c44c1-2024-11-11-GAP分析+简历修改_chunk_005",
+    "topic": "市场竞争分析",
+    "L1": "求职策略",
+    "L2": "竞争分析",
+    "problem_tags": "low_role_specificity,weak_target_role_alignment,education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者担心CPT/OPT等手续上不完整的工作经历在...",
+    "user_problem_summary": "求职者担心CPT/OPT等手续上不完整的工作经历在背调时会出现问题，导师说明了背调的两种主要方式，澄清只要经历实际发生即可通过背调。",
+    "A_action": "在背调前可主动向公司说明CPT/OPT的特殊手续情况，但若公司未主动询问也无需特别解释，只要经历真实发生即不会有问题。",
+    "action_summary": "在背调前可主动向公司说明CPT/OPT的特殊手续情况，但若公司未主动询问也无需特别解释，只要经历真实发生即不会有问题。",
+    "current": {
+      "canonical_title": "改写工作经历 bullet",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6872,
+    "chunk_id": "22c76ef0-8529-427f-afa6-c076522c44c1-2024-11-11-GAP分析+简历修改_chunk_004",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "missing_relocation_signal",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者有真实的创业/电商经营经历但未通过CPT等正...",
+    "user_problem_summary": "求职者有真实的创业/电商经营经历但未通过CPT等正规身份在美经营，担心能否将该经历写入简历；导师需判断其是否具备背调可验证性。",
+    "A_action": "确认能否提供可联系的reference（如合作伙伴/朋友），只要有人能为你的实际工作经历作证，即可将该经历写入简历；背调核心是验证\"是否真实共事\"，并非核查工作签证状态。",
+    "action_summary": "确认能否提供可联系的reference（如合作伙伴/朋友），只要有人能为你的实际工作经历作证，即可将该经历写入简历；",
+    "current": {
+      "canonical_title": "改写工作经历 bullet",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "改写工作经历 bullet",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6881,
+    "chunk_id": "22c76ef0-8529-427f-afa6-c076522c44c1-2024-11-11-GAP分析+简历修改_chunk_011",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者持一年OPT且实习经验有限",
+    "user_problem_summary": "求职者持一年OPT且实习经验有限，本地美资/主流外资企业sponsor政策严格，成功率低；",
+    "A_action": "优先投递华资背景或中资出海企业（如Anker、喜茶、奈雪、美妆品牌等），这类企业规模达百人以上、出货量大、sponsor意愿强，且高度认可创业经验；导师将提供具体企业名单供参考。",
+    "action_summary": "优先投递华资背景或中资出海企业（如Anker、喜茶、奈雪、美妆品牌等），",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6887,
+    "chunk_id": "22c76ef0-8529-427f-afa6-c076522c44c1-2024-11-11-GAP分析+简历修改_chunk_014",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者目前有年流水十多万的自营电商业务",
+    "user_problem_summary": "求职者目前有年流水十多万的自营电商业务，若求职不顺，导师建议将创业路径作为备选，通过扩大业务规模争取OPT/H1B支持",
+    "A_action": "若求职遇阻，考虑将现有电商业务正式化并扩大规模，目标年流水翻倍至几十万，以真实公司业务为基础申请OPT延期或H1B抽签",
+    "action_summary": "若求职遇阻，考虑将现有电商业务正式化并扩大规模，目标年流水翻倍至几十万，以真实公司业务为基础申请OPT延期或H1B抽签",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6888,
+    "chunk_id": "22c76ef0-8529-427f-afa6-c076522c44c1-2024-11-11-GAP分析+简历修改_chunk_012",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者持OPT签证",
+    "user_problem_summary": "求职者持OPT签证，",
+    "A_action": "将主要精力集中在北美规模达一两百人的华人出海企业（如Anchor、喜茶、奈雪的茶等消费电子/餐饮/美妆品类），将国际背景本土品牌（如Zara）列为Tier 2，并向导师索取目标企业list",
+    "action_summary": "将主要精力集中在北美规模达一两百人的华人出海企业（如Anchor、喜茶、奈雪的茶等消费电子/餐饮/美妆品类），",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6892,
+    "chunk_id": "22c76ef0-8529-427f-afa6-c076522c44c1-2024-11-11-GAP分析+简历修改_chunk_015",
+    "topic": "求职时间规划",
+    "L1": "职业规划",
+    "L2": "时间规划",
+    "problem_tags": "generic_resume_positioning,weak_target_role_alignment",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者有自己的创业公司",
+    "user_problem_summary": "求职者有自己的创业公司，但不清楚可以用自己公司与雇主公司同时参与H-1B抽签，存在身份保障漏洞风险。",
+    "A_action": "保持创业公司运营不断线，同时用自己公司和雇主公司同时参与H-1B抽签，以防雇主关系恶化时仍有自家公司作为backup签证主体。",
+    "action_summary": "保持创业公司运营不断线，同时用自己公司和雇主公司同时参与H-1B抽签，以防雇主关系恶化时仍有自家公司作为backup签证主体。",
+    "current": {
+      "canonical_title": "聚焦目标岗位定位",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "聚焦目标岗位定位",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6977,
+    "chunk_id": "2353005d-d8c7-4786-9d44-4dde72194ab7-2026-01-04-Marketing-方向求职可行性分析&差距分析&简历提升方案_chunk_003",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_target_role_alignment",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者有心理学相关背景",
+    "user_problem_summary": "求职者有心理学相关背景，但不确定与marketing的关联性；",
+    "A_action": "主动搜寻mental health、wellness类APP公司的marketing research或brand marketing岗位，将心理学背景作为差异化优势在简历与求职信中突出呈现。",
+    "action_summary": "主动搜寻mental health、wellness类APP公司的marketing research或brand marke...",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 6993,
+    "chunk_id": "2353005d-d8c7-4786-9d44-4dde72194ab7-2026-01-04-Marketing-方向求职可行性分析&差距分析&简历提升方案_chunk_015",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者目前Marketing经验接近于零",
+    "user_problem_summary": "求职者目前Marketing经验接近于零，直接找全职难度较大，且实践性技能无法在家自学获得，必须通过实习积累真实项目经验。",
+    "A_action": "将当前求职优先级调整为寻找Marketing实习，通过半年实习积累实操经验后再转向全职求职；利用OPT三年时间窗口合理规划实习到全职的过渡路径。",
+    "action_summary": "将当前求职优先级调整为寻找Marketing实习，通过半年实习积累实操经验后再转向全职求职；",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 6998,
+    "chunk_id": "2353005d-d8c7-4786-9d44-4dde72194ab7-2026-01-04-Marketing-方向求职可行性分析&差距分析&简历提升方案_chunk_016",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者目前经验不足",
+    "user_problem_summary": "求职者目前经验不足，难以直接找全职，需通过实习积累经验后再转全职，OPT三年时间足够完成这一路径。",
+    "A_action": "利用OPT三年时间，先找半年实习积累实际工作经验，再凭借实习经历申请全职职位，循序渐进提升竞争力。",
+    "action_summary": "利用OPT三年时间，先找半年实习积累实际工作经验，再凭借实习经历申请全职职位，循序渐进提升竞争力。",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 7109,
+    "chunk_id": "24c0d7f3-5600-4152-8a80-0e40deb0bf4a-2026-01-27-咨询方向GAP+简历深挖_chunk_024",
+    "topic": "市场竞争分析",
+    "L1": "求职策略",
+    "L2": "竞争分析",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "学生因暑期实习竞争压力大而气馁",
+    "user_problem_summary": "学生因暑期实习竞争压力大而气馁，但未意识到咨询行业暑期实习竞争远高于全职岗位，且仍有多轮career fair机会",
+    "A_action": "不要只盯暑期实习，同时准备全职申请；利用剩余多次career fair机会逐步推进，必要时通过CPT渠道或boutique咨询公司积累经验再跳槽至tier one",
+    "action_summary": "不要只盯暑期实习，同时准备全职申请；",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 7110,
+    "chunk_id": "24c0d7f3-5600-4152-8a80-0e40deb0bf4a-2026-01-27-咨询方向GAP+简历深挖_chunk_024",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "F1签证学生担心身份限制导致无法进入tier one咨询",
+    "user_problem_summary": "F1签证学生担心身份限制导致无法进入tier one咨询，但忽略了CPT渠道和boutique咨询公司作为跳板的可行性",
+    "A_action": "若tier one咨询因签证受阻，可通过CPT找boutique或local advisory公司积累1-2年咨询方法论与项目经验，再利用行业内跳槽机制进入更大平台",
+    "action_summary": "若tier one咨询因签证受阻，",
+    "current": {
+      "canonical_title": "补清工具和方法证据",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补清工具和方法证据",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 7185,
+    "chunk_id": "256b1dfe-218d-4836-9784-61bd63f46ca8-2025-01-27-GAP分析与简历修改_chunk_003",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "机械工程背景的求职者面临\"什么都会但什么都不精\"的...",
+    "user_problem_summary": "机械工程背景的求职者面临\"什么都会但什么都不精\"的困境：编程不如CS出身扎实，",
+    "A_action": "明确自身在机械工程中的细分优势方向（如结构设计、FEA仿真、机器人运动学/控制），围绕该方向在简历中集中呈现深度，而非泛泛罗列所有技能。",
+    "action_summary": "明确自身在机械工程中的细分优势方向（如结构设计、FEA仿真、机器人运动学/控制），",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 7223,
+    "chunk_id": "256cdeb6-3389-4aba-9d87-06fdf329c374-2025-09-17-Session-02-简历修改的课程_chunk_000",
+    "topic": "职业方向选择",
+    "L1": "职业规划",
+    "L2": "方向定位",
+    "problem_tags": "low_soft_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者拥有communication硕士背景",
+    "user_problem_summary": "求职者拥有communication硕士背景，",
+    "A_action": "将求职方向交叉搭配：一条线走policy/political organization的communications或media相关岗位，另一条线走corporate consulting或nonprofit的research/data岗位，同时开拓digital media和marketing方向，增加投递覆盖面。",
+    "action_summary": "将求职方向交叉搭配：一条线走policy/political organization的communications或medi...",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "明确目标求职赛道",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 7229,
+    "chunk_id": "256cdeb6-3389-4aba-9d87-06fdf329c374-2025-09-17-Session-02-简历修改的课程_chunk_001",
+    "topic": "职业方向选择",
+    "L1": "职业规划",
+    "L2": "方向定位",
+    "problem_tags": "low_soft_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者有policy/media兴趣但受OPT限制",
+    "user_problem_summary": "求职者有policy/media兴趣但受OPT限制，",
+    "A_action": "从两个维度交叉分析：左列列出自身所有技能，右列列出感兴趣的行业或目标公司，决定是以技能匹配行业还是以目标行业反推所需技能，再结合当前job market搜索开放职位数量确定主攻方向",
+    "action_summary": "从两个维度交叉分析：左列列出自身所有技能，",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "明确目标求职赛道",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 7409,
+    "chunk_id": "2720ac67-1195-4e2e-a657-1bcbcbc9c405-2025-01-07-简历修改-生统_chunk_001",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "数据分析、数据科学等方向市场严重饱和",
+    "user_problem_summary": "数据分析、数据科学等方向市场严重饱和，大厂小厂均减少对fresh graduate（尤其需要OPT/H1B身份）的招募；",
+    "A_action": "放弃BA/DA/DS方向，转向生物统计求职赛道；利用耶鲁Tier 1学校平台优势，同时补充行业相关项目以弥补无生统实习的劣势。",
+    "action_summary": "放弃BA/DA/DS方向，转向生物统计求职赛道；利用耶鲁Tier 1学校平台优势，同时补充行业相关项目以弥补无生统实习的劣势。",
+    "current": {
+      "canonical_title": "改写工作经历 bullet",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "明确目标求职赛道",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 7417,
+    "chunk_id": "2720ac67-1195-4e2e-a657-1bcbcbc9c405-2025-01-07-简历修改-生统_chunk_007",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title,education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "生统硕士毕业生在选择雇主梯队时",
+    "user_problem_summary": "生统硕士毕业生在选择雇主梯队时，往往忽视第三梯队（学术医院、科研机构）的独特价值，不了解其低薪但轻松氛围及套词PhD的隐性优势。",
+    "A_action": "若尚未确定是否继续读PhD，可优先考虑UC系列或学术医院职位，借助日常合作与教授建立关系，作为申请PhD的缓冲跳板；同时需提前确认雇主是否sponsor有cap的H1B，避免日后转签困难。",
+    "action_summary": "若尚未确定是否继续读PhD，可优先考虑UC系列或学术医院职位，借助日常合作与教授建立关系，作为申请PhD的缓冲跳板；",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 7418,
+    "chunk_id": "2720ac67-1195-4e2e-a657-1bcbcbc9c405-2025-01-07-简历修改-生统_chunk_007",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "部分国际学生在选择政府或非营利机构时",
+    "user_problem_summary": "部分国际学生在选择政府或非营利机构时，",
+    "A_action": "在接受政府或非营利机构offer前，务必确认其H1B sponsorship类型：若为non-cap H1B（non-profit专属），需评估未来转回有cap H1B的难度及对后续求职的影响，谨慎决策。",
+    "action_summary": "在接受政府或非营利机构offer前，",
+    "current": {
+      "canonical_title": "聚焦目标岗位定位",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 7430,
+    "chunk_id": "2720ac67-1195-4e2e-a657-1bcbcbc9c405-2025-01-07-简历修改-生统_chunk_008",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "部分政府机构或非营利机构只提供non-cap H1...",
+    "user_problem_summary": "部分政府机构或非营利机构只提供non-cap H1B而非有cap的H1B，",
+    "A_action": "入职前务必确认雇主的签证类型；若只能选择non-cap H1B岗位，可考虑以contractor身份入职，通过咨询公司申请H1B，绕过雇主不sponsor的限制",
+    "action_summary": "入职前务必确认雇主的签证类型；",
+    "current": {
+      "canonical_title": "聚焦目标岗位定位",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 7432,
+    "chunk_id": "2720ac67-1195-4e2e-a657-1bcbcbc9c405-2025-01-07-简历修改-生统_chunk_012",
+    "topic": "求职时间规划",
+    "L1": "职业规划",
+    "L2": "时间规划",
+    "problem_tags": "short_tenure_unclear,generic_resume_positioning,weak_target_role_alignment",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者不清楚H1B、Perm、I-140到绿卡48...",
+    "user_problem_summary": "求职者不清楚H1B、Perm、I-140到绿卡485的完整流程，",
+    "A_action": "按以下节点规划：①H1B抽签后10月生效前不跳槽；②生效后可做H1B transfer；③H1B期间推进Perm（约1年完成）；④Perm批准后加急递I-140锁排期；⑤拿到I-140后可自由跳槽且H1B无6年限制；⑥等待485排期期间换大公司等绿卡即可。",
+    "action_summary": "按以下节点规划：①H1B抽签后10月生效前不跳槽；",
+    "current": {
+      "canonical_title": "聚焦目标岗位定位",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "聚焦目标岗位定位",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 7438,
+    "chunk_id": "2720ac67-1195-4e2e-a657-1bcbcbc9c405-2025-01-07-简历修改-生统_chunk_011",
+    "topic": "求职时间规划",
+    "L1": "职业规划",
+    "L2": "时间规划",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者担心CRO帮忙申请H1B后会被锁定多年无法跳槽",
+    "user_problem_summary": "求职者担心CRO帮忙申请H1B后会被锁定多年无法跳槽，",
+    "A_action": "在CRO完成OPT期间积累经验，让雇主协助抽签申请H1B（3~4月准备材料，10月生效）；H1B生效后即可通过H1B transfer携带身份跳槽至目标药厂，无需等待6年期满。",
+    "action_summary": "在CRO完成OPT期间积累经验，让雇主协助抽签申请H1B（3~4月准备材料，10月生效）；",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 7524,
+    "chunk_id": "2730e47c-554b-448a-bc64-9c3e25e227ad-2025-09-26-GAP分析+提升方案+简历分析_chunk_020",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者因过去学过C++而犹豫是否要继续用C++",
+    "user_problem_summary": "求职者因过去学过C++而犹豫是否要继续用C++，导致被沉没成本束缚，无法做出最优的职业语言选择。",
+    "A_action": "忽略过去已学语言的沉没成本，以未来市场需求和岗位数量为决策依据，刚毕业时转换语言成本最低，应果断选择市场需求更大的语言（如Java）。",
+    "action_summary": "忽略过去已学语言的沉没成本，",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 7602,
+    "chunk_id": "279e79f7-2078-4c83-a301-77136e26dd00-2025-03-14-Session-07-供应链方向简历润色和技能分析后续规划,行业的梳理_chunk_022",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者混淆了Data Analyst与Data S...",
+    "user_problem_summary": "求职者混淆了Data Analyst与Data Scientist的工作性质：Data Analyst通常嵌入业务团队、独立作业，",
+    "A_action": "明确自身MSBA背景对应的职业路径为Data Analyst而非Data Scientist，求职时聚焦业务导向岗位，简历与技能栈围绕业务问题解决而非模型研发来构建。",
+    "action_summary": "明确自身MSBA背景对应的职业路径为Data Analyst而非Data Scientist，",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 7603,
+    "chunk_id": "27cbed97-601f-4f51-8289-2ba06313362c-2025-03-02-SDE方向求职岗位差距分析&简历修改沟通_chunk_003",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title,education_details_missing",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者误以为毕业后超过一定时间就无法投递new g...",
+    "user_problem_summary": "求职者误以为毕业后超过一定时间就无法投递new graduate岗位，产生不必要的焦虑，影响求职规划。",
+    "A_action": "继续以new graduate身份投递SDE岗位，无需担心毕业年限问题；同时利用剩余时间做项目补充简历空白期，并关注OPT续签的合规时间窗口。",
+    "action_summary": "继续以new graduate身份投递SDE岗位，无需担心毕业年限问题；",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 7610,
+    "chunk_id": "27cbed97-601f-4f51-8289-2ba06313362c-2025-03-02-SDE方向求职岗位差距分析&简历修改沟通_chunk_009",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "missing_distributed_systems,short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者目前对计算机系统缺乏融会贯通的理解",
+    "user_problem_summary": "求职者目前对计算机系统缺乏融会贯通的理解，",
+    "A_action": "系统学习计算机科学各层次知识，从软硬件接口、编译器、操作系统、网络/分布式系统到云计算，再到ML/NLP等应用领域，建立从底层到上层的融会贯通认知，将各知识点在脑海中形成一棵完整的树状结构。",
+    "action_summary": "系统学习计算机科学各层次知识，",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 7665,
+    "chunk_id": "27cbfe2c-5bf3-495a-8c3f-57f625d621ca-2024-12-26-Session-01-gap分析报告+简历润色_chunk_012",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "精算师若长期只做单一传统职能（如reserving）",
+    "user_problem_summary": "精算师若长期只做单一传统职能（如reserving），一旦该细分领域被AI取代便陷入困境。",
+    "A_action": "择业时优先选择提供rotation机制的精算岗位（通常每18个月轮岗一次），在reserving、risk management、financial forecasting、investing等多个functional area积累经验，避免只深耕单一领域。",
+    "action_summary": "择业时优先选择提供rotation机制的精算岗位（通常每18个月轮岗一次），",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 7667,
+    "chunk_id": "27cbfe2c-5bf3-495a-8c3f-57f625d621ca-2024-12-26-Session-01-gap分析报告+简历润色_chunk_013",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者担心AI会取代Data Scientist和...",
+    "user_problem_summary": "求职者担心AI会取代Data Scientist和相关领域工作，导致求职焦虑；",
+    "A_action": "将求职精力聚焦于应对就业市场竞争激烈的现实问题：提升简历竞争力、强化差异化亮点，而非过度担忧AI取代；同时调整预期，认识到当前市场比前几年更难，需要更充分准备。",
+    "action_summary": "将求职精力聚焦于应对就业市场竞争激烈的现实问题：提升简历竞争力、强化差异化亮点，而非过度担忧AI取代；",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 7668,
+    "chunk_id": "27cbfe2c-5bf3-495a-8c3f-57f625d621ca-2024-12-26-Session-01-gap分析报告+简历润色_chunk_011",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_action_verbs",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者担忧AI取代数据分析师/数据科学家岗位",
+    "user_problem_summary": "求职者担忧AI取代数据分析师/数据科学家岗位，对行业前景感到绝望。",
+    "A_action": "将职业发展方向定位于AI质量验证与监督角色（AI tester/grader），积累足够的领域经验以具备判断AI输出准确性的能力，而非停留在执行层面的报告生成工作，从而在AI浪潮中建立不可替代性。",
+    "action_summary": "将职业发展方向定位于AI质量验证与监督角色（AI tester/grader），",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 7690,
+    "chunk_id": "27d8593c-07dc-45e8-81a2-4f8c37e2e820-2024-12-14-Session-01-gap分析报告+简历润色_chunk_004",
+    "topic": "职业方向选择",
+    "L1": "职业规划",
+    "L2": "方向定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "国际学生仅有一年OPT",
+    "user_problem_summary": "国际学生仅有一年OPT，",
+    "A_action": "优先锁定具备以下条件的大型公司：1）有国际办公室可实现跨国调派；2）品牌国际知名度高，离职后可凭背书在海外市场继续求职；3）公司规模足以与员工商讨OPT延期或签证替代方案",
+    "action_summary": "优先锁定具备以下条件的大型公司：1）有国际办公室可实现跨国调派；",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "明确目标求职赛道",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 7707,
+    "chunk_id": "27d8593c-07dc-45e8-81a2-4f8c37e2e820-2024-12-14-Session-01-gap分析报告+简历润色_chunk_017",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "简历要清晰展示你的目标岗位",
+    "user_problem_summary": "国际学生直接投递全职岗位竞争压力大，且存在签证身份顾虑，通过实习转正是更高效的路径",
+    "A_action": "优先寻找允许CPT的实习机会，在校期间先积累大公司实习经验，争取通过Intern转Full-Time，而非直接投递全职岗位",
+    "action_summary": "优先寻找允许CPT的实习机会，在校期间先积累大公司实习经验，争取通过Intern转Full-Time，而非直接投递全职岗位",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 7708,
+    "chunk_id": "27d8593c-07dc-45e8-81a2-4f8c37e2e820-2024-12-14-Session-01-gap分析报告+简历润色_chunk_017",
+    "topic": "投递渠道规划",
+    "L1": "求职策略",
+    "L2": "投递渠道",
+    "problem_tags": "low_soft_skill_match,missing_relocation_signal",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "国际学生在投递时对签证身份解释不清",
+    "user_problem_summary": "国际学生在投递时对签证身份解释不清，导致错误判断公司是否接受申请，错失机会",
+    "A_action": "在与recruiter或hiring manager沟通时，明确说明：1）在校期间可用CPT合法工作；2）OPT一年内无需公司承担任何sponsorship成本，雇主无需额外付出，legally work authorization已具备",
+    "action_summary": "在与recruiter或hiring manager沟通时，明确说明：1）在校期间可用CPT合法工作；",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 7709,
+    "chunk_id": "27d8593c-07dc-45e8-81a2-4f8c37e2e820-2024-12-14-Session-01-gap分析报告+简历润色_chunk_018",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者担心因OPT/签证身份问题被雇主刷掉",
+    "user_problem_summary": "求职者担心因OPT/签证身份问题被雇主刷掉，不确定是否应如实回答sponsorship问题",
+    "A_action": "诚实回答签证sponsorship问题；同时认清OPT阶段雇主无需额外付出，降低对方顾虑，将一年经验积累作为核心诉求点",
+    "action_summary": "诚实回答签证sponsorship问题；同时认清OPT阶段雇主无需额外付出，降低对方顾虑，将一年经验积累作为核心诉求点",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 7754,
+    "chunk_id": "28002e13-ccdf-4c66-8df6-622b97462579-2025-05-20-GAP分析和简历修改_chunk_004",
+    "topic": "个人总结撰写",
+    "L1": "简历内容",
+    "L2": "个人总结",
+    "problem_tags": "missing_relocation_signal",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者已获得绿卡身份",
+    "user_problem_summary": "求职者已获得绿卡身份，但简历上未体现，导致HR可能对工作授权存在疑虑，影响面试转化率",
+    "A_action": "在简历显眼位置标注绿卡身份（如 Green Card Holder / Permanent Resident），消除雇主对工作签证的顾虑，提升简历通过率",
+    "action_summary": "在简历显眼位置标注绿卡身份（如 Green Card Holder / Permanent Resident），",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "强化经历结果证据",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 7759,
+    "chunk_id": "28002e13-ccdf-4c66-8df6-622b97462579-2025-05-20-GAP分析和简历修改_chunk_005",
+    "topic": "个人总结撰写",
+    "L1": "简历内容",
+    "L2": "个人总结",
+    "problem_tags": "missing_relocation_signal",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "delivery",
+    "advice_card_title": "求职者简历上只写了'work authorization'",
+    "user_problem_summary": "求职者简历上只写了'work authorization'，",
+    "A_action": "将简历顶部的身份标注改为'GREEN CARD HOLDER'并加粗放大，明确区别于H1B等其他工作授权类型，以吸引偏好无需sponsorship候选人的雇主",
+    "action_summary": "将简历顶部的身份标注改为'GREEN CARD HOLDER'并加粗放大，",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "改写工作经历 bullet",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 7793,
+    "chunk_id": "28a309dd-f193-4982-9182-9a7fb27a699b-2025-10-01-GAP分析+行情分析+规划建议(会后出具GAP分析报告+数据方向精修后的简历)_chunk_003",
+    "topic": "市场竞争分析",
+    "L1": "求职策略",
+    "L2": "竞争分析",
+    "problem_tags": "low_role_specificity,weak_target_role_alignment",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者投递40个职位",
+    "user_problem_summary": "求职者投递40个职位，",
+    "A_action": "梳理投递公司类型，评估是否集中于无法提供sponsorship的小型startup；调整OPT身份表达方式，或优先投递已知可sponsor的大公司，以提高HR轮通过率。",
+    "action_summary": "梳理投递公司类型，评估是否集中于无法提供sponsorship的小型startup；",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 7860,
+    "chunk_id": "28c1ed44-fff4-4ac8-82e7-cea677037b8c-2026-03-14-简历梳理+学生近况梳理+春招情况+实习和科研如何选择_chunk_004",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "low_role_specificity,short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "学生在向职业顾问或校友咨询时",
+    "user_problem_summary": "学生在向职业顾问或校友咨询时，未能主动说明自己的背景与规划，导致对方无法给出针对性建议",
+    "A_action": "咨询时主动告知对方自己的当前状态、正在做的事情及未来规划，例如：'我马上大四，想读硕士，这个暑假应该做什么'，让对方有足够信息给出具体建议",
+    "action_summary": "咨询时主动告知对方自己的当前状态、正在做的事情及未来规划，",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 7866,
+    "chunk_id": "28c1ed44-fff4-4ac8-82e7-cea677037b8c-2026-03-14-简历梳理+学生近况梳理+春招情况+实习和科研如何选择_chunk_009",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "学生在不打算读博的情况下",
+    "user_problem_summary": "学生在不打算读博的情况下，仍花大量精力在科研上，导致用于简历准备和找实习的时间不足，优先级分配有误。",
+    "A_action": "若不打算读博，减少科研投入，将更多时间和精力集中在简历打磨和找实习上，以提升就业竞争力。",
+    "action_summary": "若不打算读博，减少科研投入，将更多时间和精力集中在简历打磨和找实习上，以提升就业竞争力。",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 7893,
+    "chunk_id": "28f336b0-003a-4268-89de-2aa064a75067-2025-04-12-GAP分析+简历修改沟通_chunk_006",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "low_role_specificity",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "国际学生求职时因H-1B需要抽签",
+    "user_problem_summary": "国际学生求职时因H-1B需要抽签，许多公司不愿承担风险而拒绝赞助entry level职位；",
+    "A_action": "求职时优先了解目标公司的sponsorship政策，区分其是否接受H-1B抽签赞助或仅接受transfer；制定求职策略时将签证风险纳入考量，针对性筛选愿意sponsor抽签的雇主。",
+    "action_summary": "求职时优先了解目标公司的sponsorship政策，区分其是否接受H-1B抽签赞助或仅接受transfer；",
+    "current": {
+      "canonical_title": "聚焦目标岗位定位",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 7894,
+    "chunk_id": "28f336b0-003a-4268-89de-2aa064a75067-2025-04-12-GAP分析+简历修改沟通_chunk_007",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "short_tenure_unclear,education_details_missing",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "求职者目标是private wealth mana...",
+    "user_problem_summary": "求职者目标是private wealth management，",
+    "A_action": "将private wealth management设为终极目标，先从IB、M&A或financial advisory/consulting公司起步，积累相关经验后再逐步向上跳槽，实现曲线救国。",
+    "action_summary": "将private wealth management设为终极目标，",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 7995,
+    "chunk_id": "29ac675f-32d6-4955-94ba-4bfcefe80548-2025-06-13-GAP分析+简历修改_chunk_000",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "low_role_specificity,short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者BA背景想转marketing analyst方向",
+    "user_problem_summary": "求职者BA背景想转marketing analyst方向，但对两个方向的区别和自身GAP尚不清晰，需先梳理背景再做方向定位。",
+    "A_action": "按三步框架推进辅导：①梳理个人背景和简历重点；②评估求职者对marketing分析方向的了解程度；③导师讲解BA与marketing analyst区别并诊断当前经验GAP。",
+    "action_summary": "按三步框架推进辅导：①梳理个人背景和简历重点；",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 8026,
+    "chunk_id": "29afde3c-ed51-4d91-8bef-80aeb0232367-2026-03-19-GAP分析+简历深挖_chunk_001",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "low_hard_skill_match,short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者持CPT身份",
+    "user_problem_summary": "求职者持CPT身份，",
+    "A_action": "深入了解CPT身份的具体限制，明确哪些公司可接受CPT全职雇员；优先考虑大型公司或技术导向型岗位，因其sponsor H1B的概率更高；同时在求职方向上向data-driven marketing倾斜以提升被sponsor的可能性。",
+    "action_summary": "深入了解CPT身份的具体限制，明确哪些公司可接受CPT全职雇员；",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8032,
+    "chunk_id": "29afde3c-ed51-4d91-8bef-80aeb0232367-2026-03-19-GAP分析+简历深挖_chunk_002",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者希望直接做marketing strategy",
+    "user_problem_summary": "求职者希望直接做marketing strategy，但entry level策略岗难度极高，缺乏执行经验也难以输出有价值的策略",
+    "A_action": "从marketing specialist、marketing coordinator或digital marketing specialist等执行岗入手，积累实际执行经验后，再向brand manager或growth/performance marketing manager晋升，最终进入strategy方向",
+    "action_summary": "从marketing specialist、marketing coordinator或digital marketing s...",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 8063,
+    "chunk_id": "29d74c58-1f7b-45e9-a6db-432abbc5a790-2024-10-19-GAP分析+简历修改(张怀毅)_chunk_005",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "short_tenure_unclear,education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "F1留学生若选修课与目标职位方向不相关（如huma...",
+    "user_problem_summary": "F1留学生若选修课与目标职位方向不相关（如human resources、supply chain、marketing），",
+    "A_action": "在今天辅导结束后，梳理剩余选修课学分（约12学分/4门课），优先选择与目标求职方向相关的课程，如statistics for data analysis、data visualization for business intelligence、management of information technology等，避免选与职位不搭的课程",
+    "action_summary": "在今天辅导结束后，",
+    "current": {
+      "canonical_title": "修复格式和版面问题",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "修复格式和版面问题",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8076,
+    "chunk_id": "29d74c58-1f7b-45e9-a6db-432abbc5a790-2024-10-19-GAP分析+简历修改(张怀毅)_chunk_008",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_summary_role_alignment,education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者专业方向偏向Program Management",
+    "user_problem_summary": "求职者专业方向偏向Program Management，",
+    "A_action": "在选课上主动往BA、DA乃至Machine Learning方向倾斜，同时保留PM相关课程，增加求职方向灵活性；求职目标定为BA、DA及PM三个方向，给自己保留更多选择空间。",
+    "action_summary": "在选课上主动往BA、DA乃至Machine Learning方向倾斜，同时保留PM相关课程，增加求职方向灵活性；",
+    "current": {
+      "canonical_title": "让 Summary 指向目标岗位",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "明确目标求职赛道",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8079,
+    "chunk_id": "29d74c58-1f7b-45e9-a6db-432abbc5a790-2024-10-19-GAP分析+简历修改(张怀毅)_chunk_007",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title,education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "美国H1B政策存在潜在立法风险",
+    "user_problem_summary": "美国H1B政策存在潜在立法风险，未来可能要求求职方向与所学专业强相关。",
+    "A_action": "确定求职方向时，优先选择与专业名称强相关的岗位（如 data analytics、business analytics、project management），并在做OPT/H1B相关文书时，确保岗位描述与专业背景能形成清晰对应关系。",
+    "action_summary": "确定求职方向时，",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8130,
+    "chunk_id": "2a2f1e44-6de6-493c-a73e-5e46eb0443a2-2025-03-26-GAP岗位差距分析+简历修改_chunk_005",
+    "topic": "市场竞争分析",
+    "L1": "求职策略",
+    "L2": "竞争分析",
+    "problem_tags": "low_soft_skill_match",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者拥有不需要公司sponsorship的身份优势",
+    "user_problem_summary": "求职者拥有不需要公司sponsorship的身份优势，",
+    "A_action": "在求职过程中主动在简历或沟通中标注无需sponsor，优先锁定对此敏感的雇主（如中小型金融机构或量化基金），以此作为差异化竞争点。",
+    "action_summary": "在求职过程中主动在简历或沟通中标注无需sponsor，优先锁定对此敏感的雇主（如中小型金融机构或量化基金），以此作为差异化竞争点。",
+    "current": {
+      "canonical_title": "整理 Skills 关键词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8149,
+    "chunk_id": "2a2f1e44-6de6-493c-a73e-5e46eb0443a2-2025-03-26-GAP岗位差距分析+简历修改_chunk_020",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者有金融背景",
+    "user_problem_summary": "求职者有金融背景，",
+    "A_action": "若有意转型Consulting，可先积累相关经验再跳槽，重点关注BCG等在LA地区（如帕萨迪纳办公室）有quant/data相关岗位的头部咨询公司；同时做好心理准备，接受出差驻场甲方的工作模式。",
+    "action_summary": "若有意转型Consulting，",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 8172,
+    "chunk_id": "2b75f09e-2589-4d06-9f80-260b5b0827c8-2025-11-07-GAP分析+简历修改沟通_chunk_002",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者12月毕业",
+    "user_problem_summary": "求职者12月毕业，错过实习招聘窗口，需直接找全职；加之国际生身份，时间窗口受限，需采取激进广撒网策略",
+    "A_action": "立即办理OPT，以Johns Hopkins学历背景为优势，广泛投递全职职位，不限于金融，覆盖咨询及企业各类岗位，尽量在OPT有效期内锁定offer",
+    "action_summary": "立即办理OPT，",
+    "current": {
+      "canonical_title": "聚焦目标岗位定位",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8194,
+    "chunk_id": "2b75f09e-2589-4d06-9f80-260b5b0827c8-2025-11-07-GAP分析+简历修改沟通_chunk_012",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者混淆服务提供商（四大advisory、评级机...",
+    "user_problem_summary": "求职者混淆服务提供商（四大advisory、评级机构、Bloomberg等）与资管机构的职能差异，",
+    "A_action": "研究金融服务提供商（四大advisory、Moody's/Fitch/S&P评级、Bloomberg等数据商）的具体岗位，明确其与资管/投行的核心区别，结合自身技能评估匹配度。",
+    "action_summary": "研究金融服务提供商（四大advisory、Moody's/Fitch/S&P评级、Bloomberg等数据商）的具体岗位，",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 8207,
+    "chunk_id": "2b91675f-0c9b-42c9-afd3-dbc7d7feb1d7-2025-02-13-Session-01-gap分析报告+简历润色_chunk_008",
+    "topic": "个人总结撰写",
+    "L1": "简历内容",
+    "L2": "个人总结",
+    "problem_tags": "formatting_penalty_triggered,missing_relocation_signal",
+    "canonical_action_family": "overall_positioning",
+    "action_depth": "diagnose",
+    "advice_card_title": "持有绿卡的求职者若未在简历上注明身份状态",
+    "user_problem_summary": "持有绿卡的求职者若未在简历上注明身份状态，",
+    "A_action": "在简历顶部联系方式（电话、Email）下方新增一行，注明「US Permanent Resident」或「Green Card Holder」，并在申请系统填写不需要sponsorship，帮助顺利通过HR初筛。",
+    "action_summary": "在简历顶部联系方式（电话、Email）下方新增一行，",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "把经历证据写进 bullet",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8218,
+    "chunk_id": "2b91675f-0c9b-42c9-afd3-dbc7d7feb1d7-2025-02-13-Session-01-gap分析报告+简历润色_chunk_015",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者想直接进入药企或化工厂有一定难度",
+    "user_problem_summary": "求职者想直接进入药企或化工厂有一定难度，",
+    "A_action": "将CRO作为进入药企的跳板，优先考虑大型国际CRO（如Thermo Fisher、PPD、Eurofins）积累规范化经验；若无经验门槛限制，也可考虑NJ/PA地区中小型中国CRO快速获取bench经验，但需控制在该类公司的停留时长。",
+    "action_summary": "将CRO作为进入药企的跳板，优先考虑大型国际CRO（如Thermo Fisher、PPD、Eurofins）积累规范化经验；",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 8243,
+    "chunk_id": "2be209e2-802c-48d3-a36a-4aab0adcd72d-2025-10-09-Session-01简历+Gap分析报告_chunk_004",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者希望进入Pharma/Biotech的mar...",
+    "user_problem_summary": "求职者希望进入Pharma/Biotech的marketing、pipeline或access岗位，",
+    "A_action": "将目标岗位从Pharma/Biotech内部职能转向consulting方向，以规避签证sponsor的障碍，尽早启动consulting申请流程。",
+    "action_summary": "将目标岗位从Pharma/Biotech内部职能转向consulting方向，",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8249,
+    "chunk_id": "2be209e2-802c-48d3-a36a-4aab0adcd72d-2025-10-09-Session-01简历+Gap分析报告_chunk_005",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "持OPT/需要签证sponsorship的求职者在...",
+    "user_problem_summary": "持OPT/需要签证sponsorship的求职者在Pharma/Biotech的marketing、pipeline、acce...",
+    "A_action": "重新评估目标方向，将Pharma直接职位调整为Life Sciences Consulting方向，因后者sponsorship限制相对较少，可行性更高",
+    "action_summary": "重新评估目标方向，",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8254,
+    "chunk_id": "2be209e2-802c-48d3-a36a-4aab0adcd72d-2025-10-09-Session-01简历+Gap分析报告_chunk_010",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者聚焦于美国Biotech/Pharma就业市场",
+    "user_problem_summary": "求职者聚焦于美国Biotech/Pharma就业市场，",
+    "A_action": "若美国就业受阻，考虑英国（工签无需抽签）或爱尔兰（EU成员，许多美国大型Pharma在当地设有重要据点），可在网上搜索相关案例验证机会。",
+    "action_summary": "若美国就业受阻，",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 8313,
+    "chunk_id": "2c3031db-2461-4a9e-97d5-d1ce465db33d-2025-01-25-简历更新辅导_chunk_009",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者现处于marketing领域",
+    "user_problem_summary": "求职者现处于marketing领域，薪资目标6-8万，但担忧未来薪资增长空间有限，不知道如何向高薪方向发展。",
+    "A_action": "积累当前marketing工作经验后，向互联网/科技公司的marketing部门转型，tech公司的marketing岗位薪资明显高于传统行业。",
+    "action_summary": "积累当前marketing工作经验后，",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 8314,
+    "chunk_id": "2c3031db-2461-4a9e-97d5-d1ce465db33d-2025-01-25-简历更新辅导_chunk_009",
+    "topic": "求职时间规划",
+    "L1": "职业规划",
+    "L2": "时间规划",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者作为应届生",
+    "user_problem_summary": "求职者作为应届生，",
+    "A_action": "将第一阶段目标设定为获得return offer并留下来，优先争取H1B抽签资格，薪资增长放在身份稳定之后再规划。",
+    "action_summary": "将第一阶段目标设定为获得return offer并留下来，优先争取H1B抽签资格，薪资增长放在身份稳定之后再规划。",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "校准国际生求职范围",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8315,
+    "chunk_id": "2c3031db-2461-4a9e-97d5-d1ce465db33d-2025-01-25-简历更新辅导_chunk_010",
+    "topic": "求职时间规划",
+    "L1": "职业规划",
+    "L2": "时间规划",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "应届生拿到return offer后往往想着加薪",
+    "user_problem_summary": "应届生拿到return offer后往往想着加薪，但在当前经济环境下，H1B身份才是最关键的优先目标，薪资可以日后再谈。",
+    "A_action": "拿到return offer后，第一步确认公司给出的薪资是否达到H1B申请的最低工资标准（通常6万以上），不要纠结薪资高低，先确保H1B能顺利申请。",
+    "action_summary": "拿到return offer后，",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8316,
+    "chunk_id": "2c3031db-2461-4a9e-97d5-d1ce465db33d-2025-01-25-简历更新辅导_chunk_010",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "应届生不必执着于直接进大厂",
+    "user_problem_summary": "应届生不必执着于直接进大厂，",
+    "A_action": "在当前公司踏实积累1年以上的行业经验（如广告、电商domain knowledge），抽到H1B后以有经验候选人身份申请Pinterest、Facebook、Instagram等大型互联网广告岗位。",
+    "action_summary": "在当前公司踏实积累1年以上的行业经验（如广告、电商domain knowledge），",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8317,
+    "chunk_id": "2c3031db-2461-4a9e-97d5-d1ce465db33d-2025-01-25-简历更新辅导_chunk_011",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "学生尚未毕业但已有实习机会",
+    "user_problem_summary": "学生尚未毕业但已有实习机会，若错过争取return offer的时机，毕业后再找赞助H1B的雇主极为困难，因为公司不愿为陌生人抽签。",
+    "A_action": "以拿到当前实习公司的return offer并争取H1B抽签为首要目标，留满一年后若不满意再跳槽；在读期间主动表现让雇主愿意留用，是获得H1B赞助最可行的路径。",
+    "action_summary": "以拿到当前实习公司的return offer并争取H1B抽签为首要目标，留满一年后若不满意再跳槽；",
+    "current": {
+      "canonical_title": "聚焦目标岗位定位",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8318,
+    "chunk_id": "2c3031db-2461-4a9e-97d5-d1ce465db33d-2025-01-25-简历更新辅导_chunk_012",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者未充分意识到H1B抽签的工资门槛要求",
+    "user_problem_summary": "求职者未充分意识到H1B抽签的工资门槛要求，以及雇主愿意办H1B这一条件对于留美工作的决定性重要性",
+    "A_action": "将雇主愿意办H1B且工资达到所在地区最低工资线这一条件列为择业首要优先级，超过薪资、职位等其他因素",
+    "action_summary": "将雇主愿意办H1B且工资达到所在地区最低工资线这一条件列为择业首要优先级，超过薪资、职位等其他因素",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8325,
+    "chunk_id": "2c3031db-2461-4a9e-97d5-d1ce465db33d-2025-01-25-简历更新辅导_chunk_027",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者担心错过招聘旺季、每天投递但只收到拒信或感谢信",
+    "user_problem_summary": "求职者担心错过招聘旺季、每天投递但只收到拒信或感谢信，导致焦虑；同时当前雇主有H1B支持意向但尚未确定，求职者需要同步推进两条路",
+    "A_action": "保持每天持续投递，不要因为1月是旺季就认为4月5月没有机会；同时珍惜当前雇主已开口支持H1B的机会，两条腿并行，稳住现有工作关系的同时继续外部求职",
+    "action_summary": "保持每天持续投递，不要因为1月是旺季就认为4月5月没有机会；",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8350,
+    "chunk_id": "2c7cc1d5-bbdd-4e74-8de2-04f606958b8c-2025-12-03-岗位差距分析&简历修改课程_chunk_013",
+    "topic": "背景差距分析",
+    "L1": "职业规划",
+    "L2": "GAP分析",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "Healthcare行业薪资水平偏低（fresh毕...",
+    "user_problem_summary": "Healthcare行业薪资水平偏低（fresh毕业约10万），",
+    "A_action": "若求职者优先考虑工作压力小、生活平衡，可将Healthcare列为目标行业；但若以财富积累为主要目标，应优先考虑大药厂或Tech行业，而非Healthcare。",
+    "action_summary": "若求职者优先考虑工作压力小、生活平衡，可将Healthcare列为目标行业；",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 8359,
+    "chunk_id": "2c7cc1d5-bbdd-4e74-8de2-04f606958b8c-2025-12-03-岗位差距分析&简历修改课程_chunk_012",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "就业形势不好时",
+    "user_problem_summary": "就业形势不好时，",
+    "A_action": "若无法直接进入药厂，优先投递CRO公司，在CRO积累1–2年经验后再跳槽药厂；投递时重点考察CRO是否提供身份赞助（H1B/绿卡）。",
+    "action_summary": "若无法直接进入药厂，优先投递CRO公司，在CRO积累1–2年经验后再跳槽药厂；投递时重点考察CRO是否提供身份赞助（H1B/绿卡）。",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8397,
+    "chunk_id": "2cbb16db-7dfa-49a0-8244-2f3751790af3-2025-08-09-简历更新与面试辅导_chunk_006",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title,education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者收到Offer但未确认雇主是否支持H1B抽签",
+    "user_problem_summary": "求职者收到Offer但未确认雇主是否支持H1B抽签，签证问题不解决，其他条件谈判毫无意义。",
+    "A_action": "在接受Offer或深入谈薪前，首先明确询问雇主是否会为你抽H1B并提供担保，将此作为最优先确认事项。",
+    "action_summary": "在接受Offer或深入谈薪前，首先明确询问雇主是否会为你抽H1B并提供担保，将此作为最优先确认事项。",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8398,
+    "chunk_id": "2cbb16db-7dfa-49a0-8244-2f3751790af3-2025-08-09-简历更新与面试辅导_chunk_006",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者简历几乎没有完整工作经验",
+    "user_problem_summary": "求职者简历几乎没有完整工作经验，仅有学校内实习，议价能力极弱，但心理薪资预期可能偏高，导致错失机会。",
+    "A_action": "调整薪资心理预期，以成功上岸、获得正式工作经验和H1B担保为第一目标，即使时薪低至35美元也优先接受，再逐步积累竞争力。",
+    "action_summary": "调整薪资心理预期，以成功上岸、获得正式工作经验和H1B担保为第一目标，即使时薪低至35美元也优先接受，再逐步积累竞争力。",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8413,
+    "chunk_id": "2cbb16db-7dfa-49a0-8244-2f3751790af3-2025-08-09-简历更新与面试辅导_chunk_022",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者持OPT身份",
+    "user_problem_summary": "求职者持OPT身份，误以为大量职位要求US Citizen是普遍障碍，导致焦虑；",
+    "A_action": "避免投递要求US Citizen的政府相关职位，集中精力投递大厂及主流科技/数据类企业，这类岗位99%对OPT/visa持开放态度，不必因身份问题过度担忧。",
+    "action_summary": "避免投递要求US Citizen的政府相关职位，",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8419,
+    "chunk_id": "2cbb16db-7dfa-49a0-8244-2f3751790af3-2025-08-09-简历更新与面试辅导_chunk_027",
+    "topic": "投递渠道规划",
+    "L1": "求职策略",
+    "L2": "投递渠道",
+    "problem_tags": "short_tenure_unclear,generic_resume_positioning,weak_target_role_alignment",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者考虑通过第三方ICC外包公司上岸",
+    "user_problem_summary": "求职者考虑通过第三方ICC外包公司上岸，",
+    "A_action": "在加入任何ICC机构前，优先确认以下问题：1）是否帮助维持OPT身份或协助抽H1B；2）没有上项目期间是否有工资；3）是否有training且附带合同约束期；4）近期上岸率是多少。身份问题优先于待遇条款，先搞清楚再谈保险等福利。",
+    "action_summary": "在加入任何ICC机构前，优先确认以下问题：1）是否帮助维持OPT身份或协助抽H1B；",
+    "current": {
+      "canonical_title": "聚焦目标岗位定位",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "制定岗位投递策略",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8421,
+    "chunk_id": "2cbb16db-7dfa-49a0-8244-2f3751790af3-2025-08-09-简历更新与面试辅导_chunk_032",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "short_tenure_unclear",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者对contract工作价值存疑",
+    "user_problem_summary": "求职者对contract工作价值存疑，不了解其作为跳板的长期意义；",
+    "A_action": "先接受contract工作积累实际工作经验，待市场回暖时以此经验跳槽至Google、Meta等大厂；同时contract可解决身份问题，避免专业转换导致前期时间成本浪费。",
+    "action_summary": "先接受contract工作积累实际工作经验，待市场回暖时以此经验跳槽至Google、Meta等大厂；",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 8450,
+    "chunk_id": "2cfcac0b-ef0a-4c5f-bf89-ed0cd5b3e6c0-2025-12-23-Session-1岗位GAP分析+简历修改课程(ME)_chunk_022",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_target_role_alignment,low_role_specificity",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者具备embedded system背景但尚未...",
+    "user_problem_summary": "求职者具备embedded system背景但尚未了解Edge AI趋势，",
+    "A_action": "在简历中补充AI相关内容，深入学习Edge AI概念；重点强化C语言和FPGA（Verilog）技能，为进入博通、AMD、Nvidia等半导体公司做准备，尤其关注embedded system与AI推理结合的岗位方向。",
+    "action_summary": "在简历中补充AI相关内容，深入学习Edge AI概念；",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 8546,
+    "chunk_id": "2dac5be5-ab96-4395-b146-315c9e913374-2026-01-24-GAP分析+简历修改沟通_chunk_005",
+    "topic": "转行路径规划",
+    "L1": "职业规划",
+    "L2": "转行路径",
+    "problem_tags": "weak_action_verbs",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "机械工程是夕阳专业",
+    "user_problem_summary": "机械工程是夕阳专业，薪资天花板低，尤其在湾区竞争力不足；",
+    "A_action": "学习Python（用于AI/ML相关package）和C/C++（用于ECU等底层通信开发），向robotics或自动化方向转型，结合机械背景形成复合竞争力；若确实排斥编程则专注纯manufacturing或mechanical方向。",
+    "action_summary": "学习Python（用于AI/ML相关package）和C/C++（用于ECU等底层通信开发），",
+    "current": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.58"
+    },
+    "proposed": {
+      "canonical_title": "明确简历修改优先级",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.58,
+      "titleFlags": [
+        "generic_title"
+      ]
+    }
+  },
+  {
+    "id": 8600,
+    "chunk_id": "2def1682-6a37-48df-873c-77ccf0101e4e-2025-06-04-Session-09-简历的讲解梳理-在面试的时候如何更好的阐述面试问题_chunk_004",
+    "topic": "面试复盘改进",
+    "L1": "面试准备",
+    "L2": "面试复盘",
+    "problem_tags": "low_role_specificity,low_soft_skill_match,weak_target_role_alignment",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者缺乏主动参加目标岗位面试、通过面试问题反向识...",
+    "user_problem_summary": "求职者缺乏主动参加目标岗位面试、通过面试问题反向识别自身知识盲区的意识，导致备考方向不够精准。",
+    "A_action": "主动投递目标岗位（如FA、财务建模相关）进行面试实战，记录面试中被问到的问题，尤其是财务建模、逻辑类问题，面试后针对性查漏补缺，强化薄弱知识点。",
+    "action_summary": "主动投递目标岗位（如FA、财务建模相关）进行面试实战，",
+    "current": {
+      "canonical_title": "重排定位相关技能",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8602,
+    "chunk_id": "2def1682-6a37-48df-873c-77ccf0101e4e-2025-06-04-Session-09-简历的讲解梳理-在面试的时候如何更好的阐述面试问题_chunk_003",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "weak_experience_keyword_evidence,vague_project_details",
+    "canonical_action_family": "summary_positioning",
+    "action_depth": "evidence",
+    "advice_card_title": "Marketing岗位面试官不聚焦于简历上的具体经历",
+    "user_problem_summary": "Marketing岗位面试官不聚焦于简历上的具体经历，",
+    "A_action": "准备Marketing面试时，重点阐述自己在岗位上积累的营销能力和学习成长，而非逐条解释简历上的具体项目细节。",
+    "action_summary": "准备Marketing面试时，重点阐述自己在岗位上积累的营销能力和学习成长，而非逐条解释简历上的具体项目细节。",
+    "current": {
+      "canonical_title": "重排定位相关技能",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "准备岗位面试表达",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8603,
+    "chunk_id": "2def1682-6a37-48df-873c-77ccf0101e4e-2025-06-04-Session-09-简历的讲解梳理-在面试的时候如何更好的阐述面试问题_chunk_003",
+    "topic": "职业方向选择",
+    "L1": "职业规划",
+    "L2": "方向定位",
+    "problem_tags": "low_role_specificity,weak_target_role_alignment,education_details_missing",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者以留美为首要目标",
+    "user_problem_summary": "求职者以留美为首要目标，",
+    "A_action": "在以留美为首要目标的前提下，将投递范围扩展至Marketing、FA、BA、Strategy Analyst、财务分析等多类岗位，优先筛选有留用可能性的职位，而非仅追求专业对口。",
+    "action_summary": "在以留美为首要目标的前提下，",
+    "current": {
+      "canonical_title": "补强教育背景信号",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "明确目标求职赛道",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8610,
+    "chunk_id": "2def1682-6a37-48df-873c-77ccf0101e4e-2025-06-04-Session-09-简历的讲解梳理-在面试的时候如何更好的阐述面试问题_chunk_005",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "problem_tags": "weak_result_orientation,weak_action_verbs,low_measurable_results,education_details_missing",
+    "canonical_action_family": "experience_evidence",
+    "action_depth": "evidence",
+    "advice_card_title": "求职者对FA经历中各bullet point（du...",
+    "user_problem_summary": "求职者对FA经历中各bullet point（due diligence、strategic analysis、advance...",
+    "A_action": "逐条梳理FA简历中每个bullet point的核心逻辑：due sourcing=数据收集服务尽调；strategic analysis=基于估值给出具体建议；advanced valuation=在DCF基础上结合基本面指标做更细化估值；risk-advised=在模型结果中加入风险调整系数（scenario分析+期望回报）。面试时按此逻辑向面试官阐述。",
+    "action_summary": "逐条梳理FA简历中每个bullet point的核心逻辑：due sourcing=数据收集服务尽调；",
+    "current": {
+      "canonical_title": "改写工作经历 bullet",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "改写工作经历 bullet",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8618,
+    "chunk_id": "2def1682-6a37-48df-873c-77ccf0101e4e-2025-06-04-Session-09-简历的讲解梳理-在面试的时候如何更好的阐述面试问题_chunk_010",
+    "topic": "目标岗位定位",
+    "L1": "求职策略",
+    "L2": "目标岗位定位",
+    "problem_tags": "education_details_missing,weak_target_role_alignment,low_role_specificity,missing_exact_job_title",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "求职者不确定应专注投FA还是数据分析岗位",
+    "user_problem_summary": "求职者不确定应专注投FA还是数据分析岗位，导师诊断其不需要局限于单一方向，两个领域均可考虑。",
+    "A_action": "同时投递FA和数据分析两个方向的岗位，不将自己限制在单一领域，给自己多一段选择空间。",
+    "action_summary": "同时投递FA和数据分析两个方向的岗位，不将自己限制在单一领域，给自己多一段选择空间。",
+    "current": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补上目标岗位原词",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  },
+  {
+    "id": 8678,
+    "chunk_id": "2ea1f102-af8e-405a-bec1-f155ecd1d1f3-2025-10-27-岗位差距分析&简历修改课程_chunk_003",
+    "topic": "ATS机筛策略",
+    "L1": "求职策略",
+    "L2": "ATS机筛机制",
+    "problem_tags": "missing_linkedin",
+    "canonical_action_family": "",
+    "action_depth": "",
+    "advice_card_title": "F1/OPT身份求职者在投递LinkedIn、In...",
+    "user_problem_summary": "F1/OPT身份求职者在投递LinkedIn、Indeed等平台时，",
+    "A_action": "在投递职位时注意筛查目标公司是否提供H1B sponsor；优先锁定愿意sponsor的公司，避免在不接受外籍申请的公司上浪费时间；同时提前规划身份路径（如绿卡），减少后期因身份问题被淘汰的风险。",
+    "action_summary": "在投递职位时注意筛查目标公司是否提供H1B sponsor；",
+    "current": {
+      "canonical_title": "补齐 JD 关键词证据",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": "0.72"
+    },
+    "proposed": {
+      "canonical_title": "补齐 JD 关键词证据",
+      "title_review_status": "needs_review",
+      "title_source": "rule",
+      "title_confidence": 0.72,
+      "titleFlags": [
+        "source_contains_case_specific_terms"
+      ]
+    }
+  }
+]

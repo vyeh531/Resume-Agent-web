@@ -1,0 +1,92 @@
+[
+  {
+    "id": 22449,
+    "chunk_id": "86f23bc5-156d-45e2-bf43-30984fba29f1-2025-11-29-简历修改建议+补充实习经历到简历中_chunk_019",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "retrieval_scope": "resume_edit",
+    "role_family": "machine_learning",
+    "target_roles": "universal",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills",
+    "ats_dimensions": "D_keyword_match",
+    "advice_card_title": "学生可能倾向于选择高阶或新颖的课程",
+    "user_problem_summary": "学生可能倾向于选择高阶或新颖的课程，",
+    "A_action": "选课优先覆盖三个方向：①传统Machine Learning（KNN、linear/logistic regression、模型证明）；②Deep Learning（SGD、back propagation、CNN、RNN）；③ML Infra相关课程。与其选fancy高阶课，不如把基本功打扎实，因为面试考的正是这些基础内容。",
+    "action_summary": "选课优先覆盖三个方向：①传统Machine Learning（KNN、linear/logistic regression、模...",
+    "I_insight": "ML领域变化快，但面试考点相对稳定，集中在基础模型理论和deep learning核心概念。选修与面试考点不匹配的课（如financial engineering）会直接导致面试时无法回答ML Infra类问题。",
+    "HR_os": "经验还不长时，我会看课程、证书和训练能不能补足岗位信号；相关内容别藏太深。",
+    "current": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位需要机器学习基础，可以用选课或课程项目补信号；优先选择与 JD 最相关的算法方向，并把真实项目产出写进 Projects 或 Education。",
+      "activation_role_family": "machine_learning",
+      "activation_keywords": "machine learning, KNN, regression, CNN, RNN",
+      "grounding_terms": "KNN,SGD,CNN,RNN",
+      "canonical_action_family": "education_signal",
+      "action_depth": "proof",
+      "action_review_status": "approved"
+    },
+    "proposed": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位需要机器学习基础，可以用选课或课程项目补信号；优先选择与 JD 最相关的算法方向，并把真实项目产出写进 Projects 或 Education。",
+      "activation_role_family": "machine_learning",
+      "activation_keywords": "machine learning,KNN,regression,CNN,RNN",
+      "grounding_terms": "KNN,SGD,CNN,RNN",
+      "canonical_action_family": "education_signal",
+      "action_depth": "proof",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:resume_specific;has_grounding_terms;has_activation_conditions"
+    },
+    "review_priority_score": 80,
+    "review_priority_reasons": [
+      "resume_specific action needs resume grounding before showing raw text"
+    ]
+  },
+  {
+    "id": 25027,
+    "chunk_id": "95956ddd-cbd4-4277-acf6-39f5d9b10478-2025-04-11-简历精修_chunk_009",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "retrieval_scope": "resume_edit",
+    "role_family": "universal",
+    "target_roles": "universal",
+    "problem_tags": "low_hard_skill_match,weak_summary_role_alignment",
+    "ats_dimensions": "C_content_quality",
+    "advice_card_title": "本科生普遍缺乏HPLC操作经验",
+    "user_problem_summary": "本科生普遍缺乏HPLC操作经验，",
+    "A_action": "通过网课自学HPLC基本原理及四种色谱柱（Reverse Phase、IEX、HIC、SEC）的分离原理，在技能栏添加HPLC，在简历summary中写入'in-depth understanding of liquid chromatography / chromatography separation'，秋季实习申请前争取动手操作机会",
+    "action_summary": "通过网课自学HPLC基本原理及四种色谱柱（Reverse Phase、IEX、HIC、SEC）的分离原理，",
+    "I_insight": "100个本科生中接触过HPLC的不超过10人，该技能在药企本科实习中属于高价值稀缺项；上手操作打样、看谱并不难，但写在简历上即可形成显著差异化优势",
+    "HR_os": "如果开头没有把目标岗位讲清楚，我会先怀疑这是通用版，继续读下去的动力会变弱。",
+    "current": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位要求 HPLC 或实验技能，先补齐基础原理和常见方法，再把真实课程、实验或训练经历写进 Education 或 Projects，避免只写自学清单。",
+      "activation_role_family": "lab_research",
+      "activation_keywords": "HPLC, chromatography, lab, QC, research",
+      "grounding_terms": "HPLC,IEX,HIC,SEC",
+      "canonical_action_family": "education_signal",
+      "action_depth": "proof",
+      "action_review_status": "approved"
+    },
+    "proposed": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "generalized",
+      "generalized_action": "如果目标岗位要求 HPLC 或实验技能，先补齐基础原理和常见方法，再把真实课程、实验或训练经历写进 Education 或 Projects，避免只写自学清单。",
+      "activation_role_family": "lab_research",
+      "activation_keywords": "HPLC,chromatography,lab,QC,research",
+      "grounding_terms": "HPLC,IEX,HIC,SEC",
+      "canonical_action_family": "education_signal",
+      "action_depth": "proof",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:resume_specific;has_grounding_terms;has_activation_conditions"
+    },
+    "review_priority_score": 80,
+    "review_priority_reasons": [
+      "resume_specific action needs resume grounding before showing raw text"
+    ]
+  }
+]

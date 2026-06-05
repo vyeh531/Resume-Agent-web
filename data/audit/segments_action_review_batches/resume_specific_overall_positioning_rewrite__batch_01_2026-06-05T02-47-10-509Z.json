@@ -1,0 +1,47 @@
+[
+  {
+    "id": 7759,
+    "chunk_id": "28002e13-ccdf-4c66-8df6-622b97462579-2025-05-20-GAP分析和简历修改_chunk_005",
+    "topic": "个人总结撰写",
+    "L1": "简历内容",
+    "L2": "个人总结",
+    "retrieval_scope": "resume_edit",
+    "role_family": "data_analyst",
+    "target_roles": "data_analyst",
+    "problem_tags": "missing_relocation_signal",
+    "ats_dimensions": "A_format,E_market_fit",
+    "advice_card_title": "求职者简历上只写了'work authorization'",
+    "user_problem_summary": "求职者简历上只写了'work authorization'，",
+    "A_action": "将简历顶部的身份标注改为'GREEN CARD HOLDER'并加粗放大，明确区别于H1B等其他工作授权类型，以吸引偏好无需sponsorship候选人的雇主",
+    "action_summary": "将简历顶部的身份标注改为'GREEN CARD HOLDER'并加粗放大，",
+    "I_insight": "许多雇主因H1B签证sponsorship成本高而倾向绿卡持有者，简历上模糊写'work authorization'无法体现这一优势；明确标注绿卡身份可显著提升简历吸引力",
+    "HR_os": "身份信息如果处理得不清楚，招聘流程会多一层不确定；提前讲明白会让判断更顺。",
+    "current": {
+      "action_specificity": "",
+      "display_action_mode": "",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "",
+      "action_depth": "",
+      "action_review_status": ""
+    },
+    "proposed": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "围绕目标岗位重新检查这条建议对应的简历部分，把最相关的职责、关键词和结果证据写得更明确。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "GREEN,CARD,HOLDER,H1B",
+      "canonical_action_family": "overall_positioning",
+      "action_depth": "rewrite",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:resume_specific;has_grounding_terms"
+    },
+    "review_priority_score": 80,
+    "review_priority_reasons": [
+      "resume_specific action needs resume grounding before showing raw text"
+    ]
+  }
+]

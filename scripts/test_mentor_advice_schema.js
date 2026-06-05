@@ -15,6 +15,8 @@
  */
 
 const assert = require("assert");
+const fs = require("fs");
+const path = require("path");
 
 // We need to import module internals. Since some are not exported, we stub
 // the db require so the module loads without a real DB file.
@@ -31,6 +33,14 @@ const {
   buildAdviceEvidence,
   buildPublicSafeEvidence,
   formatPublicFreeMentorAdvice,
+  isCardAlignedWithTargetProblems,
+  extractGroundingTermsFromAdvice,
+  isResumeGroundedAdvice,
+  normalizeDisplayActionLanguage,
+  normalizeDisplayTitle,
+  normalizeDisplayDiagnosis,
+  selectPremiumMentorPlan,
+  formatPremiumMentorReport,
 } = require("../services/mentorAdviceRetrieval");
 
 // Re-load the module to get non-exported helpers via internal eval
@@ -198,7 +208,105 @@ test("source field passed through unchanged from fallback item", () => {
   assert.strictEqual(item.source, "fallback");
 });
 
+console.log("\nTest 8: display copy governance");
+test("English action is replaced with Chinese display action while preserving common terms", () => {
+  const action = "Rewrite the Summary to include the exact target job title and add stronger Experience bullet evidence for the target JD.";
+  const normalized = normalizeDisplayActionLanguage(action, {
+    canonicalActionFamily: "summary_positioning",
+  }, "优先把目标岗位关键词、相关技能和经历证据放到 Summary、Skills 和 Experience 中。");
+  assert.ok(/[\u4e00-\u9fff]/.test(normalized), normalized);
+  assert.ok(!/^Rewrite the Summary/i.test(normalized), normalized);
+});
+
+test("system placeholder title and diagnosis are not displayed", () => {
+  assert.notStrictEqual(
+    normalizeDisplayTitle("简历优化建议 11", { canonicalActionFamily: "experience_evidence" }),
+    "简历优化建议 11"
+  );
+  assert.ok(!/导师建议不足 12 条/.test(
+    normalizeDisplayDiagnosis("当前报告可用的导师建议不足 12 条，系统基于 ATS 诊断补充了这一条优先行动。")
+  ));
+});
+
+test("front-end report logic does not re-enable empty report fallback suggestions", () => {
+  const source = fs.readFileSync(path.join(__dirname, "..", "public", "report-logic.js"), "utf8");
+  assert.ok(!/const\s+fallbackSuggestions\s*=\s*normalizeSuggestionList\s*\(\s*\)/.test(source));
+  assert.ok(!/report-fallback/i.test(source));
+  assert.ok(!/while\s*\(\s*items\.length\s*<\s*12/i.test(source));
+});
+
+test("premium plan may return fewer than 12 advice items without system placeholders", () => {
+  const internal = {
+    jobTitle: "Management Trainee",
+    profile: { roleFamily: "business", targetRole: "Management Trainee" },
+    adviceCoverageObligations: [{
+      id: "ob_kw",
+      tag: "missing_priority_keywords",
+      severity: "high",
+      dimension: "D",
+      keywords: ["process improvement"],
+      message: "简历缺少 process improvement 相关证据。",
+      required: true,
+    }],
+  };
+  const plan = selectPremiumMentorPlan([], internal, { adviceItems: [] });
+  const report = formatPremiumMentorReport(plan, internal);
+  assert.ok(report.allAdviceItems.length > 0, "should include problem-specific fallback");
+  assert.ok(report.allAdviceItems.length < 12, "should not force-fill to 12");
+  const text = report.allAdviceItems.map((item) => `${item.title} ${item.currentDiagnosis} ${item.action}`).join(" ");
+  assert.ok(!/简历优化建议\s*\d+|导师建议不足\s*12\s*条|report-fallback/i.test(text), text);
+});
+
+console.log("\nTest 9: advice action family must match the user problem family");
+test("keyword problem rejects format-only action cards", () => {
+  const card = {
+    title: "不要一份简历投所有岗位",
+    problemSummary: "简历内容超过一页，包含不相关活动，导致重点分散。",
+    actionSummary: "删除不相关 internship、活动和获奖记录，调整字体或行间距，将简历压缩至一页。",
+    relatedProblemTags: ["low_jd_keyword_match"],
+  };
+  const keywordProblem = [{ tag: "low_jd_keyword_match", severity: "high" }];
+  assert.strictEqual(isCardAlignedWithTargetProblems(card, keywordProblem), false);
+});
+
+test("format problem accepts format action cards", () => {
+  const card = {
+    title: "压缩简历到一页",
+    problemSummary: "简历超过一页，版面过松，重点不够集中。",
+    actionSummary: "删除不相关活动，调整字体或行间距，将简历压缩至一页。",
+    relatedProblemTags: ["formatting_penalty_triggered"],
+  };
+  const formatProblem = [{ tag: "formatting_penalty_triggered", severity: "medium" }];
+  assert.strictEqual(isCardAlignedWithTargetProblems(card, formatProblem), true);
+});
+
 // ─── Summary ───────────────────────────────────────────────────────────────
 console.log(`\n${"─".repeat(50)}`);
 console.log(`  ${passed + failed} tests: ${passed} passed, ${failed} failed`);
+console.log("\nTest 9: resume grounding rejects advice about absent project-specific material");
+test("Alpha Research / VADER / MACD advice is rejected when resume lacks those terms", () => {
+  const card = {
+    actionSummary: "将Alpha Research项目拆分为两段：第一段专写NLP pipeline，按四步结构展开：①爬虫数据采集（data acquisition）→②数据预处理（pre-processing headlines and article summary）→③用VADER生成compound sentiment scores→④结果聚合并量化市场趋势（quantify market trends）；第二段写MACD与NLP的结合。",
+  };
+  const resumeText = [
+    "Zhehan Zhang",
+    "OBJECTIVE Detail-oriented and research-driven Biostatistician.",
+    "CDISC Data Mapping Project (SAS)",
+    "Transformed raw clinical trial data into SDTM domains.",
+    "Biostatistics Research on COVID-19",
+  ].join("\n");
+  const terms = extractGroundingTermsFromAdvice(card);
+  assert.ok(terms.includes("Alpha Research"), `expected Alpha Research in grounding terms, got ${JSON.stringify(terms)}`);
+  assert.strictEqual(isResumeGroundedAdvice(card, { resumeText }), false);
+});
+
+test("project-specific advice is accepted when the named project exists in resume", () => {
+  const card = {
+    actionSummary: "将CDISC Data Mapping Project项目改写成两条 bullet，分别说明SDTM mapping和ADaM datasets的产出。",
+  };
+  const resumeText = "CDISC Data Mapping Project (SAS)\nTransformed raw clinical trial data into SDTM domains and converted SDTM datasets into ADaM datasets.";
+  assert.strictEqual(isResumeGroundedAdvice(card, { resumeText }), true);
+});
+
+console.log(`\nAfter grounding tests: ${passed + failed} tests: ${passed} passed, ${failed} failed`);
 if (failed > 0) process.exit(1);

@@ -204,7 +204,10 @@ async function getAnalysisJobAPI(jobId) {
   const response = await fetch(`${API_BASE}/api/v1/analysis-jobs/${encodeURIComponent(jobId)}`);
   const { ok, status, json } = await safeParseResponse(response);
   if (!ok || !json?.success) {
-    throw new Error(json?.error || `Analysis job status failed (${status})`);
+    const error = new Error(json?.error || `Analysis job status failed (${status})`);
+    error.code = json?.error || "";
+    error.status = status;
+    throw error;
   }
   return json.job;
 }

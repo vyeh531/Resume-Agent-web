@@ -1,4 +1,5 @@
 import { scoreWithHostedAtsSystem } from './hostedAtsSystem.mjs';
+import { scoreResumeATS as scoreResumeSystem } from '../../src/ats/ats-scorer.js';
 import {
   createReportAccessToken,
   createReportId,
@@ -173,10 +174,26 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
 }
 
 export async function scoreWithHostedFirst(input = {}) {
-  const hosted = await scoreWithHostedAtsSystem(input);
-  return {
-    rawScoreResult: hosted.rawScoreResult,
-    source: 'hosted-api',
-    warning: null,
-  };
+  try {
+    const hosted = await scoreWithHostedAtsSystem(input);
+    return {
+      rawScoreResult: hosted.rawScoreResult,
+      source: 'hosted-api',
+      warning: null,
+    };
+  } catch (error) {
+    const warning = error?.message || 'Hosted ATS API unavailable';
+    console.warn('[ATS-System] Hosted API unavailable, using local fallback:', warning);
+    const local = scoreResumeSystem(input.resumeText || '', input.jobTitle || '', input.jdText || '');
+    return {
+      rawScoreResult: {
+        ...local,
+        engine: local.engine || 'ats-system-local-fallback',
+        source: 'local-fallback',
+        fallbackReason: warning,
+      },
+      source: 'local-fallback',
+      warning,
+    };
+  }
 }

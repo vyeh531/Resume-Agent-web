@@ -1,0 +1,47 @@
+[
+  {
+    "id": 22449,
+    "chunk_id": "86f23bc5-156d-45e2-bf43-30984fba29f1-2025-11-29-简历修改建议+补充实习经历到简历中_chunk_019",
+    "topic": "技术技能补强",
+    "L1": "技能提升",
+    "L2": "技术技能",
+    "retrieval_scope": "resume_edit",
+    "role_family": "machine_learning",
+    "target_roles": "universal",
+    "problem_tags": "low_hard_skill_match,keywords_only_in_skills",
+    "ats_dimensions": "D_keyword_match",
+    "advice_card_title": "学生可能倾向于选择高阶或新颖的课程",
+    "user_problem_summary": "学生可能倾向于选择高阶或新颖的课程，",
+    "A_action": "选课优先覆盖三个方向：①传统Machine Learning（KNN、linear/logistic regression、模型证明）；②Deep Learning（SGD、back propagation、CNN、RNN）；③ML Infra相关课程。与其选fancy高阶课，不如把基本功打扎实，因为面试考的正是这些基础内容。",
+    "action_summary": "选课优先覆盖三个方向：①传统Machine Learning（KNN、linear/logistic regression、模...",
+    "I_insight": "ML领域变化快，但面试考点相对稳定，集中在基础模型理论和deep learning核心概念。选修与面试考点不匹配的课（如financial engineering）会直接导致面试时无法回答ML Infra类问题。",
+    "HR_os": "经验还不长时，我会看课程、证书和训练能不能补足岗位信号；相关内容别藏太深。",
+    "current": {
+      "action_specificity": "",
+      "display_action_mode": "",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "",
+      "action_depth": "",
+      "action_review_status": ""
+    },
+    "proposed": {
+      "action_specificity": "resume_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "只保留和目标岗位相关的课程、证书或训练成果，并说明它们如何支撑岗位要求。",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "KNN,SGD,CNN,RNN",
+      "canonical_action_family": "education_signal",
+      "action_depth": "proof",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:resume_specific;has_grounding_terms"
+    },
+    "review_priority_score": 80,
+    "review_priority_reasons": [
+      "resume_specific action needs resume grounding before showing raw text"
+    ]
+  }
+]

@@ -1,0 +1,4 @@
+{"type":"validation","id":1,"issues":["forbidden_phrase"],"value":"不要一份简历投所有岗位，会降低通过率。根据目标岗位分别维护针对性简历版本，提高匹配度。"}
+{"type":"validation","id":2,"issues":["missing_id"]}
+{"type":"validation","id":3,"issues":["missing_id"]}
+{"type":"validation","id":1,"issues":["forbidden_phrase"],"value":"多版本简历策略有助于提高关键词匹配率，从而进入人工筛选阶段。我会先看你是否针对性地投递了不同岗位的简历。","retry":"single"}

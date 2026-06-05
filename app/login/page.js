@@ -128,6 +128,21 @@ export default function LoginPage() {
           return JSON.parse(localStorage.getItem("resumeFixMVP") || "{}");
         }
 
+        function normalizeDisplayTargetJob(value) {
+          return String(value || "")
+            .replace(/^\\s*【(?:岗位|职位|职称|职务|招聘岗位|应聘岗位)】\\s*[：:]\\s*/i, "")
+            .replace(/^\\s*(?:目标岗位|岗位|职位|职称|职务|招聘岗位|应聘岗位)\\s*[：:\\-–]\\s*/i, "")
+            .replace(/\\s*\\((?:junior|senior|entry[-\\s]?level|full[-\\s]?time|part[-\\s]?time|internship|intern|co-?op|new\\s*grad)[^)]*\\)\\s*$/i, "")
+            .replace(/\\s+/g, " ")
+            .trim();
+        }
+
+        function normalizeDisplayTargetJobStrict(value) {
+          return normalizeDisplayTargetJob(String(value || "")
+            .replace(/^\\s*\\u3010(?:\\u76ee\\u6807\\u5c97\\u4f4d|\\u5c97\\u4f4d|\\u804c\\u4f4d|\\u804c\\u79f0|\\u804c\\u52a1|\\u62db\\u8058\\u5c97\\u4f4d|\\u5e94\\u8058\\u5c97\\u4f4d)\\u3011\\s*[\\uff1a:]\\s*/i, "")
+            .replace(/^\\s*(?:\\u76ee\\u6807\\u5c97\\u4f4d|\\u5c97\\u4f4d|\\u804c\\u4f4d|\\u804c\\u79f0|\\u804c\\u52a1|\\u62db\\u8058\\u5c97\\u4f4d|\\u5e94\\u8058\\u5c97\\u4f4d)\\s*[\\uff1a:\\-–]\\s*/i, ""));
+        }
+
         function setLoginProgress(pct, status) {
           loginVisualPct = Math.max(loginVisualPct, Math.min(100, Math.floor(pct)));
           const pctEl = document.getElementById("loginPct");
@@ -148,7 +163,7 @@ export default function LoginPage() {
             sessionId: result.reportId || publicReport.reportId || null,
             reportAccessToken: result.reportAccessToken || null,
             atsResult,
-            targetLabel: atsResult.jobTitle || publicReport.jobTitle || Store.get().targetLabel || Store.get().jobTitle || null,
+            targetLabel: Store.get().targetLabel || Store.get().jobTitle || publicReport.jobTitle || atsResult.jobTitle || null,
             freeMentorAdvice: publicReport.freeMentorAdvice || null,
             lockedAdvicePreview: publicReport.lockedAdvicePreview || null,
             mentorLogoPool: publicReport.lockedAdvicePreview?.mentorLogoPool || publicReport.freeMentorAdvice?.mentorLogoPool || null,
@@ -220,7 +235,7 @@ export default function LoginPage() {
           function isPlaceholder(v) {
             return !v || /依\\s*JD|自动识别|根据\\s*JD|unknown|^目标岗位$/i.test(String(v));
           }
-          const jobT = [s.targetLabel, s.jobTitle, atsR.jobTitle, atsR.raw && atsR.raw.jobTitle].find(function(v){ return v && !isPlaceholder(v); }) || "";
+          const jobT = normalizeDisplayTargetJobStrict([s.targetLabel, s.jobTitle, atsR.jobTitle, atsR.raw && atsR.raw.jobTitle].find(function(v){ return v && !isPlaceholder(v); }) || "");
           const jobEl = document.getElementById("resumeJobTitle");
           if (jobEl) jobEl.textContent = jobT ? "目标岗位：" + jobT : "目标岗位：根据 JD 分析";
         })();

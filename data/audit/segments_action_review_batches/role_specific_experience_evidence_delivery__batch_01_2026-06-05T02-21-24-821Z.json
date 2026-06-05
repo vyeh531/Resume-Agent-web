@@ -1,0 +1,49 @@
+[
+  {
+    "id": 16294,
+    "chunk_id": "602f8a64-6292-4c1a-a8cf-23166c6a2d4e-2025-05-29-Session-03-技术gap分析,近期投递复盘,简历复盘_chunk_002",
+    "topic": "工作经历描述",
+    "L1": "简历内容",
+    "L2": "工作经历",
+    "retrieval_scope": "resume_edit",
+    "role_family": "data_analyst",
+    "target_roles": "data_analyst",
+    "problem_tags": "low_jd_keyword_match,missing_priority_keywords,resume_not_tailored_to_jd,weak_experience_keyword_evidence,weak_result_orientation",
+    "ats_dimensions": "D_keyword_match,F_role_fit,C_content_quality",
+    "advice_card_title": "求职者背景优秀但简历缺乏针对风险岗位的建模经验描述...",
+    "user_problem_summary": "求职者背景优秀但简历缺乏针对风险岗位的建模经验描述（如VAR、Stress Testing、Regression等），",
+    "A_action": "在简历中补充风险建模相关经验，如Regression Model、VAR、Stress Testing、Time Series、Random Forest等，针对性地投递Quant Risk岗位。",
+    "action_summary": "在简历中补充风险建模相关经验，",
+    "I_insight": "金融Quant Risk岗位的HR和招聘方会重点关注候选人是否有风险建模相关技术经验，即使是学术课程中的统计方法也可以作为支撑材料体现在简历中。",
+    "HR_os": "我扫经历时会找任务、方法和结果；只看到职责描述，会觉得信息还不够扎实。",
+    "current": {
+      "action_specificity": "",
+      "display_action_mode": "",
+      "generalized_action": "",
+      "activation_role_family": "",
+      "activation_keywords": "",
+      "grounding_terms": "",
+      "canonical_action_family": "",
+      "action_depth": "",
+      "action_review_status": ""
+    },
+    "proposed": {
+      "action_specificity": "role_specific",
+      "display_action_mode": "grounded_raw",
+      "generalized_action": "选择最相关的经历，把 bullet 改成「动作 + 方法/工具 + 结果」结构，让关键词有真实证据支撑。",
+      "activation_role_family": "trading_quant",
+      "activation_keywords": "Quant",
+      "grounding_terms": "VAR",
+      "canonical_action_family": "experience_evidence",
+      "action_depth": "delivery",
+      "action_review_status": "needs_review",
+      "review_reason": "specificity:role_specific;has_grounding_terms;has_activation_conditions"
+    },
+    "review_priority_score": 110,
+    "review_priority_reasons": [
+      "role_specific action is valuable but must be role/JD gated",
+      "high-frequency family: experience_evidence",
+      "contains high-risk role/project/tool terms"
+    ]
+  }
+]

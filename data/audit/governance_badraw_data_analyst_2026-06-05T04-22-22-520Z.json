@@ -1,0 +1,11 @@
+{
+  "contextName": "data_analyst",
+  "sampled": 667,
+  "counts": {
+    "generalized": 349,
+    "exclude": 38,
+    "raw": 280
+  },
+  "badRawCount": 0,
+  "badRaw": []
+}

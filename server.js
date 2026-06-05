@@ -250,6 +250,7 @@ app.post("/api/mentor-advice", async (req, res) => {
       `[S${i+1}] ${s.generality||""} confidence:${s.confidence||""} fit:${s.background_fit||0}\n` +
       `  topic:${s.topic||""} L1:${s.L1||""}\n` +
       `  insight:${(s.I_insight||"").slice(0,100)}\n` +
+      `  HR_os:${(s.HR_os||"").slice(0,100)}\n` +
       `  action:${(s.A_action||"").slice(0,90)}\n` +
       `  example:${(s.E_example||"").slice(0,100)}`
     ).join("\n");
@@ -265,7 +266,7 @@ app.post("/api/mentor-advice", async (req, res) => {
       "You are a resume coaching AI. Output ONLY a valid JSON array — no markdown, no code fences, no extra text. " +
       "The array has exactly 4 objects. Each object has these exact keys: " +
       "name, company, role, avatar, tag, credentials, career_path, adviceList. " +
-      "adviceList is an array of exactly 3 objects, each with keys: priority, issue, strategy, current, advice, beforeAfter. " +
+      "adviceList is an array of exactly 3 objects, each with keys: priority, issue, strategy, current, advice, HR_os, beforeAfter. " +
       "beforeAfter has keys: before, after. " +
       "Wrap any fabricated/estimated numbers in [[double brackets]] in beforeAfter.after and advice fields. " +
       "All free-text fields in Chinese EXCEPT: name, company, role, credentials pill text, career_path company names, " +
@@ -290,6 +291,7 @@ app.post("/api/mentor-advice", async (req, res) => {
       `  - issue: 20-40 chars, core problem headline\n` +
       `  - strategy: 70-120 chars, start with "[Company]在筛选[role]时," + screening philosophy from KB\n` +
       `  - current: 70-110 chars, 2-3 specific gaps found in this resume\n` +
+      `  - HR_os: 50-100 chars, use the HR_os field from the matched KB segment as the recruiter/HR supplemental perspective\n` +
       `  - advice: MUST use format "(1) ... (2) ... (3) ..." with each step as a separate sentence; 90-150 chars total\n` +
       `  - beforeAfter.before: original weak English resume bullet 15-40 chars (from REWRITE EXAMPLES if possible)\n` +
       `  - beforeAfter.after: improved English resume bullet 20-50 chars, wrap invented numbers in [[brackets]]`;
@@ -719,10 +721,12 @@ app.post("/api/v1/reports/:reportId/mark-paid", async (req, res) => {
     await db.markAtsReportPaid(reportId, true);
     console.log(`[Payment] marked paid report_id=${reportId}`);
 
-    // Trigger AI rewrite asynchronously (don't block response)
-    triggerAiRewrite(reportId, report).catch(err =>
-      console.error(`[AI-Rewrite] background error report_id=${reportId}:`, err.message)
-    );
+    if (process.env.ENABLE_AI_REWRITE_ON_PAYMENT === "true") {
+      // Trigger AI rewrite asynchronously (don't block response)
+      triggerAiRewrite(reportId, report).catch(err =>
+        console.error(`[AI-Rewrite] background error report_id=${reportId}:`, err.message)
+      );
+    }
 
     res.json({ success: true, reportId });
   } catch (err) {
@@ -869,6 +873,19 @@ function redactSensitiveLogPayload(payload) {
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
+});
+
+[
+  ["index", "index.html"],
+  ["login", "login.html"],
+  ["analyzing", "analyzing.html"],
+  ["result", "result.html"],
+  ["payment", "payment.html"],
+  ["report", "report.html"],
+].forEach(([route, file]) => {
+  app.get(`/${route}`, (req, res) => {
+    res.sendFile(path.join(__dirname, file));
+  });
 });
 
 const server = app.listen(PORT, () => {
