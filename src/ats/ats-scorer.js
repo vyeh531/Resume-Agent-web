@@ -2642,6 +2642,16 @@ function hasGithubLink(text) {
   return /\b(github\.com|gitlab\.com|bitbucket\.org|github\.io)\b/i.test(text || "");
 }
 
+function hasLinkedInSignal(text) {
+  const value = text || "";
+  return (
+    /\blinkedin\.com\s*\/\s*(in|pub)\s*\//i.test(value) ||
+    /\blinkedin\b/i.test(value) ||
+    /\blinked[\s-]*in\b/i.test(value) ||
+    /\blinkedln\b/i.test(value)
+  );
+}
+
 function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
   const normalized = normalizeText(resumeText);
   if (!normalized.trim()) throw new Error("resumeText is required");
@@ -2693,7 +2703,7 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
   const emailValid = hasEmail && /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i.test(normalized);
   const isGmail = hasEmail && /@gmail\.com\b/i.test(normalized);
   const phoneInfo = analyzePhone(normalized);
-  const hasLinkedIn = /linkedin\.com\/in\/|linkedin/i.test(normalized);
+  const hasLinkedIn = hasLinkedInSignal(normalized);
   const hasPortfolio = hasPortfolioLink(normalized);
   const hasGithub = hasGithubLink(normalized);
   const hasWillingToRelocate = /willing\s+to\s+(re)?locate|open\s+to\s+(re)?locat|\brelocate\b|\brelocation\b/i.test(normalized);
