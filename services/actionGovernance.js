@@ -320,6 +320,10 @@ function ungroundedRawExampleTerms(card = {}, context = {}) {
     ["final", /\bfinal\b/i],
     ["GitHub", /\bGitHub\b/],
     ["green book", /\bgreen book\b/i],
+    ["interview", /\binterview\b|面试/],
+    ["project storyline", /完整故事线|storyline|story line|小项目合并|data-driven/i],
+    ["keyword highlighting", /加粗|高亮|highlight|bold|显眼位置/],
+    ["education order condition", /应届毕业生|无工作经验者|教育背景置顶|教育背景.*在后|education.*top/i],
     ["石油", /石油/],
   ];
   const haystack = [context.resumeText, context.jdText, context.targetRole, context.jobTitle, context.roleFamily]

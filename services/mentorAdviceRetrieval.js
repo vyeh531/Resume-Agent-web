@@ -3139,6 +3139,82 @@ function fallbackAdviceItems(internalAtsResult = {}, count = 3, usedTags = new S
       priority: "low",
       source: "fallback",
     },
+    {
+      adviceId: "fb_cross_functional_delivery",
+      title: "突出跨部门协作交付",
+      mentorLens: "Management Trainee 会轮到不同部门，招聘方会特别看你能不能和不同角色一起把事情推进到结果。",
+      currentDiagnosis: "简历里有协作和团队经历，但还可以更明确写出你和哪些对象配合、推进了什么任务、最后交付了什么。",
+      action: "选一段最相关经历，改成「协作对象 + 你负责的推进动作 + 交付物」结构，例如和老师、同学、经理或跨职能成员一起完成报告、流程、分析或运营任务。",
+      reason: "这能把普通团队合作写成管培生更需要的跨部门推进能力，而不是泛泛写 communication / teamwork。",
+      HR_os: "管培生不是只看聪明，我会看你能不能和不同部门的人一起把任务落地。",
+      hrPerspective: "管培生不是只看聪明，我会看你能不能和不同部门的人一起把任务落地。",
+      evidence: ["跨部门协作", "交付物", "团队推进"],
+      get problemSummary() { return this.currentDiagnosis; },
+      get actionSummary() { return this.action; },
+      relatedProblemTags: ["cross_functional_collaboration_gap", "weak_soft_skill_evidence", "weak_target_role_alignment"],
+      canonicalActionFamily: "cross_functional_delivery",
+      actionDepth: "evidence",
+      targetSection: "experience",
+      priority: "medium",
+      source: "fallback",
+    },
+    {
+      adviceId: "fb_business_reporting_output",
+      title: "把分析经历写成业务报告产出",
+      mentorLens: "管培生 JD 里的 analyze data / create reports 不只是会用工具，而是能把信息整理成管理者能用的报告或建议。",
+      currentDiagnosis: "简历里有 data analysis 和 reporting 信号，但还可以更清楚说明这些分析服务了什么业务判断或管理动作。",
+      action: "把一条数据或研究经历改写成「分析对象 + 报告/总结产出 + 支持的决策或改进」；如果是课程或项目，也要写清楚最终交付物，而不是只写用了哪些工具。",
+      reason: "这能直接对齐 JD 中 analyze data、create reports 和 assist managers 的职责，比单独列 data analysis 更有岗位感。",
+      HR_os: "我会问这份分析最后给谁看、用来做什么；能讲清楚产出，经历就更像工作能力。",
+      hrPerspective: "我会问这份分析最后给谁看、用来做什么；能讲清楚产出，经历就更像工作能力。",
+      evidence: ["Data analysis", "Reporting output", "业务决策"],
+      get problemSummary() { return this.currentDiagnosis; },
+      get actionSummary() { return this.action; },
+      relatedProblemTags: ["reporting_output_gap", "weak_experience_keyword_evidence", "low_jd_keyword_match"],
+      canonicalActionFamily: "business_reporting",
+      actionDepth: "proof",
+      targetSection: "experience",
+      priority: "medium",
+      source: "fallback",
+    },
+    {
+      adviceId: "fb_process_improvement_framing",
+      title: "补出流程改进视角",
+      mentorLens: "Management Trainee 的价值不只是完成任务，还包括观察流程、发现问题、提出改进建议。",
+      currentDiagnosis: "简历目前对 process improvement 的表达不够突出，容易让经历停留在执行层面。",
+      action: "从经历里找一件你整理、检查、协调或汇总过的任务，补一句你发现了什么低效点、如何优化步骤、或给团队留下了什么更清楚的流程/文档。",
+      reason: "这能把执行型经历提升到管理训练岗位更看重的流程意识和改进意识。",
+      HR_os: "管培生要有一点 owner 视角；如果你能看到流程哪里可以改，会比只说完成任务更有潜力。",
+      hrPerspective: "管培生要有一点 owner 视角；如果你能看到流程哪里可以改，会比只说完成任务更有潜力。",
+      evidence: ["Process improvement", "Owner mindset", "流程意识"],
+      get problemSummary() { return this.currentDiagnosis; },
+      get actionSummary() { return this.action; },
+      relatedProblemTags: ["process_improvement_gap", "weak_target_role_alignment", "low_content_quality"],
+      canonicalActionFamily: "process_improvement",
+      actionDepth: "rewrite",
+      targetSection: "experience",
+      priority: "medium",
+      source: "fallback",
+    },
+    {
+      adviceId: "fb_rotation_readiness",
+      title: "写出轮岗适应能力",
+      mentorLens: "管培生岗位的特殊点是轮岗。简历需要证明你能快速学习新场景，而不是只适合单一专业任务。",
+      currentDiagnosis: "简历还没有充分体现你适应不同任务、不同团队和不同业务场景的能力。",
+      action: "在 Summary 或经历 bullet 中加入一条轮岗可读的表达：强调你能快速学习新流程、和不同团队协作，并把分析或报告任务转化为可执行交付。",
+      reason: "这比单纯写 willing to learn 更有证据，也更贴近 Management Trainee 的岗位设计。",
+      HR_os: "我会看候选人是不是只会一个窄任务；能快速切换场景，对管培生很重要。",
+      hrPerspective: "我会看候选人是不是只会一个窄任务；能快速切换场景，对管培生很重要。",
+      evidence: ["轮岗适应", "快速学习", "跨场景协作"],
+      get problemSummary() { return this.currentDiagnosis; },
+      get actionSummary() { return this.action; },
+      relatedProblemTags: ["rotation_readiness_gap", "weak_summary_role_alignment", "weak_target_role_alignment"],
+      canonicalActionFamily: "rotation_readiness",
+      actionDepth: "delivery",
+      targetSection: "summary",
+      priority: "low",
+      source: "fallback",
+    },
   ];
   for (const template of templates) {
     if (selected.length >= count) break;
@@ -3420,6 +3496,36 @@ function normalizeAdviceBundleDiversity(adviceItems = [], candidateItems = [], i
   );
 }
 
+function normalizeFreeAdviceVisibleDiversity(adviceItems = [], candidateItems = [], targetProblemTags = [], internalAtsResult = {}) {
+  const priorityOrder = ["high", "medium", "low"];
+  const selected = [];
+  const usedIds = new Set();
+  for (const item of adviceItems) {
+    if (!item || (item.adviceId && usedIds.has(item.adviceId))) continue;
+    if (!canAddVisibleAdvice(item, selected, targetProblemTags)) continue;
+    selected.push(item);
+    if (item.adviceId) usedIds.add(item.adviceId);
+    if (selected.length >= 3) break;
+  }
+  for (const item of [...candidateItems, ...fallbackAdviceItems(internalAtsResult, 30, new Set())]) {
+    if (selected.length >= 3) break;
+    if (!item || (item.adviceId && usedIds.has(item.adviceId))) continue;
+    if (!canAddVisibleAdvice(item, selected, targetProblemTags)) continue;
+    selected.push(item);
+    if (item.adviceId) usedIds.add(item.adviceId);
+  }
+  for (const item of [...candidateItems, ...fallbackAdviceItems(internalAtsResult, 30, new Set())]) {
+    if (selected.length >= 3) break;
+    if (!item || (item.adviceId && usedIds.has(item.adviceId))) continue;
+    if (!canAddVisibleAdviceRelaxed(item, selected, targetProblemTags)) continue;
+    selected.push(item);
+    if (item.adviceId) usedIds.add(item.adviceId);
+  }
+  return selected.slice(0, 3).map((item, index) =>
+    forceAdvicePriority(item, priorityOrder[index] || item.priority || "medium")
+  );
+}
+
 const BIG_TECH_COMPANIES = new Set([
   "Google", "Amazon", "Meta", "Microsoft", "Apple", "NVIDIA", "OpenAI",
   "ByteDance", "TikTok", "Uber", "Airbnb", "LinkedIn", "Spotify", "Robinhood",
@@ -3679,6 +3785,7 @@ function selectFreeMentorPlan(candidates, internalAtsResult) {
 
   adviceItems = normalizeFreeAdviceLanes(adviceItems, internalAtsResult);
   adviceItems = normalizeAdviceBundleDiversity(adviceItems, alternativeItems, internalAtsResult, 3);
+  adviceItems = normalizeFreeAdviceVisibleDiversity(adviceItems, alternativeItems, targetProblemTags, internalAtsResult);
 
   // Step 5: Choose displayed mentor — pick best bucket that covers most problems
   let plan;
@@ -3760,6 +3867,205 @@ function canAddToTwelveAdviceBundle(item = {}, existingItems = []) {
     if (count >= 1 && itemTitle && existingTitle && itemTitle === existingTitle) return false;
   }
   return true;
+}
+
+function visibleAdviceText(item = {}) {
+  return [
+    item.title,
+    item.currentDiagnosis,
+    item.problemSummary,
+    item.action,
+    item.actionSummary,
+    item.mentorLens,
+    item.reason,
+    item.hrPerspective,
+    ...(item.evidence || []),
+  ].filter(Boolean).join(" ");
+}
+
+function visibleAdviceIntent(item = {}) {
+  const family = canonicalActionFamilyOf(item);
+  const text = visibleAdviceText(item).toLowerCase();
+  if (family === "profile_links" || /linkedin|github|portfolio|project link|可验证|链接|入口|header/.test(text)) return "profile_links";
+  if (family === "education_signal" || /education|course|certificate|lab\/project|课程|证书|训练|教育背景|junior/.test(text)) return "education_training";
+  if (family === "quantified_impact" || /量化|结果表达|职责描述|规模|频率|效率|impact|metrics?|数字/.test(text)) return "quantified_result";
+  if (family === "skills_section" || /skills.*顺序|skills.*前半段|重排.*skills|技能.*顺序|技能.*前半段/.test(text)) return "skills_order";
+  if (family === "jd_keyword_alignment" || /jd.*关键词|关键词.*jd|核心.*关键词|岗位关键词|skills.*关键词/.test(text)) return "jd_keywords";
+  if (family === "summary_positioning" || /summary|objective|岗位原词|目标岗位导向|定位/.test(text)) return "summary_positioning";
+  if (family === "experience_evidence" || /experience|bullet|经历|项目证据|方法\/工具/.test(text)) return "experience_evidence";
+  return family || "overall";
+}
+
+function isLowValueGenericFallbackAdvice(item = {}) {
+  const text = visibleAdviceText(item);
+  return /优化建议/.test(String(item.title || "")) &&
+    /围绕.+重新检查.+把最相关的关键词、职责和结果证据写得更明确/.test(text);
+}
+
+function hasExplicitProfileLinkProblem(targetProblemTags = []) {
+  return targetProblemTags.some((item) => {
+    const text = [
+      item.tag,
+      item.coverageFamily,
+      item.targetSection,
+      item.message,
+      ...(item.keywords || []),
+    ].filter(Boolean).join(" ").toLowerCase();
+    return /linkedin|github|portfolio|profile_links|project_link|contact_info|missing_.*link|header.*link/.test(text);
+  });
+}
+
+function canAddVisibleAdvice(item = {}, existingItems = [], targetProblemTags = []) {
+  if (isLowValueGenericFallbackAdvice(item)) return false;
+  if (!canAddToTwelveAdviceBundle(item, existingItems)) return false;
+  const intent = visibleAdviceIntent(item);
+  const intentCount = existingItems.filter((existing) => visibleAdviceIntent(existing) === intent).length;
+  const hasSkillsOrder = existingItems.some((existing) => visibleAdviceIntent(existing) === "skills_order");
+  if (intent === "profile_links" && !hasExplicitProfileLinkProblem(targetProblemTags)) return false;
+  if (["summary_positioning", "quantified_result", "education_training", "profile_links"].includes(intent) && intentCount >= 1) return false;
+  if (intent === "jd_keywords" && (intentCount >= 1 || hasSkillsOrder)) return false;
+  return true;
+}
+
+function canAddVisibleAdviceRelaxed(item = {}, existingItems = [], targetProblemTags = []) {
+  if (isLowValueGenericFallbackAdvice(item)) return false;
+  if (!canAddToTwelveAdviceBundle(item, existingItems)) return false;
+  const intent = visibleAdviceIntent(item);
+  const intentCount = existingItems.filter((existing) => visibleAdviceIntent(existing) === intent).length;
+  if (intent === "profile_links" && !hasExplicitProfileLinkProblem(targetProblemTags)) return false;
+  if (["summary_positioning", "quantified_result", "education_training", "profile_links"].includes(intent) && intentCount >= 1) return false;
+  if (intent === "jd_keywords" && intentCount >= 1) return false;
+  return true;
+}
+
+function canAddHardTopUpAdvice(item = {}, existingItems = [], targetProblemTags = []) {
+  if (isLowValueGenericFallbackAdvice(item)) return false;
+  const intent = visibleAdviceIntent(item);
+  if (intent === "profile_links" && !hasExplicitProfileLinkProblem(targetProblemTags)) return false;
+  const itemAction = normalizedBundleVisibleText(item.action || item.actionSummary);
+  const itemTitle = normalizedBundleVisibleText(item.title);
+  for (const existing of existingItems) {
+    const existingAction = normalizedBundleVisibleText(existing.action || existing.actionSummary);
+    const existingTitle = normalizedBundleVisibleText(existing.title);
+    if (item.adviceId && existing.adviceId === item.adviceId) return false;
+    if (itemAction && existingAction && itemAction.length >= 18 && itemAction === existingAction) return false;
+    if (itemTitle && existingTitle && itemTitle === existingTitle) return false;
+  }
+  return true;
+}
+
+function normalizePaidAdviceVisibleDiversity(paidItems = [], freeItems = [], targetProblemTags = [], internalAtsResult = {}) {
+  const selected = [];
+  const usedIds = new Set(freeItems.map((item) => item.adviceId).filter(Boolean));
+  for (const item of paidItems) {
+    if (!item || (item.adviceId && usedIds.has(item.adviceId))) continue;
+    if (!canAddVisibleAdvice(item, [...freeItems, ...selected], targetProblemTags)) continue;
+    selected.push(item);
+    if (item.adviceId) usedIds.add(item.adviceId);
+    if (selected.length >= 9) return selected;
+  }
+
+  const fallbackPool = fallbackAdviceItems(internalAtsResult, 60, new Set());
+  for (const item of fallbackPool) {
+    if (selected.length >= 9) break;
+    if (!item || (item.adviceId && usedIds.has(item.adviceId))) continue;
+    if (!canAddVisibleAdvice(item, [...freeItems, ...selected], targetProblemTags)) continue;
+    selected.push(item);
+    if (item.adviceId) usedIds.add(item.adviceId);
+  }
+  return selected.slice(0, 9);
+}
+
+function finalPremiumTopUpAdviceItems(internalAtsResult = {}) {
+  const profile = internalAtsResult.profile || {};
+  const roleName = internalAtsResult.jobTitle || profile.targetRole || "目标岗位";
+  return [
+    {
+      adviceId: "fb_business_reporting_output",
+      title: "把分析经历写成业务报告产出",
+      mentorLens: "管培生 JD 里的 analyze data / create reports 不只是会用工具，而是能把信息整理成管理者能用的报告或建议。",
+      currentDiagnosis: "简历里有 data analysis 和 reporting 信号，但还可以更清楚说明这些分析服务了什么业务判断或管理动作。",
+      action: "把一条数据或研究经历改写成「分析对象 + 报告/总结产出 + 支持的决策或改进」；如果是课程或项目，也要写清楚最终交付物。",
+      reason: "这能直接对齐 analyze data、create reports 和 assist managers 的职责，比单独列 data analysis 更有岗位感。",
+      HR_os: "我会问这份分析最后给谁看、用来做什么；能讲清楚产出，经历就更像工作能力。",
+      hrPerspective: "我会问这份分析最后给谁看、用来做什么；能讲清楚产出，经历就更像工作能力。",
+      evidence: ["Data analysis", "Reporting output", "业务决策"],
+      relatedProblemTags: ["reporting_output_gap", "weak_experience_keyword_evidence", "low_jd_keyword_match"],
+      canonicalActionFamily: "business_reporting",
+      actionDepth: "proof",
+      targetSection: "experience",
+      priority: "medium",
+      source: "fallback",
+    },
+    {
+      adviceId: "fb_process_improvement_framing",
+      title: "补出流程改进视角",
+      mentorLens: `${roleName} 的价值不只是完成任务，还包括观察流程、发现问题、提出改进建议。`,
+      currentDiagnosis: "简历目前对 process improvement 的表达不够突出，容易让经历停留在执行层面。",
+      action: "从经历里找一件你整理、检查、协调或汇总过的任务，补一句你发现了什么低效点、如何优化步骤、或给团队留下了什么更清楚的流程/文档。",
+      reason: "这能把执行型经历提升到管理训练岗位更看重的流程意识和改进意识。",
+      HR_os: "管培生要有一点 owner 视角；如果你能看到流程哪里可以改，会比只说完成任务更有潜力。",
+      hrPerspective: "管培生要有一点 owner 视角；如果你能看到流程哪里可以改，会比只说完成任务更有潜力。",
+      evidence: ["Process improvement", "Owner mindset", "流程意识"],
+      relatedProblemTags: ["process_improvement_gap", "weak_target_role_alignment", "low_content_quality"],
+      canonicalActionFamily: "process_improvement",
+      actionDepth: "rewrite",
+      targetSection: "experience",
+      priority: "medium",
+      source: "fallback",
+    },
+    {
+      adviceId: "fb_manager_assist_tasks",
+      title: "把协助经理任务写具体",
+      mentorLens: "JD 写 assist department managers，简历里就要让人看到你能接住具体任务，而不是只写 support 或 assist。",
+      currentDiagnosis: "简历对 assist managers / day-to-day tasks 的对应证据还不够明确。",
+      action: "把一条 support 类经历改成具体任务：你协助谁、处理了什么资料或流程、产出了什么文档/报告/跟进结果。",
+      reason: "这能把笼统的协助能力变成可读的岗位证据，适合 entry-level 管培生筛选。",
+      HR_os: "我会看 assist 后面到底是什么事；写清楚任务和产出，才像能马上上手的人。",
+      hrPerspective: "我会看 assist 后面到底是什么事；写清楚任务和产出，才像能马上上手的人。",
+      evidence: ["Assist managers", "任务细节", "交付结果"],
+      relatedProblemTags: ["manager_assist_evidence_gap", "weak_experience_keyword_evidence", "weak_target_role_alignment"],
+      canonicalActionFamily: "manager_assist_evidence",
+      actionDepth: "evidence",
+      targetSection: "experience",
+      priority: "medium",
+      source: "fallback",
+    },
+    {
+      adviceId: "fb_learning_adaptability_evidence",
+      title: "把学习适应力写成证据",
+      mentorLens: "willingness to learn 不能只放在 Summary 里自我评价，最好用一段经历证明你进入新任务后怎么学、怎么交付。",
+      currentDiagnosis: "简历还没有把学习适应力写成具体证据，这对 trainee 类岗位会影响潜力判断。",
+      action: "选一段新领域或新任务经历，补出「第一次接触什么内容 + 如何快速上手 + 最后完成什么交付」。",
+      reason: "这比直接写 fast learner 更可信，也更符合 Management Trainee 的轮岗逻辑。",
+      HR_os: "管培生会不断换场景；我想看到你过去怎么学新东西，而不是只看到一句愿意学习。",
+      hrPerspective: "管培生会不断换场景；我想看到你过去怎么学新东西，而不是只看到一句愿意学习。",
+      evidence: ["快速学习", "适应能力", "交付证据"],
+      relatedProblemTags: ["learning_adaptability_gap", "rotation_readiness_gap", "weak_target_role_alignment"],
+      canonicalActionFamily: "learning_adaptability",
+      actionDepth: "proof",
+      targetSection: "experience",
+      priority: "low",
+      source: "fallback",
+    },
+    {
+      adviceId: "fb_customer_business_exposure",
+      title: "补出客户与业务一线意识",
+      mentorLens: "Management Trainee 会接触 sales、customer service 和 operations，简历最好体现你理解一线业务和用户/客户需求。",
+      currentDiagnosis: "简历目前更多是在写任务本身，还可以补出这些任务和客户、用户、部门需求或业务目标之间的关系。",
+      action: "选一条沟通、服务、调研或报告经历，补清楚对象是谁、他们需要什么、你如何整理信息或跟进问题，以及这件事如何支持服务质量或业务运转。",
+      reason: "这能让经历更贴近轮岗岗位的一线业务语境，而不是只停留在后台分析或课程项目。",
+      HR_os: "管培生最终要理解业务现场；如果你能说明自己怎么面对需求和问题，会比只写内部任务更完整。",
+      hrPerspective: "管培生最终要理解业务现场；如果你能说明自己怎么面对需求和问题，会比只写内部任务更完整。",
+      evidence: ["Customer service", "业务现场", "需求理解"],
+      relatedProblemTags: ["customer_service_exposure_gap", "weak_soft_skill_evidence", "weak_target_role_alignment"],
+      canonicalActionFamily: "customer_business_exposure",
+      actionDepth: "delivery",
+      targetSection: "experience",
+      priority: "low",
+      source: "fallback",
+    },
+  ];
 }
 
 function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan = null) {
@@ -3883,7 +4189,7 @@ function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan =
     }
     if (!newItem) continue;
     if (paidItems.some((item) => item.adviceId === newItem.adviceId) || freeItems.some((item) => item.adviceId === newItem.adviceId)) continue;
-    if (!canAddToTwelveAdviceBundle(newItem, [...freeItems, ...paidItems])) continue;
+    if (!canAddVisibleAdviceRelaxed(newItem, [...freeItems, ...paidItems], targetProblemTags)) continue;
     if (paidItems.length < 9) {
       paidItems.push(newItem);
     } else {
@@ -3899,12 +4205,12 @@ function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan =
     for (const item of finalFallbackPool) {
       if (paidItems.length >= 9) break;
       if (!item || paidItems.some((existing) => existing.adviceId === item.adviceId) || freeItems.some((existing) => existing.adviceId === item.adviceId)) continue;
-      if (!canAddToTwelveAdviceBundle(item, [...freeItems, ...paidItems])) continue;
+      if (!canAddVisibleAdviceRelaxed(item, [...freeItems, ...paidItems], targetProblemTags)) continue;
       paidItems.push(item);
     }
   }
 
-  paidItems = paidItems.slice(0, 9);
+  paidItems = normalizePaidAdviceVisibleDiversity(paidItems, freeItems, targetProblemTags, internalAtsResult).slice(0, 9);
 
   const logoPool = [
     ...buildMentorLogoPoolFromItems([...freeItems, ...paidItems]),
@@ -3955,7 +4261,7 @@ function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan =
         const newItem = coverCandidate
           ? toAdviceItem(coverCandidate, targetProblemTags, 0, true, internalAtsResult, new Set())
           : fallbackItem;
-        if (newItem && canAddToTwelveAdviceBundle(newItem, allAdviceItems)) {
+        if (newItem && canAddVisibleAdviceRelaxed(newItem, allAdviceItems, targetProblemTags)) {
           targetMentor.adviceItems.push(newItem);
           allAdviceItems.push(newItem);
         }
@@ -3971,7 +4277,7 @@ function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan =
         : fallbackItem;
       const idx = targetMentor.adviceItems.indexOf(toReplace);
       const bundleWithoutReplace = allAdviceItems.filter((item) => item !== toReplace);
-      if (newItem && idx !== -1 && canAddToTwelveAdviceBundle(newItem, bundleWithoutReplace)) {
+      if (newItem && idx !== -1 && canAddVisibleAdviceRelaxed(newItem, bundleWithoutReplace, targetProblemTags)) {
         targetMentor.adviceItems[idx] = newItem;
         allAdviceItems.push(newItem);
       }

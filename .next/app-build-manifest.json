@@ -45,26 +45,6 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/api/position-salary/route.js"
-    ],
-    "/payment/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/payment/page.js"
-    ],
-    "/api/v1/reports/[reportId]/mark-paid/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/v1/reports/[reportId]/mark-paid/route.js"
-    ],
-    "/api/v1/reports/[reportId]/unlock/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/v1/reports/[reportId]/unlock/route.js"
-    ],
-    "/report/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/report/page.js"
     ]
   }
 }
