@@ -1272,11 +1272,20 @@ function detectRoleFamilyFromExplicitTitle(candidate = "") {
   const clean = cleanExplicitRoleCandidate(candidate);
   if (!clean) return null;
 
+  const explicitRole = inferExplicitTitleRoleFamily(clean);
+  if (explicitRole) return { role: explicitRole, hits: 1, terms: [clean], explicit: true };
+
   const canonicalRole = inferCanonicalRoleFamily(clean);
   if (canonicalRole) return { role: canonicalRole, hits: 1, terms: [clean], explicit: true };
 
   const detected = detectRoleFamily(clean);
   return detected.role === "general" ? null : { ...detected, explicit: true };
+}
+
+function inferExplicitTitleRoleFamily(title = "") {
+  const lower = normalizeText(title).toLowerCase();
+  if (/\bmanagement trainee\b/.test(lower) || /管培生/.test(title)) return "management_trainee";
+  return null;
 }
 
 function cleanExplicitRoleCandidate(candidate = "") {
