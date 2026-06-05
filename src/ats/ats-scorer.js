@@ -2742,6 +2742,19 @@ function hasGithubLink(text) {
   return /\b(github\.com|gitlab\.com|bitbucket\.org|github\.io)\b/i.test(text || "");
 }
 
+function hasWebsiteLink(text) {
+  const value = String(text || "").replace(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi, " ");
+  const urls = value.match(/\b(?:https?:\/\/)?(?:www\.)?[a-z0-9-]+\.[a-z]{2,}(?:\/[^\s|,;]*)?/gi) || [];
+  return urls.some((url) => {
+    const lower = url.toLowerCase();
+    return !lower.includes("linkedin.") &&
+      !lower.includes("github.") &&
+      !lower.includes("gitlab.") &&
+      !lower.includes("bitbucket.") &&
+      !/@/.test(lower);
+  });
+}
+
 function hasLinkedInSignal(text) {
   const value = text || "";
   return (
@@ -2750,6 +2763,188 @@ function hasLinkedInSignal(text) {
     /\blinked[\s-]*in\b/i.test(value) ||
     /\blinkedln\b/i.test(value)
   );
+}
+
+function cleanHeadingTitle(line) {
+  return String(line || "")
+    .trim()
+    .replace(/[:ï¼š]\s*$/, "")
+    .replace(/\s+/g, " ");
+}
+
+function detectResumeSectionTitles(text) {
+  const titlePatterns = [
+    { title: "Summary", key: "summary", re: /^(summary|profile|professional summary)\b/i },
+    { title: "Objective", key: "summary", re: /^(objective|career objective)\b/i },
+    { title: "Professional Experience", key: "experience", re: /^professional experience\b/i },
+    { title: "Internship", key: "experience", re: /^(internship|internships|internship experience)\b/i },
+    { title: "Experience", key: "experience", re: /^(experience|work experience|employment)\b/i },
+    { title: "Projects", key: "projects", re: /^(projects?|project experience|selected projects)\b/i },
+    { title: "Skills", key: "skills", re: /^(skills?|technical skills?|core skills?|competencies)\b/i },
+    { title: "Education", key: "education", re: /^(education|academic background)\b/i },
+    { title: "Activities", key: "activities", re: /^(activities|leadership activities|extracurriculars?)\b/i },
+    { title: "Awards", key: "awards", re: /^(awards?|honors?)\b/i },
+    { title: "Publications", key: "publications", re: /^(publications?|papers?|research publications?)\b/i },
+    { title: "Certifications", key: "certifications", re: /^(certifications?|licenses?)\b/i }
+  ];
+
+  const detected = [];
+  for (const rawLine of normalizeText(text).split("\n")) {
+    const line = cleanHeadingTitle(rawLine);
+    if (!line || line.length > 80) continue;
+    const compact = line.replace(/\s+/g, "");
+    const match = titlePatterns.find(({ re }) => re.test(line) || re.test(compact));
+    if (match && !detected.some((item) => item.title === match.title && item.key === match.key)) {
+      detected.push({ title: match.title, key: match.key });
+    }
+  }
+  return detected;
+}
+
+function detectSectionOrder(sectionTitles, key) {
+  return sectionTitles.findIndex((item) => item.key === key);
+}
+
+function termsPresentInText(terms, text) {
+  return unique((terms || []).filter((term) => matchTermWithCredit(text || "", term).credit > 0));
+}
+
+function buildResumeFacts({
+  normalized,
+  sections,
+  summaryText,
+  experienceProjectsText,
+  skillsText,
+  educationText,
+  projectsText,
+  keywordMatch,
+  targetRole,
+  explicitTargetRole,
+  resumeRole,
+  phoneInfo,
+  hasEmail,
+  hasLinkedIn,
+  hasGithub,
+  hasPortfolio,
+  hasCoursework,
+  hasGPA,
+  educationHasDates,
+  projectsHasDates,
+  inconsistentDates,
+  inconsistentMonthStyle,
+  rawBullets,
+  quantifiedCount,
+  strongVerbCount,
+  impactCount,
+  weakPhraseCount
+}) {
+  const sectionTitles = detectResumeSectionTitles(normalized);
+  const detectedTitles = sectionTitles.map((item) => item.title);
+  const normalizedSections = unique([
+    ...sectionTitles.map((item) => item.key),
+    ...Object.keys(sections || {}).filter((key) => key !== "header" && String(sections[key] || "").trim())
+  ]);
+  const educationIndex = detectSectionOrder(sectionTitles, "education");
+  const experienceIndex = detectSectionOrder(sectionTitles, "experience");
+  const projectsIndex = detectSectionOrder(sectionTitles, "projects");
+  const allTerms = unique(keywordMatch?.allTerms || []);
+  const presentInResume = unique(keywordMatch?.allMatched || termsPresentInText(allTerms, normalized));
+  const presentInSkills = termsPresentInText(allTerms, skillsText);
+  const presentInExperience = termsPresentInText(allTerms, experienceProjectsText);
+  const bulletsText = (rawBullets || []).join("\n");
+  const evidenceText = `${normalized}\n${bulletsText}`.toLowerCase();
+  const wordCount = normalized.split(/\s+/).filter(Boolean).length;
+  const estimatedPages = Math.max(1, Math.ceil(wordCount / 650));
+  const missingDatesSections = [];
+  if (educationText.trim() && !educationHasDates) missingDatesSections.push("education");
+  if (projectsText.trim() && !projectsHasDates) missingDatesSections.push("projects");
+
+  const hasProfessionalExperienceTitle = detectedTitles.includes("Professional Experience");
+  const hasInternshipTitle = detectedTitles.includes("Internship");
+
+  const targetRoleFamily = explicitTargetRole?.explicit
+    ? explicitTargetRole.role
+    : (targetRole?.role || "unknown");
+
+  return {
+    sections: {
+      detectedTitles,
+      normalizedSections,
+      hasSummary: Boolean((summaryText || "").trim()),
+      hasObjective: detectedTitles.includes("Objective"),
+      hasExperience: Boolean((sections?.experience || "").trim()),
+      hasProfessionalExperienceTitle,
+      hasInternshipTitle,
+      hasProjects: Boolean((projectsText || "").trim()),
+      hasEducation: Boolean((educationText || "").trim()),
+      hasSkills: Boolean((skillsText || "").trim()),
+      hasActivities: normalizedSections.includes("activities"),
+      hasAwards: normalizedSections.includes("awards"),
+      hasPublications: normalizedSections.includes("publications"),
+      hasCertifications: normalizedSections.includes("certifications"),
+      educationBeforeExperience: educationIndex >= 0 && experienceIndex >= 0 && educationIndex < experienceIndex,
+      projectsBeforeExperience: projectsIndex >= 0 && experienceIndex >= 0 && projectsIndex < experienceIndex
+    },
+    links: {
+      hasEmail: Boolean(hasEmail),
+      hasPhone: Boolean(phoneInfo?.present),
+      phoneValid: Boolean(phoneInfo?.valid),
+      hasLinkedIn: Boolean(hasLinkedIn),
+      hasGithub: Boolean(hasGithub),
+      hasPortfolio: Boolean(hasPortfolio),
+      hasWebsite: hasWebsiteLink(normalized)
+    },
+    keywords: {
+      jdRequired: allTerms,
+      presentInResume,
+      missingFromResume: unique(keywordMatch?.allMissing || allTerms.filter((term) => !presentInResume.includes(term))),
+      presentInSkills,
+      presentInExperience,
+      skillsOnly: presentInSkills.filter((term) => !presentInExperience.includes(term)),
+      experienceOnly: presentInExperience.filter((term) => !presentInSkills.includes(term))
+    },
+    experience: {
+      bulletCount: (rawBullets || []).length,
+      quantifiedBulletCount: quantifiedCount || 0,
+      weakBulletCount: weakPhraseCount || 0,
+      strongVerbBulletCount: strongVerbCount || 0,
+      impactWordCount: impactCount || 0,
+      hasActionVerbBullets: (strongVerbCount || 0) > 0,
+      hasMeasurableResults: (quantifiedCount || 0) > 0,
+      hasBusinessOutcomeLanguage: /\b(revenue|cost|profit|growth|retention|efficiency|business outcome|customer|market|kpi|roi)\b/i.test(bulletsText),
+      hasCrossFunctionalLanguage: /\b(cross[-\s]?functional|stakeholder|collaborat|coordinate|partnered|team|department)\b/i.test(bulletsText),
+      hasReportingLanguage: /\b(report|reporting|dashboard|presentation|presented|visualiz|analysis|analyz|insight)\b/i.test(bulletsText),
+      hasProcessImprovementLanguage: /\b(process improvement|improv|optimiz|streamlin|automated|reduc|efficien|workflow)\b/i.test(bulletsText)
+    },
+    roleEvidence: {
+      targetRoleFamily,
+      resumeRoleFamily: resumeRole?.role || "unknown",
+      hasLeadershipEvidence: /\b(leadership|led|lead|managed|supervised|mentor|trained|owned)\b/i.test(evidenceText),
+      hasCommunicationEvidence: /\b(communicat|present|presentation|wrote|written|client|stakeholder|report)\b/i.test(evidenceText),
+      hasTeamworkEvidence: /\b(team|collaborat|coordinat|partnered|cross[-\s]?functional)\b/i.test(evidenceText),
+      hasDataAnalysisEvidence: /\b(data|analysis|analyz|excel|sql|python|tableau|dashboard|metric|statistics?)\b/i.test(evidenceText),
+      hasReportingEvidence: /\b(report|reporting|dashboard|presentation|kpi|weekly|monthly)\b/i.test(evidenceText),
+      hasCustomerServiceEvidence: /\b(customer service|client service|customer support|customer|client|satisfaction)\b/i.test(evidenceText),
+      hasSalesEvidence: /\b(sales|selling|pipeline|lead generation|crm|revenue)\b/i.test(evidenceText),
+      hasFinanceEvidence: /\b(finance|financial|budget|forecast|accounting|profit|loss|p&l)\b/i.test(evidenceText),
+      hasOperationsEvidence: /\b(operations?|operational|logistics|inventory|supply chain|workflow|process)\b/i.test(evidenceText),
+      hasProcessImprovementEvidence: /\b(process improvement|continuous improvement|streamlin|optimiz|automated|efficien|workflow)\b/i.test(evidenceText),
+      hasAdaptabilityEvidence: /\b(adapt|rotate|rotation|learned|trained|multiple departments?|fast[-\s]?paced)\b/i.test(evidenceText)
+    },
+    format: {
+      estimatedPages,
+      likelyOverOnePage: estimatedPages > 1 || normalized.length > 4500,
+      hasDateInconsistency: Boolean(inconsistentDates),
+      hasMonthStyleInconsistency: Boolean(inconsistentMonthStyle),
+      missingDatesSections,
+      hasDenseFormattingRisk: normalized.length > 6500 || wordCount > 900,
+      parseWarnings: []
+    },
+    education: {
+      hasCoursework: Boolean(hasCoursework),
+      hasGPA: Boolean(hasGPA)
+    }
+  };
 }
 
 function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
@@ -2971,6 +3166,37 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
   const inconsistentDates = hasInconsistentDateFormat(normalized);
 
   const priorityMissingKeywords = buildPriorityMissingKeywords(keywordMatch, targetRole);
+  const resumeFacts = buildResumeFacts({
+    normalized,
+    sections,
+    summaryText,
+    experienceProjectsText,
+    skillsText,
+    educationText,
+    projectsText,
+    keywordProfile,
+    keywordMatch,
+    targetRole,
+    explicitTargetRole,
+    resumeRole,
+    phoneInfo,
+    hasEmail,
+    hasLinkedIn,
+    hasGithub,
+    hasPortfolio,
+    hasCoursework,
+    hasGPA,
+    educationHasDates,
+    projectsHasDates,
+    inconsistentDates,
+    inconsistentMonthStyle,
+    expEntries,
+    rawBullets,
+    quantifiedCount,
+    strongVerbCount,
+    impactCount,
+    weakPhraseCount
+  });
 
   const problemTagsInput = {
     resumeOutdated, isChronological, inconsistentDates, inconsistentMonthStyle,
@@ -3164,6 +3390,7 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
     retrievalQuery,
     diagnostics,
     priorityMissingKeywords,
+    resumeFacts,
   };
 }
 
