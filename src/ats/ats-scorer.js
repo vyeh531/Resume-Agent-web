@@ -89,6 +89,13 @@ const SKILL_VERB_MAP = {
 
 const SEMANTIC_MATCH_MAP = {
   "software development engineer": ["software engineer", "software developer", "sde", "swe"],
+  "data visualization": ["dashboard", "dashboards", "tableau dashboard", "power bi dashboard", "bi reporting", "charting", "visual analytics", "data viz"],
+  "dashboarding": ["dashboard", "dashboards", "bi dashboard", "tableau dashboard", "power bi dashboard", "reporting dashboard"],
+  "business analysis": ["business reporting", "requirements analysis", "stakeholder reporting", "business insights", "business analytics", "analysis for business stakeholders"],
+  "requirements gathering": ["gather requirements", "gathered requirements", "define reporting needs", "defined reporting needs", "translate business needs", "translated business needs", "business requirements"],
+  "etl": ["data pipeline", "data pipelines", "data ingestion", "data extraction", "extract load", "extract transform load", "pipeline automation"],
+  "extraction": ["data extraction", "extract data", "extracted data", "data ingestion", "source data"],
+  "decision-making": ["insights", "recommendations", "data-driven decisions", "data driven decisions", "business decisions", "decision support"],
   "cloud-native architectures": ["aws", "azure", "gcp", "docker", "kubernetes", "ci/cd", "cloud infrastructure", "cloud architecture"],
   "cloud native architectures": ["aws", "azure", "gcp", "docker", "kubernetes", "ci/cd", "cloud infrastructure", "cloud architecture"],
   "communicate effectively": ["collaborated", "communicated", "presented", "partnered", "aligned", "stakeholder communication"],
@@ -802,6 +809,7 @@ function extractKeywords(text) {
   const lower = normalizeText(text).toLowerCase();
   const knownPhrases = [
     "machine learning", "deep learning", "data analysis", "data visualization",
+    "business analysis", "requirements gathering", "decision-making",
     "power bi", "tableau", "react", "node.js", "next.js", "typescript",
     "python", "sql", "aws", "azure", "gcp", "docker", "kubernetes",
     "financial modeling", "financial statements", "tax preparation",
@@ -815,7 +823,7 @@ function extractKeywords(text) {
     "cloud native architectures", "technical documentation",
     "operational excellence", "distributed systems", "microservices",
     "game development", "quantum computing", "embedded systems",
-    "communicate effectively"
+    "communicate effectively", "data extraction", "data ingestion", "data pipeline"
   ];
   for (const phrase of knownPhrases) {
     if (lower.includes(phrase)) phrases.push(phrase);
@@ -1582,6 +1590,17 @@ function matchTermWithCredit(resumeText, term, category = "") {
     };
   }
 
+  const evidenceMatch = matchEvidencePattern(lower, clean);
+  if (evidenceMatch) {
+    return {
+      term: clean,
+      category,
+      type: "semantic",
+      credit: evidenceMatch.credit,
+      matchedBy: evidenceMatch.matchedBy
+    };
+  }
+
   if (clean.includes(" ")) {
     const tokens = clean.split(/\s+/).filter((t) => t.length > 2 && !STOP_WORDS.has(t));
     const hits = tokens.filter((token) => phraseOrWordMatch(lower, token)).length;
@@ -1637,6 +1656,62 @@ function phraseOrWordMatch(lowerText, cleanTerm) {
     : new RegExp(`\\b${escapeRegExp(cleanTerm)}(?:s|es|ed|ing)?\\b`, "i").test(lowerText);
 }
 
+function matchEvidencePattern(lowerText, cleanTerm) {
+  const evidenceRules = [
+    {
+      terms: ["data visualization", "dashboarding", "reporting"],
+      credit: 0.55,
+      matchedBy: "dashboard/reporting evidence",
+      patterns: [
+        /\b(built|created|developed|designed|launched|maintained|delivered|automated)\b.{0,90}\b(dashboard|dashboards|report|reports|visualization|visualizations|chart|charts|tableau|power\s*bi|looker)\b/i,
+        /\b(dashboard|dashboards|report|reports|visualization|visualizations|tableau|power\s*bi|looker)\b.{0,90}\b(kpi|metric|metrics|insight|insights|stakeholder|stakeholders|business)\b/i
+      ]
+    },
+    {
+      terms: ["business analysis"],
+      credit: 0.55,
+      matchedBy: "business analysis evidence",
+      patterns: [
+        /\b(analyzed|analysed|identified|translated|modeled|reported|built|created)\b.{0,90}\b(business|stakeholder|stakeholders|requirement|requirements|kpi|metric|metrics|process|processes)\b/i,
+        /\b(business|stakeholder|stakeholders)\b.{0,90}\b(insight|insights|reporting|analysis|analytics|recommendation|recommendations)\b/i
+      ]
+    },
+    {
+      terms: ["requirements gathering"],
+      credit: 0.55,
+      matchedBy: "requirements gathering evidence",
+      patterns: [
+        /\b(gathered|gather|defined|define|translated|translate|elicited|documented|scoped|partnered|collaborated)\b.{0,90}\b(requirement|requirements|business needs|reporting needs|stakeholder needs|dashboard specs|specifications)\b/i,
+        /\b(partnered|collaborated|worked)\b.{0,90}\b(stakeholder|stakeholders|business teams|product managers|users)\b.{0,90}\b(define|defined|translate|translated|scope|scoped|requirements|needs)\b/i
+      ]
+    },
+    {
+      terms: ["etl", "extraction"],
+      credit: 0.55,
+      matchedBy: "data pipeline evidence",
+      patterns: [
+        /\b(extracted|extract|ingested|ingest|loaded|load|transformed|transform|built|automated)\b.{0,90}\b(data|dataset|datasets|pipeline|pipelines|source|sources|warehouse)\b/i,
+        /\b(data pipeline|data pipelines|data ingestion|data extraction|source data|etl pipeline)\b/i
+      ]
+    },
+    {
+      terms: ["decision-making"],
+      credit: 0.5,
+      matchedBy: "decision support evidence",
+      patterns: [
+        /\b(insight|insights|recommendation|recommendations|analysis|analytics)\b.{0,90}\b(decision|decisions|strategy|prioritization|roadmap|business)\b/i,
+        /\b(data-driven|data driven)\b.{0,60}\b(decision|decisions|recommendation|recommendations|insight|insights)\b/i
+      ]
+    }
+  ];
+
+  const rule = evidenceRules.find((item) => item.terms.includes(cleanTerm));
+  if (!rule) return null;
+  return rule.patterns.some((pattern) => pattern.test(lowerText))
+    ? { credit: rule.credit, matchedBy: rule.matchedBy }
+    : null;
+}
+
 function singularize(token) {
   return String(token || "")
     .replace(/ies$/i, "y")
@@ -1663,11 +1738,36 @@ function analyzeKeywordEvidence(profile, resumeText) {
   const inExperience = matched.filter((term) => resumeHasTerm(experienceProjectsText, term));
   const skillsOnly = matched.filter((term) => !resumeHasTerm(experienceProjectsText, term) && resumeHasTerm(skillsText, term));
   return {
+    termCount: terms.length,
     matchedCount: matched.length,
     inExperienceCount: inExperience.length,
     skillsOnlyCount: skillsOnly.length,
     skillsOnlyShare: matched.length ? skillsOnly.length / matched.length : 0
   };
+}
+
+function computeHybridJdMatchRatio(keywordMatch, coreBulletSignal) {
+  const keywordCoverage = keywordMatch.softTermCount
+    ? keywordMatch.hardCoverage * 0.78 + keywordMatch.softCoverage * 0.22
+    : (keywordMatch.hardTermCount ? keywordMatch.hardCoverage : keywordMatch.ratio);
+
+  const evidence = keywordMatch.experienceEvidence || {};
+  const evidenceCoverage = evidence.termCount
+    ? Math.min(1, ((evidence.inExperienceCount || 0) + (evidence.skillsOnlyCount || 0) * 0.35) / evidence.termCount)
+    : keywordCoverage;
+  const roleCoreAlignment = typeof coreBulletSignal?.coverage === "number"
+    ? coreBulletSignal.coverage
+    : keywordCoverage;
+  const placementQuality = typeof coreBulletSignal?.earlyPlacement === "number"
+    ? coreBulletSignal.earlyPlacement
+    : 0;
+
+  const hybrid = keywordCoverage * 0.40 +
+    evidenceCoverage * 0.35 +
+    roleCoreAlignment * 0.15 +
+    placementQuality * 0.10;
+
+  return Math.max(keywordCoverage, hybrid);
 }
 
 function analyzeExactJobTitleMatch(resumeText, jobTitle, keywordProfile) {
@@ -1687,12 +1787,12 @@ function analyzeExactJobTitleMatch(resumeText, jobTitle, keywordProfile) {
   };
 }
 
-function buildScoreCaps({ keywordMatch, exactJobTitle, D_final, F }) {
+function buildScoreCaps({ keywordMatch, exactJobTitle, D_final, F, hybridCoverage }) {
   const caps = [];
-  if (keywordMatch.hardCoverage < 0.3) caps.push({ max: 60, reason: "Hard skills coverage < 30%" });
-  else if (keywordMatch.hardCoverage < 0.45) caps.push({ max: 70, reason: "Hard skills coverage 30-45%" });
-  if (keywordMatch.combinedKeywordCoverage < 0.4) caps.push({ max: 72, reason: "Hard + soft keyword coverage < 40%" });
-  if (exactJobTitle && !exactJobTitle.exact) caps.push({ max: 90, reason: "Exact job title missing" });
+  const capCoverage = typeof hybridCoverage === "number" ? hybridCoverage : keywordMatch.combinedKeywordCoverage;
+  if (capCoverage < 0.3) caps.push({ max: 60, reason: "Hybrid JD coverage < 30%" });
+  else if (capCoverage < 0.4) caps.push({ max: 72, reason: "Hybrid JD coverage < 40%" });
+  if (exactJobTitle && !exactJobTitle.exact && !exactJobTitle.partial) caps.push({ max: 90, reason: "Exact job title missing" });
   if (D_final < 20) caps.push({ max: 70, reason: "D dimension < 20/45" });
   if (F < 14) caps.push({ max: 80, reason: "F dimension < 14/23" });
   return caps;
@@ -2783,10 +2883,8 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
   C = clamp(C, 0, DIMENSION_MAX.C);
   const jdKeywords = keywordMatch.allTerms;
   const jdHits = keywordMatch.allMatched.length;
-  const jdMatchRatio = keywordMatch.softTermCount
-    ? keywordMatch.hardCoverage * 0.78 + keywordMatch.softCoverage * 0.22
-    : (keywordMatch.hardTermCount ? keywordMatch.hardCoverage : keywordMatch.ratio);
-  const D = jdKeywords.length ? scoreByRatio(jdMatchRatio, DIMENSION_MAX.D) : 13;
+  const jdMatchRatio = computeHybridJdMatchRatio(keywordMatch, coreBulletSignal);
+  const D = jdKeywords.length ? clamp(Math.round(jdMatchRatio * DIMENSION_MAX.D), 0, DIMENSION_MAX.D) : 13;
 
   const expText = sections.experience || "";
   const expEntries = parseExperienceEntries(expText);
@@ -2860,7 +2958,7 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
   if (A < 8 * 0.6) formatPenaltyReason.push(`格式规范（A 维度）仅 ${A}/8 分`);
   if (B < 7 * 0.6) formatPenaltyReason.push(`基本资料（B 维度）仅 ${B}/7 分`);
   const exactJobTitle = analyzeExactJobTitleMatch(normalized, jobTitle, keywordProfile);
-  const scoreCaps = buildScoreCaps({ keywordMatch, exactJobTitle, D_final, F });
+  const scoreCaps = buildScoreCaps({ keywordMatch, exactJobTitle, D_final, F, hybridCoverage: jdMatchRatio });
   const cappedTotal = scoreCaps.length ? Math.min(rawTotal, ...scoreCaps.map((cap) => cap.max)) : rawTotal;
   const total = formatPenaltyTriggered ? Math.min(cappedTotal, 54) : cappedTotal;
   const risk = formatPenaltyTriggered ? "高" : (total >= 75 ? "低" : total >= 55 ? "中" : "高");
