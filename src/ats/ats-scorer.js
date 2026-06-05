@@ -1268,6 +1268,116 @@ function detectRoleFamily(text) {
   return best;
 }
 
+function detectRoleFamilyFromExplicitTitle(candidate = "") {
+  const clean = cleanExplicitRoleCandidate(candidate);
+  if (!clean) return null;
+
+  const canonicalRole = inferCanonicalRoleFamily(clean);
+  if (canonicalRole) return { role: canonicalRole, hits: 1, terms: [clean], explicit: true };
+
+  const detected = detectRoleFamily(clean);
+  return detected.role === "general" ? null : { ...detected, explicit: true };
+}
+
+function cleanExplicitRoleCandidate(candidate = "") {
+  return normalizeText(candidate)
+    .replace(/^\s*【?\s*(?:岗位|岗位名称|职位|职位名称)\s*】?\s*[:：-]\s*/i, "")
+    .replace(/^\s*(?:job\s*title|position\s*title|position|role)\s*[:：-]\s*/i, "")
+    .replace(/\b(?:responsibilities?|requirements?|qualifications?|job\s+summary|what\s+you'?ll\s+do)\b.*$/i, "")
+    .replace(/\s*[-|:：,;]\s*$/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function uniqueRoleCandidates(candidates) {
+  const seen = new Set();
+  const result = [];
+  for (const candidate of candidates) {
+    const clean = cleanExplicitRoleCandidate(candidate);
+    if (!clean) continue;
+    const key = clean.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    result.push(clean);
+  }
+  return result;
+}
+
+function extractExplicitJdRoleCandidatesV2(jdText = "") {
+  const candidates = [];
+  const text = String(jdText || "");
+
+  const lines = text
+    .split(/\r?\n/)
+    .map((line) => normalizeText(line).trim())
+    .filter(Boolean)
+    .slice(0, 12);
+
+  for (const line of lines) {
+    const labeledTitle = line.match(/^\s*(?:【?\s*(?:岗位|岗位名称|职位|职位名称)\s*】?|job\s*title|position\s*title|position|role)\s*[:：-]\s*(.+)$/i);
+    if (labeledTitle) candidates.push(labeledTitle[1].trim());
+
+    const cleanedLine = cleanExplicitRoleCandidate(line);
+    const wordCount = cleanedLine.split(/\s+/).filter(Boolean).length;
+    if (
+      wordCount <= 8 &&
+      !/[.!?]/.test(cleanedLine) &&
+      (inferCanonicalRoleFamily(cleanedLine) || detectRoleFamilyFromExplicitTitle(cleanedLine))
+    ) {
+      candidates.push(cleanedLine);
+    }
+  }
+
+  const chineseRole = extractChineseTargetRole(text);
+  if (chineseRole) candidates.push(chineseRole);
+
+  for (const role of extractTargetRole(text, "")) candidates.push(role);
+
+  return uniqueRoleCandidates(candidates);
+}
+
+function detectExplicitTargetRole(jobTitle = "", jdText = "") {
+  const jobTitleRole = detectRoleFamilyFromExplicitTitle(jobTitle);
+  if (jobTitleRole) return { ...jobTitleRole, source: "jobTitle", title: cleanExplicitRoleCandidate(jobTitle) };
+
+  for (const candidate of extractExplicitJdRoleCandidatesV2(jdText)) {
+    const role = detectRoleFamilyFromExplicitTitle(candidate);
+    if (role) return { ...role, source: "jdTitle", title: candidate };
+  }
+
+  return { role: "general", hits: 0, terms: [], explicit: false, source: null };
+}
+
+function formatTargetRoleSource(role) {
+  return role?.source === "jobTitle" ? "目标岗位为" : "JD 指向";
+}
+
+function formatTargetRoleName(role) {
+  return role?.title || formatRole(role?.role || "general");
+}
+
+function formatRoleMismatchProblem(explicitTargetRole, resumeRole) {
+  const resumeRoleName = formatRole(resumeRole.role);
+  if (explicitTargetRole?.explicit) {
+    if (explicitTargetRole.role === resumeRole.role) {
+      return `${formatTargetRoleSource(explicitTargetRole)}「${formatTargetRoleName(explicitTargetRole)}」，但 JD 技能信号与简历定位不够一致。`;
+    }
+    return `${formatTargetRoleSource(explicitTargetRole)}「${formatTargetRoleName(explicitTargetRole)}」，但简历定位更接近「${resumeRoleName}」，岗位信号不够一致。`;
+  }
+  return `目标岗位与简历定位不一致：简历定位更接近「${resumeRoleName}」，但 JD 未明确写出岗位 title。`;
+}
+
+function formatRoleMismatchDimensionProblem(explicitTargetRole, resumeRole) {
+  const resumeRoleName = formatRole(resumeRole.role);
+  if (explicitTargetRole?.explicit) {
+    if (explicitTargetRole.role === resumeRole.role) {
+      return `岗位信号不一致：${formatTargetRoleSource(explicitTargetRole)}「${formatTargetRoleName(explicitTargetRole)}」，但 JD 技能信号与简历定位不够一致`;
+    }
+    return `岗位信号不一致：${formatTargetRoleSource(explicitTargetRole)}「${formatTargetRoleName(explicitTargetRole)}」，简历更接近「${resumeRoleName}」`;
+  }
+  return `岗位信号不一致：JD 未明确写出岗位 title，简历更接近「${resumeRoleName}」`;
+}
+
 function scoreByRatio(ratio, scale) {
   if (ratio >= 0.90) return scale;
   if (ratio >= 0.80) return Math.round(scale * 0.83);
@@ -2713,6 +2823,7 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
   if (summaryMentionsRole) F = Math.min(DIMENSION_MAX.F, F + 2);
   const roleSource = `${jobTitle}\n${jdText}`;
   const targetRole = detectRoleFamily(roleSource || jobTitle);
+  const explicitTargetRole = detectExplicitTargetRole(jobTitle, jdText);
   const resumeRole = detectRoleFamily(normalized);
   F = clamp(F, 0, DIMENSION_MAX.F);
 
@@ -2781,7 +2892,7 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
 
   const problems = buildProblems({
     hasEmail, hasJD, jdMatchRatio, quantifiedCount, strongVerbCount, impactCount,
-    bulletCount: experienceProjectBulletLines.length, missingKeywords, keywordMatch, targetRole, resumeRole,
+    bulletCount: experienceProjectBulletLines.length, missingKeywords, keywordMatch, targetRole, explicitTargetRole, resumeRole,
     allChina, hasAnyChinaExp, formatPenaltyTriggered, isChronological, shortTenures,
     exactJobTitle, scoreCaps
   });
@@ -2842,6 +2953,7 @@ function scoreResumeATS(resumeText, jobTitle = "", jdText = "", options = {}) {
     jdMatchRatio,
     keywordMatch,
     targetRole,
+    explicitTargetRole,
     resumeRole
   });
 
@@ -2974,7 +3086,7 @@ function buildProblems(ctx) {
     problems.push("未检测到标准 email，联系方式完整性存在风险。");
   }
   if (ctx.targetRole.role !== "general" && ctx.resumeRole.role !== ctx.targetRole.role) {
-    problems.push(`目标岗位像是「${formatRole(ctx.targetRole.role)}」，但简历定位更接近「${formatRole(ctx.resumeRole.role)}」，岗位信号不够一致。`);
+    problems.push(formatRoleMismatchProblem(ctx.explicitTargetRole, ctx.resumeRole));
   }
   if (problems.length === 0) {
     problems.push("基础结构良好，下一步应继续提升 JD 关键词覆盖率和成果量化密度。");
@@ -2984,7 +3096,7 @@ function buildProblems(ctx) {
 
 function buildDimensionProblems(ctx) {
   const { checks, quantifiedCount, strongVerbCount, impactCount, bulletCount,
-    hasJD, jdMatchRatio, keywordMatch, targetRole, resumeRole } = ctx;
+    hasJD, jdMatchRatio, keywordMatch, targetRole, explicitTargetRole, resumeRole } = ctx;
 
   const A = [];
   const missingCore = ["experience", "education", "skills"].filter((s) => !ctx.coreSections.includes(s));
@@ -3100,7 +3212,7 @@ function buildDimensionProblems(ctx) {
   if ((fb.toolsMatch || 0) < 40) F.push(`工具技术覆盖率仅 ${fb.toolsMatch || 0}%`);
   if ((fb.titleSummaryAliasMatch || 0) < 50) F.push("Summary / 标题未体现目标岗位定位");
   if (targetRole.role !== "general" && resumeRole.role !== targetRole.role) {
-    F.push(`岗位信号不一致：JD 指向「${formatRole(targetRole.role)}」，简历更接近「${formatRole(resumeRole.role)}」`);
+    F.push(formatRoleMismatchDimensionProblem(explicitTargetRole, resumeRole));
   }
   if (checks.jobTitleAligned && !checks.jobTitleAligned.aligned) {
     F.push(`简历工作经历中的 Job Title 与 JD 职位名称差异较大，建议尽量保持一致以提升 ATS 匹配率`);
