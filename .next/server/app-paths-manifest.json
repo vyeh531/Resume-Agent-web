@@ -1,8 +1,13 @@
 {
+  "/api/v1/analysis-jobs/route": "app/api/v1/analysis-jobs/route.js",
+  "/api/v1/analysis-jobs/[jobId]/route": "app/api/v1/analysis-jobs/[jobId]/route.js",
+  "/api/parse-file/route": "app/api/parse-file/route.js",
   "/api/position-salary/route": "app/api/position-salary/route.js",
-  "/result/page": "app/result/page.js",
-  "/payment/page": "app/payment/page.js",
-  "/report/page": "app/report/page.js",
+  "/api/v1/reports/[reportId]/unlock/route": "app/api/v1/reports/[reportId]/unlock/route.js",
+  "/api/v1/reports/[reportId]/mark-paid/route": "app/api/v1/reports/[reportId]/mark-paid/route.js",
   "/page": "app/page.js",
-  "/login/page": "app/login/page.js"
+  "/login/page": "app/login/page.js",
+  "/result/page": "app/result/page.js",
+  "/report/page": "app/report/page.js",
+  "/payment/page": "app/payment/page.js"
 }
