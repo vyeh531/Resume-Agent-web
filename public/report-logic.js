@@ -506,23 +506,28 @@ function normalizeSuggestionList() {
     missingKw.length ? "优先补齐岗位描述中的缺失技能：只保留真实经历能支撑的工具、领域词和动作词，并写入对应段落。" : "",
     ...reportSuggestionFallbacks(),
   ];
-  const raw = [
+  const structuredSource = [
     ...Object.values(s.sectionFixPlan || {}).flat().map(item => item.message || item.action || item.actionSummary || item.title).filter(Boolean),
     ...(s.detailedSuggestions || []).map(item => item.message || item.action || item.actionSummary || item.title).filter(Boolean),
     ...((atsResult.structuredSuggestions || []).map(item => item.action || item.actionSummary || item.title).filter(Boolean)),
     ...((atsResult.raw?.structuredSuggestions || []).map(item => item.action || item.actionSummary || item.title).filter(Boolean)),
-    ...(atsResult.suggestions || []),
-    ...(atsResult.raw?.suggestions || []),
+  ];
+  const raw = [
+    ...structuredSource,
+    ...(structuredSource.length ? [] : [
+      ...(atsResult.suggestions || []),
+      ...(atsResult.raw?.suggestions || []),
+    ]),
   ]
     .map(simplifySuggestionText)
     .filter(Boolean);
-  const items = dedupeAtsList(raw);
+  const items = dedupeAtsList(raw, { topicDedupe: false });
   for (const item of reportSuggestionFallbacks()) {
     if (items.length >= 3) break;
-    const nextItems = dedupeAtsList([...items, item]);
+    const nextItems = dedupeAtsList([...items, item], { topicDedupe: false });
     if (nextItems.length > items.length) items.push(item);
   }
-  return dedupeAtsList(items);
+  return dedupeAtsList(items, { topicDedupe: false });
 }
 function reportProblemFallbacks() {
   return [

@@ -641,7 +641,60 @@ function problemTitle(item) {
   return "JD \u5173\u952e\u8bcd\u5339\u914d\u5ea6\u504f\u4f4e";
 }
 
+const PROBLEM_MESSAGE_BY_TAG = {
+  uploaded_non_pdf_format: "上传文件不是稳定的 PDF 格式，可能在不同系统里出现版式错乱或解析失败。",
+  file_naming_issue: "简历文件名不够清晰专业，可能影响招聘方快速识别候选人和目标岗位。",
+  formatting_penalty_triggered: "简历格式或版面解析存在风险，系统可能无法稳定读取关键信息。",
+  missing_section_dates: "简历中有教育、项目或经历条目缺少年份/日期，时间线完整度不足。",
+  inconsistent_date_format: "简历中的日期格式不统一，会降低版面专业度，也可能影响系统解析。",
+  missing_contact_info: "简历顶部联系方式不完整，可能影响招聘方后续联系或初筛判断。",
+  missing_linkedin: "简历中缺少 LinkedIn 链接，招聘方较难快速核验背景与职业轨迹。",
+  missing_portfolio: "目标岗位需要通过作品集判断能力，但简历头部未检测到可点击的作品集链接。",
+  missing_github_link: "目标岗位需要项目或代码证据，但简历中未检测到 GitHub 或相关代码链接。",
+  education_details_missing: "Education 段落缺少关键细节，例如 GPA、相关课程、学位、毕业时间或学校信息。",
+  missing_gpa: "Education 段落缺少 GPA；对早期职业或在校候选人来说，这会减少可筛选信号。",
+  missing_coursework: "Education 段落缺少 Relevant Coursework，早期职业候选人的技能证据会偏弱。",
+  missing_exp_location: "部分经历缺少地点或 Remote/Hybrid 信息，招聘方较难判断市场和工作场景匹配度。",
+  missing_summary: "简历缺少 Summary 段落，HR 和 ATS 需要先有一条清晰的岗位定位线索，后续关键词补充才有承载位置。",
+  missing_exact_job_title: "简历中未稳定出现目标岗位原词，可能影响 ATS 对职位定位的判断。",
+  weak_summary_role_alignment: "Summary 和目标岗位的关联不够直接，HR 初筛时可能看不出你正在投这个方向。",
+  weak_target_role_alignment: "简历整体还没有围绕目标岗位重新组织，相关技能、经历和成果之间的主线不够清楚。",
+  generic_resume_positioning: "这份简历定位过于通用，像是在同时服务多个方向，目标岗位信号不够集中。",
+  resume_not_tailored_to_jd: "简历内容还没有充分贴合当前 JD 的职责、关键词和表达方式。",
+  keyword_gap_critical: "简历和目标 JD 的语言匹配严重不足，ATS 可能无法识别你和这个岗位的直接关联。",
+  keyword_gap_major: "简历和目标 JD 的语言匹配还不够，ATS 可能无法快速识别你和这个岗位的直接关联。",
+  keyword_gap_minor: "简历和目标 JD 仍有少量关键词缺口，可以进一步提升岗位匹配信号。",
+  low_jd_keyword_match: "简历和目标 JD 的语言匹配还不够，ATS 可能无法快速识别你和这个岗位的直接关联。",
+  missing_priority_keywords: "简历缺少目标 JD 中优先级较高的关键词，需要先补真实掌握、且能用经历支撑的技能词。",
+  low_hard_skill_match: "核心硬技能覆盖不足，需要把有真实经验支撑的工具、技能和场景写进经历证据里。",
+  missing_tools: "目标 JD 要求的工具或技术栈覆盖不足，简历需要补充真实使用过的工具证据。",
+  low_soft_skill_match: "目标岗位需要的协作、沟通或领导力信号不足，经历表达偏少体现软技能证据。",
+  weak_experience_keyword_evidence: "目标岗位的关键词在经历里缺少对应证据，只看 Skills 很难判断你是否真的做过相关工作。",
+  keywords_only_in_skills: "部分关键词只堆在 Skills 区块，没有进入项目或经历要点，可信度会偏弱。",
+  low_measurable_results: "经历中的结果证据偏少，建议提升百分比、规模、效率等量化表达。",
+  insufficient_quantification: "经历中的结果证据偏少，建议提升百分比、规模、效率等量化表达。",
+  weak_action_verbs: "经历要点中弱动词或被动表达偏多，行动 ownership 不够清楚。",
+  weak_verbs: "经历要点中弱动词或被动表达偏多，行动 ownership 不够清楚。",
+  passive_voice: "简历中被动语态偏多，会削弱你在项目和成果中的主动贡献感。",
+  repetitive_verbs: "经历要点重复使用相同动作动词，表达层次和可读性会被削弱。",
+  weak_result_orientation: "经历要点偏任务描述，缺少结果、业务影响或用户价值。",
+  low_bullet_coverage: "核心技能在经历要点中的覆盖不足，技能列表和真实项目证据没有连起来。",
+  short_tenure_unclear: "简历中有时长较短的经历，如果不标注 Intern / Internship 或说明项目周期，HR 可能会对稳定性产生疑虑。",
+  short_tenure_unexplained: "简历中有时长较短的经历，如果不标注 Intern / Internship 或说明项目周期，HR 可能会对稳定性产生疑虑。",
+  outdated_resume: "最近经历或简历内容看起来不够新，可能让招聘方怀疑当前状态没有更新。",
+  missing_relocation_signal: "地点、工作授权、到岗方式或 relocation 信号不够清楚，可能影响招聘推进。",
+  no_relocate_signal: "地点、工作授权、到岗方式或 relocation 信号不够清楚，可能影响招聘推进。",
+  non_chronological_order: "工作经历没有按时间倒序排列，招聘方和系统都较难快速理解你的职业时间线。",
+  job_title_mismatch: "简历中的职位名称或 headline 与目标 JD 的岗位名称不够一致，定位信号会被削弱。",
+  role_mismatch: "简历整体方向和目标岗位存在偏差，需要重新突出最相关的技能与经历。",
+  summary_missing_role: "Summary 没有明确承接目标岗位，开头定位信号不够稳定。",
+  all_china_experience: "简历核心经历主要来自中国或非目标市场，需要强化可迁移能力证据，降低 HR 对市场适配度的疑虑。",
+  partial_china_experience: "简历中有部分经历来自中国或非目标市场，需要补充更容易被目标市场 HR 理解的工具、场景和成果表达。",
+  career_growth_optimization: "简历基础不错，但职业成长故事和竞争力表达仍有进一步强化空间。",
+};
+
 function problemMessage(item) {
+  if (PROBLEM_MESSAGE_BY_TAG[item.tag]) return PROBLEM_MESSAGE_BY_TAG[item.tag];
   if (item.tag === "missing_summary") return "简历缺少 Summary 段落，HR 和 ATS 需要先有一条清晰的岗位定位线索，后续关键词补充才有承载位置。";
   if (item.tag === "missing_exact_job_title") return "\u7b80\u5386\u4e2d\u672a\u7a33\u5b9a\u51fa\u73b0\u76ee\u6807\u5c97\u4f4d\u539f\u8bcd\uff0c\u53ef\u80fd\u5f71\u54cd ATS \u5bf9\u804c\u4f4d\u5b9a\u4f4d\u7684\u5224\u65ad\u3002";
   if (item.tag === "missing_priority_keywords") return "\u7b80\u5386\u7f3a\u5c11\u76ee\u6807 JD \u4e2d\u4f18\u5148\u7ea7\u8f83\u9ad8\u7684\u5173\u952e\u8bcd\uff0c\u9700\u8981\u5148\u8865\u771f\u5b9e\u638c\u63e1\u3001\u4e14\u80fd\u7528\u7ecf\u5386\u652f\u6491\u7684\u6280\u80fd\u8bcd\u3002";
@@ -667,6 +720,63 @@ function userFacingProblemMessage(item = {}, fallback = "") {
   const raw = String(item.message || item.evidence || fallback || "").trim();
   if (!raw || looksLikeRawAtsDiagnostic(raw)) return problemMessage(item);
   return raw;
+}
+
+const PRIORITY_ACTION_BY_TAG = {
+  uploaded_non_pdf_format: "将简历导出为 PDF 后再提交，确认打开后的版面、字体和链接都稳定可读。",
+  file_naming_issue: "把上传文件名改成清楚的专业格式，例如 FirstName_LastName_Resume_TargetRole.pdf。",
+  formatting_penalty_triggered: "先修复版面和解析风险：避免复杂表格、双栏错位、图片文字和不可复制文本。",
+  missing_section_dates: "补齐教育、项目和经历条目的月份/年份，让时间线完整可判断。",
+  inconsistent_date_format: "统一所有日期格式，例如全部使用 Jan 2024 - May 2024 或 01/2024 - 05/2024。",
+  missing_contact_info: "补齐邮箱、电话、所在地和必要链接，并放在姓名下方的头部区域。",
+  missing_linkedin: "在简历头部加入可点击 LinkedIn 链接，并确保页面内容与简历主线一致。",
+  missing_portfolio: "在简历头部加入作品集链接，并优先展示 3-5 个最贴近目标岗位的项目。",
+  missing_github_link: "为技术类项目补充 GitHub、repo、demo 或项目链接，让代码和实现证据可验证。",
+  education_details_missing: "补齐 Education 里的学位、学校、毕业时间、相关课程或 GPA 等筛选信号。",
+  missing_gpa: "如果 GPA 对当前阶段有帮助，把 GPA 加到 Education 中，并保持格式简洁。",
+  missing_coursework: "为早期职业或转专业场景补上 Relevant Coursework，承接目标岗位关键词。",
+  missing_exp_location: "为每段经历补充地点或 Remote/Hybrid 信息，降低市场和工作场景的不确定性。",
+  missing_summary: "先添加 2-3 行个人简介段落，再写入目标岗位，并用一句证据说明最相关的经历或技能。",
+  missing_exact_job_title: "把目标岗位原词自然写进个人简介段落或 headline。",
+  weak_summary_role_alignment: "重写 Summary：第一句说明目标方向，第二句连接最相关技能、经历和成果。",
+  weak_target_role_alignment: "按目标岗位重排简历重点，把最相关的技能、项目和成果提前。",
+  generic_resume_positioning: "拆出面向当前目标岗位的版本，删减不服务这个方向的经历和技能。",
+  resume_not_tailored_to_jd: "逐条对照 JD，把职责、工具和关键词改写进 Summary、Skills 和最相关经历。",
+  keyword_gap_critical: "优先补齐真实项目或工作经历能支撑的岗位关键词。",
+  keyword_gap_major: "优先补齐真实项目或工作经历能支撑的岗位关键词。",
+  keyword_gap_minor: "把少量缺失的 JD 关键词自然补进 Summary、Skills 或最相关经历。",
+  low_jd_keyword_match: "优先补齐真实项目或工作经历能支撑的岗位关键词。",
+  missing_priority_keywords: "把高优先级 JD 关键词放进真实经历、项目或技能栏，不要只做关键词堆叠。",
+  low_hard_skill_match: "把目标岗位要求的工具、技术和方法写进项目动作和结果证据里。",
+  missing_tools: "补充真实使用过的工具/平台，并说明在项目中如何使用、解决了什么问题。",
+  low_soft_skill_match: "在经历要点中加入协作、沟通、stakeholder 或领导力场景，并写清结果。",
+  weak_experience_keyword_evidence: "把 Skills 中的核心关键词迁移到经历要点，用项目动作和结果支撑。",
+  keywords_only_in_skills: "不要只把关键词放在 Skills；至少在一到两条经历 bullet 中写出使用场景。",
+  low_measurable_results: "把靠前的经历要点改成「动作 + 方法 + 可量化结果」结构。",
+  insufficient_quantification: "把靠前的经历要点改成「动作 + 方法 + 可量化结果」结构。",
+  weak_action_verbs: "把 helped、responsible for、participated in 改成 led、built、analyzed、optimized 等主动动词。",
+  weak_verbs: "把 helped、responsible for、participated in 改成 led、built、analyzed、optimized 等主动动词。",
+  passive_voice: "把被动句改成主动句，明确你负责的动作、方法和产出。",
+  repetitive_verbs: "替换重复动作动词，让每条经历要点体现不同能力层次。",
+  weak_result_orientation: "为任务型 bullet 补上结果、影响对象或业务/用户价值。",
+  low_bullet_coverage: "把核心技能写进更多经历要点，而不是只放在 Skills 清单。",
+  short_tenure_unclear: "为短期经历标注 Intern/Contract/Project，或用一句话说明项目周期和职责边界。",
+  short_tenure_unexplained: "为短期经历标注 Intern/Contract/Project，或用一句话说明项目周期和职责边界。",
+  outdated_resume: "更新最近经历、项目和日期，确保简历反映当前求职状态。",
+  missing_relocation_signal: "在 Summary 或头部补充 location、work authorization、relocation 或到岗方式相关信号。",
+  no_relocate_signal: "在 Summary 或头部补充 location、work authorization、relocation 或到岗方式相关信号。",
+  non_chronological_order: "将工作经历重新排列为时间倒序，最新经历放在最前面。",
+  job_title_mismatch: "统一 headline、Summary 和经历标题里的岗位语言，让它贴近目标 JD。",
+  role_mismatch: "围绕目标岗位重写 Summary 和前两段经历，减少偏离方向的信息。",
+  summary_missing_role: "在 Summary 第一句明确目标岗位，并连接最相关的经历证据。",
+  all_china_experience: "把非目标市场经历改写成目标市场可读的工具、场景和成果证据。",
+  partial_china_experience: "把非目标市场经历聚焦到可迁移技能、业务结果和目标岗位相关工具上。",
+  career_growth_optimization: "补强职业成长线：写清你能力升级、项目复杂度提升和影响范围扩大。",
+};
+
+function priorityActionForTag(item = {}) {
+  if (PRIORITY_ACTION_BY_TAG[item.tag]) return PRIORITY_ACTION_BY_TAG[item.tag];
+  return "围绕目标岗位重新检查这条问题对应的简历部分，把最相关的职责、关键词和结果证据写得更明确。";
 }
 
 function buildStructuredSuggestions(internalAtsResult) {
@@ -697,6 +807,20 @@ function buildStructuredSuggestions(internalAtsResult) {
   }
   if (internalAtsResult.problemTags.some((item) => item.tag === "low_measurable_results")) {
     add("content_fix", "experience", "把靠前的经历要点改成「动作 + 方法 + 可量化结果」结构。", ["low_measurable_results"], [], "paid");
+  }
+
+  const coveredTags = new Set(suggestions.flatMap((item) => asArray(item.relatedTags)));
+  for (const problemTag of asArray(internalAtsResult.problemTags)) {
+    if (!problemTag?.tag || coveredTags.has(problemTag.tag)) continue;
+    add(
+      "tag_fix",
+      targetSectionForTag(problemTag.tag, problemTag.dimension),
+      priorityActionForTag(problemTag),
+      [problemTag.tag],
+      asArray(problemTag.keywords),
+      problemTag.severity === "critical" || problemTag.severity === "high" ? "paid" : "premium"
+    );
+    coveredTags.add(problemTag.tag);
   }
 
   for (const suggestion of asArray(internalAtsResult.suggestions).slice(0, 3)) {
