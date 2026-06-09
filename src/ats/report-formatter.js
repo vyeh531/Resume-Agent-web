@@ -582,6 +582,19 @@ function buildTopProblems(internalAtsResult) {
     })));
 }
 
+function stripProblemTagForClient(item) {
+  if (!item || !item.tag) return null;
+  return {
+    tag: item.tag,
+    severity: item.severity,
+    dimension: item.dimension,
+    topic: item.topic,
+    message: problemMessage(item),
+    title: problemTitle(item),
+    evidence: item.evidence || "",
+  };
+}
+
 function dedupeInsights(items) {
   const byKey = new Map();
   for (const item of items) {
@@ -1269,6 +1282,8 @@ function formatPremiumUnlockedReport(internalAtsResult, paidAdviceOrMentorReport
         coveredObligationIds: [],
         uncoveredObligationIds: [],
       },
+      problemTags: internalAtsResult.problemTags.map(stripProblemTagForClient).filter(Boolean),
+      detailedSuggestions: internalAtsResult.structuredSuggestions,
       keywordBreakdown: premiumKeywordBreakdown,
       missingKeywordChecklist: checklist,
       sectionFixPlan,
@@ -1291,6 +1306,7 @@ function formatPremiumUnlockedReport(internalAtsResult, paidAdviceOrMentorReport
     keywordBreakdown: premiumKeywordBreakdown,
     sectionFixPlan,
     detailedSuggestions: internalAtsResult.structuredSuggestions,
+    problemTags: internalAtsResult.problemTags.map(stripProblemTagForClient).filter(Boolean),
   };
 }
 

@@ -400,6 +400,8 @@ function mockPayment(btn) {
         premiumKeywordBreakdown: premiumReport.keywordBreakdown || null,
         missingKeywordChecklist: premiumReport.missingKeywordChecklist || null,
         sectionFixPlan: premiumReport.sectionFixPlan || null,
+        problemTags: premiumReport.problemTags || null,
+        detailedSuggestions: premiumReport.detailedSuggestions || null,
         mentorLogoPool: premiumReport.mentorLogoPool || s.mentorLogoPool || null,
       });
       completeLoader("解锁完成！", "完整报告已生成，正在进入报告页…");

@@ -33,12 +33,24 @@ export async function POST(request, { params }) {
     if (!unlock.ok) {
       return Response.json({ success: false, error: unlock.error }, { status: unlock.status || 403 });
     }
+    const premiumReport =
+      unlock.report.premiumReport ||
+      formatPremiumUnlockedReport(unlock.report.internalAtsResult, unlock.report.paidAdvice);
+    const fallbackPremiumReport = (premiumReport?.problemTags && premiumReport?.detailedSuggestions)
+      ? null
+      : formatPremiumUnlockedReport(unlock.report.internalAtsResult, unlock.report.paidAdvice);
+    const hydratedPremiumReport = fallbackPremiumReport
+      ? {
+          ...fallbackPremiumReport,
+          ...premiumReport,
+          problemTags: premiumReport?.problemTags || fallbackPremiumReport.problemTags || null,
+          detailedSuggestions: premiumReport?.detailedSuggestions || fallbackPremiumReport.detailedSuggestions || null,
+        }
+      : premiumReport;
     return Response.json({
       success: true,
       reportId: params.reportId,
-      premiumReport:
-        unlock.report.premiumReport ||
-        formatPremiumUnlockedReport(unlock.report.internalAtsResult, unlock.report.paidAdvice),
+      premiumReport: hydratedPremiumReport,
     });
   } catch (err) {
     console.error('[ATS-Report] Unlock error:', err.message);

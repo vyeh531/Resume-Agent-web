@@ -27,6 +27,8 @@ if (s.reportId && s.reportAccessToken && (!s.premiumKeywordBreakdown || !s.premi
         premiumKeywordBreakdown: premiumReport.keywordBreakdown || null,
         missingKeywordChecklist: premiumReport.missingKeywordChecklist || null,
         sectionFixPlan: premiumReport.sectionFixPlan || null,
+        problemTags: premiumReport.problemTags || null,
+        detailedSuggestions: premiumReport.detailedSuggestions || null,
         mentorLogoPool: premiumReport.mentorLogoPool || s.mentorLogoPool || null,
       });
       window.location.reload();
@@ -145,6 +147,50 @@ function uniqueList(items) {
     seen.add(key);
     return true;
   });
+}
+function normalizeAtsListText(text) {
+  return String(text || "")
+    .toLowerCase()
+    .replace(/\d+(?:\.\d+)?\s*%/g, "<pct>")
+    .replace(/\d+/g, "<num>")
+    .replace(/[，。、“”‘’：；（）()[\]{}<>"'`~!@#$%^&*_+=|\\/?.:,;\-\s]/g, "")
+    .trim();
+}
+function atsListTopicKey(text) {
+  const value = String(text || "");
+  const lower = value.toLowerCase();
+  const normalized = normalizeAtsListText(value);
+  const has = (pattern) => pattern.test(value) || pattern.test(lower);
+  if (has(/summary|\u4e2a\u4eba\u7b80\u4ecb|\u5b9a\u4f4d|\u76ee\u6807\u5c97\u4f4d|\u539f\u8bcd|job\s*title|target\s*role/i)) return "positioning";
+  if (has(/jd|keyword|\u5173\u952e\u8bcd|\u6280\u80fd|\u5de5\u5177|\u9886\u57df\u8bcd|\u5339\u914d|\u8986\u76d6|\u7f3a\u5931|\u8865\u9f50/i)) return "keywords";
+  if (has(/\u91cf\u5316|\u6210\u679c|\u7ed3\u679c|\u5f71\u54cd|\u6548\u7387|\u767e\u5206\u6bd4|\u91d1\u989d|impact|result|measurable/i)) return "impact";
+  if (has(/bullet|\u7ecf\u5386|\u8bc1\u636e|\u9879\u76ee|action\s*\+\s*method|\u52a8\u4f5c|\u65b9\u6cd5/i)) return "experience-evidence";
+  if (has(/\u65f6\u95f4\u5012\u5e8f|chronolog|\u65e5\u671f|\u5e74\u4efd/i)) return "chronology";
+  if (has(/\u4e2d\u56fd|\u7f8e\u56fd|us-based|willing\s*to\s*relocate|relocat/i)) return "market-fit";
+  if (has(/email|phone|linkedin|github|portfolio|\u8054\u7cfb|\u90ae\u7bb1|\u4f5c\u54c1\u96c6|\u94fe\u63a5/i)) return "profile-links";
+  if (has(/\u683c\u5f0f|\u6587\u4ef6|format|file/i)) return "format";
+  if (has(/intern|internship|\u5b9e\u4e60|\u65f6\u957f\u4e0d\u8db3|\u77ed\u671f/i)) return "tenure";
+  if (has(/helped|assisted|responsible|led|built|optimized|\u52a8\u8bcd|\u4e3b\u52a8/i)) return "verbs";
+  return normalized || lower.trim();
+}
+function dedupeAtsList(items, options = {}) {
+  const { max = Infinity, topicDedupe = true } = options;
+  const seenExact = new Set();
+  const seenTopics = new Set();
+  const output = [];
+  for (const item of items || []) {
+    const text = String(item || "").trim();
+    if (!text) continue;
+    const exactKey = normalizeAtsListText(text) || text.toLowerCase();
+    const topicKey = atsListTopicKey(text);
+    if (seenExact.has(exactKey)) continue;
+    if (topicDedupe && seenTopics.has(topicKey)) continue;
+    seenExact.add(exactKey);
+    seenTopics.add(topicKey);
+    output.push(text);
+    if (output.length >= max) break;
+  }
+  return output;
 }
 function getKeywordBreakdown() {
   return s.premiumKeywordBreakdown || atsResult.raw?.premiumKeywordBreakdown || atsResult.keywordBreakdown || atsResult.raw?.keywordBreakdown || [];
@@ -369,7 +415,11 @@ function repairTargetRoleProblem(text) {
     .replace(/目标岗位像是「[^」]+」/g, `目标岗位是「${target}」`)
     .replace(/目标岗位是「数据科学家」/g, `目标岗位是「${target}」`);
 }
-function normalizeProblemList() {
+function problemTextFromTag(item) {
+  if (!item || typeof item === "string") return item || "";
+  return item.message || item.title || item.evidence || item.tag || "";
+}
+function normalizeProblemListLegacy() {
   return uniqueList([
     ...(atsResult.keyProblems || []),
     ...(atsResult.problems || []),
@@ -406,9 +456,25 @@ function simplifySuggestionText(text) {
     .replace(/real project or work evidence/gi, "真实项目或工作证据")
     .replace(/action, method, and measurable result/gi, "动作、方法和量化结果")
     .replace(/Experience/g, "经历")
-    .replace(/bullet/g, "要点");
+    .replace(/bullet/g, "要点")
+    .replace(/个人简介\s*\/\s*个人简介段落/g, "个人简介段落")
+    .replace(/个人简介\s*\/\s*个人简介/g, "个人简介")
+    .replace(/岗位描述\s+关键词/g, "岗位描述关键词")
+    .replace(/要点\s+的/g, "要点的")
+    .replace(/系统\s+和\s+招聘方/g, "系统和招聘方")
+    .replace(/招聘方\s+和\s+系统/g, "招聘方和系统")
+    .replace(/\s+(个人简介段落|个人简介)/g, "$1")
+    .replace(/个人简介\s+段落/g, "个人简介段落")
+    .replace(/(系统和招聘方)\s+/g, "$1")
+    .replace(/(招聘方和系统)\s+/g, "$1")
+    .replace(/这是\s+系统和招聘方/g, "这是系统和招聘方")
+    .replace(/影响\s+系统/g, "影响系统")
+    .replace(/只看\s+技能栏/g, "只看技能栏")
+    .replace(/影响系统\s+对/g, "影响系统对")
+    .replace(/技能栏\s+很难/g, "技能栏很难")
+    .replace(/招聘方\s+可能/g, "招聘方可能");
 }
-function normalizeSuggestionList() {
+function normalizeSuggestionListLegacy() {
   const missingKw = uniqueList([
     ...(atsResult.topMissingKw || []),
     ...(atsResult.topMissingKeywords || []),
@@ -441,21 +507,22 @@ function normalizeSuggestionList() {
     ...reportSuggestionFallbacks(),
   ];
   const raw = [
-    ...(atsResult.suggestions || []),
-    ...(atsResult.raw?.suggestions || []),
     ...Object.values(s.sectionFixPlan || {}).flat().map(item => item.message || item.action || item.actionSummary || item.title).filter(Boolean),
+    ...(s.detailedSuggestions || []).map(item => item.message || item.action || item.actionSummary || item.title).filter(Boolean),
     ...((atsResult.structuredSuggestions || []).map(item => item.action || item.actionSummary || item.title).filter(Boolean)),
     ...((atsResult.raw?.structuredSuggestions || []).map(item => item.action || item.actionSummary || item.title).filter(Boolean)),
-    ...fallbackSuggestions,
+    ...(atsResult.suggestions || []),
+    ...(atsResult.raw?.suggestions || []),
   ]
     .map(simplifySuggestionText)
-    .filter(Boolean)
-    .filter(item => !/[A-Za-z]/.test(item));
-  const items = uniqueList(raw);
+    .filter(Boolean);
+  const items = dedupeAtsList(raw);
   for (const item of reportSuggestionFallbacks()) {
-    if (!items.includes(item)) items.push(item);
+    if (items.length >= 3) break;
+    const nextItems = dedupeAtsList([...items, item]);
+    if (nextItems.length > items.length) items.push(item);
   }
-  return items;
+  return dedupeAtsList(items);
 }
 function reportProblemFallbacks() {
   return [
@@ -465,6 +532,16 @@ function reportProblemFallbacks() {
   ];
 }
 function normalizeProblemList() {
+  const tagItems = [
+    ...(s.problemTags || []),
+    ...(atsResult.problemTags || []),
+    ...(atsResult.raw?.problemTags || []),
+  ].map(problemTextFromTag)
+    .map(repairTargetRoleProblem)
+    .map(simplifySuggestionText)
+    .filter(Boolean);
+  if (tagItems.length) return dedupeAtsList(tagItems, { topicDedupe: false });
+
   const raw = [
     ...(atsResult.keyProblems || []),
     ...(atsResult.problems || []),
@@ -475,14 +552,14 @@ function normalizeProblemList() {
   ]
     .map(repairTargetRoleProblem)
     .map(simplifySuggestionText)
-    .filter(Boolean)
-    .filter(item => !/[A-Za-z]/.test(item));
-  const items = uniqueList(raw);
+    .filter(Boolean);
+  const items = dedupeAtsList(raw, { topicDedupe: false });
   for (const item of reportProblemFallbacks()) {
     if (items.length >= 3) break;
-    if (!items.includes(item)) items.push(item);
+    const nextItems = dedupeAtsList([...items, item], { topicDedupe: false });
+    if (nextItems.length > items.length) items.push(item);
   }
-  return items;
+  return dedupeAtsList(items, { topicDedupe: false });
 }
 function renderAtsProblemItem(text) {
   return `<li style="margin-bottom:10px;padding-left:20px;position:relative;line-height:1.5;"><span style="position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--rose);"></span>${escapeHtml(text)}</li>`;
