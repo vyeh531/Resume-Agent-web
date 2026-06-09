@@ -15,6 +15,12 @@ node_modules/
 npm-debug.log*
 .next/
 
+# Scripts — one-off data generation / migration scripts
+scripts/create_r*.js
+scripts/create_r*.py
+scripts/fix_*.js
+scripts/fix_*.py
+
 # Local
 .env
 .env.local

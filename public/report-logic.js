@@ -991,7 +991,7 @@ function renderSkillRow(sk) {
 function renderSkillList(skills){
   const skillListEl = document.getElementById("skillList");
   if (!skillListEl) return;
-  const visibleCount = 5;
+  const visibleCount = 10;
   const visibleSkills = skills.slice(0, visibleCount);
   const hiddenSkills = skills.slice(visibleCount);
   skillListEl.innerHTML = [
