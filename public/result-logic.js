@@ -29,6 +29,13 @@ function atsRiskText(risk) {
   if (risk === "高") return "高风险";
   return risk || "未评级";
 }
+function riskToneClass(risk) {
+  const text = String(risk || "");
+  if (/高|é«˜|high|severe|red/i.test(text)) return "risk-high";
+  if (/中|ä¸­|medium|mid|moderate|orange|yellow/i.test(text)) return "risk-medium";
+  if (/低|ä½Ž|low|green/i.test(text)) return "risk-low";
+  return "risk-pending";
+}
 function escapeHtml(str) {
   return String(str || "").replace(/[&<>"']/g, ch =>
     ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[ch])
@@ -39,7 +46,7 @@ function renderUnlockMiniCta() {
   return `
     <div class="result-lock-cta">
       <div class="lock">🔒</div>
-      <div class="text">解锁<b>全部 4 位导师</b> + <b>完整改写报告</b><br><span>含完整技能清单</span></div>
+      <div class="text">解锁<b>全部 4 位导师</b> + <b>完整改写报告</b><br><span>含完整 JD Keyword 清单</span></div>
       <a class="btn btn-jade" href="/payment">¥ 49 解锁完整诊断</a>
     </div>`;
 }
@@ -130,7 +137,19 @@ function getJdMatchRatio(ats) {
   return Math.round(number > 0 && number <= 1 ? number * 100 : number);
 }
 function getKeywordBreakdown() {
-  return atsResult.keywordBreakdown || atsResult.raw?.keywordBreakdown || [];
+  return s.premiumKeywordBreakdown || atsResult.raw?.premiumKeywordBreakdown || atsResult.keywordBreakdown || atsResult.raw?.keywordBreakdown || [];
+}
+function getMissingKeywordChecklist() {
+  return Array.isArray(s.missingKeywordChecklist) ? s.missingKeywordChecklist : [];
+}
+function uniqueList(items) {
+  const seen = new Set();
+  return (items || []).map((item) => String(item || "").trim()).filter(Boolean).filter((item) => {
+    const key = item.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 function getJdKeywordCount(ats) {
   const explicit = ats?.keywordMatchCount || ats?.raw?.keywordMatchCount;
@@ -150,6 +169,18 @@ function getJdKeywordCount(ats) {
 function formatJdKeywordCount(ats) {
   const count = getJdKeywordCount(ats);
   return count ? `${count.matched}/${count.total}` : "--";
+}
+function formatJdKeywordMatchValue(ats) {
+  const count = getJdKeywordCount(ats);
+  if (!count || !count.total) return "--";
+  return `${count.matched}/${count.total}`;
+}
+function formatJdKeywordMatchPercent(ats) {
+  const ratio = getJdMatchRatio(ats);
+  if (ratio !== null) return ratio + "%";
+  const count = getJdKeywordCount(ats);
+  if (!count || !count.total) return "--";
+  return Math.round((count.matched / count.total) * 100) + "%";
 }
 function getTargetJobTitle() {
   const candidates = [s.jobTitle, atsResult.jobTitle, atsResult.raw && atsResult.raw.jobTitle];
@@ -209,6 +240,12 @@ function renderPaywallMoreBlock(kind) {
       <div class="paywall-more-overlay">${renderUnlockMiniCta()}</div>
     </li>`;
 }
+function renderAtsPreviewMoreButton(kind) {
+  return `
+    <li class="ats-preview-more-item">
+      <button type="button" class="ats-preview-more" data-ats-preview-more="${escapeAttr(kind)}">查看更多</button>
+    </li>`;
+}
 function normalizeProblemList() {
   const raw = [
     ...(atsResult.keyProblems || []),
@@ -217,7 +254,7 @@ function normalizeProblemList() {
     ...((atsResult.topProblems || []).map(item => item.message || item.title).filter(Boolean)),
   ];
   const items = [...new Set(raw.filter(Boolean).map(repairTargetRoleProblem))].slice(0, 3);
-  while (items.length < 3) items.push(["JD 技能匹配仍有提升空间。", "简历定位需要更贴近目标岗位。", "经历证据需要更清楚支撑核心技能。"][items.length]);
+  while (items.length < 3) items.push(["JD 关键词匹配仍有提升空间。", "简历定位需要更贴近目标岗位。", "经历证据需要更清楚支撑核心技能。"][items.length]);
   return items;
 }
 function isIrrelevantSuggestion(text) {
@@ -256,6 +293,35 @@ function buildRoleAwareSuggestions() {
     "把最相关的项目或经历改写成 MLE 证据链：数据规模、模型/特征方法、评估指标、上线或业务影响。"
   ];
 }
+function resultSuggestionFallbacks() {
+  return [
+    "添加个人简介段落：用 2-3 句话说明你的背景、核心技能和目标岗位，这是系统和招聘方第一眼读到的内容，也有助于提升关键词覆盖。",
+    "优先补齐岗位描述匹配缺口：只补真实经历能支撑的工具、领域词和动作词，分别放进个人简介、技能栏和最相关的经历要点。",
+    "将每段核心经历改成「动作 + 方法/工具 + 量化结果」结构，让系统和招聘方都能看到岗位证据。",
+  ];
+}
+function simplifySuggestionText(text) {
+  const value = String(text || "").trim();
+  if (!value) return "";
+  if (/Add a 2-3 line Summary section first/i.test(value)) return resultSuggestionFallbacks()[0];
+  if (/Prioritize missing role keywords/i.test(value)) return resultSuggestionFallbacks()[1];
+  if (/Rewrite top bullets/i.test(value)) return resultSuggestionFallbacks()[2];
+  return value
+    .replace(/exact phrase/gi, "精确岗位原词")
+    .replace(/Summary section/gi, "个人简介段落")
+    .replace(/\bSummary\b/g, "个人简介")
+    .replace(/Experience bullet/gi, "经历要点")
+    .replace(/\bSkills\b/g, "技能栏")
+    .replace(/\bJD\b/g, "岗位描述")
+    .replace(/\bATS\b/g, "系统")
+    .replace(/\bHR\b/g, "招聘方")
+    .replace(/target role/gi, "目标岗位")
+    .replace(/role keywords/gi, "岗位关键词")
+    .replace(/real project or work evidence/gi, "真实项目或工作证据")
+    .replace(/action, method, and measurable result/gi, "动作、方法和量化结果")
+    .replace(/Experience/g, "经历")
+    .replace(/bullet/g, "要点");
+}
 function normalizeSuggestionList() {
   const raw = [
     ...buildRoleAwareSuggestions(),
@@ -263,8 +329,992 @@ function normalizeSuggestionList() {
     ...(atsResult.raw?.suggestions || []),
   ].filter(text => text && !isIrrelevantSuggestion(text));
   const items = [...new Set(raw)].slice(0, 3);
-  while (items.length < 3) items.push(["优先补齐目标岗位的核心关键词。", "把关键词写进 Experience 的具体成果证据。", "调整 Summary，让岗位方向一眼可见。"][items.length]);
+  while (items.length < 3) items.push(["优先补齐目标岗位的核心关键词。", "把关键词写进经历要点的具体成果证据。", "调整个人简介，让岗位方向一眼可见。"][items.length]);
   return items;
+}
+function normalizeSuggestionList() {
+  const fallbacks = resultSuggestionFallbacks();
+  const raw = [
+    ...(atsResult.suggestions || []),
+    ...(atsResult.raw?.suggestions || []),
+    ...fallbacks,
+  ]
+    .filter(text => text && !isIrrelevantSuggestion(text))
+    .map(simplifySuggestionText)
+    .filter(Boolean);
+  const items = [];
+  for (const item of raw) {
+    if (/[A-Za-z]/.test(item)) continue;
+    if (!items.includes(item)) items.push(item);
+    if (items.length === 3) break;
+  }
+  for (const item of fallbacks) {
+    if (items.length === 3) break;
+    if (!items.includes(item)) items.push(item);
+  }
+  return items.slice(0, 3);
+}
+function resultProblemFallbacks() {
+  return [
+    "岗位描述关键词匹配仍有提升空间。",
+    "简历定位需要更贴近目标岗位。",
+    "经历证据需要更清楚地支撑核心技能。",
+  ];
+}
+function normalizeProblemList() {
+  const fallbacks = resultProblemFallbacks();
+  const raw = [
+    ...(atsResult.keyProblems || []),
+    ...(atsResult.problems || []),
+    ...(atsResult.raw?.problems || []),
+    ...((atsResult.topProblems || []).map(item => item.message || item.title).filter(Boolean)),
+  ]
+    .map(repairTargetRoleProblem)
+    .map(simplifySuggestionText)
+    .filter(Boolean);
+  const items = [];
+  for (const item of raw) {
+    if (/[A-Za-z]/.test(item)) continue;
+    if (!items.includes(item)) items.push(item);
+    if (items.length === 3) break;
+  }
+  for (const item of fallbacks) {
+    if (items.length === 3) break;
+    if (!items.includes(item)) items.push(item);
+  }
+  return items.slice(0, 3);
+}
+function getRoleSignalText() {
+  return [
+    getTargetJobTitle(),
+    s.jobTitle,
+    atsResult.jobTitle,
+    atsResult.profile?.roleFamily,
+    atsResult.raw?.profile?.roleFamily,
+    atsResult.roleFamily,
+    atsResult.raw?.roleFamily,
+    atsResult.raw?.jobTitle,
+    s.jdText,
+    atsResult.jdText,
+    atsResult.raw?.jdText,
+    ...(atsResult.topMissingKw || []),
+    ...(atsResult.raw?.topMissingKw || []),
+  ].filter(Boolean).join(" ").toLowerCase();
+}
+function getAiTitleSignalText() {
+  return [
+    getTargetJobTitle(),
+    s.jobTitle,
+    atsResult.jobTitle,
+    atsResult.raw?.jobTitle,
+  ].filter(Boolean).join(" ").toLowerCase();
+}
+
+function aiFamilyProfile(level, caption, auto, value, resume) {
+  return {
+    level,
+    caption,
+    rows: [
+      { k: "容易被自动化", v: auto.v, note: auto.note },
+      { k: "更有价值的能力", v: value.v, note: value.note },
+      { k: "简历应强化", v: resume.v, note: resume.note },
+    ],
+  };
+}
+
+const AI_FAMILY_RULES = [
+  ["ai_engineer", /(^|\b)(ai|ai engineer|ai scientist|ai developer|artificial intelligence|generative ai|genai|llm|agent engineer|prompt engineer|ai\/ml|ai for drug|nlp engineer)(\b|$)/i],
+  ["machine_learning", /\b(machine learning|ml engineer|mle|deep learning|deep reinforcement|computer vision|algorithm|autonomous driving|autonomy|robotic|robotics|path planning|signal processing|predictive modeler|computational imaging)\b/i],
+  ["data_scientist", /\b(data scientist|statistician|biostatistician|decision scientist|applied scientist|research scientist)\b/i],
+  ["data_engineer", /\b(data engineer|analytics engineering|data architect|etl|big data|data warehouse|data warehousing|database architect|database administrator|database engineer|database manager|data integration|database developer)\b/i],
+  ["data_analyst", /\b(data analyst|data analytics|analytics manager|web analyst|data governance|data mining|data modeler|data strategist|data visualization|database analyst|technical data analysts|gis\/geospatial|geospatial analyst|business intelligence|bi analyst|reporting analyst|insights analyst|dashboard|sql|tableau|power bi)\b/i],
+  ["business_analysis", /\b(business analyst|business analysis|business analytics manager|business strategist|corporate performance analyst|decision analyst|erp analyst|technical analyst|business systems|business process|applications analyst|salesforce analyst|systems analyst|management analyst)\b/i],
+  ["accounting", /\b(accountant|accounting|audit|auditor|tax|controller|bookkeep|payroll|accounts payable|accounts receivable)\b/i],
+  ["actuarial", /\b(actuarial|actuary)\b/i],
+  ["trading_quant", /\b(quant|quantitative|trader|trading|desk quant|risk quant)\b/i],
+  ["finance", /\b(finance|financial|investment|equity|banking|fp&a|fpa|treasury|credit|valuation|portfolio|wealth|fund|asset management|cost analyst|cost engineer|forecasting analyst|m&a|mergers and acquisitions|pe\/vc|pevc|venture capital|private equity|hedge fund|real estate analyst|risk analyst|risk management|risk manager|risk modeling|budget analyst|pricing analyst|pricing manager|economist)\b/i],
+  ["cybersecurity", /\b(cyber|cybersecurity|computer security|security analyst|security engineer|information security|network security|penetration tester)\b/i],
+  ["cloud_infrastructure", /\b(cloud|linux\/platform|wifi engineer|wi-fi engineer|solutions architect|system administrator|systems administrator|system engineer|systems architect|network administrator|network architect|network engineer|technical architect|systems engineer|platform engineer)\b/i],
+  ["software_engineer", /\b(software|application engineer|backend|front[- ]?end|full[- ]?stack|sde|swe|developer|programmer|devops|mobile|android|ios|web developer|application developer|software tester|qa engineer|test engineer|embedded software)\b/i],
+  ["hardware_electrical", /\b(hardware|electrical|electronic engineer|electronics|circuit|pcb|semiconductor|vlsi|analog|rf|fpga|asic|ic design|cmos|silicon|firmware|embedded engineer|embedded hardware|embedded system|rtl|verification|optical|thermal engineer)\b/i],
+  ["mechanical_engineering", /\b(mechanical|cad\/cam|civil engineer|chemical engineer|control system|controls engineer|automation engineer|automotive|electric vehicle|energy analyst|maintenance engineer|material engineer|materials engineer|plant engineer|reliability engineer|safety engineer|value stream)\b/i],
+  ["manufacturing_process", /\b(manufacturing|fabrication|failure analysis|material$|materials manager|process control|process engineer|production manager|production supervisor|production engineer|plant manager|production planner|semiconductor process|materials planner)\b/i],
+  ["industrial_quality", /\b(industrial engineer|lean engineer|quality|test\/quality|continuous improvement|process improvement)\b/i],
+  ["civil_construction", /\b(construction|urban planner|site manager|civil construction)\b/i],
+  ["product_manager", /\b(product manager|product owner|product analyst|product operations|technical product manager|product marketing manager|product development engineer|product designer|product engineer)\b/i],
+  ["project_program_management", /\b(project manager|project management|program manager|program coordinator|scrum master|delivery manager|implementation manager|engineering manager|project analyst|project coordinator|project planner|project engineer|technical program)\b/i],
+  ["procurement", /\b(procurement|purchasing|vendor manager|sourcing)\b/i],
+  ["supply_chain_logistics", /\b(logistics|inventory|warehouse|supply chain|distribution|demand planner|planning engineer|scheduling engineer|materials planner|shipping|receiving|dispatch|pickup)\b/i],
+  ["operations", /\b(operation|operations|admin assistant|administrative|business manager|fundraising manager)\b/i],
+  ["business_operations", /\b(management trainee|business manager|sport management|business operations)\b/i],
+  ["consulting", /\b(consultant|consulting|strategy|advisory|management consultant|business consultant)\b/i],
+  ["marketing", /\b(marketing|marketer|market research|brand|branding|growth|seo|sem|content|social media|advertising|campaign|digital strategist)\b/i],
+  ["sales_customer_success", /\b(sales|account executive|account manager|business development|customer success|solution consultant|sales engineer)\b/i],
+  ["communications_pr", /\b(communication|communications|public relations|pr specialist|technical writer)\b/i],
+  ["ux_research_design", /\b(ux|ui|information architect|user experience|user interface|user researcher|interaction designer|web designer|technical designer)\b/i],
+  ["design_creative", /\b(design|designer|artist|animator|illustrator|game|visual|creative|cinematography|film|video editor|storyboard|motion designer|producer|art management|hard surface|interactive installation)\b/i],
+  ["legal_compliance", /\b(legal|lawyer|attorney|paralegal|compliance|counsel|law clerk|contract)\b/i],
+  ["healthcare", /\b(health|healthcare|clinical|medical|patient|therapist|counselor|psychologist|nurse)\b/i],
+  ["life_sciences", /\b(bio|biological engineer|bioinformatics|omics|biomedical|biopharma|pharma|pharmaceutical|life sciences|protein|vaccine|lab|clinical research)\b/i],
+  ["hr_recruiting", /\b(human resources|people ops|recruiter|talent acquisition|hrbp|full-cycle recruiter)\b/i],
+  ["education", /\b(teacher|tutor|academic|education|instructional|curriculum|instructor)\b/i],
+  ["policy_public_sector", /\b(policy|political|public health|public sector|government|sustainability|esg|climate|environmental|community health)\b/i],
+  ["journalism_media", /\b(journalist|media|writer|copywriter|editor|music production|video editor)\b/i],
+  ["hospitality_events", /\b(hospitality|hotel|host|event planner|restaurant|tourism)\b/i],
+  ["research_academic", /\b(research and development|research assistant|research associate|research engineer|research analyst|researcher|scientist|r&d)\b/i],
+  ["social_services", /\b(social worker|psychologist|case manager|community services|counselor)\b/i],
+  ["sustainability_environment", /\b(sustainability|environmental|esg|climate|csr|corporate social responsibility)\b/i],
+  ["it_support", /\b(it support|technical support|help desk|service desk|it specialist|it analyst|it manager|information systems manager)\b/i],
+];
+
+const AI_HIGH_IMPACT_TITLE_OVERRIDES = [
+  {
+    patterns: /\b(admin assistant|administrative assistant|receptionist|office assistant|data entry|clerk)\b/i,
+    profile: aiFamilyProfile("高影响", "日常事务会被工具接手",
+      { v: "日程安排、邮件初稿、表格整理、提醒跟进", note: "排程、提醒和资料整理会更省力，但临时状况和优先级判断还是要靠人。" },
+      { v: "优先级判断、保密意识、临时协调、服务体验", note: "行政岗位的亮点不只是快，而是分得清轻重缓急、守得住细节和边界。" },
+      { v: "响应效率、流程优化、错误减少、团队支持", note: "不要只写日常协助，写清楚你让谁的工作变快、变准或更稳定。" }),
+  },
+  {
+    patterns: /\b(it support|technical support|software support|help desk|service desk|support specialist|support engineer)\b/i,
+    profile: aiFamilyProfile("高影响", "标准排查会被工具接手",
+      { v: "FAQ、工单分类、基础故障排查", note: "标准问题会越来越自动化，但复杂故障和用户沟通仍然需要人。" },
+      { v: "问题定位、用户沟通、升级协调、知识库优化", note: "技术支持要写出你怎么更快解决问题、减少重复问题。" },
+      { v: "响应时间、解决率、用户满意度、知识库改进", note: "用 SLA、解决率或满意度来写会更具体。" }),
+  },
+  {
+    patterns: /\b(data analyst|business intelligence analyst|bi analyst|web analyst|reporting analyst|report analyst|data visualization analyst|data mining analyst|database analyst|data entry analyst|documentation specialist)\b/i,
+    profile: aiFamilyProfile("高影响", "基础报表会被工具接手",
+      { v: "取数、报表初稿、固定指标解释", note: "固定报表会越来越快，真正拉开差距的是你能不能看出问题。" },
+      { v: "指标判断、异常解释、业务沟通、流程改进", note: "不要只写产出报表，要写你怎么把数据变成下一步动作。" },
+      { v: "报表自动化、错误率下降、决策支持、效率提升", note: "把报表工作写成改善结果，会比只写整理数据更有力。" }),
+  },
+  {
+    patterns: /\b(social media specialist|copywriter|content writer|content creator|technical writer)\b/i,
+    exclude: /\b(manager|strategist|strategy|lead|director|head)\b/i,
+    profile: aiFamilyProfile("高影响", "基础内容生产会越来越工具化",
+      { v: "文案初稿、标题变体、资料摘要、发布排程", note: "普通内容会更快生成，难的是判断受众、语气和转化方向。" },
+      { v: "选题判断、品牌语气、事实核查、转化优化", note: "内容岗位要写出你怎么让内容有效，而不是只写负责发布。" },
+      { v: "阅读量、转化、互动率、内容质量标准", note: "写出内容带来的结果，会比只列平台和工具更有说服力。" }),
+  },
+  {
+    patterns: /\b(computer programmer|web developer|application developer|software tester|quality assurance tester|qa tester|junior software|entry[- ]level software)\b/i,
+    exclude: /\b(architect|principal|staff|manager|lead|devops|security|cloud|embedded)\b/i,
+    profile: aiFamilyProfile("高影响", "样板代码会被工具接手",
+      { v: "样板代码、基础测试、简单 bug 修复", note: "基础实现会被明显提速，尤其是重复 CRUD、测试和小修小改。" },
+      { v: "需求拆解、复杂调试、系统判断、上线质量", note: "SDE 更该把自己写成能判断和交付的人，而不是只会照需求写代码。" },
+      { v: "复杂问题、性能/可靠性、业务影响、上线结果", note: "简历里要写工程取舍和结果，别只列语言和框架。" }),
+  },
+];
+
+const AI_TITLE_IMPACT_OVERRIDES = [
+  {
+    patterns: /\b(social media manager|social media strategist|content strategist|digital strategist|brand manager|marketing manager|product manager|technical product manager|program manager|project manager|it manager|information systems manager|management consultant|strategy consultant)\b/i,
+    profile: aiFamilyProfile("中等影响", "策略判断会更重要",
+      { v: "资料整理、初稿生成、状态同步", note: "工具会帮你省掉很多整理时间，但策略和取舍还是要人来做。" },
+      { v: "方向判断、优先级取舍、跨团队推动、结果负责", note: "这类 title 的重点不是产出多少材料，而是判断对不对、能不能推进。" },
+      { v: "策略选择、指标变化、项目结果、团队协作", note: "简历里要写清楚你做了什么判断，以及结果有没有变好。" }),
+  },
+  {
+    patterns: /\b(product analyst|analytics consultant|business analytics consultant|data consultant|insights analyst|corporate performance analyst)\b/i,
+    profile: aiFamilyProfile("高影响", "基础分析会被工具接手",
+      { v: "取数、分析初稿、固定指标解释", note: "基础分析会越来越快，真正拉开差距的是你能不能解释业务问题。" },
+      { v: "指标判断、业务解释、实验分析、建议落地", note: "不要只写做分析，要写你怎么把分析变成决策或行动。" },
+      { v: "业务洞察、指标提升、决策支持、自动化效率", note: "把分析工作写成结果，会比只写工具和图表更有力。" }),
+  },
+  ...AI_HIGH_IMPACT_TITLE_OVERRIDES,
+];
+
+const AI_FAMILY_PROFILES = {
+  accounting: aiFamilyProfile("中等影响", "基础核对会越来越工具化",
+    { v: "凭证整理、基础核对、报表初稿", note: "规则清楚的核对会更省时间，但异常解释和风险判断还是要靠人。" },
+    { v: "异常解释、合规意识、业务理解、准确性", note: "会计/审计岗位更该写你怎么发现问题，而不是只写做账或对账。" },
+    { v: "月结、审计发现、错误率下降、流程规范", note: "用准确率、周期缩短或审计发现来证明你的价值。" }),
+  actuarial: aiFamilyProfile("中等影响", "模型初稿会帮你提速",
+    { v: "基础测算、数据整理、模型版本对比", note: "工具能加快测算，但假设是否合理仍然需要专业判断。" },
+    { v: "风险建模、假设选择、监管理解、结果解释", note: "精算岗位最该体现的是你如何解释风险，而不是只会套模型。" },
+    { v: "模型准确性、风险评估、假设依据、业务影响", note: "写清楚你做了什么判断，以及这个判断影响了什么结果。" }),
+  finance: aiFamilyProfile("中等影响", "基础分析会被工具接手",
+    { v: "资料整理、财务模型初稿、市场摘要", note: "基础材料会更快，但投资判断和商业解释不会自动生成。" },
+    { v: "估值判断、风险解释、业务建模、投资逻辑", note: "金融岗位要写出你为什么这么判断，而不是只说会建模。" },
+    { v: "估值、预算、成本节省、投资建议采纳", note: "尽量把模型结论和业务动作连起来写。" }),
+  trading_quant: aiFamilyProfile("中等影响", "回测与研究会更自动化",
+    { v: "数据清洗、回测框架、策略初筛", note: "工具能加快研究节奏，但信号是否可靠仍然要人判断。" },
+    { v: "风险控制、策略解释、市场直觉、稳健性验证", note: "量化岗位更看重你怎么证明策略不是偶然有效。" },
+    { v: "收益风险、回撤、样本外验证、交易约束", note: "把策略表现和风险边界写清楚，会比只列模型更有力。" }),
+  business_analysis: aiFamilyProfile("中等影响", "需求整理会被工具接手",
+    { v: "会议纪要、流程图初稿、需求摘要", note: "整理工作会更快，但真正重要的是你有没有理解业务问题。" },
+    { v: "问题拆解、流程诊断、系统沟通、需求取舍", note: "BA 的亮点在于把模糊问题讲清楚，并推动团队对齐。" },
+    { v: "流程改善、需求落地、系统优化、效率提升", note: "写出你发现了什么卡点，以及最后流程怎么变好了。" }),
+  business_operations: aiFamilyProfile("中等影响", "日常跟进会被工具接手",
+    { v: "进度提醒、信息同步、运营汇总", note: "重复跟进会更省力，但跨团队推进和结果负责仍然很看人。" },
+    { v: "资源协调、优先级判断、流程改进、执行落地", note: "运营岗位要写出你怎么把事情真正推进到结果。" },
+    { v: "效率提升、周期缩短、错误减少、跨部门协作", note: "把日常运营写成具体改善，用户和 HR 都更容易看懂。" }),
+  operations: aiFamilyProfile("中等影响", "重复事务会被工具接手",
+    { v: "排程、资料整理、基础报表、提醒跟进", note: "工具会分担很多日常事务，但临场判断和协调还是关键。" },
+    { v: "优先级判断、现场协调、流程优化、服务体验", note: "不要只写执行，要写你怎么让流程更顺、问题更少。" },
+    { v: "响应效率、流程优化、成本降低、团队支持", note: "写清楚你让谁的工作变快、变准或更稳定。" }),
+  consulting: aiFamilyProfile("低-中等影响", "资料整理会被工具接手",
+    { v: "行业摘要、PPT 初稿、资料归纳", note: "材料会做得更快，但客户问题怎么拆，还是核心能力。" },
+    { v: "结构化思考、商业判断、客户沟通、落地推动", note: "顾问价值不在页数，而在判断和影响力。" },
+    { v: "分析框架、客户结果、建议采纳、项目影响", note: "写出你的建议如何被使用，比只写做了 deck 更强。" }),
+  procurement: aiFamilyProfile("中等影响", "比价与跟踪会越来越工具化",
+    { v: "供应商资料整理、报价比对、采购跟进", note: "工具能加快比价和追踪，但谈判和风险判断仍然靠人。" },
+    { v: "供应商判断、成本谈判、风险识别、跨部门协调", note: "采购岗位的价值在于拿到更稳、更合适的方案。" },
+    { v: "成本节省、交付稳定、供应商绩效、风险降低", note: "把节省金额、周期或供应稳定性写出来会更有说服力。" }),
+  supply_chain_logistics: aiFamilyProfile("中等影响", "追踪与调度会越来越工具化",
+    { v: "库存追踪、基础预测、运输/仓库数据整理", note: "报表、提醒和基础调度会更自动化，但现场异常和资源协调还是关键。" },
+    { v: "供需判断、异常协调、成本与时效权衡", note: "越能把现场问题转成可执行的优化，越不容易被写成普通执行岗。" },
+    { v: "库存优化、成本降低、时效提升、完结率提升", note: "最好写出你怎么让流程更准、更快或更省成本。" }),
+  project_program_management: aiFamilyProfile("低-中等影响", "状态同步会被工具接手",
+    { v: "进度更新、会议纪要、风险清单初稿", note: "工具能帮忙追状态，但项目卡住时还是要人来推动。" },
+    { v: "优先级管理、风险升级、资源协调、交付判断", note: "项目管理的价值在于让复杂事情按时落地。" },
+    { v: "按期交付、风险处理、跨团队协作、范围管理", note: "写清楚你解决过什么阻塞，以及项目因此怎么推进。" }),
+  data_analyst: aiFamilyProfile("中等影响", "基础分析会被工具接手",
+    { v: "取数、报表初稿、常规指标解释", note: "报表会越来越快，真正拉开差距的是你能不能看出问题。" },
+    { v: "定义问题、选择指标、解释业务原因", note: "重点不是工具用得多快，而是你能不能把信息变成决策。" },
+    { v: "指标体系、业务洞察、实验分析、决策影响", note: "别只写做图表，要写你发现了什么、推动了什么。" }),
+  data_engineer: aiFamilyProfile("中等影响", "脚本和管道初稿会提速",
+    { v: "样板 ETL、SQL 初稿、数据校验脚本", note: "工具能加快实现，但数据质量和系统稳定性仍然要人负责。" },
+    { v: "数据建模、管道可靠性、质量治理、成本控制", note: "数据工程更该突出你怎么让数据稳定、可信、可复用。" },
+    { v: "延迟降低、稳定性、数据质量、平台复用", note: "写出规模、稳定性和影响范围，会比只列工具更有力。" }),
+  data_scientist: aiFamilyProfile("中等影响", "建模初稿会帮你提速",
+    { v: "特征初筛、模型 baseline、结果摘要", note: "模型跑得更快了，但问题定义和结果解释还是关键。" },
+    { v: "实验设计、因果判断、模型解释、业务落地", note: "DS 的价值在于把模型变成可信的业务判断。" },
+    { v: "实验结果、模型效果、业务提升、方法选择", note: "写清楚为什么选这个方法，以及它解决了什么问题。" }),
+  machine_learning: aiFamilyProfile("中等影响", "代码与实验会提速",
+    { v: "训练脚本、模型 baseline、论文摘要", note: "工具能加快实验起步，但不会替你判断模型是否可靠。" },
+    { v: "模型设计、误差分析、部署约束、数据判断", note: "MLE/ML 岗位更看重你怎么处理真实数据和工程限制。" },
+    { v: "模型指标、部署效果、延迟/成本、泛化能力", note: "把模型效果和上线约束一起写，会更像真实项目。" }),
+  ai_engineer: aiFamilyProfile("中等影响", "原型搭建会更快",
+    { v: "prompt 初稿、agent demo、RAG 样板流程", note: "AI 工具会让原型更快，但稳定性和产品化仍然要人把关。" },
+    { v: "系统设计、评估方法、安全边界、业务落地", note: "AI 岗位不要只写会调模型，要写你怎么让它可靠可用。" },
+    { v: "评估指标、上线效果、成本控制、用户影响", note: "写清楚你怎么验证效果，而不是只展示 demo。" }),
+  software_engineer: aiFamilyProfile("中等影响", "代码生成会帮你提速",
+    { v: "样板代码、基础测试、简单 bug 修复", note: "简单实现会被提速，但需求拆解和上线质量还是关键。" },
+    { v: "系统设计、复杂调试、性能与安全判断", note: "越能处理复杂系统和模糊需求，越能体现工程价值。" },
+    { v: "架构选择、可靠性、性能指标、上线影响", note: "把项目写成工程决策和结果，不只是技术栈清单。" }),
+  cloud_infrastructure: aiFamilyProfile("中等影响", "配置初稿会被工具接手",
+    { v: "脚本模板、监控摘要、配置建议", note: "工具能帮忙写配置，但稳定性、成本和安全要有人负责。" },
+    { v: "架构可靠性、故障排查、成本优化、安全意识", note: "基础设施岗位的亮点在系统稳定和问题恢复能力。" },
+    { v: "可用性、恢复时间、成本节省、自动化覆盖", note: "用 uptime、恢复时间或成本指标来写会更有力量。" }),
+  cybersecurity: aiFamilyProfile("中等影响", "告警初筛会更自动化",
+    { v: "日志摘要、告警分流、漏洞资料整理", note: "工具能帮忙看更多信号，但风险优先级还是要人判断。" },
+    { v: "威胁判断、事件响应、风险沟通、安全架构", note: "安全岗位最重要的是判断什么真的危险，以及怎么处理。" },
+    { v: "风险降低、响应时间、漏洞修复、安全策略", note: "写出你降低了什么风险，会比只列工具更可信。" }),
+  it_support: aiFamilyProfile("高影响", "标准排查会被工具接手",
+    { v: "FAQ、工单分类、基础故障排查", note: "标准问题会越来越自动化，但复杂故障和用户沟通仍然需要人。" },
+    { v: "问题定位、用户沟通、升级协调、知识库优化", note: "IT 支持要写出你怎么更快解决问题、减少重复问题。" },
+    { v: "响应时间、解决率、用户满意度、知识库改进", note: "用 SLA、解决率或满意度来写会更具体。" }),
+  hardware_electrical: aiFamilyProfile("低-中等影响", "设计辅助会提速",
+    { v: "资料检索、仿真设置、测试记录整理", note: "工具能加快准备工作，但硬件判断和验证责任仍然很重。" },
+    { v: "电路判断、验证计划、故障定位、跨团队协作", note: "硬件岗位更看重你怎么验证、排错和保证可靠性。" },
+    { v: "性能指标、良率、验证结果、量产影响", note: "写出测试结果和工程约束，会比只列设计工具更强。" }),
+  mechanical_engineering: aiFamilyProfile("低-中等影响", "设计与记录会提速",
+    { v: "CAD 初稿、测试记录、资料整理", note: "工具能帮忙生成和整理，但现场约束和工程判断仍然关键。" },
+    { v: "设计取舍、可靠性、安全、制造可行性", note: "机械岗位要写出你怎么在成本、性能和安全之间做取舍。" },
+    { v: "性能改善、成本降低、可靠性、测试结果", note: "用工程指标写成果，会比只写参与设计更有说服力。" }),
+  manufacturing_process: aiFamilyProfile("中等影响", "记录与监控会更自动化",
+    { v: "生产记录、异常初筛、工艺数据监控", note: "系统能更快发现波动，真正重要的是你怎么定位原因。" },
+    { v: "根因分析、工艺优化、现场判断、安全意识", note: "能把异常变成流程改善，会比只记录问题更有价值。" },
+    { v: "良率提升、缺陷下降、停机减少、SOP 改进", note: "把改善前后写出来，让人看到你推动了解决。" }),
+  industrial_quality: aiFamilyProfile("中等影响", "检测与记录会越来越工具化",
+    { v: "质量记录、异常初筛、检测数据汇总", note: "检测记录会更快，但质量问题背后的原因仍需要人判断。" },
+    { v: "根因分析、流程改善、质量体系、跨部门推动", note: "质量岗位的价值在于让问题不再重复发生。" },
+    { v: "缺陷率下降、良率提升、返工减少、流程改善", note: "用质量指标写成果，会比只说负责 QA/QC 更强。" }),
+  civil_construction: aiFamilyProfile("低-中等影响", "排程与文档会被工具接手",
+    { v: "施工记录、排程提醒、材料文档整理", note: "文档和排程会更省力，但现场安全和协调还是靠人。" },
+    { v: "现场判断、安全管理、供应商协调、进度控制", note: "施工/现场岗位最值钱的是稳住安全、进度和质量。" },
+    { v: "按期交付、安全记录、成本控制、质量问题减少", note: "写出现场问题怎么被你解决，会比职责列表更有用。" }),
+  product_manager: aiFamilyProfile("低-中等影响", "文档初稿会被工具接手",
+    { v: "竞品摘要、PRD 初稿、用户反馈整理", note: "工具能帮忙起草，但产品判断和取舍不能外包。" },
+    { v: "用户洞察、优先级判断、跨团队推动", note: "产品岗位的核心是定义问题、取舍资源、推动结果。" },
+    { v: "需求判断、指标提升、实验结果、上线影响", note: "写出你为什么这么做，以及结果有没有变好。" }),
+  marketing: aiFamilyProfile("中等影响", "内容初稿会越来越工具化",
+    { v: "文案初稿、素材变体、基础复盘", note: "普通内容会更快生成，难的是判断受众和转化方向。" },
+    { v: "受众判断、策略定位、渠道组合、转化优化", note: "市场岗位要写出你怎么让 campaign 真的有效。" },
+    { v: "转化率、ROI、留存、品牌/内容影响", note: "别只写执行活动，要写指标和业务影响。" }),
+  sales_customer_success: aiFamilyProfile("中等影响", "跟进和回复会被工具接手",
+    { v: "线索研究、邮件初稿、CRM 更新、FAQ 回复", note: "标准沟通会更省力，但客户判断和推进节奏仍然很看人。" },
+    { v: "客户判断、谈判推进、复杂问题处理、关系建立", note: "销售/客户成功的价值在信任、判断和结果推进。" },
+    { v: "成交额、pipeline、续约、满意度、留存", note: "用转化、成交或续约结果来证明你的贡献。" }),
+  communications_pr: aiFamilyProfile("中等影响", "初稿和摘要会越来越工具化",
+    { v: "新闻稿初稿、资料摘要、传播素材变体", note: "工具能帮忙起草，但语气、风险和受众判断仍然重要。" },
+    { v: "信息判断、品牌语气、危机沟通、利益相关方管理", note: "传播岗位最关键的是知道什么该说、怎么说、对谁说。" },
+    { v: "传播效果、媒体覆盖、受众反馈、风险处理", note: "写出传播结果和影响范围，会比只写产出材料更强。" }),
+  design_creative: aiFamilyProfile("中等影响", "草图与变体会越来越工具化",
+    { v: "视觉变体、初稿生成、素材延展", note: "工具能帮你起步，但方向和审美判断还是你的价值。" },
+    { v: "用户理解、审美判断、故事表达、落地协作", note: "设计/创意岗位要写出为什么这样做，以及结果是否有效。" },
+    { v: "作品影响、用户问题、设计决策、效率或转化提升", note: "不要只放作品名，写清楚你的判断和贡献。" }),
+  ux_research_design: aiFamilyProfile("低-中等影响", "整理和原型会提速",
+    { v: "访谈摘要、原型初稿、可用性问题归纳", note: "工具能整理材料，但用户真正的问题还是要你判断。" },
+    { v: "研究设计、洞察提炼、信息架构、跨团队推动", note: "UX 的价值在于把用户问题转成产品决策。" },
+    { v: "研究方法、洞察影响、设计改进、指标变化", note: "写出你的洞察如何影响设计或业务结果。" }),
+  legal_compliance: aiFamilyProfile("中等影响", "检索与初稿会越来越工具化",
+    { v: "法规检索、合同初稿、条款比对", note: "标准文本处理会省时间，但风险判断不能只交给工具。" },
+    { v: "风险判断、事实分析、谈判沟通、合规取舍", note: "法律/合规岗位要写出你怎么识别和降低风险。" },
+    { v: "风险识别、合同审阅、流程合规、跨部门沟通", note: "不要只写审文件，写你发现并修正了什么问题。" }),
+  healthcare: aiFamilyProfile("低-中等影响", "记录整理会被工具接手",
+    { v: "记录整理、基础数据录入、资料摘要", note: "文档会更省力，但安全、准确性和责任边界不能含糊。" },
+    { v: "专业判断、质量控制、患者/实验安全、跨团队协作", note: "涉及安全和专业责任时，人的判断仍然非常重要。" },
+    { v: "准确率、SOP 遵循、质量改进、护理/研究结果", note: "写清楚你如何保证准确、安全和稳定。" }),
+  life_sciences: aiFamilyProfile("低-中等影响", "文献与记录会提速",
+    { v: "文献摘要、实验记录整理、基础数据录入", note: "工具能帮忙整理资料，但实验设计和结果解释仍要人负责。" },
+    { v: "实验设计、方法选择、质量控制、结果解释", note: "生命科学岗位要体现严谨性和可验证的判断。" },
+    { v: "实验方法、样本规模、发现结论、发表或应用影响", note: "把研究写成方法和结果，不只是实验任务。" }),
+  hr_recruiting: aiFamilyProfile("中等影响", "筛选和排程会被工具接手",
+    { v: "简历初筛、面试安排、候选人沟通模板", note: "流程会更自动化，但人才判断和候选人体验仍然靠人。" },
+    { v: "人才判断、面试校准、雇主品牌、员工关系", note: "HR 的价值在判断、关系和组织理解。" },
+    { v: "招聘转化、time-to-fill、留存、流程优化", note: "写出你怎么提高招聘效率或质量，会更具体。" }),
+  education: aiFamilyProfile("中等影响", "备课与反馈会被工具接手",
+    { v: "教案初稿、练习题生成、基础反馈", note: "材料会更容易准备，但学生状态和课堂判断还是要靠人。" },
+    { v: "学生判断、课堂管理、学习设计、沟通陪伴", note: "教育岗位的价值在理解人和推动成长。" },
+    { v: "学习成果、课程设计、学生支持、参与度提升", note: "把学生前后变化写出来，会比只写授课内容更有说服力。" }),
+  research_academic: aiFamilyProfile("低-中等影响", "资料整理会被工具接手",
+    { v: "文献摘要、数据清洗、实验记录整理", note: "准备工作会更快，但好问题和可靠方法仍然稀缺。" },
+    { v: "问题定义、实验设计、方法选择、结果解释", note: "研究价值来自提出好问题和做出可靠判断。" },
+    { v: "研究方法、样本规模、发现结论、发表或应用影响", note: "写清楚方法和结果，让别人看到研究质量。" }),
+  policy_public_sector: aiFamilyProfile("中等影响", "材料整理会被工具接手",
+    { v: "政策摘要、申请材料初稿、项目进度整理", note: "文档会更快，但政策理解和利益相关方沟通仍然关键。" },
+    { v: "政策理解、项目落地、影响评估、公众沟通", note: "公共部门/政策岗位更看重协调和实际影响。" },
+    { v: "服务人数、资金规模、项目结果、流程改进", note: "用影响范围和结果证明项目价值。" }),
+  sustainability_environment: aiFamilyProfile("中等影响", "资料和报告会被工具接手",
+    { v: "ESG 资料整理、政策摘要、基础报告初稿", note: "材料整理会更快，但环境判断和落地方案仍然需要人。" },
+    { v: "数据解释、政策理解、项目推进、影响评估", note: "可持续岗位要把理念写成实际行动和可衡量结果。" },
+    { v: "排放/成本改善、项目影响、合规进展、报告质量", note: "写出你推动了什么改变，而不是只写关注可持续。" }),
+  social_services: aiFamilyProfile("低-中等影响", "记录和材料会被工具接手",
+    { v: "个案记录、资源资料整理、沟通模板", note: "文档会更省力，但人的判断、陪伴和边界感替代不了。" },
+    { v: "个案判断、危机处理、资源协调、信任建立", note: "社会服务岗位最重要的是处理复杂的人和真实情境。" },
+    { v: "服务人数、个案进展、资源链接、干预结果", note: "写出你如何支持对象发生具体变化。" }),
+  journalism_media: aiFamilyProfile("中等影响", "初稿与改写会越来越工具化",
+    { v: "初稿生成、标题变体、资料摘要", note: "普通内容会更快，难的是选题判断、事实核查和观点。" },
+    { v: "选题判断、采访能力、事实核查、独特表达", note: "媒体岗位真正稀缺的是判断、来源和表达。" },
+    { v: "阅读量、转化、选题影响、内容质量标准", note: "少写抽象词，多写你做过什么，以及带来什么变化。" }),
+  hospitality_events: aiFamilyProfile("中等影响", "预订与排班会越来越工具化",
+    { v: "预订确认、排班提醒、标准客户回复", note: "重复流程会被工具优化，但现场服务和临时处理仍然靠人。" },
+    { v: "现场服务、投诉处理、团队协调、体验设计", note: "服务岗位的价值在对人的理解和现场判断。" },
+    { v: "满意度、复购、投诉解决、运营效率", note: "写出你怎么提升体验或让现场运转更顺。" }),
+  other: aiFamilyProfile("待校准", "需要更明确的岗位信息",
+    { v: "待判断", note: "岗位职责越具体，这里就能判断得越准。" },
+    { v: "判断力、协作、结果负责", note: "先把最能体现判断和结果的经历写清楚。" },
+    { v: "场景、动作、结果", note: "别硬塞关键词，先把真实贡献讲清楚。" }),
+};
+
+function matchAiFamilyProfile(text, titleText = "") {
+  const normalized = String(text || "");
+  const titleSignal = String(titleText || normalized);
+  for (const override of AI_TITLE_IMPACT_OVERRIDES) {
+    if (override.patterns.test(titleSignal) && !(override.exclude && override.exclude.test(titleSignal))) return override.profile;
+  }
+  for (const [family, re] of AI_FAMILY_RULES) {
+    if (re.test(normalized)) return AI_FAMILY_PROFILES[family];
+  }
+  return null;
+}
+
+const AI_IMPACT_PROFILES = [
+  {
+    patterns: /(logistics_operations_support|logistics|operations support|pickup|dispatch|warehouse|delivery|parcel|fleet|shipping|receiving|揽收|调度|仓库|物流|快递|末端|运营支持|报告制作|成本控制)/i,
+    level: "中等影响",
+    caption: "重复任务会被自动化",
+    rows: [
+      { k:"容易被自动化", v:"重复报表、基础数据整理、标准流程提醒", note:"AI 会先压缩低判断、可模板化的日常工作。" },
+      { k:"更有价值的能力", v:"异常判断、跨团队协同、流程优化、数据决策", note:"越能处理例外情况和协调现场资源，越不容易被工具替代。" },
+      { k:"简历应强化", v:"数据发现问题、优化调度、降低成本、提升完结率", note:"把工作写成判断和改进，而不是只写执行任务。" },
+    ],
+  },
+  {
+    patterns: /(supply_chain_operations|supply chain|logistician|logistics analyst|operations analyst|transportation analyst|inventory|fulfillment|procurement|供应链|物流分析|库存|履约|采购)/i,
+    level: "中等影响",
+    caption: "预测与跟踪会更自动化",
+    rows: [
+      { k:"容易被自动化", v:"库存追踪、基础预测、供应商数据整理", note:"规则清楚、数据结构稳定的分析会越来越多由系统完成。" },
+      { k:"更有价值的能力", v:"供需判断、异常协调、成本与时效权衡", note:"真正的价值在于理解业务约束，并推动跨团队决策。" },
+      { k:"简历应强化", v:"优化库存、缩短周期、降低缺货或运输成本", note:"用结果证明你不只是跟踪流程，也能改善流程。" },
+    ],
+  },
+  {
+    patterns: /(data_analytics|data analyst|data analytics|business intelligence|bi analyst|sql|tableau|power bi|dashboard|数据分析|商业分析|报表|指标|仪表盘)/i,
+    level: "中等影响",
+    caption: "基础分析会被自动化",
+    rows: [
+      { k:"容易被自动化", v:"取数、报表初稿、常规指标解释", note:"AI 会降低基础分析和图表生成的门槛。" },
+      { k:"更有价值的能力", v:"定义问题、选择指标、解释业务原因", note:"能把数据转成决策的人，会比只会做图表的人更有优势。" },
+      { k:"简历应强化", v:"指标体系、业务洞察、实验分析、决策影响", note:"强调你如何发现问题、提出建议并影响业务结果。" },
+    ],
+  },
+  {
+    patterns: /(software_engineering|software_engineer|software engineer|software developer|frontend|backend|full stack|sde|web developer|developer|软件工程师|前端|后端|全栈|开发)/i,
+    level: "中等影响",
+    caption: "代码生成会提升效率",
+    rows: [
+      { k:"容易被自动化", v:"样板代码、基础测试、简单 bug 修复", note:"AI 会让常规实现更快，但不会替代完整工程判断。" },
+      { k:"更有价值的能力", v:"系统设计、复杂调试、性能与安全判断", note:"越能处理模糊需求和复杂系统，越能体现不可替代性。" },
+      { k:"简历应强化", v:"架构选择、规模指标、可靠性、上线影响", note:"把项目写成工程决策和业务结果，而不是技术栈清单。" },
+    ],
+  },
+  {
+    patterns: /(product_management|product manager|associate product manager|apm|product owner|growth product|roadmap|user story|产品经理|产品负责人|产品运营)/i,
+    level: "低-中等影响",
+    caption: "AI 更像效率工具",
+    rows: [
+      { k:"容易被自动化", v:"竞品摘要、PRD 初稿、用户反馈整理", note:"AI 会加快信息整理和文档初稿，但不能代替产品判断。" },
+      { k:"更有价值的能力", v:"用户洞察、优先级判断、跨团队推动", note:"产品岗位的核心仍是定义问题、取舍资源、推动结果。" },
+      { k:"简历应强化", v:"需求判断、指标提升、实验结果、上线影响", note:"突出你如何从用户和数据中做判断，并推动产品改进。" },
+    ],
+  },
+  {
+    patterns: /(marketing|growth|social media|smm|campaign|content marketing|seo|sem|brand|市场|营销|增长|社媒|内容运营|品牌|投放)/i,
+    level: "中等影响",
+    caption: "内容与投放初稿会自动化",
+    rows: [
+      { k:"容易被自动化", v:"文案初稿、素材变体、基础数据复盘", note:"AI 会显著提升内容生产和 campaign 分析效率。" },
+      { k:"更有价值的能力", v:"受众判断、策略定位、渠道组合、转化优化", note:"能定义策略和解释增长原因的人更难被工具替代。" },
+      { k:"简历应强化", v:"转化率、留存、ROI、campaign 结果", note:"不要只写执行活动，要写清楚策略、指标和业务影响。" },
+    ],
+  },
+  {
+    patterns: /(finance_accounting|financial analyst|finance|accounting|accountant|audit|tax|fp&a|valuation|会计|审计|财务|金融分析|估值|税务)/i,
+    level: "中等影响",
+    caption: "基础核对会更自动化",
+    rows: [
+      { k:"容易被自动化", v:"凭证整理、基础核对、报表初稿", note:"规则明确、重复性高的财务工作会被系统加速。" },
+      { k:"更有价值的能力", v:"风险判断、异常解释、业务建模、合规意识", note:"岗位价值会更多体现在解释数字和判断风险上。" },
+      { k:"简历应强化", v:"预算分析、成本节省、审计发现、模型准确性", note:"用具体数字证明你能支持决策，而不只是处理表格。" },
+    ],
+  },
+  {
+    patterns: /(business_operations|business operations|operations specialist|program coordinator|project coordinator|business analyst|运营专员|项目协调|业务运营|流程|项目管理)/i,
+    level: "中等影响",
+    caption: "流程跟进会被自动化",
+    rows: [
+      { k:"容易被自动化", v:"进度提醒、会议纪要、流程状态汇总", note:"AI 会减少重复协调和信息同步的时间。" },
+      { k:"更有价值的能力", v:"流程设计、资源协调、问题升级、结果负责", note:"能推动复杂事项落地的人会更有优势。" },
+      { k:"简历应强化", v:"缩短周期、提升效率、减少错误、跨部门协作", note:"把运营工作写成改进结果，而不是日常跟进。" },
+    ],
+  },
+  {
+    patterns: /(human_resources|human resources|hr specialist|recruiter|talent acquisition|people operations|人力资源|招聘|人才招聘|员工关系)/i,
+    level: "中等影响",
+    caption: "筛选与沟通会被自动化",
+    rows: [
+      { k:"容易被自动化", v:"简历初筛、面试安排、候选人沟通模板", note:"标准化招聘流程会越来越依赖自动化工具。" },
+      { k:"更有价值的能力", v:"人才判断、面试校准、雇主品牌、员工关系", note:"HR 的核心价值会更偏向判断、关系和组织理解。" },
+      { k:"简历应强化", v:"招聘转化、time-to-fill、留存、流程优化", note:"用指标说明你如何提高招聘或组织运营质量。" },
+    ],
+  },
+  {
+    patterns: /(customer_support|customer support|customer service|customer success|client success|support specialist|客服|客户支持|客户成功|售后|工单)/i,
+    level: "高影响",
+    caption: "标准回复会被自动化",
+    rows: [
+      { k:"容易被自动化", v:"FAQ 回复、工单分类、基础问题排查", note:"重复咨询和标准流程会优先被 AI 接管。" },
+      { k:"更有价值的能力", v:"复杂问题判断、客户安抚、升级协调、续约洞察", note:"能处理高风险客户和复杂场景的人更有价值。" },
+      { k:"简历应强化", v:"满意度、响应时效、升级解决率、留存贡献", note:"强调你如何解决复杂问题并改善客户体验。" },
+    ],
+  },
+  {
+    patterns: /(sales|account executive|business development|bd|partnership|revenue|客户经理|销售|商务拓展|渠道|合作伙伴)/i,
+    level: "中等影响",
+    caption: "线索整理会被自动化",
+    rows: [
+      { k:"容易被自动化", v:"线索研究、邮件初稿、CRM 更新", note:"AI 会提高销售准备和跟进效率。" },
+      { k:"更有价值的能力", v:"客户判断、谈判推进、方案匹配、关系建立", note:"真实成交仍依赖信任、判断和复杂沟通。" },
+      { k:"简历应强化", v:"pipeline、成交额、转化率、客户保留", note:"用数字展示你如何带来收入或关键客户进展。" },
+    ],
+  },
+  {
+    patterns: /(designer|ux|ui|product design|graphic design|creative|visual|figma|设计|视觉|交互|用户体验)/i,
+    level: "中等影响",
+    caption: "草图与变体会自动化",
+    rows: [
+      { k:"容易被自动化", v:"视觉变体、初稿生成、素材延展", note:"AI 会加快探索速度，但不会自动产生好判断。" },
+      { k:"更有价值的能力", v:"用户理解、信息架构、审美判断、落地协作", note:"能把设计和业务目标连接起来的人更有优势。" },
+      { k:"简历应强化", v:"用户问题、设计决策、转化或效率提升", note:"作品集和简历都要说明为什么这么设计，以及结果如何。" },
+    ],
+  },
+  {
+    patterns: /(consulting|consultant|strategy|management trainee|business strategy|咨询|顾问|战略|管培生)/i,
+    level: "低-中等影响",
+    caption: "研究整理会被自动化",
+    rows: [
+      { k:"容易被自动化", v:"资料整理、行业摘要、PPT 初稿", note:"AI 会减少基础研究和材料制作时间。" },
+      { k:"更有价值的能力", v:"结构化思考、客户沟通、商业判断、落地推动", note:"顾问价值更多来自判断和影响力，而不是材料本身。" },
+      { k:"简历应强化", v:"分析框架、客户结果、项目影响、建议采纳", note:"写清你如何拆解问题并推动决策。" },
+    ],
+  },
+  {
+    patterns: /(legal|paralegal|law clerk|compliance|contract|policy|律师|法务|合规|合同|法律助理|政策)/i,
+    level: "中等影响",
+    caption: "检索与初稿会自动化",
+    rows: [
+      { k:"容易被自动化", v:"法规检索、合同初稿、条款比对", note:"AI 会提升资料查找和标准文本处理效率。" },
+      { k:"更有价值的能力", v:"风险判断、事实分析、谈判沟通、合规取舍", note:"法律相关岗位仍依赖专业判断和责任边界。" },
+      { k:"简历应强化", v:"风险识别、合同审阅、流程合规、跨部门沟通", note:"突出你如何降低风险或提升合规效率。" },
+    ],
+  },
+  {
+    patterns: /(healthcare|clinical|medical|nurse|pharmacy|biotech|life science|lab|research associate|医疗|临床|护理|药房|生物|生命科学|实验室|医药)/i,
+    level: "低-中等影响",
+    caption: "记录整理会被自动化",
+    rows: [
+      { k:"容易被自动化", v:"记录整理、文献摘要、基础数据录入", note:"AI 会辅助文档和研究资料处理，但不能替代专业责任。" },
+      { k:"更有价值的能力", v:"专业判断、质量控制、患者/实验安全、跨团队协作", note:"越涉及安全、伦理和专业判断，越需要人来负责。" },
+      { k:"简历应强化", v:"SOP 遵循、准确率、质量改进、研究或护理结果", note:"用具体场景证明你的严谨性和专业贡献。" },
+    ],
+  },
+  {
+    patterns: /(education|teacher|tutor|academic advisor|student affairs|instructional|学校|教师|老师|助教|课程|学生事务|教育)/i,
+    level: "中等影响",
+    caption: "备课与反馈会被自动化",
+    rows: [
+      { k:"容易被自动化", v:"教案初稿、练习题生成、基础反馈", note:"AI 会降低内容准备和个性化材料制作成本。" },
+      { k:"更有价值的能力", v:"学生判断、课堂管理、学习设计、沟通陪伴", note:"教育岗位的核心价值仍在理解人和推动成长。" },
+      { k:"简历应强化", v:"学习成果、课程设计、学生支持、参与度提升", note:"强调你如何帮助学生达成可观察的进步。" },
+    ],
+  },
+  {
+    patterns: /(research|scientist|r&d|quantitative researcher|policy research|研究|科研|研发|调研|实验设计)/i,
+    level: "低-中等影响",
+    caption: "资料整理会被自动化",
+    rows: [
+      { k:"容易被自动化", v:"文献摘要、数据清洗、实验记录整理", note:"AI 会提升研究准备和资料处理速度。" },
+      { k:"更有价值的能力", v:"问题定义、实验设计、方法选择、结果解释", note:"研究价值来自提出好问题和做出可靠判断。" },
+      { k:"简历应强化", v:"研究方法、样本规模、发现结论、发表或应用影响", note:"把研究写成可验证的方法和结果。" },
+    ],
+  },
+  {
+    patterns: /(administrative|office assistant|executive assistant|coordinator|receptionist|行政|助理|前台|秘书|文员|办公室)/i,
+    level: "高影响",
+    caption: "日常事务会被自动化",
+    rows: [
+      { k:"容易被自动化", v:"日程安排、邮件初稿、表格整理、提醒跟进", note:"标准化事务会越来越多由工具完成。" },
+      { k:"更有价值的能力", v:"优先级判断、现场协调、保密意识、服务体验", note:"能处理临时情况和复杂关系的人更有价值。" },
+      { k:"简历应强化", v:"流程优化、响应效率、跨部门支持、错误减少", note:"证明你不只是执行，也能让团队运转更顺。" },
+    ],
+  },
+  {
+    patterns: /(manufacturing|production|quality|qa|qc|process engineer|industrial|工厂|制造|生产|质检|质量|工艺|工业工程)/i,
+    level: "中等影响",
+    caption: "检测与记录会更自动化",
+    rows: [
+      { k:"容易被自动化", v:"质量记录、异常初筛、生产数据监控", note:"标准检测和数据汇总会被系统持续增强。" },
+      { k:"更有价值的能力", v:"现场判断、根因分析、工艺优化、安全意识", note:"真实产线问题仍需要经验和跨团队处理。" },
+      { k:"简历应强化", v:"良率提升、缺陷下降、停机减少、SOP 改进", note:"用产线指标证明你的改进效果。" },
+    ],
+  },
+  {
+    patterns: /(facilities|maintenance|field technician|technician|construction|site manager|物业|设施|维修|技术员|施工|现场|安保)/i,
+    level: "低-中等影响",
+    caption: "排程与记录会自动化",
+    rows: [
+      { k:"容易被自动化", v:"工单分派、巡检记录、维护提醒", note:"AI 会让现场工作的信息流更自动化。" },
+      { k:"更有价值的能力", v:"现场判断、安全处理、供应商协调、应急响应", note:"现场岗位的关键仍是及时判断和可靠执行。" },
+      { k:"简历应强化", v:"响应时间、故障恢复、安全记录、成本节约", note:"突出你如何保障稳定运行和降低风险。" },
+    ],
+  },
+  {
+    patterns: /(government|public sector|nonprofit|ngo|program officer|community|政府|公共部门|公益|非营利|项目官员|社区)/i,
+    level: "中等影响",
+    caption: "材料整理会被自动化",
+    rows: [
+      { k:"容易被自动化", v:"资料汇总、申请材料初稿、项目进度整理", note:"AI 会提升文档和项目管理效率。" },
+      { k:"更有价值的能力", v:"政策理解、利益相关方沟通、项目落地、影响评估", note:"公共与公益岗位更看重协调和实际影响。" },
+      { k:"简历应强化", v:"服务人数、资金规模、项目结果、流程改进", note:"用影响范围和结果证明项目价值。" },
+    ],
+  },
+  {
+    patterns: /(real estate|property manager|leasing|mortgage|房地产|物业管理|租赁|房贷|地产)/i,
+    level: "中等影响",
+    caption: "资料与跟进会自动化",
+    rows: [
+      { k:"容易被自动化", v:"房源整理、客户跟进、合同资料初稿", note:"标准信息整理和沟通会更依赖自动化工具。" },
+      { k:"更有价值的能力", v:"客户判断、谈判推进、风险识别、现场协调", note:"交易和服务仍依赖信任、判断和关系经营。" },
+      { k:"简历应强化", v:"成交率、出租率、客户满意度、运营效率", note:"用业务指标证明你的服务和转化能力。" },
+    ],
+  },
+  {
+    patterns: /(hospitality|hotel|restaurant|event|tourism|front desk|酒店|餐饮|旅游|活动|会务|前厅)/i,
+    level: "中等影响",
+    caption: "预订与排班会自动化",
+    rows: [
+      { k:"容易被自动化", v:"预订确认、排班提醒、标准客户回复", note:"重复服务流程会被工具持续优化。" },
+      { k:"更有价值的能力", v:"现场服务、投诉处理、团队协调、体验设计", note:"高质量服务仍来自对人的理解和现场判断。" },
+      { k:"简历应强化", v:"满意度、复购、投诉解决、运营效率", note:"强调你如何提升体验或让现场运行更顺畅。" },
+    ],
+  },
+  {
+    patterns: /(journalist|editor|writer|content creator|copywriter|media|出版|编辑|记者|写作|文案|媒体|内容创作)/i,
+    level: "中等影响",
+    caption: "初稿与改写会自动化",
+    rows: [
+      { k:"容易被自动化", v:"初稿生成、标题变体、资料摘要", note:"AI 会加快文字生产，但也让普通内容更容易同质化。" },
+      { k:"更有价值的能力", v:"选题判断、采访能力、事实核查、独特表达", note:"真正稀缺的是判断、来源和观点。" },
+      { k:"简历应强化", v:"阅读量、转化、选题影响、内容质量标准", note:"突出你如何做出有影响力且可靠的内容。" },
+    ],
+  },
+];
+function matchAiImpactProfile(text) {
+  return AI_IMPACT_PROFILES.find(profile => profile.patterns.test(text)) || null;
+}
+
+function humanizeAiImpactCaption(caption) {
+  return String(caption || "")
+    .replace(/会被自动化/g, "会被工具接手")
+    .replace(/会更自动化/g, "会越来越工具化")
+    .replace(/会自动化/g, "会越来越工具化")
+    .replace(/AI 更像效率工具/g, "更像帮你提速的工具")
+    .replace(/会提升效率/g, "会帮你提速");
+}
+
+function stablePick(items, seed) {
+  if (!items.length) return "";
+  const text = String(seed || "");
+  let hash = 0;
+  for (let i = 0; i < text.length; i += 1) {
+    hash = (hash * 31 + text.charCodeAt(i)) >>> 0;
+  }
+  return items[hash % items.length];
+}
+
+function detectAiImpactContext(trend) {
+  const text = [
+    trend?.caption,
+    ...(trend?.rows || []).flatMap(row => [row.k, row.v, row.note]),
+  ].filter(Boolean).join(" ");
+
+  if (/(日程安排|邮件初稿|表格整理|提醒跟进|行政|office assistant|executive assistant|receptionist)/i.test(text)) return "admin";
+  if (/(工单分派|巡检记录|维护提醒|故障恢复|设施|维修|field technician|maintenance|construction)/i.test(text)) return "field";
+  if (/(质量记录|异常初筛|生产数据|良率|缺陷|停机|SOP|manufacturing|production|quality)/i.test(text)) return "manufacturing";
+  if (/(房源|出租率|成交率|房贷|leasing|real estate|property)/i.test(text)) return "real_estate";
+  if (/(法规检索|合同|条款|合规|legal|paralegal|compliance)/i.test(text)) return "legal";
+  if (/(教案|练习题|学生|课堂|education|teacher|tutor)/i.test(text)) return "education";
+  if (/(患者|实验|护理|临床|医疗|healthcare|clinical|lab)/i.test(text)) return "healthcare";
+  if (/(代码|测试|bug|架构|software|developer|frontend|backend)/i.test(text)) return "software";
+  if (/(视觉|设计|用户理解|Figma|designer|ux|ui)/i.test(text)) return "design";
+  if (/(线索|CRM|成交|pipeline|sales|account executive)/i.test(text)) return "sales";
+  if (/(FAQ|工单分类|客户安抚|续约|customer support|customer success)/i.test(text)) return "support";
+  if (/(库存|供应商|供需|运输|supply chain|inventory|procurement)/i.test(text)) return "supply_chain";
+  if (/(调度|仓库|揽收|物流|delivery|warehouse|dispatch|pickup)/i.test(text)) return "logistics";
+  if (/(报表|数据|指标|dashboard|取数|analytics|business intelligence)/i.test(text)) return "data";
+  return "general";
+}
+
+function contextSpecificAiImpactNote(context, rowKey, rowValue, seed) {
+  const isAutomation = /容易被自动化/.test(rowKey);
+  const isValue = /更有价值/.test(rowKey);
+  const isResume = /简历/.test(rowKey);
+
+  if (context === "admin") {
+    if (isAutomation) return stablePick([
+      "排程、提醒和资料整理会更省力，但临时状况和优先级判断还是要靠人。",
+      "日常事务会被工具分担不少，真正要写的是你怎么让团队运转更顺。",
+    ], seed);
+    if (isValue) return stablePick([
+      "行政岗位的亮点不只是快，而是分得清轻重缓急、守得住细节和边界。",
+      "越能处理临时需求、保密信息和多人协调，越能体现你的价值。",
+    ], seed);
+    if (isResume) return stablePick([
+      "把支持工作写成具体改善，比如节省时间、减少出错、让跨部门配合更顺。",
+      "不要只写日常协助，写清楚你让谁的工作变快、变准或更稳定。",
+    ], seed);
+  }
+
+  if (context === "field") {
+    if (isAutomation) return stablePick([
+      "派工和巡检记录会更自动化，但现场安全、临时判断和响应速度仍然很看人。",
+      "工具能提醒和分派任务，真正关键的是你到现场后怎么判断和处理。",
+    ], seed);
+    if (isValue) return stablePick([
+      "这类岗位最值钱的是现场判断、应急处理和把资源协调到位。",
+      "现场问题很少完全照剧本走，能稳住安全和进度的人更有优势。",
+    ], seed);
+    if (isResume) return stablePick([
+      "最好写出响应时间、故障恢复、安全记录或成本节约，这些比职责清单更有力。",
+      "把经历写成你解决了什么现场问题，以及结果有没有更快、更稳、更安全。",
+    ], seed);
+  }
+
+  if (context === "manufacturing") {
+    if (isAutomation) return stablePick([
+      "质量记录和数据监控会越来越自动化，但异常背后的原因还是需要人判断。",
+      "系统能更快发现波动，真正重要的是你怎么定位原因、推动修正。",
+    ], seed);
+    if (isValue) return stablePick([
+      "制造和质量岗位的价值在现场排查、根因分析和把改善落到流程里。",
+      "能把异常变成可执行的工艺或流程改进，会比只记录问题更有说服力。",
+    ], seed);
+    if (isResume) return stablePick([
+      "用良率、缺陷率、停机时间或 SOP 改善来写，会比单纯说负责质检更强。",
+      "把改善前后写出来，让人看到你不是只发现问题，也推动了解决。",
+    ], seed);
+  }
+
+  if (context === "real_estate") {
+    if (isAutomation) return stablePick([
+      "房源整理、跟进提醒和资料初稿会更省力，但客户判断和谈判节奏仍然靠人。",
+      "工具能帮你整理信息，真正难的是判断客户需求、风险和成交时机。",
+    ], seed);
+    if (isValue) return stablePick([
+      "这里更该写客户判断、谈判推进和风险识别，而不是只写维护房源。",
+      "交易和租赁都很看信任与判断，能处理复杂客户场景会更有价值。",
+    ], seed);
+    if (isResume) return stablePick([
+      "成交率、出租率、客户满意度和运营效率都可以写，越具体越可信。",
+      "把你怎么推进交易、降低风险或改善服务体验写出来，会比泛泛描述更有效。",
+    ], seed);
+  }
+
+  if (context === "legal") {
+    if (isAutomation) return stablePick([
+      "检索、比对和初稿会更快，但风险判断和责任边界不能只交给工具。",
+      "标准文本处理会省时间，真正重要的是你怎么看事实、风险和取舍。",
+    ], seed);
+    if (isValue) return stablePick([
+      "法律/合规相关岗位更该突出风险判断、事实分析和跨部门沟通。",
+      "工具能帮忙找资料，但怎么解释、怎么把风险讲清楚，还是核心能力。",
+    ], seed);
+    if (isResume) return stablePick([
+      "写清楚你处理过什么风险、合同或合规流程，以及最后降低了什么问题。",
+      "不要只写审阅文件，最好写出你发现了什么风险、推动了什么修正。",
+    ], seed);
+  }
+
+  if (context === "education") {
+    if (isAutomation) return stablePick([
+      "备课材料和练习题会更容易生成，但学生状态和课堂判断还是需要人。",
+      "工具能帮忙准备内容，难的是让学生真的理解、跟上和进步。",
+    ], seed);
+    if (isValue) return stablePick([
+      "教育岗位的亮点在观察学生、调整方法和持续沟通，不只是准备材料。",
+      "越能根据学生情况调整教学，越能体现你的价值。",
+    ], seed);
+    if (isResume) return stablePick([
+      "可以写学习成果、参与度、课程改进或学生支持结果，让贡献更具体。",
+      "把学生前后变化写出来，会比只写授课内容更有说服力。",
+    ], seed);
+  }
+
+  if (context === "healthcare") {
+    if (isAutomation) return stablePick([
+      "记录整理和资料摘要会更快，但安全、准确性和专业责任仍然不能含糊。",
+      "工具能帮忙处理文档，真正关键的是你怎么守住质量和安全。",
+    ], seed);
+    if (isValue) return stablePick([
+      "这里更该突出专业判断、质量控制和跨团队配合，而不是只写完成记录。",
+      "涉及患者、实验或安全时，严谨和责任感本身就是很重要的竞争力。",
+    ], seed);
+    if (isResume) return stablePick([
+      "用准确率、SOP 遵循、质量改进或研究/护理结果来证明你的专业度。",
+      "写清楚你如何保证准确、安全和稳定，会比泛泛写职责更有用。",
+    ], seed);
+  }
+
+  if (context === "logistics") {
+    if (isAutomation) return stablePick([
+      "报表、提醒和基础调度会更自动化，但现场异常和资源协调还是关键。",
+      "工具能帮忙盯流程，真正值钱的是你怎么处理异常、调人调资源。",
+    ], seed);
+    if (isValue) return stablePick([
+      "揽收、仓库和调度类岗位，最该写的是异常判断、跨团队配合和流程优化。",
+      "越能把现场问题转成可执行的优化，越不容易被写成普通执行岗。",
+    ], seed);
+    if (isResume) return stablePick([
+      "把数据发现问题、优化调度、降低成本或提升完结率写出来，会很有用。",
+      "最好写出你怎么让揽收或配送更准、更快、更省成本。",
+    ], seed);
+  }
+
+  return null;
+}
+
+function humanizeAiImpactNote(key, value, note, context = "general") {
+  const rowKey = String(key || "");
+  const rowValue = String(value || "");
+  const seed = `${rowKey}|${rowValue}|${note || ""}`;
+  const contextNote = contextSpecificAiImpactNote(context, rowKey, rowValue, seed);
+  if (contextNote) return contextNote;
+
+  if (/容易被自动化/.test(rowKey)) {
+    if (/待判断/.test(rowValue)) return "如果岗位职责写得更具体，这里就能判断得更准。";
+    if (/(报表|数据|指标|dashboard|分析|录入|表格|report|data|metric)/i.test(rowValue)) {
+      return stablePick([
+        "报表、整理和基础解释会越来越快，但真正拉开差距的是你能不能看出问题。",
+        "这些任务工具会帮很多忙，所以简历里最好别只写“做报表”，要写你看出了什么。",
+        "基础数据活会被压缩，能留下来的亮点是你怎么用数据推动下一步。",
+      ], seed);
+    }
+    if (/(客户|客服|工单|回复|FAQ|续约|销售|线索|CRM|customer|sales|lead)/i.test(rowValue)) {
+      return stablePick([
+        "标准回复和跟进会更省力，但棘手客户、判断时机这些还是很看人。",
+        "工具能处理一部分重复沟通，真正重要的是你怎么稳住客户、推进结果。",
+        "可模板化的沟通会被加速，所以简历要多写复杂场景里的处理能力。",
+      ], seed);
+    }
+    if (/(代码|测试|bug|系统|架构|software|code|test|debug)/i.test(rowValue)) {
+      return stablePick([
+        "样板代码会写得更快，但需求拆解、排查问题和上线质量还是关键。",
+        "简单实现会被提速，简历里更该突出你处理复杂系统的经验。",
+        "工具能省掉一部分重复开发时间，但不会替你承担工程取舍。",
+      ], seed);
+    }
+    if (/(文案|初稿|PPT|素材|标题|摘要|PRD|设计|视觉|content|copy|design|draft)/i.test(rowValue)) {
+      return stablePick([
+        "初稿会越来越容易生成，难的是判断方向对不对、内容有没有用。",
+        "工具能帮你起步，但最后能不能打动用户，还是看你的取舍和判断。",
+        "普通版本会变得很快，简历里要写你怎么把初稿变成有效结果。",
+      ], seed);
+    }
+    if (/(现场|巡检|维护|安全|生产|质量|工单|仓库|调度|dispatch|warehouse|field|quality)/i.test(rowValue)) {
+      return stablePick([
+        "记录和提醒会更自动化，但现场变化多，还是需要人做判断。",
+        "工具能帮忙盯流程，真正值钱的是你处理异常和协调资源的能力。",
+        "标准流程会更顺，但一到突发情况，经验和判断就会变得很重要。",
+      ], seed);
+    }
+    return stablePick([
+      "这些通常会先被工具接手，所以简历里别只停在日常执行。",
+      "重复性高的部分会越来越省力，重点要放在你做了哪些判断和改进。",
+      "这类工作会被提速，但不代表岗位没价值，关键是别把自己写成只会照流程做事。",
+    ], seed);
+  }
+  if (/更有价值/.test(rowKey)) {
+    if (/(数据|指标|业务|成本|风险|模型|finance|analytics|metric)/i.test(rowValue)) {
+      return stablePick([
+        "这里更该突出的是你怎么解释原因、做判断，而不是只会产出数字。",
+        "能把数字翻成业务动作的人，会比只会整理数据更有竞争力。",
+        "重点不是工具用得多快，而是你能不能把信息变成决策。",
+      ], seed);
+    }
+    if (/(协调|跨团队|现场|异常|流程|资源|客户|沟通|stakeholder|coordination)/i.test(rowValue)) {
+      return stablePick([
+        "这些能力更难被工具替代，因为里面有判断、人和现场变量。",
+        "越是需要协调人、处理例外、推动落地的部分，越值得写清楚。",
+        "这类能力最好写成具体场景，让 HR 看到你不是只负责传话。",
+      ], seed);
+    }
+    if (/(设计|产品|用户|策略|审美|内容|品牌|strategy|product|design)/i.test(rowValue)) {
+      return stablePick([
+        "真正有价值的是你怎么判断方向、做取舍，并让结果变好。",
+        "工具能给选项，但选哪个、为什么选，还是需要你的判断。",
+        "这部分适合写成“我发现了什么，所以做了什么，结果怎样”。",
+      ], seed);
+    }
+    return stablePick([
+      "更值得强调的是你怎么判断、怎么协调，以及怎么把事情往前推。",
+      "这里不要只列能力词，最好写出你在哪个场景里用过它。",
+      "能体现主动判断和结果负责的经历，会比单纯执行更有说服力。",
+    ], seed);
+  }
+  if (/简历/.test(rowKey)) {
+    if (/(成本|效率|完结率|转化率|满意度|响应|周期|错误率|ROI|accuracy|revenue)/i.test(rowValue)) {
+      return stablePick([
+        "能量化就尽量量化，让别人看到你不是只参与，而是真的带来改善。",
+        "这类内容最好带数字，哪怕是区间，也会比空泛描述更有力。",
+        "把结果写出来，例如省了多少时间、降低多少错误、提高多少转化。",
+      ], seed);
+    }
+    if (/(判断|协调|流程|调度|客户|团队|风险|现场)/i.test(rowValue)) {
+      return stablePick([
+        "写成具体故事会更好：当时遇到什么问题，你怎么处理，最后改善了什么。",
+        "不要只写“负责协调”，要写你协调了谁、解决了什么卡点。",
+        "把职责改成结果导向，HR 会更容易看出你的岗位价值。",
+      ], seed);
+    }
+    return stablePick([
+      "写的时候尽量带上场景、动作和结果，让别人一眼看出你的贡献。",
+      "少写抽象词，多写你真的做过什么，以及带来了什么变化。",
+      "这一行不是让你硬塞关键词，而是提醒你把最相关的经历写清楚。",
+    ], seed);
+  }
+  return note;
+}
+
+function humanizeAiImpactTrend(trend) {
+  if (!trend || !Array.isArray(trend.rows)) return trend;
+  const context = detectAiImpactContext(trend);
+  return {
+    ...trend,
+    caption: humanizeAiImpactCaption(trend.caption),
+    rows: trend.rows.map(row => ({
+      ...row,
+      note: humanizeAiImpactNote(row.k, row.v, row.note, context),
+    })),
+  };
+}
+
+function buildAiImpactTrend() {
+  const text = getRoleSignalText();
+  if (!text.trim()) {
+    return {
+      level: "待校准",
+      caption: "需要更多岗位信息",
+      rows: [
+        { k:"容易被自动化", v:"待判断", note:"需要更明确的岗位职责后再判断。" },
+        { k:"更有价值的能力", v:"判断力与协作", note:"优先写出你如何处理复杂问题，而不是只列日常任务。" },
+        { k:"简历应强化", v:"成果证据", note:"补充能体现判断、协作、优化结果的经历。" },
+      ],
+    };
+  }
+  const familyProfile = matchAiFamilyProfile(text, getAiTitleSignalText());
+  if (familyProfile) {
+    return familyProfile;
+  }
+  const profile = matchAiImpactProfile(text);
+  if (profile) {
+    return {
+      level: profile.level,
+      caption: profile.caption,
+      rows: profile.rows,
+    };
+  }
+  const highAutomation = /(data entry|clerk|administrative|assistant|basic report|reporting|documentation|scheduling|客服|文员|行政|录入|基础报表|重复报表|数据整理|标准流程|报告制作)/i.test(text);
+  const opsSignal = /(logistics|operations support|pickup|dispatch|warehouse|delivery|parcel|customer support|揽收|调度|仓库|物流|快递|客服|运营支持|报告制作|成本控制)/i.test(text);
+  const judgmentSignal = /(strategy|manager|lead|principal|architect|research|consulting|stakeholder|cross-functional|onsite|现场|异常|协同|流程优化|数据决策|成本控制)/i.test(text);
+  const techSignal = /(software|engineer|machine learning|ai engineer|data scientist|product manager|developer|软件|算法|产品经理)/i.test(text);
+
+  if (opsSignal) {
+    return {
+      level: "中等影响",
+      caption: "重复任务会被自动化",
+      rows: [
+        { k:"容易被自动化", v:"重复报表、基础数据整理、标准流程提醒", note:"AI 会先压缩低判断、可模板化的日常工作。" },
+        { k:"更有价值的能力", v:"异常判断、跨团队协同、流程优化、数据决策", note:"越能处理例外情况和协调现场资源，越不容易被工具替代。" },
+        { k:"简历应强化", v:"数据发现问题、优化调度、降低成本、提升完结率", note:"把工作写成判断和改进，而不是只写执行任务。" },
+      ],
+    };
+  }
+  if (highAutomation && !judgmentSignal) {
+    return {
+      level: "高影响",
+      caption: "标准化任务会被自动化",
+      rows: [
+        { k:"容易被自动化", v:"基础录入、重复整理、模板化沟通", note:"这类任务更容易被工具接管或压缩。" },
+        { k:"更有价值的能力", v:"问题判断、流程改进、跨团队沟通", note:"需要证明你不只是执行流程，也能优化流程。" },
+        { k:"简历应强化", v:"效率提升、错误率下降、流程优化结果", note:"用数字写出你带来的改进。" },
+      ],
+    };
+  }
+  if (judgmentSignal || techSignal) {
+    return {
+      level: "低-中等影响",
+      caption: "AI 更像效率工具",
+      rows: [
+        { k:"容易被自动化", v:"资料整理、初稿生成、基础分析", note:"AI 会提升执行速度，但不直接替代完整判断。" },
+        { k:"更有价值的能力", v:"复杂决策、产品/业务判断、跨团队影响", note:"能定义问题和推动结果的人更有优势。" },
+        { k:"简历应强化", v:"决策依据、业务影响、规模化成果", note:"突出你如何用工具和数据做出更好的判断。" },
+      ],
+    };
+  }
+  return {
+    level: "中等影响",
+    caption: "部分流程会被自动化",
+    rows: [
+      { k:"容易被自动化", v:"重复整理、标准沟通、基础分析", note:"AI 会优先影响低判断、重复性强的工作。" },
+      { k:"更有价值的能力", v:"业务判断、协作推进、结果负责", note:"未来更看重能把问题推进到结果的人。" },
+      { k:"简历应强化", v:"问题、行动、结果", note:"用清楚的证据说明你解决了什么问题。" },
+    ],
+  };
 }
 
 // ── 1. Student info ──────────────────────────────────────────────
@@ -344,29 +1394,51 @@ if (coreIssueEl) {
 const atsTileEl = document.getElementById("atsScore");
 if (atsTileEl) atsTileEl.textContent = atsScore;
 
-// Ranking：根據 ATS 分數推估
-const rankPct = atsScore >= 80 ? 15 : atsScore >= 65 ? 32 : atsScore >= 50 ? 50 : 68;
+// JD match tile：wide JD keyword coverage
+const jdMatchValue = formatJdKeywordMatchValue(atsResult);
 const rankPctEl = document.getElementById("rankPct");
-if (rankPctEl) rankPctEl.textContent = rankPct + "%";
+if (rankPctEl) rankPctEl.textContent = jdMatchValue;
 
 // Salary：先顯示空，等 API
 const salaryRangeEl = document.getElementById("salaryRange");
 const salaryTopEl   = document.getElementById("salaryTop");
 const headlineSalaryTopEl = document.getElementById("headlineSalaryTop");
-if (salaryRangeEl) salaryRangeEl.textContent = "--";
-if (salaryTopEl)   salaryTopEl.textContent   = "--";
+if (salaryRangeEl) salaryRangeEl.textContent = "成长潜力";
+if (salaryTopEl)   salaryTopEl.textContent   = "待校准";
 
-// Competition：先顯示空
+// AI impact trend：local rule-based signal, no AI/API call
 const compCountEl  = document.getElementById("compCount");
 const admitRateEl  = document.getElementById("admitRate");
-if (compCountEl)  compCountEl.textContent  = "--";
-if (admitRateEl)  admitRateEl.textContent  = "--";
+const aiTrend = humanizeAiImpactTrend(buildAiImpactTrend());
+if (compCountEl) {
+  compCountEl.textContent = aiTrend.level;
+  compCountEl.classList.remove("ai-impact-low", "ai-impact-medium", "ai-impact-high", "ai-impact-pending");
+  const levelText = String(aiTrend.level || "");
+  const impactClass = /高/.test(levelText)
+    ? "ai-impact-high"
+    : /低/.test(levelText)
+      ? "ai-impact-low"
+      : /中/.test(levelText)
+        ? "ai-impact-medium"
+        : "ai-impact-pending";
+  compCountEl.classList.add(impactClass);
+}
+if (admitRateEl)  admitRateEl.textContent  = aiTrend.caption;
 
 // Detail rows
 function renderRows(arr) {
   return (arr || []).map(r => `
     <div class="detail-row"><span class="k">${escapeHtml(r.k)}</span><span class="v">${escapeHtml(r.v)}</span></div>
-    <div style="font-size:12px;color:var(--ink-mute);margin:-2px 0 6px;line-height:1.4;">${escapeHtml(r.note)}</div>
+    <div class="detail-note">${escapeHtml(r.note)}</div>
+  `).join("");
+}
+function renderStackedRows(arr) {
+  return (arr || []).map(r => `
+    <div class="detail-row detail-row-stacked">
+      <span class="k">${escapeHtml(r.k)}</span>
+      <span class="v">${escapeHtml(r.v)}</span>
+      <span class="detail-note">${escapeHtml(r.note)}</span>
+    </div>
   `).join("");
 }
 
@@ -375,47 +1447,228 @@ const atsDetailEl = document.getElementById("atsDetail");
 if (atsDetailEl && atsScore) {
   atsDetailEl.innerHTML = renderRows([
     { k:"ATS 总分", v: atsScore + "/100", note: atsRiskText(atsResult.riskLevel) },
-    { k:"JD 技能匹配", v: formatJdKeywordCount(atsResult), note:"已具备 / JD 技能总数" },
+    { k:"JD 关键词匹配", v: formatJdKeywordCount(atsResult), note:"已覆盖 / JD 关键词总数" },
     { k:"简历质量", v: (atsResult.dimensions?.C?.score ?? "--") + "/" + (atsResult.dimensions?.C?.max ?? 12), note:"内容质量与成果表达" },
   ]);
 }
+const atsRiskCaptionEl = document.getElementById("atsRiskCaption");
+if (atsRiskCaptionEl) {
+  const riskLabel = atsRiskText(atsResult.riskLevel);
+  atsRiskCaptionEl.textContent = riskLabel;
+  atsRiskCaptionEl.classList.remove("risk-high", "risk-medium", "risk-low", "risk-pending");
+  atsRiskCaptionEl.classList.add(riskToneClass(riskLabel));
+}
 
-// Ranking detail
+// JD match detail
 const rankDetailEl = document.getElementById("rankDetail");
 if (rankDetailEl) {
   rankDetailEl.innerHTML = renderRows([
-    { k:"当前排名估算", v:"TOP " + rankPct + "%", note:"基于 ATS 评分推算" },
-    { k:"ATS 分数", v: atsScore + "/100", note: atsRiskText(atsResult.riskLevel) },
+    { k:"JD 关键词匹配", v: formatJdKeywordCount(atsResult), note:"已覆盖 / JD 关键词总数。" },
+    { k:"整体覆盖率", v: formatJdKeywordMatchPercent(atsResult), note:"基于目标 JD 的关键词覆盖情况估算。" },
+  ]) + renderStackedRows([
+    { k:"主要缺口", v:"下方 JD Keyword 清单已整理关键词与放置建议。", note:"完整清单可付费解锁查看。" },
   ]);
 }
+const compDetailEl = document.getElementById("compDetail");
+if (compDetailEl) compDetailEl.innerHTML = renderStackedRows(aiTrend.rows);
 
-// ── 4. 薪资 & 竞争（从 DB 加载）────────────────────────────────
-(async function loadSalaryFromDB() {
-  const jobTitle = s.jobTitle || atsResult.jobTitle || (atsResult.raw && atsResult.raw.jobTitle) || "";
-  if (!jobTitle) return;
-  try {
-    const resp = await fetch(`/api/position-salary?jobTitle=${encodeURIComponent(jobTitle)}`);
-    if (!resp.ok) return;
-    const data = await resp.json();
-    if (!data.found || !data.salary_range) return;
-    const raw = data.salary_range;
-    const nums = raw.match(/[\d,]+\.?\d*/g);
-    if (!nums || nums.length === 0) return;
-    function toK(n) {
-      const v = parseFloat(n.replace(/,/g, ""));
-      return v >= 1000 ? Math.round(v / 1000) + "K" : n;
+// ── 4. 薪资 & 竞争（同赛道成长 benchmark）────────────────────────────────
+(function syncTileRowHeights() {
+  const tiles = Array.from(document.querySelectorAll("#tilesArea .tile"));
+  if (!tiles.length) return;
+
+  function measureExpandedTileHeight(tile) {
+    const rect = tile.getBoundingClientRect();
+    const clone = tile.cloneNode(true);
+    clone.open = true;
+    clone.style.position = "absolute";
+    clone.style.visibility = "hidden";
+    clone.style.pointerEvents = "none";
+    clone.style.left = "-9999px";
+    clone.style.top = "0";
+    clone.style.width = `${rect.width}px`;
+    clone.style.minHeight = "";
+    clone.style.height = "auto";
+    document.body.appendChild(clone);
+    const height = clone.offsetHeight;
+    clone.remove();
+    return height;
+  }
+
+  function measureClosedTileHeight(tile) {
+    const rect = tile.getBoundingClientRect();
+    const clone = tile.cloneNode(true);
+    clone.open = false;
+    clone.style.position = "absolute";
+    clone.style.visibility = "hidden";
+    clone.style.pointerEvents = "none";
+    clone.style.left = "-9999px";
+    clone.style.top = "0";
+    clone.style.width = `${rect.width}px`;
+    clone.style.minHeight = "";
+    clone.style.height = "auto";
+    document.body.appendChild(clone);
+    const height = clone.offsetHeight;
+    clone.remove();
+    return height;
+  }
+
+  function updateAllRows() {
+    tiles.forEach(tile => {
+      tile.classList.remove("is-row-equal-height");
+      tile.style.minHeight = "";
+    });
+
+    const closedBaseHeight = Math.max(...tiles.map(measureClosedTileHeight));
+    tiles.forEach(tile => {
+      if (!tile.open) tile.style.minHeight = `${closedBaseHeight}px`;
+    });
+
+    for (let i = 0; i < tiles.length; i += 2) {
+      const pair = tiles.slice(i, i + 2);
+      const rowHeight = Math.max(...pair.map(measureExpandedTileHeight));
+      const openTiles = pair.filter(tile => tile.open);
+      const targets = openTiles.length === pair.length ? pair : openTiles;
+      targets.forEach(tile => {
+        tile.classList.add("is-row-equal-height");
+        tile.style.minHeight = `${rowHeight}px`;
+      });
     }
-    const low  = toK(nums[0]);
-    const high = nums[1] ? toK(nums[1]) : low;
-    if (salaryRangeEl) salaryRangeEl.textContent = "$" + low;
-    if (salaryTopEl)   salaryTopEl.textContent   = "$" + high;
-    if (headlineSalaryTopEl) headlineSalaryTopEl.textContent = "$" + high;
-    const salaryDetailEl = document.getElementById("salaryDetail");
-    if (salaryDetailEl) salaryDetailEl.innerHTML = renderRows([
-      { k:"当前简历水平", v:"$" + low,  note:"基于岗位市场数据" },
-      { k:"顶级 Offer 线", v:"$" + high, note:"优化后可冲击" },
-    ]);
-  } catch(e) { console.warn("[Salary]", e.message); }
+  }
+
+  tiles.forEach(tile => tile.addEventListener("toggle", updateAllRows));
+  window.addEventListener("resize", updateAllRows);
+  updateAllRows();
+})();
+
+function getStoredJdText() {
+  return s.jdText || atsResult.jdText || atsResult.raw?.jdText || "";
+}
+function getStoredLocation() {
+  return s.location || s.jobLocation || atsResult.location || atsResult.raw?.location || "";
+}
+function getStoredResumeText() {
+  return s.resumeText || atsResult.resumeText || atsResult.raw?.resumeText || "";
+}
+function inferSalaryRoleFamilyFromText(text) {
+  const value = String(text || "");
+  if (/\b(software engineer|software developer|sde|swe|frontend|front-end|backend|back-end|full stack|full-stack|react|node\.?js|typescript|java|python developer)\b|软件|前端|后端|全栈/i.test(value)) return "software_engineering";
+  if (/\b(data analyst|business analyst|business intelligence|bi analyst|data scientist|analytics|sql|tableau|power bi|dashboard|machine learning|ml engineer|mle)\b|数据分析|商业分析|数据科学|机器学习|算法/i.test(value)) return "data_analytics";
+  if (/\b(product manager|associate product manager|apm|product owner|roadmap|user research|product strategy)\b|产品经理|产品负责人/i.test(value)) return "product_management";
+  if (/\b(financial analyst|finance|accounting|accountant|audit|tax|fp&a|valuation|quickbooks|gaap)\b|会计|审计|财务|金融分析/i.test(value)) return "finance_accounting";
+  if (/\b(marketing|growth|social media|campaign|content marketing|seo|sem|brand)\b|市场|营销|增长|社媒|内容运营/i.test(value)) return "marketing";
+  if (/\b(supply chain|logistics analyst|operations analyst|inventory|fulfillment|procurement)\b|供应链|库存|履约|物流分析/i.test(value)) return "supply_chain_operations";
+  if (/\b(logistics|operations support|pickup|dispatch|warehouse|delivery|parcel|fleet)\b|揽收|调度|仓库|物流|末端|运营支持/i.test(value)) return "logistics_operations_support";
+  if (/\b(business operations|operations specialist|program coordinator|project coordinator|operations coordinator)\b|业务运营|项目协调|运营专员/i.test(value)) return "business_operations";
+  return "";
+}
+function getSalaryRoleFamily() {
+  const primaryText = [getTargetJobTitle(), atsResult.profile?.targetRole, atsResult.raw?.profile?.targetRole, getStoredResumeText()].filter(Boolean).join(" ");
+  return inferSalaryRoleFamilyFromText(primaryText)
+    || atsResult.profile?.roleFamily
+    || atsResult.raw?.profile?.roleFamily
+    || atsResult.roleFamily
+    || atsResult.raw?.roleFamily
+    || "";
+}
+function getSalaryTargetRole() {
+  return atsResult.profile?.targetRole || atsResult.raw?.profile?.targetRole || getTargetJobTitle() || "";
+}
+function formatConfidenceLabel(confidence) {
+  const key = String(confidence || "").toLowerCase();
+  if (key === "high") return "高";
+  if (key === "medium") return "中等";
+  if (key === "low") return "较低";
+  return "中等";
+}
+function formatSalaryBasisNote(data) {
+  const locationSource = String(data.matched_location_source || "").toLowerCase();
+  const market = locationSource === "explicit"
+    ? `${data.matched_location || "United States"} 地区`
+    : "全美市场";
+  return `基于此方向与${market}估算。`;
+}
+function salarySourceDisplayNote() {
+  return "数据来源：美国官方职业薪资资料（BLS/O*NET），按相近岗位赛道估算。";
+}
+function salaryUnavailableRows() {
+  return [
+    { k:"薪资成长潜力", v:"待校准", note:"暂未匹配到足够明确的岗位赛道，薪资成长区间需要进一步校准。" },
+    { k:"展示原则", v:"不使用 mock 薪资", note:"不会把 $120K/$200K 这类示例数字当作真实薪资或长期上限。" },
+  ];
+}
+(async function loadSalaryTrajectory() {
+  const jobTitle = getTargetJobTitle() || s.jobTitle || atsResult.jobTitle || (atsResult.raw && atsResult.raw.jobTitle) || "";
+  const jdText = getStoredJdText();
+  const location = getStoredLocation();
+  const resumeText = getStoredResumeText();
+  const roleFamily = getSalaryRoleFamily();
+  const targetRole = getSalaryTargetRole();
+  const salaryDetailEl = document.getElementById("salaryDetail");
+  const showSalaryFallback = () => {
+    if (salaryRangeEl) salaryRangeEl.textContent = "待校准";
+    if (salaryTopEl) salaryTopEl.textContent = "需补充";
+    if (salaryDetailEl) salaryDetailEl.innerHTML = renderRows(salaryUnavailableRows());
+  };
+  if (!jobTitle && !jdText) {
+    showSalaryFallback();
+    return;
+  }
+  try {
+    const resp = await fetch("/api/position-salary", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ jobTitle, jdText, location, resumeText, roleFamily, targetRole }),
+    });
+    if (!resp.ok) {
+      showSalaryFallback();
+      return;
+    }
+    const data = await resp.json();
+    if (data.trajectory_source !== "benchmark" || !data.three_year_range || !data.five_year_range) {
+      if (salaryRangeEl) salaryRangeEl.textContent = "待校准";
+      if (salaryTopEl) salaryTopEl.textContent = "需补充";
+      if (salaryDetailEl) salaryDetailEl.innerHTML = renderRows(salaryUnavailableRows());
+      return;
+    }
+    if (salaryRangeEl) salaryRangeEl.textContent = data.three_year_range;
+    if (salaryTopEl) salaryTopEl.textContent = data.five_year_range;
+    if (headlineSalaryTopEl) headlineSalaryTopEl.textContent = data.top_range || data.five_year_range;
+    const rows = [];
+    if (data.jd_salary) {
+      rows.push({
+        k:"JD 标注薪资",
+        v:data.jd_salary,
+        note:"这是 JD 中写明的薪资，不等同于长期成长上限。",
+      });
+    }
+    rows.push(
+      {
+        k:"当前赛道参考",
+        v:data.current_range || "待校准",
+        note:formatSalaryBasisNote(data),
+      },
+      {
+        k:"3 年成长区间",
+        v:data.three_year_range,
+        note:"若持续积累目标岗位相关经验和可验证成果，3 年内可参考这个区间。",
+      },
+      {
+        k:"5 年成长区间",
+        v:data.five_year_range,
+        note:"代表同类岗位中经验更成熟、职责更完整时的市场参考。",
+      },
+      {
+        k:"同赛道高分位",
+        v:data.top_range || data.five_year_range,
+        note:salarySourceDisplayNote(),
+      }
+    );
+    if (salaryDetailEl) salaryDetailEl.innerHTML = renderRows(rows);
+  } catch(e) {
+    console.warn("[Salary]", e.message);
+    showSalaryFallback();
+  }
 })();
 
 // ── 5. Skills ────────────────────────────────────────────────────
@@ -423,31 +1676,135 @@ const labelMap = {
   have: `<span class="pill pill-good"><span class="dot"></span>已具备</span>`,
   weak: `<span class="pill pill-warn"><span class="dot"></span>待补强</span>`
 };
+const KEYWORD_CATEGORY_CONFIG = {
+  skill_tool: { label: "技能/工具", sourceKeys: ["core_skills", "tools"] },
+  responsibility_scene: { label: "职责/场景", sourceKeys: ["action_verbs", "nice_to_have"] },
+  domain_business: { label: "行业/业务词", sourceKeys: ["domain_keywords"] },
+  soft_collab: { label: "软技能/协作词", sourceKeys: [] },
+};
+const CATEGORY_LABEL_TO_GROUP = {
+  "核心技能": "skill_tool",
+  "工具 / 技术": "skill_tool",
+  "工具/技术": "skill_tool",
+  "领域词": "domain_business",
+  "动作词": "responsibility_scene",
+  "加分项": "responsibility_scene",
+};
+function categoryGroupForTerm(term, sourceKey = "", sourceLabel = "") {
+  const text = String(term || "").toLowerCase();
+  if (CATEGORY_LABEL_TO_GROUP[sourceLabel]) return CATEGORY_LABEL_TO_GROUP[sourceLabel];
+  if (["core_skills", "tools", "hard_skills"].includes(sourceKey)) return "skill_tool";
+  if (["domain_keywords"].includes(sourceKey)) return "domain_business";
+  if (["action_verbs", "nice_to_have"].includes(sourceKey)) return "responsibility_scene";
+  if (/(communication|collaboration|stakeholder|cross-functional|leadership|teamwork|沟通|协作|协调|跨部门|客服|客户|抗压)/i.test(term)) return "soft_collab";
+  if (/(excel|sql|python|tableau|power\s*bi|quickbooks|gaap|aws|gcp|azure|jira|figma|system|系统|工具|报表|数据分析|成本控制|调度|报告制作|kpi|数据|分析)/i.test(term)) return "skill_tool";
+  if (/(负责|创建|指派|调度|监控|优化|协同|值班|应急|流程|卸车|分拨|support|manage|analyze|coordinate|report|track)/i.test(term)) return "responsibility_scene";
+  if (/(行业|业务|揽收|物流|快递|仓库|warehouse|logistics|parcel|delivery|运营|末端|区域)/i.test(term)) return "domain_business";
+  return "domain_business";
+}
+function placementForKeyword(term, group, sourceKey = "") {
+  const text = String(term || "").toLowerCase();
+  if (/(title|岗位|职位|summary|定位|目标)/i.test(term) && !/(工具|系统|数据)/i.test(term)) {
+    return { label: "放 Summary", className: "keyword-use--summary" };
+  }
+  if (group === "skill_tool" || ["core_skills", "tools"].includes(sourceKey)) {
+    return { label: "放 Skills", className: "keyword-use--skills" };
+  }
+  if (group === "responsibility_scene" || /(负责|创建|指派|调度|监控|优化|协同|值班|应急|support|manage|analyze|coordinate|report|track)/i.test(term)) {
+    return { label: "写进经历要点", className: "keyword-use--experience" };
+  }
+  if (group === "soft_collab") {
+    return { label: "写进经历要点", className: "keyword-use--experience" };
+  }
+  if (/(公司|福利|地点|城市|全职|兼职|remote|onsite)/i.test(text)) {
+    return { label: "按需放入", className: "keyword-use--reference" };
+  }
+  return { label: "按需放入", className: "keyword-use--reference" };
+}
+function keywordItemKey(item) {
+  return String(item?.name || "").trim().toLowerCase();
+}
+function buildKeywordItems() {
+  const items = [];
+  const seen = new Set();
+  const add = (name, status, sourceKey = "", sourceLabel = "", priority = 50) => {
+    const clean = String(name || "").trim();
+    if (!clean) return;
+    const key = clean.toLowerCase();
+    if (seen.has(key)) return;
+    seen.add(key);
+    const group = categoryGroupForTerm(clean, sourceKey, sourceLabel);
+    const placement = placementForKeyword(clean, group, sourceKey);
+    items.push({ name: clean, status, sourceKey, sourceLabel, group, placement, priority });
+  };
+  const checklist = getMissingKeywordChecklist();
+  checklist.forEach((item, index) => {
+    const term = item?.term || item;
+    const where = String(item?.whereToAdd || "").toLowerCase();
+    const sourceKey = /experience/.test(where) ? "action_verbs" : item?.category === "hard_skill" ? "core_skills" : "";
+    add(term, "weak", sourceKey, "", index);
+  });
+  getKeywordBreakdown().forEach((cat, catIndex) => {
+    const sourceKey = cat.key || "";
+    const sourceLabel = cat.label || "";
+    (cat.missing || []).forEach((term, index) => add(term, "weak", sourceKey, sourceLabel, catIndex * 20 + index));
+    (cat.matched || []).forEach((term, index) => add(term, "have", sourceKey, sourceLabel, 100 + catIndex * 20 + index));
+  });
+  uniqueList([
+    ...(atsResult.topMissingKw || []),
+    ...(atsResult.topMissingKeywords || []),
+    ...(atsResult.raw?.topMissingKw || []),
+    ...(atsResult.raw?.topMissingKeywords || []),
+  ]).forEach((term, index) => add(term, "weak", "", "", index + 5));
+  return items.sort((a, b) => {
+    if (a.status !== b.status) return a.status === "weak" ? -1 : 1;
+    const aSkill = a.group === "skill_tool" ? 0 : 1;
+    const bSkill = b.group === "skill_tool" ? 0 : 1;
+    if (aSkill !== bSkill) return aSkill - bSkill;
+    return a.priority - b.priority;
+  });
+}
+function primaryKeywordItems(items) {
+  return items.slice(0, 3);
+}
+function keywordTypeLabel(group) {
+  const labels = {
+    skill_tool: "工具",
+    responsibility_scene: "职责",
+    domain_business: "业务词",
+    soft_collab: "协作",
+  };
+  return labels[group] || "关键词";
+}
 function renderSkillRow(sk) {
+  const placement = sk.placement || placementForKeyword(sk.name, sk.group, sk.sourceKey);
   return `<li class="skill-row">
     <div class="skill-name"><span class="priority">#${sk.priority}</span>${escapeHtml(sk.name)}</div>
-    ${labelMap[sk.status] || ""}
+    <div class="skill-meta">
+      <span class="keyword-use ${placement.className}">${escapeHtml(placement.label)}</span>
+      ${labelMap[sk.status] || ""}
+    </div>
   </li>`;
 }
 function getJdSkillDisplayCount(skills) {
-  const count = getJdKeywordCount(atsResult);
-  if (count) {
-    return {
-      have: count.matched,
-      total: count.total,
-      weak: Math.max(count.total - count.matched, 0),
-    };
-  }
   const have = skills.filter(sk => sk.status === "have").length;
   const total = skills.length;
   return { have, total, weak: Math.max(total - have, 0) };
 }
 function renderSkillSection(skills) {
-  const counts = getJdSkillDisplayCount(skills);
+  const isPaid = Boolean(s.isPaid);
+  const visibleCount = isPaid ? skills.length : Math.min(skills.length, 3);
+  const visibleSkills = skills.slice(0, visibleCount);
+  const hiddenSkills = isPaid ? [] : skills.slice(visibleCount);
+  const jdCount = getJdKeywordCount(atsResult);
+  const counts = jdCount ? {
+    have: jdCount.matched,
+    total: jdCount.total,
+    weak: Math.max(jdCount.total - jdCount.matched, 0),
+  } : getJdSkillDisplayCount(visibleSkills);
   const have  = counts.have;
   const weak  = counts.weak;
   const total = counts.total;
-  const lockedCount = Math.max(total - 3, 0);
   const skillHaveEl    = document.getElementById("skillHave");
   const skillTotalEl   = document.getElementById("skillTotal");
   const skillSummaryEl = document.getElementById("skillSummary");
@@ -459,59 +1816,35 @@ function renderSkillSection(skills) {
   if (skillSummaryEl) skillSummaryEl.innerHTML = `
     <span class="skill-have" style="flex:${have}"></span>
     <span class="skill-weak" style="flex:${Math.max(weak, 1)}"></span>`;
-  if (skillListTop3El)    skillListTop3El.innerHTML    = skills.slice(0, 3).map(renderSkillRow).join("");
+  if (skillListTop3El)    skillListTop3El.innerHTML    = visibleSkills.map(renderSkillRow).join("");
   if (skillPaywallListEl) {
-    const lockedSkills = skills.slice(3);
-    const placeholderCount = Math.min(Math.max(lockedCount, lockedSkills.length), 5);
-    const placeholders = Array.from({ length: placeholderCount }, (_, i) => ({
-      priority: i + 4,
-      name: "更多 JD 技能",
-      status: "weak",
-    }));
-    skillPaywallListEl.innerHTML = (lockedSkills.length ? lockedSkills : placeholders).map(renderSkillRow).join("");
+    skillPaywallListEl.innerHTML = hiddenSkills
+      .map((sk, i) => ({ ...sk, priority: visibleCount + i + 1 }))
+      .map(renderSkillRow)
+      .join("");
   }
-  // Update expand button label to reflect actual count
-  if (expandBtn && total > 3) {
+  if (expandBtn && hiddenSkills.length) {
     expandBtn.hidden = false;
-    expandBtn.innerHTML = `查看全部 ${total} 项技能 ↓`;
+    expandBtn.innerHTML = "查看更多 ↓";
   } else if (expandBtn) {
     expandBtn.hidden = true;
   }
 }
-
-// Build skills from JD keyword analysis already in atsResult (client-side, no extra API call needed)
-function buildSkillsFromJD(resumeTextLower) {
-  const breakdown = getKeywordBreakdown();
-  const seen = new Set();
-  const skills = [];
-  for (const cat of breakdown) {
-    for (const term of (cat.matched || [])) {
-      const name = String(term).trim();
-      if (!name || seen.has(name.toLowerCase())) continue;
-      seen.add(name.toLowerCase());
-      skills.push({ name, status: 'have' });
-    }
-    for (const term of (cat.missing || [])) {
-      const name = String(term).trim();
-      if (!name || seen.has(name.toLowerCase())) continue;
-      seen.add(name.toLowerCase());
-      skills.push({ name, status: 'weak' });
-    }
-  }
-  return { skills, seen };
-}
-
 (async function loadSkills() {
-  const resumeTextLower = (s.resumeText || "").toLowerCase();
-
-  const { skills: jdSkills } = buildSkillsFromJD(resumeTextLower);
-
-  const merged = jdSkills.map(function(sk, i) {
-    return { priority: i + 1, name: sk.name, status: sk.status };
+  const keywordItems = buildKeywordItems();
+  const previewItems = primaryKeywordItems(keywordItems).map(function(sk, i) {
+    return { ...sk, priority: i + 1 };
   });
-
-  if (merged.length === 0 && !getJdKeywordCount(atsResult)) return;
-  renderSkillSection(merged);
+  const sectionTitleEl = document.getElementById("skillSectionTitle");
+  const sectionDescEl = document.getElementById("skillSectionDesc");
+  if (sectionTitleEl) sectionTitleEl.textContent = "JD Keyword 清单";
+  if (sectionDescEl) {
+    sectionDescEl.textContent = "这些是系统从 JD 中识别出的关键词。优先把待补强项写进 Summary、Skills 或 Experience。";
+  }
+  if (previewItems.length === 0 && !getJdKeywordCount(atsResult)) return;
+  renderSkillSection(keywordItems.map(function(sk, i) {
+    return { ...sk, priority: i + 1 };
+  }));
 })();
 
 // Toggle paywall
@@ -522,7 +1855,7 @@ if (expandBtn && paywallEl) {
   expandBtn.addEventListener("click", () => {
     open = !open;
     paywallEl.hidden = !open;
-    expandBtn.innerHTML = open ? "收起 ↑" : "查看全部技能 ↓";
+    expandBtn.innerHTML = open ? "收起 ↑" : "查看更多 ↓";
   });
 }
 
@@ -591,19 +1924,81 @@ function collectResultHrPerspectiveLookup() {
   return lookup;
 }
 const HR_PERSPECTIVE_LOOKUP = collectResultHrPerspectiveLookup();
+function truncateAtSentence(value = "", maxLength = 120) {
+  const text = String(value || "").replace(/\s+/g, " ").trim();
+  if (!text || text.length <= maxLength) return text;
+  const slice = text.slice(0, maxLength);
+  const sentenceEnd = Math.max(
+    slice.lastIndexOf("。"), slice.lastIndexOf("！"), slice.lastIndexOf("？"),
+    slice.lastIndexOf("."), slice.lastIndexOf("!"), slice.lastIndexOf("?")
+  );
+  if (sentenceEnd >= 24) return slice.slice(0, sentenceEnd + 1).trim();
+  const commaEnd = Math.max(slice.lastIndexOf("，"), slice.lastIndexOf(","), slice.lastIndexOf("；"), slice.lastIndexOf(";"));
+  if (commaEnd >= 28) return slice.slice(0, commaEnd).trim() + "。";
+  return slice.replace(/[，,；;：:\s]+$/g, "").trim() + "。";
+}
 function fallbackHrPerspective(item = {}) {
-  const action = item.action || item.actionSummary || item.title || "这条修改建议";
-  return `HR 会把这里当作快速筛选信号：如果简历没有体现「${String(action).slice(0, 42)}」这一点，候选人与 JD 的匹配感会被削弱。`;
+  const tags = item.relatedProblemTags || [];
+  if (tags.includes("missing_summary")) {
+    return "HR 会先看简历开头是否说明投递方向；缺少 Summary 时，后面的技能和经历更容易被读散。";
+  }
+  if (tags.some(tag => /education|coursework|gpa/.test(tag))) {
+    return "HR 会把教育背景当作 junior 候选人的快速筛选信号；相关课程和训练需要完整、靠前、可识别。";
+  }
+  if (tags.some(tag => /keyword|jd|hard_skill/.test(tag))) {
+    return "HR 会用 JD 技能词快速确认候选人是否匹配；关键词缺少经历证据时，可信度会下降。";
+  }
+  const action = truncateAtSentence(item.action || item.actionSummary || item.title || "这条修改建议", 64);
+  return `HR 会把这里当作快速筛选信号；建议优先处理「${action.replace(/[。.!?！？]$/g, "")}」。`;
+}
+
+function hasMissingSummarySignal() {
+  const sources = [
+    ...(atsResult.problemTags || []),
+    ...(atsResult.raw?.problemTags || []),
+    ...(atsResult.diagnosticObligations || []),
+    ...(atsResult.raw?.diagnosticObligations || []),
+    ...(atsResult.problems || []),
+    ...(atsResult.raw?.problems || []),
+  ];
+  return sources.some((item) => {
+    const tag = typeof item === "string" ? item : item?.tag || item?.id || item?.problemTag || "";
+    const text = typeof item === "string" ? item : [item?.message, item?.title, item?.evidence].filter(Boolean).join(" ");
+    return /missing_summary|缺少\s*summary|没有\s*summary|add\s+(?:a\s+)?summary/i.test(`${tag} ${text}`);
+  }) || atsResult.diagnostics?.searchability?.hasSummary === false || atsResult.raw?.diagnostics?.searchability?.hasSummary === false;
+}
+
+function normalizeMissingSummaryAdviceItem(item = {}) {
+  const tags = item.relatedProblemTags || [];
+  const text = [item.title, item.action, item.actionSummary, item.currentDiagnosis, item.problemSummary].filter(Boolean).join(" ");
+  const talksAboutSummaryKeyword = /summary/i.test(text) && /岗位原词|目标岗位原词|exact (?:target )?(?:job )?title|target title|job title|keyword|关键词/i.test(text);
+  if (!tags.includes("missing_summary") && !(hasMissingSummarySignal() && talksAboutSummaryKeyword)) return item;
+  const targetRole = s.jobTitle || atsResult.jobTitle || atsResult.profile?.targetRole || atsResult.raw?.jobTitle || "目标岗位";
+  const action = `新增 2-3 行 Summary：第一句写目标岗位 ${targetRole}，第二句连接你最相关的经历、技能和可量化成果；先把段落搭起来，再补具体关键词。`;
+  return {
+    ...item,
+    title: "先补上 Summary 段落",
+    currentDiagnosis: "原简历目前缺少 Summary 段落；需要先有一个岗位定位入口，再谈把 JD 关键词放进 Summary。",
+    problemSummary: "原简历目前缺少 Summary 段落；需要先有一个岗位定位入口，再谈把 JD 关键词放进 Summary。",
+    action,
+    actionSummary: action,
+    mentorLens: "没有 Summary 时，简历开头缺少岗位定位入口；先搭出这一段，后续目标岗位原词和 JD 关键词才有自然承载位置。",
+    hrPerspective: "HR 会先看简历开头是否说明投递方向；缺少 Summary 时，后面的技能和经历更容易被读散。",
+    relatedProblemTags: [...new Set(["missing_summary", ...tags.filter((tag) => tag !== "missing_exact_job_title")])],
+    canonicalActionFamily: "summary_creation",
+    targetSection: "summary",
+  };
 }
 
 function renderApiAdviceItem(item, i) {
+  item = normalizeMissingSummaryAdviceItem(item);
   const diagnosis   = item.currentDiagnosis || item.problemSummary || "";
   const action      = item.action || item.actionSummary || "";
   const insight     = item.mentorInsight || item.mentorLens || item.reason || item.I_insight || item.P_mentor || "";
-  const hrPov       = item.hrPerspective || item.HR_os || item.hrPov || item.recruiterPerspective || HR_PERSPECTIVE_LOOKUP.get(String(item.adviceId || "")) || HR_PERSPECTIVE_LOOKUP.get(resultAdviceIdentity(item)) || fallbackHrPerspective(item);
+  const hrPov       = truncateAtSentence(item.hrPerspective || item.HR_os || item.hrPov || item.recruiterPerspective || HR_PERSPECTIVE_LOOKUP.get(String(item.adviceId || "")) || HR_PERSPECTIVE_LOOKUP.get(resultAdviceIdentity(item)) || fallbackHrPerspective(item), 150);
   const matchReason = item.matchReason || "";
   const fitType     = item.mentorFitType || "";
-  const topicCluster = item.topicCluster || sectionLabel(item.targetSection);
+  const topicCluster = item.displayAdviceType || item.topicCluster || sectionLabel(item.targetSection);
 
   const fitCfg = FIT_TYPE_CONFIG[fitType];
   const fitChip = fitCfg
@@ -649,6 +2044,34 @@ function renderApiAdviceItem(item, i) {
     </div>`;
 }
 
+function prepareDisplayAdviceItems(items = []) {
+  const missingSummary = hasMissingSummarySignal();
+  const normalized = items
+    .filter((item) => !isIrrelevantMlAdvice(item))
+    .map((item) => normalizeMissingSummaryAdviceItem(item));
+  const seen = new Set();
+  const unique = [];
+  normalized.forEach((item) => {
+    const tags = item.relatedProblemTags || [];
+    const family = item.canonicalActionFamily || "";
+    const key = missingSummary && (family === "summary_creation" || tags.includes("missing_summary"))
+      ? "missing_summary"
+      : resultAdviceIdentity(item);
+    if (!key || seen.has(key)) return;
+    seen.add(key);
+    unique.push(item);
+  });
+  if (!missingSummary) return unique;
+  return unique.sort((a, b) => {
+    const aTags = a.relatedProblemTags || [];
+    const bTags = b.relatedProblemTags || [];
+    const aMissing = a.canonicalActionFamily === "summary_creation" || aTags.includes("missing_summary");
+    const bMissing = b.canonicalActionFamily === "summary_creation" || bTags.includes("missing_summary");
+    if (aMissing !== bMissing) return aMissing ? -1 : 1;
+    return 0;
+  });
+}
+
 function mentorInitials(name) {
   const clean = String(name || "").replace(/[导师]/g, "").trim();
   return clean.slice(0, 2) || (name || "M").slice(0, 1);
@@ -664,7 +2087,7 @@ function renderFreeMentor(m) {
   const title = m.mentorTitle || "";
   const careerPath = m.careerPathDisplay || "";
   const companyMeta = [company, title].filter(Boolean).join(" · ");
-  const adviceHtml = (m.adviceItems || []).filter((item) => !isIrrelevantMlAdvice(item)).slice(0, 3).map(renderApiAdviceItem).join("");
+  const adviceHtml = prepareDisplayAdviceItems(m.adviceItems || []).slice(0, 3).map(renderApiAdviceItem).join("");
 
   mentorFreeEl.innerHTML = `
     <div style="background:#FFFDF7;border:1px solid rgba(0,0,0,0.07);border-radius:20px;padding:20px 20px 18px;box-shadow:0 1px 6px rgba(0,0,0,0.04);">
@@ -767,10 +2190,14 @@ if (atsResult && atsResult.atsScore) {
   const sysSummaryEl = document.getElementById("atsSystemSummary");
   if (sysSummaryEl) {
     const jdKeywordCount = formatJdKeywordCount(atsResult);
-    const missingKw = atsResult.topMissingKw || atsResult.raw?.topMissingKw || [];
+    const jdCount = getJdKeywordCount(atsResult);
+    const coverageRatio = jdCount && jdCount.total ? jdCount.matched / jdCount.total : null;
+    const coverageNote = coverageRatio !== null && coverageRatio >= 0.65
+      ? "关键词覆盖良好。建议重点检查下方关键词是否有足够的经历证据支撑。"
+      : "覆盖偏低。先看下方关键词。";
     sysSummaryEl.innerHTML = [
-      jdKeywordCount !== "--" ? `<div><b>JD 技能匹配：</b>${jdKeywordCount}</div>` : "",
-      missingKw.length ? `<div><b>待补技能：</b>${missingKw.slice(0, 10).join("、")}</div>` : "",
+      jdKeywordCount !== "--" ? `<div><b>JD 关键词覆盖：</b>${jdKeywordCount}</div>` : "",
+      jdKeywordCount !== "--" ? `<div>${coverageNote}</div>` : "",
       atsResult.formatPenaltyTriggered ? `<div style="color:var(--rose);"><b>格式处罚：</b>${(atsResult.formatPenaltyReason || []).join("；")}</div>` : "",
     ].filter(Boolean).join("");
   }
@@ -832,7 +2259,7 @@ if (atsResult && atsResult.atsScore) {
     const problems = normalizeProblemList();
     problemsEl.innerHTML = problems.map((p) =>
       `<li style="margin-bottom:10px;padding-left:20px;position:relative;line-height:1.5;"><span style="position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--rose);"></span>${escapeHtml(p)}</li>`
-    ).join("") + renderPaywallMoreBlock("problems");
+    ).join("") + renderAtsPreviewMoreButton("problems") + renderPaywallMoreBlock("problems");
   }
 
   // 优先建议
@@ -841,10 +2268,20 @@ if (atsResult && atsResult.atsScore) {
     const suggestions = normalizeSuggestionList();
     suggestionsEl.innerHTML = suggestions.map((sg) =>
       `<li style="margin-bottom:10px;padding-left:20px;position:relative;line-height:1.5;"><span style="position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--jade);"></span>${escapeHtml(sg)}</li>`
-    ).join("") + renderPaywallMoreBlock("suggestions");
+    ).join("");
   }
 
   // Keep the first three bullets visible; clicking the header only reveals the paid teaser.
+  function toggleAtsPreviewDetails(el, chev) {
+    if (!el) return;
+    el.open = true;
+    el.classList.toggle("is-expanded");
+    const expanded = el.classList.contains("is-expanded");
+    if (chev) chev.style.transform = expanded ? "rotate(0deg)" : "rotate(-90deg)";
+    el.querySelectorAll(".ats-preview-more").forEach(btn => {
+      btn.textContent = expanded ? "收起" : "查看更多";
+    });
+  }
   ["atsProblemsDetails", "atsSuggestionsDetails"].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -855,18 +2292,25 @@ if (atsResult && atsResult.atsScore) {
     const summary = el.querySelector("summary");
     summary?.addEventListener("click", (event) => {
       event.preventDefault();
-      el.open = true;
-      el.classList.toggle("is-expanded");
       const chev = document.getElementById(chevId);
-      if (chev) chev.style.transform = el.classList.contains("is-expanded") ? "rotate(0deg)" : "rotate(-90deg)";
+      toggleAtsPreviewDetails(el, chev);
+    });
+    el.querySelectorAll(".ats-preview-more").forEach(btn => {
+      btn.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const chev = document.getElementById(chevId);
+        toggleAtsPreviewDetails(el, chev);
+      });
     });
     const chev = document.getElementById(chevId);
     if (chev) chev.style.transform = "rotate(-90deg)";
+    el.querySelectorAll(".ats-preview-more").forEach(btn => { btn.textContent = "查看更多"; });
   });
 
   // ATS tile detail（覆盖前面的预设）
   if (atsDetailEl) atsDetailEl.innerHTML = renderRows([
     { k:"ATS 总分", v:`${atsResult.atsScore}/100`, note: atsRiskText(atsResult.riskLevel) },
-    { k:"JD 技能匹配", v: formatJdKeywordCount(atsResult), note:"已具备 / JD 技能总数" },
+    { k:"JD 关键词匹配", v: formatJdKeywordCount(atsResult), note:"已覆盖 / JD 关键词总数" },
   ]);
 }

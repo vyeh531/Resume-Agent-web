@@ -11,7 +11,7 @@ if (typeof guardSubmitted === 'function') {
 
 const s = window.Store.get();
 const atsResult = s.atsResult || {};
-if (s.isPaid && s.reportId && s.reportAccessToken && (!s.premiumKeywordBreakdown || !s.premiumAdviceItems)) {
+if (s.reportId && s.reportAccessToken && (!s.premiumKeywordBreakdown || !s.premiumAdviceItems)) {
   fetch(`/api/v1/reports/${encodeURIComponent(s.reportId)}/unlock`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -37,7 +37,7 @@ const mentorsSection = document.getElementById("mentors");
 if (mentorsSection) {
   const num = mentorsSection.querySelector(".section-num");
   const title = mentorsSection.querySelector(".section-title");
-  if (num) num.textContent = "03 · 导师建议";
+  if (num) num.textContent = "04 · 完整导师建议";
   if (title) title.textContent = "按你的简历问题优先匹配";
 }
 
@@ -171,6 +171,176 @@ function formatJdKeywordCount(ats) {
   const count = getJdKeywordCount(ats);
   return count ? `${count.matched}/${count.total}` : "--";
 }
+function formatJdKeywordMatchValue(ats) {
+  const count = getJdKeywordCount(ats);
+  if (!count || !count.total) return "--";
+  return `${count.matched}/${count.total}`;
+}
+function formatJdKeywordMatchPercent(ats) {
+  const ratio = getJdMatchRatio(ats);
+  if (ratio !== null) return ratio + "%";
+  const count = getJdKeywordCount(ats);
+  if (!count || !count.total) return "--";
+  return Math.round((count.matched / count.total) * 100) + "%";
+}
+function atsRiskText(risk) {
+  if (risk === "低") return "低风险";
+  if (risk === "中") return "中风险";
+  if (risk === "高") return "高风险";
+  return risk || "未评级";
+}
+function riskToneClass(risk) {
+  const text = String(risk || "");
+  if (/高|high|severe|red/i.test(text)) return "risk-high";
+  if (/中|medium|mid|moderate|orange|yellow/i.test(text)) return "risk-medium";
+  if (/低|low|green/i.test(text)) return "risk-low";
+  return "risk-pending";
+}
+function renderRows(arr) {
+  return (arr || []).map(r => `
+    <div class="detail-row"><span class="k">${escapeHtml(r.k)}</span><span class="v">${escapeHtml(r.v)}</span></div>
+    <div class="detail-note">${escapeHtml(r.note)}</div>
+  `).join("");
+}
+function renderStackedRows(arr) {
+  return (arr || []).map(r => `
+    <div class="detail-row detail-row-stacked">
+      <span class="k">${escapeHtml(r.k)}</span>
+      <span class="v">${escapeHtml(r.v)}</span>
+      <span class="detail-note">${escapeHtml(r.note)}</span>
+    </div>
+  `).join("");
+}
+function getStoredJdText() {
+  return s.jdText || atsResult.jdText || atsResult.raw?.jdText || "";
+}
+function getStoredLocation() {
+  return s.location || s.jobLocation || atsResult.location || atsResult.raw?.location || "";
+}
+function getStoredResumeText() {
+  return s.resumeText || atsResult.resumeText || atsResult.raw?.resumeText || "";
+}
+function inferSalaryRoleFamilyFromText(text) {
+  const value = String(text || "");
+  if (/\b(software engineer|software developer|sde|swe|frontend|front-end|backend|back-end|full stack|full-stack|react|node\.?js|typescript|java|python developer)\b|软件|前端|后端|全栈/i.test(value)) return "software_engineering";
+  if (/\b(data analyst|business analyst|business intelligence|bi analyst|data scientist|analytics|sql|tableau|power bi|dashboard|machine learning|ml engineer|mle)\b|数据分析|商业分析|数据科学|机器学习|算法/i.test(value)) return "data_analytics";
+  if (/\b(product manager|associate product manager|apm|product owner|roadmap|user research|product strategy)\b|产品经理|产品负责人/i.test(value)) return "product_management";
+  if (/\b(financial analyst|finance|accounting|accountant|audit|tax|fp&a|valuation|quickbooks|gaap)\b|会计|审计|财务|金融分析/i.test(value)) return "finance_accounting";
+  if (/\b(marketing|growth|social media|campaign|content marketing|seo|sem|brand)\b|市场|营销|增长|社媒|内容运营/i.test(value)) return "marketing";
+  if (/\b(supply chain|logistics analyst|operations analyst|inventory|fulfillment|procurement)\b|供应链|库存|履约|物流分析/i.test(value)) return "supply_chain_operations";
+  if (/\b(logistics|operations support|pickup|dispatch|warehouse|delivery|parcel|fleet)\b|揽收|调度|仓库|物流|末端|运营支持/i.test(value)) return "logistics_operations_support";
+  if (/\b(business operations|operations specialist|program coordinator|project coordinator|operations coordinator)\b|业务运营|项目协调|运营专员/i.test(value)) return "business_operations";
+  return "";
+}
+function getSalaryRoleFamily() {
+  const primaryText = [getTargetJobTitle(), atsResult.profile?.targetRole, atsResult.raw?.profile?.targetRole, getStoredResumeText()].filter(Boolean).join(" ");
+  return inferSalaryRoleFamilyFromText(primaryText)
+    || atsResult.profile?.roleFamily
+    || atsResult.raw?.profile?.roleFamily
+    || atsResult.roleFamily
+    || atsResult.raw?.roleFamily
+    || "";
+}
+function getSalaryTargetRole() {
+  return atsResult.profile?.targetRole || atsResult.raw?.profile?.targetRole || getTargetJobTitle() || "";
+}
+function formatConfidenceLabel(confidence) {
+  const key = String(confidence || "").toLowerCase();
+  if (key === "high") return "高";
+  if (key === "medium") return "中等";
+  if (key === "low") return "较低";
+  return "中等";
+}
+function formatSalaryBasisNote(data) {
+  const locationSource = String(data.matched_location_source || "").toLowerCase();
+  const market = locationSource === "explicit"
+    ? `${data.matched_location || "United States"} 地区`
+    : "全美市场";
+  return `基于此方向与${market}估算。`;
+}
+function salarySourceDisplayNote() {
+  return "数据来源：美国官方职业薪资资料（BLS/O*NET），按相近岗位赛道估算。";
+}
+function salaryUnavailableRows() {
+  return [
+    { k:"薪资成长潜力", v:"待校准", note:"暂未匹配到足够明确的岗位赛道，薪资成长区间需要进一步校准。" },
+    { k:"展示原则", v:"不使用 mock 薪资", note:"不会把 $120K/$200K 这类示例数字当作真实薪资或长期上限。" },
+  ];
+}
+function getRoleSignalText() {
+  return [
+    getTargetJobTitle(),
+    s.jobTitle,
+    atsResult.jobTitle,
+    atsResult.profile?.roleFamily,
+    atsResult.raw?.profile?.roleFamily,
+    atsResult.roleFamily,
+    atsResult.raw?.roleFamily,
+    atsResult.raw?.jobTitle,
+    getStoredJdText(),
+    ...(atsResult.topMissingKw || []),
+    ...(atsResult.raw?.topMissingKw || []),
+  ].filter(Boolean).join(" ").toLowerCase();
+}
+function buildReportAiImpactTrend() {
+  const text = getRoleSignalText();
+  if (!text.trim()) {
+    return {
+      level: "待校准",
+      caption: "需要更多岗位信息",
+      rows: [
+        { k:"容易被自动化", v:"待判断", note:"需要更明确的岗位职责后再判断。" },
+        { k:"更有价值的能力", v:"判断力与协作", note:"优先写出你如何处理复杂问题，而不是只列日常任务。" },
+        { k:"简历应强化", v:"成果证据", note:"补充能体现判断、协作、优化结果的经历。" },
+      ],
+    };
+  }
+  const opsSignal = /(logistics|operations|dispatch|warehouse|delivery|parcel|customer support|揽收|调度|仓库|物流|快递|客服|运营|报表|成本控制)/i.test(text);
+  const techSignal = /(software|engineer|machine learning|ai engineer|data scientist|product manager|developer|软件|算法|产品经理|数据科学)/i.test(text);
+  const adminSignal = /(data entry|clerk|administrative|assistant|basic report|documentation|scheduling|文员|行政|录入|基础报表|重复报表|数据整理|标准流程)/i.test(text);
+  if (adminSignal && !techSignal) {
+    return {
+      level: "高影响",
+      caption: "标准化任务会被自动化",
+      rows: [
+        { k:"容易被自动化", v:"基础录入、重复整理、模板化沟通", note:"这类任务更容易被工具接管或压缩。" },
+        { k:"更有价值的能力", v:"问题判断、流程改进、跨团队沟通", note:"需要证明你不只是执行流程，也能优化流程。" },
+        { k:"简历应强化", v:"效率提升、错误率下降、流程优化结果", note:"用数字写出你带来的改进。" },
+      ],
+    };
+  }
+  if (opsSignal) {
+    return {
+      level: "中等影响",
+      caption: "重复任务会被自动化",
+      rows: [
+        { k:"容易被自动化", v:"重复报表、基础数据整理、标准流程提醒", note:"AI 会先压缩低判断、可模板化的日常工作。" },
+        { k:"更有价值的能力", v:"异常判断、跨团队协同、流程优化、数据决策", note:"越能处理例外情况和协调现场资源，越不容易被工具替代。" },
+        { k:"简历应强化", v:"数据发现问题、优化调度、降低成本、提升完成率", note:"把工作写成判断和改进，而不是只写执行任务。" },
+      ],
+    };
+  }
+  if (techSignal) {
+    return {
+      level: "低-中等影响",
+      caption: "AI 更像效率工具",
+      rows: [
+        { k:"容易被自动化", v:"资料整理、初稿生成、基础分析", note:"AI 会提升执行速度，但不直接替代完整判断。" },
+        { k:"更有价值的能力", v:"复杂决策、产品/业务判断、跨团队影响", note:"能定义问题和推动结果的人更有优势。" },
+        { k:"简历应强化", v:"决策依据、业务影响、规模化成果", note:"突出你如何用工具和数据做出更好的判断。" },
+      ],
+    };
+  }
+  return {
+    level: "中等影响",
+    caption: "部分流程会被自动化",
+    rows: [
+      { k:"容易被自动化", v:"重复整理、标准沟通、基础分析", note:"AI 会优先影响低判断、重复性强的工作。" },
+      { k:"更有价值的能力", v:"业务判断、协作推进、结果负责", note:"未来更看重能把问题推进到结果的人。" },
+      { k:"简历应强化", v:"问题、行动、结果", note:"用清楚的证据说明你解决了什么问题。" },
+    ],
+  };
+}
 function getTargetJobTitle() {
   const candidates = [s.jobTitle, atsResult.jobTitle, atsResult.raw && atsResult.raw.jobTitle];
   const raw = candidates.find(v => v && !/依\s*JD|自动识别|unknown|^目标岗位$/i.test(String(v))) || "";
@@ -209,6 +379,35 @@ function normalizeProblemList() {
     ...((atsResult.raw?.topProblems || []).map(item => item.message || item.title).filter(Boolean)),
   ].map(repairTargetRoleProblem));
 }
+function reportSuggestionFallbacks() {
+  return [
+    "添加个人简介段落：用 2-3 句话说明你的背景、核心技能和目标岗位，这是系统和招聘方第一眼读到的内容，也有助于提升关键词覆盖。",
+    "优先补齐岗位描述匹配缺口：只补真实经历能支撑的工具、领域词和动作词，分别放进个人简介、技能栏和最相关的经历要点。",
+    "将每段核心经历改成「动作 + 方法/工具 + 量化结果」结构，让系统和招聘方都能看到岗位证据。",
+  ];
+}
+function simplifySuggestionText(text) {
+  const value = String(text || "").trim();
+  if (!value) return "";
+  if (/Add a 2-3 line Summary section first/i.test(value)) return reportSuggestionFallbacks()[0];
+  if (/Prioritize missing role keywords/i.test(value)) return reportSuggestionFallbacks()[1];
+  if (/Rewrite top bullets/i.test(value)) return reportSuggestionFallbacks()[2];
+  return value
+    .replace(/exact phrase/gi, "精确岗位原词")
+    .replace(/Summary section/gi, "个人简介段落")
+    .replace(/\bSummary\b/g, "个人简介")
+    .replace(/Experience bullet/gi, "经历要点")
+    .replace(/\bSkills\b/g, "技能栏")
+    .replace(/\bJD\b/g, "岗位描述")
+    .replace(/\bATS\b/g, "系统")
+    .replace(/\bHR\b/g, "招聘方")
+    .replace(/target role/gi, "目标岗位")
+    .replace(/role keywords/gi, "岗位关键词")
+    .replace(/real project or work evidence/gi, "真实项目或工作证据")
+    .replace(/action, method, and measurable result/gi, "动作、方法和量化结果")
+    .replace(/Experience/g, "经历")
+    .replace(/bullet/g, "要点");
+}
 function normalizeSuggestionList() {
   const missingKw = uniqueList([
     ...(atsResult.topMissingKw || []),
@@ -218,7 +417,7 @@ function normalizeSuggestionList() {
   ]).slice(0, 8);
   const fallbackSuggestions = [
     missingKw.length ? `优先补齐 JD 缺失技能：${missingKw.join("、")}。` : "",
-    "把目标岗位关键词写进 Summary、Skills 和最相关的 Experience bullet，避免只堆在技能列表。",
+    "把目标岗位关键词写进个人简介、技能栏和最相关的经历要点，避免只堆在技能列表。",
     "将每段核心经历改成「动作 + 方法/工具 + 量化结果」结构，让 ATS 和招聘官都能看到岗位证据。",
   ];
   return uniqueList([
@@ -230,35 +429,67 @@ function normalizeSuggestionList() {
     ...fallbackSuggestions,
   ]);
 }
+function normalizeSuggestionList() {
+  const missingKw = uniqueList([
+    ...(atsResult.topMissingKw || []),
+    ...(atsResult.topMissingKeywords || []),
+    ...(atsResult.raw?.topMissingKw || []),
+    ...(atsResult.raw?.topMissingKeywords || []),
+  ]).slice(0, 8);
+  const fallbackSuggestions = [
+    missingKw.length ? "优先补齐岗位描述中的缺失技能：只保留真实经历能支撑的工具、领域词和动作词，并写入对应段落。" : "",
+    ...reportSuggestionFallbacks(),
+  ];
+  const raw = [
+    ...(atsResult.suggestions || []),
+    ...(atsResult.raw?.suggestions || []),
+    ...Object.values(s.sectionFixPlan || {}).flat().map(item => item.message || item.action || item.actionSummary || item.title).filter(Boolean),
+    ...((atsResult.structuredSuggestions || []).map(item => item.action || item.actionSummary || item.title).filter(Boolean)),
+    ...((atsResult.raw?.structuredSuggestions || []).map(item => item.action || item.actionSummary || item.title).filter(Boolean)),
+    ...fallbackSuggestions,
+  ]
+    .map(simplifySuggestionText)
+    .filter(Boolean)
+    .filter(item => !/[A-Za-z]/.test(item));
+  const items = uniqueList(raw);
+  for (const item of reportSuggestionFallbacks()) {
+    if (!items.includes(item)) items.push(item);
+  }
+  return items;
+}
+function reportProblemFallbacks() {
+  return [
+    "岗位描述关键词匹配仍有提升空间。",
+    "简历定位需要更贴近目标岗位。",
+    "经历证据需要更清楚地支撑核心技能。",
+  ];
+}
+function normalizeProblemList() {
+  const raw = [
+    ...(atsResult.keyProblems || []),
+    ...(atsResult.problems || []),
+    ...(atsResult.raw?.keyProblems || []),
+    ...(atsResult.raw?.problems || []),
+    ...((atsResult.topProblems || []).map(item => item.message || item.title).filter(Boolean)),
+    ...((atsResult.raw?.topProblems || []).map(item => item.message || item.title).filter(Boolean)),
+  ]
+    .map(repairTargetRoleProblem)
+    .map(simplifySuggestionText)
+    .filter(Boolean)
+    .filter(item => !/[A-Za-z]/.test(item));
+  const items = uniqueList(raw);
+  for (const item of reportProblemFallbacks()) {
+    if (items.length >= 3) break;
+    if (!items.includes(item)) items.push(item);
+  }
+  return items;
+}
 function renderAtsProblemItem(text) {
   return `<li style="margin-bottom:10px;padding-left:20px;position:relative;line-height:1.5;"><span style="position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--rose);"></span>${escapeHtml(text)}</li>`;
 }
 function renderAtsSuggestionItem(text) {
   return `<li style="margin-bottom:10px;padding-left:20px;position:relative;line-height:1.5;"><span style="position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--jade);"></span>${escapeHtml(text)}</li>`;
 }
-function buildSkillsFromJD() {
-  const breakdown = getKeywordBreakdown();
-  const seen = new Set();
-  const skills = [];
-  for (const cat of breakdown) {
-    for (const term of normalizeTerms(cat.matched || [])) {
-      const name = String(term).trim();
-      const key = name.toLowerCase();
-      if (!name || seen.has(key)) continue;
-      seen.add(key);
-      skills.push({ name, status: "have" });
-    }
-    for (const term of normalizeTerms(cat.missing || [])) {
-      const name = String(term).trim();
-      const key = name.toLowerCase();
-      if (!name || seen.has(key)) continue;
-      seen.add(key);
-      skills.push({ name, status: "weak" });
-    }
-  }
-  return { skills, seen };
-}
-
 function normalizeTerms(value) {
   const raw = Array.isArray(value) ? value : [value];
   return raw.flatMap((item) => {
@@ -276,6 +507,104 @@ function splitKeywordText(text) {
     .replace(/image generationdebugging/gi, "image generation,debugging");
   if (/[、,;；|]/.test(value)) return value.split(/[、,;；|]/).map((item) => item.trim()).filter(Boolean);
   return [value];
+}
+
+const KEYWORD_CATEGORY_CONFIG = {
+  skill_tool: { label: "技能/工具" },
+  responsibility_scene: { label: "职责/场景" },
+  domain_business: { label: "行业/业务词" },
+  soft_collab: { label: "软技能/协作词" },
+};
+const CATEGORY_LABEL_TO_GROUP = {
+  "核心技能": "skill_tool",
+  "工具 / 技术": "skill_tool",
+  "工具/技术": "skill_tool",
+  "领域词": "domain_business",
+  "动作词": "responsibility_scene",
+  "加分项": "responsibility_scene",
+};
+function categoryGroupForTerm(term, sourceKey = "", sourceLabel = "") {
+  const text = String(term || "").toLowerCase();
+  if (CATEGORY_LABEL_TO_GROUP[sourceLabel]) return CATEGORY_LABEL_TO_GROUP[sourceLabel];
+  if (["core_skills", "tools", "hard_skills"].includes(sourceKey)) return "skill_tool";
+  if (["domain_keywords"].includes(sourceKey)) return "domain_business";
+  if (["action_verbs", "nice_to_have"].includes(sourceKey)) return "responsibility_scene";
+  if (/(communication|collaboration|stakeholder|cross-functional|leadership|teamwork|沟通|协作|协调|跨部门|客服|客户|抗压)/i.test(term)) return "soft_collab";
+  if (/(excel|sql|python|tableau|power\s*bi|quickbooks|gaap|aws|gcp|azure|jira|figma|system|系统|工具|报表|数据分析|成本控制|调度|报告制作|kpi|数据|分析)/i.test(term)) return "skill_tool";
+  if (/(负责|创建|指派|调度|监控|优化|协同|值班|应急|流程|卸车|分拨|support|manage|analyze|coordinate|report|track)/i.test(term)) return "responsibility_scene";
+  if (/(行业|业务|揽收|物流|快递|仓库|warehouse|logistics|parcel|delivery|运营|末端|区域)/i.test(term)) return "domain_business";
+  return "domain_business";
+}
+function placementForKeyword(term, group, sourceKey = "") {
+  const text = String(term || "").toLowerCase();
+  if (sourceKey === "summary" || (/(title|岗位|职位|summary|定位|目标)/i.test(term) && !/(工具|系统|数据)/i.test(term))) {
+    return { label: "放 Summary", className: "keyword-use--summary" };
+  }
+  if (group === "skill_tool" || ["core_skills", "tools"].includes(sourceKey)) {
+    return { label: "放 Skills", className: "keyword-use--skills" };
+  }
+  if (group === "responsibility_scene" || /(负责|创建|指派|调度|监控|优化|协同|值班|应急|support|manage|analyze|coordinate|report|track)/i.test(term)) {
+    return { label: "写进经历要点", className: "keyword-use--experience" };
+  }
+  if (group === "soft_collab") {
+    return { label: "写进经历要点", className: "keyword-use--experience" };
+  }
+  if (/(公司|福利|地点|城市|全职|兼职|remote|onsite)/i.test(text)) {
+    return { label: "只作参考，不建议硬塞", className: "keyword-use--reference" };
+  }
+  return { label: "只作参考，不建议硬塞", className: "keyword-use--reference" };
+}
+function keywordItemKey(item) {
+  return String(item?.name || "").trim().toLowerCase();
+}
+function buildKeywordItems() {
+  const items = [];
+  const seen = new Set();
+  const add = (name, status, sourceKey = "", sourceLabel = "", priority = 50) => {
+    normalizeTerms(name).forEach((term) => {
+      const clean = String(term || "").trim();
+      if (!clean) return;
+      const key = clean.toLowerCase();
+      if (seen.has(key)) return;
+      seen.add(key);
+      const group = categoryGroupForTerm(clean, sourceKey, sourceLabel);
+      const placement = placementForKeyword(clean, group, sourceKey);
+      items.push({ name: clean, status, sourceKey, sourceLabel, group, placement, priority });
+    });
+  };
+  getMissingKeywordChecklist().forEach((item, index) => {
+    const term = item?.term || item?.name || item;
+    const where = String(item?.whereToAdd || "").toLowerCase();
+    const sourceKey = /experience/.test(where) ? "action_verbs" : /summary/.test(where) ? "summary" : /skills?/.test(where) || item?.category === "hard_skill" ? "core_skills" : "";
+    add(term, "weak", sourceKey, "", index);
+  });
+  getKeywordBreakdown().forEach((cat, catIndex) => {
+    const sourceKey = cat.key || "";
+    const sourceLabel = cat.label || "";
+    normalizeTerms(cat.missing || []).forEach((term, index) => add(term, "weak", sourceKey, sourceLabel, catIndex * 20 + index));
+    normalizeTerms(cat.matched || []).forEach((term, index) => add(term, "have", sourceKey, sourceLabel, 100 + catIndex * 20 + index));
+  });
+  uniqueList([
+    ...(atsResult.topMissingKw || []),
+    ...(atsResult.topMissingKeywords || []),
+    ...(atsResult.raw?.topMissingKw || []),
+    ...(atsResult.raw?.topMissingKeywords || []),
+  ]).forEach((term, index) => add(term, "weak", "", "", index + 5));
+  return items.sort((a, b) => {
+    if (a.status !== b.status) return a.status === "weak" ? -1 : 1;
+    const aSkill = a.group === "skill_tool" ? 0 : 1;
+    const bSkill = b.group === "skill_tool" ? 0 : 1;
+    if (aSkill !== bSkill) return aSkill - bSkill;
+    return a.priority - b.priority;
+  });
+}
+function primaryKeywordItems(items) {
+  const skillItems = items.filter((item) => item.group === "skill_tool");
+  const source = skillItems.length >= 2 ? skillItems : items;
+  return source.slice(0, 5);
+}
+function hasReliableSkillClassification(items) {
+  return items.some((item) => item.group === "skill_tool");
 }
 function renderMentorLogoMarquee(pool) {
   const source = (pool && pool.length ? pool : STATIC_MENTOR_COMPANY_LOGOS);
@@ -343,18 +672,147 @@ function copyMentorExample(btn){
 window.copyMentorExample = copyMentorExample;
 
 // ── 1. Summary ──
-const issueText = atsResult.riskLevel === "低"
-  ? "✓ ATS 兼容性良好（" + (atsResult.atsScore||"?") + "/100），简历格式清晰规范。"
-  : atsResult.riskLevel === "中"
-  ? "⚠ ATS 兼容性中等（" + (atsResult.atsScore||"?") + "/100），建议优化格式和关键词。"
-  : atsResult.atsScore
-  ? "❌ ATS 兼容性偏低（" + atsResult.atsScore + "/100），需要重点修改。"
-  : "";
+const atsScore = atsResult.atsScore || 0;
+const issueProblems = normalizeProblemList();
+const issueText = issueProblems.length
+  ? issueProblems[0]
+  : atsScore
+    ? `ATS ${atsRiskText(atsResult.riskLevel)}（${atsScore}/100），请优先查看 ATS 诊断中的分项得分和修改建议。`
+    : "";
 const coreIssueEl = document.getElementById("coreIssue");
 if (coreIssueEl) coreIssueEl.textContent = issueText;
 
-const headlineEl = document.querySelector(".report-headline .num");
-if (headlineEl && atsResult.atsScore) headlineEl.textContent = atsResult.atsScore;
+const headlineEl = document.getElementById("reportHeadlineScore") || document.querySelector(".report-headline .num");
+if (headlineEl) headlineEl.textContent = atsScore || "--";
+
+// ── 1.5. Result-page metrics, fully expanded for report ──
+(function renderReportDataMetrics() {
+  const jdMatchValue = formatJdKeywordMatchValue(atsResult);
+  const rankPctEl = document.getElementById("reportRankPct");
+  if (rankPctEl) rankPctEl.textContent = jdMatchValue;
+
+  const atsTileEl = document.getElementById("reportAtsScore");
+  if (atsTileEl) atsTileEl.textContent = atsScore || "--";
+  const riskCaptionEl = document.getElementById("reportAtsRiskCaption");
+  if (riskCaptionEl) {
+    const riskLabel = atsRiskText(atsResult.riskLevel);
+    riskCaptionEl.textContent = riskLabel;
+    riskCaptionEl.classList.remove("risk-high", "risk-medium", "risk-low", "risk-pending");
+    riskCaptionEl.classList.add(riskToneClass(riskLabel));
+  }
+
+  const rankDetailEl = document.getElementById("reportRankDetail");
+  if (rankDetailEl) {
+    rankDetailEl.innerHTML = renderRows([
+      { k:"JD 关键词匹配", v: formatJdKeywordCount(atsResult), note:"已覆盖 / JD 关键词总数。" },
+      { k:"整体覆盖率", v: formatJdKeywordMatchPercent(atsResult), note:"基于目标 JD 的关键词覆盖情况估算。" },
+    ]) + renderStackedRows([
+      { k:"主要缺口", v:"下方岗位描述关键词清单已整理关键词与放置建议。", note:"报告页会直接展示当前可用的完整分析内容。" },
+    ]);
+  }
+
+  const atsDetailEl = document.getElementById("reportAtsDetail");
+  if (atsDetailEl) {
+    atsDetailEl.innerHTML = renderRows([
+      { k:"ATS 总分", v: atsScore ? `${atsScore}/100` : "--", note: atsRiskText(atsResult.riskLevel) },
+      { k:"JD 关键词匹配", v: formatJdKeywordCount(atsResult), note:"已覆盖 / JD 关键词总数" },
+      { k:"简历质量", v: (atsResult.dimensions?.C?.score ?? atsResult.raw?.dimensions?.C?.score ?? "--") + "/" + (atsResult.dimensions?.C?.max ?? atsResult.raw?.dimensions?.C?.max ?? 12), note:"内容质量与成果表达" },
+    ]);
+  }
+
+  const aiTrend = buildReportAiImpactTrend();
+  const aiLevelEl = document.getElementById("reportAiImpactLevel");
+  const aiCaptionEl = document.getElementById("reportAiImpactCaption");
+  const aiDetailEl = document.getElementById("reportAiImpactDetail");
+  if (aiLevelEl) {
+    aiLevelEl.textContent = aiTrend.level;
+    aiLevelEl.classList.remove("ai-impact-low", "ai-impact-medium", "ai-impact-high", "ai-impact-pending");
+    const levelText = String(aiTrend.level || "");
+    aiLevelEl.classList.add(/高/.test(levelText) ? "ai-impact-high" : /低/.test(levelText) ? "ai-impact-low" : /中/.test(levelText) ? "ai-impact-medium" : "ai-impact-pending");
+  }
+  if (aiCaptionEl) aiCaptionEl.textContent = aiTrend.caption;
+  if (aiDetailEl) aiDetailEl.innerHTML = renderStackedRows(aiTrend.rows);
+
+  const tiles = Array.from(document.querySelectorAll("#reportDataTiles .tile"));
+  if (tiles.length) {
+    const syncClosedTileHeight = () => {
+      tiles.forEach((tile) => {
+        tile.style.minHeight = "";
+      });
+      const closedHeight = Math.max(...tiles.map((tile) => {
+        const wasOpen = tile.open;
+        tile.open = false;
+        const height = tile.offsetHeight;
+        tile.open = wasOpen;
+        return height;
+      }));
+      tiles.forEach((tile) => {
+        if (!tile.open) tile.style.minHeight = `${closedHeight}px`;
+      });
+    };
+    tiles.forEach((tile) => tile.addEventListener("toggle", syncClosedTileHeight));
+    window.addEventListener("resize", syncClosedTileHeight);
+    requestAnimationFrame(syncClosedTileHeight);
+  }
+})();
+
+(async function loadReportSalaryTrajectory() {
+  const salaryRangeEl = document.getElementById("reportSalaryRange");
+  const salaryTopEl = document.getElementById("reportSalaryTop");
+  const headlineSalaryTopEl = document.getElementById("reportHeadlineSalaryTop");
+  const salaryDetailEl = document.getElementById("reportSalaryDetail");
+  const showSalaryFallback = () => {
+    if (salaryRangeEl) salaryRangeEl.textContent = "待校准";
+    if (salaryTopEl) salaryTopEl.textContent = "需补充";
+    if (headlineSalaryTopEl) headlineSalaryTopEl.textContent = "待校准";
+    if (salaryDetailEl) salaryDetailEl.innerHTML = renderRows(salaryUnavailableRows());
+    window.dispatchEvent(new Event("resize"));
+  };
+  const jobTitle = getTargetJobTitle() || s.jobTitle || atsResult.jobTitle || atsResult.raw?.jobTitle || "";
+  const jdText = getStoredJdText();
+  const location = getStoredLocation();
+  const resumeText = getStoredResumeText();
+  const roleFamily = getSalaryRoleFamily();
+  const targetRole = getSalaryTargetRole();
+  if (!jobTitle && !jdText) {
+    showSalaryFallback();
+    return;
+  }
+  try {
+    const resp = await fetch("/api/position-salary", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ jobTitle, jdText, location, resumeText, roleFamily, targetRole }),
+    });
+    if (!resp.ok) {
+      showSalaryFallback();
+      return;
+    }
+    const data = await resp.json();
+    if (data.trajectory_source !== "benchmark" || !data.three_year_range || !data.five_year_range) {
+      showSalaryFallback();
+      return;
+    }
+    if (salaryRangeEl) salaryRangeEl.textContent = data.three_year_range;
+    if (salaryTopEl) salaryTopEl.textContent = data.five_year_range;
+    if (headlineSalaryTopEl) headlineSalaryTopEl.textContent = data.top_range || data.five_year_range;
+    const rows = [];
+    if (data.jd_salary) {
+      rows.push({ k:"JD 标注薪资", v:data.jd_salary, note:"这是 JD 中写明的薪资，不等同于长期成长上限。" });
+    }
+    rows.push(
+      { k:"当前赛道参考", v:data.current_range || "待校准", note:formatSalaryBasisNote(data) },
+      { k:"3 年成长区间", v:data.three_year_range, note:"若持续积累目标岗位相关经验和可验证成果，3 年内可参考这个区间。" },
+      { k:"5 年成长区间", v:data.five_year_range, note:"代表同类岗位中经验更成熟、职责更完整时的市场参考。" },
+      { k:"同赛道高分位", v:data.top_range || data.five_year_range, note:salarySourceDisplayNote() }
+    );
+    if (salaryDetailEl) salaryDetailEl.innerHTML = renderRows(rows);
+    window.dispatchEvent(new Event("resize"));
+  } catch (e) {
+    console.warn("[Report salary]", e.message);
+    showSalaryFallback();
+  }
+})();
 
 // ── 2. ATS 详细分数 ──
 (function renderAtsDetail() {
@@ -411,10 +869,8 @@ if (headlineEl && atsResult.atsScore) headlineEl.textContent = atsResult.atsScor
 
   const sysSummaryEl = document.getElementById("atsSystemSummary");
   if (sysSummaryEl) {
-    const missingKw = atsResult.topMissingKw || atsResult.raw?.topMissingKw || [];
     sysSummaryEl.innerHTML = [
-      jdKeywordCount !== "--" ? `<div><b>JD 技能匹配：</b>${jdKeywordCount}</div>` : "",
-      missingKw.length ? `<div><b>待补技能：</b>${missingKw.slice(0, 10).join("、")}</div>` : "",
+      jdKeywordCount !== "--" ? `<div><b>JD 关键词覆盖：</b>${jdKeywordCount}</div>` : "",
       atsResult.formatPenaltyTriggered ? `<div style="color:var(--rose);"><b>格式处罚：</b>${(atsResult.formatPenaltyReason || []).join("；")}</div>` : "",
     ].filter(Boolean).join("");
   }
@@ -440,45 +896,97 @@ const labelMap = {
   have: `<span class="pill pill-good"><span class="dot"></span>已具备</span>`,
   weak: `<span class="pill pill-warn"><span class="dot"></span>待补强</span>`
 };
+function renderSkillRow(sk) {
+  const placement = sk.placement || placementForKeyword(sk.name, sk.group, sk.sourceKey);
+  return `<li class="skill-row">
+    <div class="skill-name"><span class="priority">#${sk.priority}</span>${escapeHtml(sk.name)}</div>
+    <div class="skill-meta">
+      <span class="keyword-use ${placement.className}">${escapeHtml(placement.label)}</span>
+      ${labelMap[sk.status] || ""}
+    </div>
+  </li>`;
+}
 function renderSkillList(skills){
   const skillListEl = document.getElementById("skillList");
   if (!skillListEl) return;
-  document.getElementById("reportSkillExpandToggle")?.remove();
-  const visible = skills.slice(0, 5);
-  const hidden = skills.slice(5);
+  const visibleCount = 5;
+  const visibleSkills = skills.slice(0, visibleCount);
+  const hiddenSkills = skills.slice(visibleCount);
   skillListEl.innerHTML = [
-    ...visible.map(sk => `
-    <li class="skill-row">
-      <div class="skill-name"><span class="priority">#${sk.priority}</span>${escapeHtml(sk.name)}</div>
-      ${labelMap[sk.status] || ""}
-    </li>`),
-    ...hidden.map(sk => `
-    <li class="skill-row skill-extra" hidden>
-      <div class="skill-name"><span class="priority">#${sk.priority}</span>${escapeHtml(sk.name)}</div>
-      ${labelMap[sk.status] || ""}
-    </li>`),
+    ...visibleSkills.map(renderSkillRow),
+    ...hiddenSkills.map((sk) => renderSkillRow(sk).replace('<li class="skill-row">', '<li class="skill-row report-skill-extra" hidden>')),
   ].join("");
-  if (hidden.length) {
-    skillListEl.insertAdjacentHTML("afterend", `<button class="skill-expand-toggle" id="reportSkillExpandToggle" type="button">展开全部 ${skills.length} 项技能 ↓</button>`);
-    const btn = document.getElementById("reportSkillExpandToggle");
+  const expandBtn = document.getElementById("reportSkillExpandToggle");
+  if (expandBtn) {
+    expandBtn.hidden = hiddenSkills.length === 0;
+    expandBtn.textContent = "查看更多 ↓";
     let open = false;
-    btn?.addEventListener("click", () => {
+    expandBtn.onclick = () => {
       open = !open;
-      document.querySelectorAll(".skill-extra").forEach((el) => { el.hidden = !open; });
-      btn.textContent = open ? "收起 ↑" : `展开全部 ${skills.length} 项技能 ↓`;
-    });
+      skillListEl.querySelectorAll(".report-skill-extra").forEach((el) => {
+        el.hidden = !open;
+      });
+      expandBtn.textContent = open ? "收起 ↑" : "查看更多 ↓";
+    };
   }
   const jdCount = getJdKeywordCount(atsResult);
   const have = jdCount ? jdCount.matched : skills.filter(sk => sk.status === "have").length;
   const total = jdCount ? jdCount.total : skills.length;
   const weak = Math.max(0, total - have);
   const insightEl = document.querySelector(".ai-insight-diagnosis");
-  if (insightEl) insightEl.innerHTML = `<span class="ico">💡</span>你已掌握 <b>${have}/${total}</b> 项 JD 技能，还有 <b>${weak} 项</b>待补强。${weak > 0 ? "招聘官会优先看简历是否使用岗位语言，建议把缺失技能写进 Summary、Skills 和相关经历证据里。" : "技能覆盖率良好，建议进一步量化成果。"}`;
+  if (insightEl) insightEl.innerHTML = `<span class="ico">💡</span>你已掌握 <b>${have}/${total}</b> 项岗位描述关键词，还有 <b>${weak} 项</b>待补强。${weak > 0 ? "优先处理可放进技能栏、个人简介和经历要点的技能/工具/能力词，避免把所有关键词平铺硬塞。" : "关键词覆盖率良好，建议进一步量化成果。"}`;
+}
+function renderKeywordCategories(items) {
+  const detailsEl = document.getElementById("jdKeywordDetails");
+  const listEl = document.getElementById("jdKeywordCategoryList");
+  if (!detailsEl || !listEl) return;
+  const grouped = Object.keys(KEYWORD_CATEGORY_CONFIG).map((group) => ({
+    group,
+    label: KEYWORD_CATEGORY_CONFIG[group].label,
+    items: items.filter((item) => item.group === group),
+  })).filter((group) => group.items.length);
+  if (!grouped.length) {
+    detailsEl.hidden = true;
+    listEl.innerHTML = "";
+    return;
+  }
+  detailsEl.hidden = false;
+  listEl.innerHTML = grouped.map((group) => `
+    <div class="jd-keyword-group">
+      <div class="jd-keyword-group-head">
+        <span class="jd-keyword-group-title">${escapeHtml(group.label)}</span>
+        <span class="jd-keyword-group-count">${group.items.length}</span>
+      </div>
+      <div class="jd-keyword-chips">
+        ${group.items.map((item) => `
+          <span class="jd-keyword-chip ${item.status === "have" ? "is-have" : ""}" title="${escapeAttr(item.placement.label)}">
+            <span class="state"></span><b>${escapeHtml(item.name)}</b>
+            <span class="keyword-use ${item.placement.className}">${escapeHtml(item.placement.label)}</span>
+          </span>
+        `).join("")}
+      </div>
+    </div>
+  `).join("");
 }
 (async function loadSkills(){
-  const { skills: jdSkills } = buildSkillsFromJD();
-  const merged = jdSkills.map((sk, i) => ({ priority: i + 1, name: sk.name, status: sk.status }));
-  if (merged.length > 0 || getJdKeywordCount(atsResult)) renderSkillList(merged);
+  const keywordItems = buildKeywordItems();
+  const reliableSkills = hasReliableSkillClassification(keywordItems);
+  const displayItems = keywordItems.map((sk, i) => ({ ...sk, priority: i + 1 }));
+  const titleEl = document.getElementById("reportSkillSectionTitle");
+  const descEl = document.getElementById("reportSkillSectionDesc");
+  if (titleEl) titleEl.textContent = "JD Keyword 清单";
+  if (descEl) {
+    descEl.textContent = "这些是系统从 JD 中识别出的关键词。优先把待补强项写进 Summary、Skills 或 Experience。";
+  }
+  renderKeywordCategories(keywordItems);
+  if (displayItems.length > 0 || getJdKeywordCount(atsResult)) {
+    renderSkillList(displayItems);
+  } else {
+    const skillListEl = document.getElementById("skillList");
+    const insightEl = document.querySelector(".ai-insight-diagnosis");
+    if (skillListEl) skillListEl.innerHTML = "";
+    if (insightEl) insightEl.innerHTML = `<span class="ico">💡</span>暂未识别到稳定的 JD 关键词。建议先确认 JD 文本是否包含岗位职责、任职要求和工具/技能信息。`;
+  }
 })();
 
 // ── 4. Mentors ──
@@ -514,7 +1022,7 @@ function renderSkillList(skills){
         ...getMissingKeywordChecklist().map(item => item.term || item.name),
       ]);
       if (missingKw.length) {
-        kwHTML += `<div><div style="font-size:11px;color:var(--ink-soft);font-family:var(--mono);letter-spacing:.04em;margin-bottom:4px;">待补技能</div><div style="display:flex;flex-wrap:wrap;gap:4px;">${missingKw.map(k=>`<span style="display:inline-block;padding:3px 8px;border-radius:99px;background:rgba(224,112,112,.12);color:#b02020;font-size:12px;">${escapeHtml(k)}</span>`).join("")}</div></div>`;
+        kwHTML += `<div><div style="font-size:11px;color:var(--ink-soft);font-family:var(--mono);letter-spacing:.04em;margin-bottom:4px;">待补关键词</div><div style="display:flex;flex-wrap:wrap;gap:4px;">${missingKw.map(k=>`<span style="display:inline-block;padding:3px 8px;border-radius:99px;background:rgba(224,112,112,.12);color:#b02020;font-size:12px;">${escapeHtml(k)}</span>`).join("")}</div></div>`;
       }
     }
     kwSection.innerHTML = kwHTML;
@@ -557,7 +1065,7 @@ function priorityBadge(p){
 
 function renderAdviceItem(item, idx) {
   const insight = item.mentorInsight || "";
-  const example = item.example || "";
+  const example = /^[（(]?\s*无具体示例\s*[）)]?$/i.test(String(item.example || "").trim()) ? "" : (item.example || "");
   const hrPerspective = item.hrPerspective || item.HR_os || item.hrPov || item.recruiterPerspective || HR_PERSPECTIVE_LOOKUP.get(String(item.adviceId || "")) || HR_PERSPECTIVE_LOOKUP.get(adviceIdentity(item)) || fallbackHrPerspective(item);
   const divider = idx > 0
     ? `<div style="height:1px;background:linear-gradient(to right,transparent,#DDD6CA,transparent);margin:24px 0;"></div>`
@@ -570,7 +1078,7 @@ function renderAdviceItem(item, idx) {
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
         ${priorityBadge(item.priority)}
         <span style="font-size:11px;color:#9CA3AF;font-weight:500;">导师建议 ${idx+1}</span>
-        <span style="margin-left:auto;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE;flex-shrink:0;">${escapeHtml(sectionLabel(item.targetSection))}</span>
+        <span style="margin-left:auto;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE;flex-shrink:0;">${escapeHtml(item.displayAdviceType || item.topicCluster || sectionLabel(item.targetSection))}</span>
       </div>
       <h4 style="margin:0 0 14px;font-size:16px;font-weight:700;color:#111827;line-height:1.4;">${escapeHtml(item.title)}</h4>
       ${problemSummary ? `<div style="display:flex;gap:10px;background:#F8F7F4;border-left:3px solid #D1C9B8;border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:10px;"><span style="font-size:15px;flex-shrink:0;margin-top:1px;">💡</span><div><div style="font-size:11px;font-weight:700;color:#78350F;margin-bottom:4px;">你的现状</div><p style="margin:0;font-size:13px;line-height:1.65;color:#44403C;">${escapeHtml(problemSummary)}</p></div></div>` : ""}
@@ -666,6 +1174,45 @@ function isUnsafeReportAdvice(item) {
   ].filter(Boolean).join(" ").toLowerCase();
   return /绿卡|green card|工作身份|work authorization|holder|quant research|risk quant|mfe|sharpe ratio|embedded system|computer vision|ba方向|ba\s*\/\s*da|da\s*\/\s*ba/i.test(text);
 }
+function hasMissingSummarySignal() {
+  const sources = [
+    ...(atsResult.problemTags || []),
+    ...(atsResult.raw?.problemTags || []),
+    ...(atsResult.diagnosticObligations || []),
+    ...(atsResult.raw?.diagnosticObligations || []),
+    ...(atsResult.problems || []),
+    ...(atsResult.raw?.problems || []),
+  ];
+  return sources.some((item) => {
+    const tag = typeof item === "string" ? item : item?.tag || item?.id || item?.problemTag || "";
+    const text = typeof item === "string" ? item : [item?.message, item?.title, item?.evidence].filter(Boolean).join(" ");
+    return /missing_summary|缺少\s*summary|没有\s*summary|add\s+(?:a\s+)?summary/i.test(`${tag} ${text}`);
+  }) || atsResult.diagnostics?.searchability?.hasSummary === false || atsResult.raw?.diagnostics?.searchability?.hasSummary === false;
+}
+function normalizeMissingSummaryAdviceItem(item = {}) {
+  const tags = item.relatedProblemTags || [];
+  const text = [item.title, item.action, item.actionSummary, item.currentDiagnosis, item.problemSummary, item.mentorInsight, item.reason].filter(Boolean).join(" ");
+  const talksAboutSummaryKeyword = /summary/i.test(text) && /岗位原词|目标岗位原词|exact (?:target )?(?:job )?title|target title|job title|keyword|关键词|定位|目标岗位/i.test(text);
+  if (!tags.includes("missing_summary") && !(hasMissingSummarySignal() && talksAboutSummaryKeyword)) return item;
+  const targetRole = getTargetJobTitle() || s.jobTitle || atsResult.jobTitle || atsResult.profile?.targetRole || atsResult.raw?.jobTitle || "目标岗位";
+  const action = `新增 2-3 行 Summary：第一句写目标岗位 ${targetRole}，第二句连接你最相关的经历、技能和可量化成果；先把段落搭起来，再补具体关键词。`;
+  return {
+    ...item,
+    title: "先补上 Summary 段落",
+    currentDiagnosis: "原简历目前缺少 Summary 段落；需要先有一个岗位定位入口，再谈把 JD 关键词放进 Summary。",
+    problemSummary: "原简历目前缺少 Summary 段落；需要先有一个岗位定位入口，再谈把 JD 关键词放进 Summary。",
+    action,
+    actionSummary: action,
+    mentorInsight: "没有 Summary 时，简历开头缺少岗位定位入口；先搭出这一段，后续目标岗位原词和 JD 关键词才有自然承载位置。",
+    hrPerspective: "HR 会先看简历开头是否说明投递方向；缺少 Summary 时，后面的技能和经历更容易被读散。",
+    relatedProblemTags: [...new Set(["missing_summary", ...tags.filter((tag) => tag !== "missing_exact_job_title")])],
+    canonicalActionFamily: "summary_creation",
+    targetSection: "summary",
+  };
+}
+function isMissingSummaryAdvice(item = {}) {
+  return item.canonicalActionFamily === "summary_creation" || (item.relatedProblemTags || []).includes("missing_summary");
+}
 function collectReportAdviceItems() {
   const sources = [
     ...(s.premiumAdviceItems || []),
@@ -680,13 +1227,19 @@ function collectReportAdviceItems() {
   const items = [];
   for (const item of sources) {
     if (isUnsafeReportAdvice(item)) continue;
-    const key = adviceIdentity(item);
+    const normalized = normalizeMissingSummaryAdviceItem(item);
+    const key = hasMissingSummarySignal() && isMissingSummaryAdvice(normalized) ? "missing_summary" : adviceIdentity(normalized);
     if (!key || seen.has(key)) continue;
     seen.add(key);
-    items.push(item);
+    items.push(normalized);
     if (items.length >= 12) break;
   }
-  return items.slice(0, 12);
+  return items.sort((a, b) => {
+    const aMissing = hasMissingSummarySignal() && isMissingSummaryAdvice(a);
+    const bMissing = hasMissingSummarySignal() && isMissingSummaryAdvice(b);
+    if (aMissing !== bMissing) return aMissing ? -1 : 1;
+    return 0;
+  }).slice(0, 12);
 }
 
 const FIT_TYPE_CONFIG = {
@@ -703,9 +1256,9 @@ function renderAdviceItem(item, i) {
   const insight = item.mentorInsight || item.mentorLens || item.reason || item.I_insight || item.P_mentor || "";
   const hrPov = item.hrPerspective || item.HR_os || item.hrPov || item.recruiterPerspective || HR_PERSPECTIVE_LOOKUP.get(String(item.adviceId || "")) || HR_PERSPECTIVE_LOOKUP.get(adviceIdentity(item)) || fallbackHrPerspective(item);
   const fitType = item.mentorFitType || "";
-  const rawTopicCluster = item.topicCluster || sectionLabel(item.targetSection);
+  const rawTopicCluster = item.displayAdviceType || item.topicCluster || sectionLabel(item.targetSection);
   const topicCluster = /ATS\s*通用建议/i.test(String(rawTopicCluster)) ? "" : rawTopicCluster;
-  const example = item.example || "";
+  const example = /^[（(]?\s*无具体示例\s*[）)]?$/i.test(String(item.example || "").trim()) ? "" : (item.example || "");
   const fitCfg = FIT_TYPE_CONFIG[fitType];
   const fitChip = fitCfg
     ? `<span style="display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:${fitCfg.bg};color:${fitCfg.color};border:1px solid ${fitCfg.border};">${fitCfg.label}</span>`
@@ -759,7 +1312,7 @@ if (mentorsSection) {
     const legacyAdviceCount = (legacyMentors || []).reduce((sum, mentor) =>
       sum + ((mentor.adviceItems || mentor.adviceList || []).length), 0);
     const adviceCount = (premiumAdviceItems || []).length || legacyAdviceCount;
-    num.textContent = adviceCount ? `03 · ${adviceCount} 条导师建议` : "03 · 导师建议";
+    num.textContent = adviceCount ? `04 · 完整 ${adviceCount} 条导师建议` : "04 · 完整导师建议";
   }
 }
 const mentorLogoIntroSlot = document.getElementById("mentorLogoIntroSlot");

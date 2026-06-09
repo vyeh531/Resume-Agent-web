@@ -128,11 +128,34 @@ function hideLoader() {
 function inferTargetJobFromJD(jdText) {
   const text = String(jdText || "").replace(/\r/g, "\n").trim();
   if (!text) return "";
-  const labeled = text.match(/(?:job\s*title|position|role|title|职位|岗位|招聘岗位|目标岗位)\s*[:：\-]\s*([^\n|;；,，]+)/i);
-  if (labeled && labeled[1]) return labeled[1].replace(/\s+/g, " ").trim().slice(0, 80);
-  const roleWords = /(engineer|developer|scientist|analyst|manager|designer|consultant|researcher|architect|specialist|associate|intern|实习|工程师|分析师|经理|顾问|研究员|设计师|产品|运营|数据|算法|机器学习|软件|前端|后端)/i;
-  const noiseWords = /(responsibilities|requirements|qualifications|about us|description|summary|薪资|职责|要求|资格|福利|公司|我们|工作内容)/i;
-  const lines = text.split("\n").map((line) => line.trim()).filter(Boolean).slice(0, 18);
+  const clean = (value) => normalizeTargetJobTitle(String(value || "")
+    .replace(/\s*【.*$/, "")
+    .replace(/[|;；].*$/, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 80));
+  const locationWords = /\b(remote|hybrid|onsite|on-site|virginia|tennessee|california|new york|seattle|boston|austin|atlanta|miami|los angeles|wa|ca|ny|tx|fl|tn|va)\b|弗吉尼亚|田纳西|加州|纽约|西雅图|洛杉矶|亚特兰大|迈阿密|远程|地点|地区|城市/i;
+  const roleWords = /(engineer|developer|scientist|analyst|manager|management\s+trainee|trainee|designer|consultant|researcher|architect|specialist|associate|intern|coordinator|assistant|support|officer|实习|管培生|工程师|分析师|经理|顾问|研究员|设计师|专员|助理|主管|负责人|产品|运营|算法|机器学习|软件|前端|后端)/i;
+  const noiseWords = /(responsibilities|requirements|qualifications|about us|description|summary|duties|tasks|projects|policies|procedures|goals|薪资|职责|要求|资格|福利|公司|公司介绍|我们|工作内容|任职要求|岗位职责)/i;
+  function isLikelyTitle(value, allowNoRoleNoun) {
+    const title = clean(value);
+    if (!title || title.length < 2 || title.length > 80) return false;
+    if (noiseWords.test(title)) return false;
+    if (locationWords.test(title) && !roleWords.test(title)) return false;
+    return allowNoRoleNoun || roleWords.test(title);
+  }
+  const labeledPatterns = [
+    /^\s*(?:【\s*)?(?:job\s*title|position\s*title|role\s*title|target\s*(?:role|position)|目标岗位|岗位|职位|职称|职务|招聘岗位|应聘岗位)(?:\s*】)?\s*[:：\-–]\s*([^\n|;；]+)/gim,
+    /^\s*(?:job\s*title|position\s*title|role\s*title|target\s*(?:role|position))\s*[:\-]\s*([^\n|;]+)/gim,
+  ];
+  for (const pattern of labeledPatterns) {
+    for (const match of text.matchAll(pattern)) {
+      const title = match && clean(match[1]);
+      if (isLikelyTitle(title, true)) return title;
+    }
+  }
+  const beforeDuties = text.split(/(?:【\s*)?(?:岗位职责|工作职责|工作内容|responsibilities|duties)(?:\s*】)?\s*[:：]?/i)[0] || text;
+  const lines = beforeDuties.split("\n").map((line) => line.trim()).filter(Boolean).slice(0, 18);
   for (const line of lines) {
     const cleaned = line
       .replace(/^[#*\-\s]+/, "")
@@ -140,7 +163,7 @@ function inferTargetJobFromJD(jdText) {
       .trim();
     if (cleaned.length < 3 || cleaned.length > 90) continue;
     if (noiseWords.test(cleaned)) continue;
-    if (roleWords.test(cleaned)) return cleaned;
+    if (isLikelyTitle(cleaned, false)) return clean(cleaned);
   }
   return "";
 }
@@ -149,7 +172,7 @@ function normalizeTargetJobTitle(value) {
   return String(value || "")
     .replace(/^\s*【(?:岗位|职位|职称|职务|招聘岗位|应聘岗位)】\s*[：:]\s*/i, "")
     .replace(/^\s*(?:目标岗位|岗位|职位|职称|职务|招聘岗位|应聘岗位)\s*[：:\-–]\s*/i, "")
-    .replace(/\s*\((?:junior|senior|entry[-\s]?level|full[-\s]?time|part[-\s]?time|internship|intern|co-?op|new\s*grad)[^)]*\)\s*$/i, "")
+    .replace(/\s*[（(](?:junior|senior|entry[-\s]?level|full[-\s]?time|part[-\s]?time|internship|intern|co-?op|new\s*grad|全职|兼职|实习|校招)[^）)]*[）)]\s*$/i, "")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -158,7 +181,7 @@ function normalizeExtractedTargetJobTitle(value) {
   return String(value || "")
     .replace(/^\s*\u3010(?:\u76ee\u6807\u5c97\u4f4d|\u5c97\u4f4d|\u804c\u4f4d|\u804c\u79f0|\u804c\u52a1|\u62db\u8058\u5c97\u4f4d|\u5e94\u8058\u5c97\u4f4d)\u3011\s*[\uff1a:]\s*/i, "")
     .replace(/^\s*(?:\u76ee\u6807\u5c97\u4f4d|\u5c97\u4f4d|\u804c\u4f4d|\u804c\u79f0|\u804c\u52a1|\u62db\u8058\u5c97\u4f4d|\u5e94\u8058\u5c97\u4f4d)\s*[\uff1a:\-–]\s*/i, "")
-    .replace(/\s*\((?:junior|senior|entry[-\s]?level|full[-\s]?time|part[-\s]?time|internship|intern|co-?op|new\s*grad)[^)]*\)\s*$/i, "")
+    .replace(/\s*[（(](?:junior|senior|entry[-\s]?level|full[-\s]?time|part[-\s]?time|internship|intern|co-?op|new\s*grad|全职|兼职|实习|校招)[^）)]*[）)]\s*$/i, "")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -168,27 +191,38 @@ function extractTargetJobFromJD(jdText) {
   if (!text) return "";
   const clean = (value) => normalizeExtractedTargetJobTitle(String(value || "")
     .replace(/\s*\u3010.*$/, "")
+    .replace(/[|;；].*$/, "")
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 80));
+  const locationWords = /\b(remote|hybrid|onsite|on-site|virginia|tennessee|california|new york|seattle|boston|austin|atlanta|miami|los angeles|wa|ca|ny|tx|fl|tn|va)\b|弗吉尼亚|田纳西|加州|纽约|西雅图|洛杉矶|亚特兰大|迈阿密|远程|地点|地区|城市/i;
+  const roleWords = /(engineer|developer|scientist|analyst|manager|management\s+trainee|trainee|designer|consultant|researcher|architect|specialist|associate|intern|coordinator|assistant|support|officer|\u5b9e\u4e60|\u7ba1\u57f9\u751f|\u5de5\u7a0b\u5e08|\u5206\u6790\u5e08|\u7ecf\u7406|\u987e\u95ee|\u7814\u7a76\u5458|\u8bbe\u8ba1\u5e08|\u4e13\u5458|\u52a9\u7406|\u4e3b\u7ba1|\u8d1f\u8d23\u4eba|\u4ea7\u54c1|\u8fd0\u8425|\u7b97\u6cd5|\u673a\u5668\u5b66\u4e60|\u8f6f\u4ef6|\u524d\u7aef|\u540e\u7aef)/i;
+  const noiseWords = /(responsibilities|requirements|qualifications|about us|description|summary|duties|tasks|projects|policies|procedures|goals|\u85aa\u8d44|\u804c\u8d23|\u8981\u6c42|\u8d44\u683c|\u798f\u5229|\u516c\u53f8|\u516c\u53f8\u4ecb\u7ecd|\u6211\u4eec|\u5de5\u4f5c\u5185\u5bb9|\u4efb\u804c\u8981\u6c42|\u5c97\u4f4d\u804c\u8d23)/i;
+  function isLikelyTitle(value, allowNoRoleNoun) {
+    const title = clean(value);
+    if (!title || title.length < 2 || title.length > 80) return false;
+    if (noiseWords.test(title)) return false;
+    if (locationWords.test(title) && !roleWords.test(title)) return false;
+    return allowNoRoleNoun || roleWords.test(title);
+  }
   const labeledPatterns = [
-    /^\s*(?:\u3010\s*)?(?:job\s*title|position\s*title|role\s*title|target\s*(?:role|position)|\u76ee\u6807\u5c97\u4f4d|\u5c97\u4f4d|\u804c\u4f4d|\u804c\u79f0|\u804c\u52a1|\u62db\u8058\u5c97\u4f4d|\u5e94\u8058\u5c97\u4f4d)(?:\s*\u3011)?\s*[:\uff1a\-–]\s*([^\n|;\uff1b]+)/i,
-    /^\s*(?:job\s*title|position\s*title|role\s*title|target\s*(?:role|position))\s*[:\-]\s*([^\n|;]+)/i,
+    /^\s*(?:\u3010\s*)?(?:job\s*title|position\s*title|role\s*title|target\s*(?:role|position)|\u76ee\u6807\u5c97\u4f4d|\u5c97\u4f4d|\u804c\u4f4d|\u804c\u79f0|\u804c\u52a1|\u62db\u8058\u5c97\u4f4d|\u5e94\u8058\u5c97\u4f4d)(?:\s*\u3011)?\s*[:\uff1a\-–]\s*([^\n|;\uff1b]+)/gim,
+    /^\s*(?:job\s*title|position\s*title|role\s*title|target\s*(?:role|position))\s*[:\-]\s*([^\n|;]+)/gim,
   ];
   for (const pattern of labeledPatterns) {
-    const match = text.match(pattern);
-    const title = match && clean(match[1]);
-    if (title) return title;
+    for (const match of text.matchAll(pattern)) {
+      const title = match && clean(match[1]);
+      if (isLikelyTitle(title, true)) return title;
+    }
   }
-  const roleWords = /(engineer|developer|scientist|analyst|manager|management\s+trainee|trainee|designer|consultant|researcher|architect|specialist|associate|intern|\u5b9e\u4e60|\u7ba1\u57f9\u751f|\u5de5\u7a0b\u5e08|\u5206\u6790\u5e08|\u7ecf\u7406|\u987e\u95ee|\u7814\u7a76\u5458|\u8bbe\u8ba1\u5e08|\u4ea7\u54c1|\u8fd0\u8425|\u6570\u636e|\u7b97\u6cd5|\u673a\u5668\u5b66\u4e60|\u8f6f\u4ef6|\u524d\u7aef|\u540e\u7aef)/i;
-  const noiseWords = /(responsibilities|requirements|qualifications|about us|description|summary|duties|tasks|projects|policies|procedures|goals|\u85aa\u8d44|\u804c\u8d23|\u8981\u6c42|\u8d44\u683c|\u798f\u5229|\u516c\u53f8|\u6211\u4eec|\u5de5\u4f5c\u5185\u5bb9)/i;
   const dutyLeadWords = /^(rotate|assist|participate|develop|analy[sz]e|complete|provide|learn|create|help|support|work|collaborate|manage\s+day[-\s]?to[-\s]?day)\b/i;
-  const lines = text.split("\n").map((line) => line.trim()).filter(Boolean).slice(0, 18);
+  const beforeDuties = text.split(/(?:\u3010\s*)?(?:\u5c97\u4f4d\u804c\u8d23|\u5de5\u4f5c\u804c\u8d23|\u5de5\u4f5c\u5185\u5bb9|responsibilities|duties)(?:\s*\u3011)?\s*[:\uff1a]?/i)[0] || text;
+  const lines = beforeDuties.split("\n").map((line) => line.trim()).filter(Boolean).slice(0, 18);
   for (const line of lines) {
     const cleaned = line.replace(/^[#*\-\s]+/, "").replace(/\s+/g, " ").trim();
     if (cleaned.length < 3 || cleaned.length > 90) continue;
     if (noiseWords.test(cleaned) || dutyLeadWords.test(cleaned)) continue;
-    if (roleWords.test(cleaned)) return clean(cleaned);
+    if (isLikelyTitle(cleaned, false)) return clean(cleaned);
   }
   return normalizeExtractedTargetJobTitle(inferTargetJobFromJD(text));
 }
@@ -381,9 +415,6 @@ function mockPayment(btn) {
 function guardSubmitted() {
   const s = window.Store.get();
   if (!s.resumeName) window.location.href = "/";
-  if (!s.isPaid && (s.premiumMentors || s.premiumAdviceItems)) {
-    window.Store.set({ premiumMentors: null, premiumAdviceItems: null });
-  }
 }
 function guardPaid() {
   const s = window.Store.get();

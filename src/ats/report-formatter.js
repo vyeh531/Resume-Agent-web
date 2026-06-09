@@ -59,26 +59,42 @@ function titleCaseRole(value) {
 function extractTitleFromJD(jdText) {
   if (!jdText || typeof jdText !== "string") return null;
   const text = jdText.trim();
+  const normalizeTitle = (value) => String(value || "")
+    .replace(/\s*【.*$/, "")
+    .replace(/[|;；].*$/, "")
+    .replace(/\s*[（(](?:junior|senior|entry[-\s]?level|full[-\s]?time|part[-\s]?time|internship|intern|co-?op|new\s*grad|全职|兼职|实习|校招)[^）)]*[）)]\s*$/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  const roleNouns = /(engineer|developer|scientist|analyst|manager|management\s+trainee|trainee|designer|consultant|researcher|architect|specialist|associate|intern|coordinator|assistant|support|officer|实习|管培生|工程师|分析师|经理|顾问|研究员|设计师|专员|助理|主管|负责人|产品|运营|算法|机器学习|软件|前端|后端)/i;
+  const locationWords = /\b(remote|hybrid|onsite|on-site|virginia|tennessee|california|new york|seattle|boston|austin|atlanta|miami|los angeles|wa|ca|ny|tx|fl|tn|va)\b|弗吉尼亚|田纳西|加州|纽约|西雅图|洛杉矶|亚特兰大|迈阿密|远程|地点|地区|城市/i;
+  const sectionNoise = /responsibilities|requirements|qualifications|about us|description|summary|duties|tasks|projects|policies|procedures|goals|薪资|职责|要求|资格|福利|公司|公司介绍|我们|工作内容|任职要求|岗位职责/i;
+  const isLikelyTitle = (value, allowNoRoleNoun = false) => {
+    const title = normalizeTitle(value);
+    if (!title || title.length < 2 || title.length > 80) return false;
+    if (sectionNoise.test(title)) return false;
+    if (locationWords.test(title) && !roleNouns.test(title)) return false;
+    return allowNoRoleNoun || roleNouns.test(title);
+  };
 
   // 1. Explicit label markers (EN + ZH, including 【岗位】 bracket format)
   const labelPatterns = [
-    /【(?:岗位|职位|职称|职务|招聘岗位|应聘岗位)】\s*[：:]\s*([^\n【]+)/,
-    /^(?:岗位|职位|职称|职务|招聘职位|应聘职位)\s*[：:\-–]\s*(.+)/m,
-    /^(?:job\s+title|position|role|title)\s*[:\-–]\s*(.+)/im,
-    /(?:we(?:'re|\s+are)\s+(?:looking|hiring|seeking)\s+(?:for\s+)?(?:an?\s+)?)([\w\s\-\/]+?)(?:\s*(?:to|who|that|\.|,|$))/i,
-    /(?:join\s+us\s+as\s+(?:an?\s+)?)([\w\s\-\/]+?)(?:\s*(?:\.|,|$))/i,
+    /【(?:岗位|职位|职称|职务|招聘岗位|应聘岗位)】\s*[：:]\s*([^\n【]+)/g,
+    /^(?:岗位|职位|职称|职务|招聘职位|应聘职位)\s*[：:\-–]\s*(.+)/gm,
+    /^(?:job\s+title|position|role|title)\s*[:\-–]\s*(.+)/gim,
+    /(?:we(?:'re|\s+are)\s+(?:looking|hiring|seeking)\s+(?:for\s+)?(?:an?\s+)?)([\w\s\-\/]+?)(?:\s*(?:to|who|that|\.|,|$))/gi,
+    /(?:join\s+us\s+as\s+(?:an?\s+)?)([\w\s\-\/]+?)(?:\s*(?:\.|,|$))/gi,
   ];
   for (const re of labelPatterns) {
-    const m = text.match(re);
-    if (m) {
-      const title = (m[1] || "").trim().replace(/[.!?。！？]$/, "").trim();
-      if (title.length >= 2 && title.length <= 60) return title;
+    for (const m of text.matchAll(re)) {
+      const title = normalizeTitle(m[1]).replace(/[.!?。！？]$/, "").trim();
+      if (isLikelyTitle(title, true)) return title;
     }
   }
 
   // 2. First non-empty line that looks like a job title
   //    (short, not a sentence, not all-caps noise like "JOB DESCRIPTION")
-  const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+  const beforeDuties = text.split(/(?:【\s*)?(?:岗位职责|工作职责|工作内容|responsibilities|duties)(?:\s*】)?\s*[：:]?/i)[0] || text;
+  const lines = beforeDuties.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
   for (const line of lines.slice(0, 6)) {
     // Skip lines that are obviously headers / noise
     if (/^(job\s+description|about\s+(us|the\s+role|this\s+role)|overview|summary|responsibilities|requirements|qualifications)/i.test(line)) continue;
@@ -86,7 +102,7 @@ function extractTitleFromJD(jdText) {
     if (line.length < 3 || line.length > 70) continue;
     // Looks title-like if it has mixed case or is 1-4 words
     const wordCount = line.split(/\s+/).length;
-    if (wordCount <= 6 && !/[.?!。？！]$/.test(line)) return line;
+    if (wordCount <= 6 && !/[.?!。？！]$/.test(line) && isLikelyTitle(line, false)) return normalizeTitle(line);
   }
 
   return null;
@@ -491,7 +507,7 @@ function normalizeProblemTag(item) {
     weak_verbs: "weak_action_verbs",
     missing_tools: "low_hard_skill_match",
     low_bullet_coverage: "weak_experience_keyword_evidence",
-    missing_summary: "weak_summary_role_alignment",
+    missing_summary: "missing_summary",
     no_relocate_signal: "missing_relocation_signal",
     short_tenure_unexplained: "short_tenure_unclear",
     missing_coursework: "education_details_missing",
@@ -603,6 +619,7 @@ function insightMessage(item) {
 }
 
 function problemTitle(item) {
+  if (item.tag === "missing_summary") return "\u7f3a\u5c11 Summary \u5c97\u4f4d\u5b9a\u4f4d\u6bb5";
   if (item.tag === "low_hard_skill_match") return "\u6838\u5fc3\u786c\u6280\u80fd\u5339\u914d\u504f\u4f4e";
   if (item.tag === "missing_exact_job_title") return "\u7f3a\u5c11\u76ee\u6807\u5c97\u4f4d\u539f\u8bcd";
   if (item.tag === "low_measurable_results") return "\u53ef\u91cf\u5316\u6210\u679c\u4e0d\u8db3";
@@ -612,6 +629,7 @@ function problemTitle(item) {
 }
 
 function problemMessage(item) {
+  if (item.tag === "missing_summary") return "简历缺少 Summary 段落，HR 和 ATS 需要先有一条清晰的岗位定位线索，后续关键词补充才有承载位置。";
   if (item.tag === "missing_exact_job_title") return "\u7b80\u5386\u4e2d\u672a\u7a33\u5b9a\u51fa\u73b0\u76ee\u6807\u5c97\u4f4d\u539f\u8bcd\uff0c\u53ef\u80fd\u5f71\u54cd ATS \u5bf9\u804c\u4f4d\u5b9a\u4f4d\u7684\u5224\u65ad\u3002";
   if (item.tag === "missing_priority_keywords") return "\u7b80\u5386\u7f3a\u5c11\u76ee\u6807 JD \u4e2d\u4f18\u5148\u7ea7\u8f83\u9ad8\u7684\u5173\u952e\u8bcd\uff0c\u9700\u8981\u5148\u8865\u771f\u5b9e\u638c\u63e1\u3001\u4e14\u80fd\u7528\u7ecf\u5386\u652f\u6491\u7684\u6280\u80fd\u8bcd\u3002";
   if (item.tag === "low_jd_keyword_match") return "\u7b80\u5386\u548c\u76ee\u6807 JD \u7684\u8bed\u8a00\u5339\u914d\u8fd8\u4e0d\u591f\uff0cATS \u53ef\u80fd\u65e0\u6cd5\u5feb\u901f\u8bc6\u522b\u4f60\u548c\u8fd9\u4e2a\u5c97\u4f4d\u7684\u76f4\u63a5\u5173\u8054\u3002";
@@ -645,14 +663,27 @@ function buildStructuredSuggestions(internalAtsResult) {
     suggestions.push({ type, priority: priority++, targetSection, message, relatedTags, relatedKeywords, unlockTier });
   };
 
-  if (internalAtsResult.problemTags.some((item) => item.tag === "missing_exact_job_title")) {
-    add("keyword_fix", "summary", "Add the exact target title to the Summary section.", ["missing_exact_job_title"], [internalAtsResult.diagnostics.jobTitleMatch.targetTitle], "free");
+  const hasMissingSummary = internalAtsResult.problemTags.some((item) => item.tag === "missing_summary");
+  const hasMissingExactJobTitle = internalAtsResult.problemTags.some((item) => item.tag === "missing_exact_job_title");
+  const targetTitle = internalAtsResult.diagnostics.jobTitleMatch.targetTitle;
+
+  if (hasMissingSummary) {
+    add(
+      "structure_fix",
+      "summary",
+      "先添加 2-3 行个人简介段落，再写入目标岗位，并用一句证据说明最相关的经历或技能。",
+      hasMissingExactJobTitle ? ["missing_summary", "missing_exact_job_title"] : ["missing_summary"],
+      targetTitle ? [targetTitle] : [],
+      "free"
+    );
+  } else if (hasMissingExactJobTitle) {
+    add("keyword_fix", "summary", "把目标岗位原词自然写进个人简介段落。", ["missing_exact_job_title"], [internalAtsResult.diagnostics.jobTitleMatch.targetTitle], "free");
   }
   if (internalAtsResult.problemTags.some((item) => item.tag === "low_jd_keyword_match" || item.tag === "low_hard_skill_match")) {
-    add("keyword_fix", "experience", "Prioritize missing role keywords that are supported by real project or work evidence.", ["low_jd_keyword_match", "low_hard_skill_match"], internalAtsResult.priorityMissingKeywords.slice(0, 3).map((item) => item.term), "paid");
+    add("keyword_fix", "experience", "优先补齐真实项目或工作经历能支撑的岗位关键词。", ["low_jd_keyword_match", "low_hard_skill_match"], internalAtsResult.priorityMissingKeywords.slice(0, 3).map((item) => item.term), "paid");
   }
   if (internalAtsResult.problemTags.some((item) => item.tag === "low_measurable_results")) {
-    add("content_fix", "experience", "Rewrite top bullets with action, method, and measurable result.", ["low_measurable_results"], [], "paid");
+    add("content_fix", "experience", "把靠前的经历要点改成「动作 + 方法 + 可量化结果」结构。", ["low_measurable_results"], [], "paid");
   }
 
   for (const suggestion of asArray(internalAtsResult.suggestions).slice(0, 3)) {
@@ -680,6 +711,7 @@ function coverageFamilyForTag(tagName = "", dimension = "overall") {
 }
 
 function targetSectionForTag(tagName = "", dimension = "overall") {
+  if (/missing_summary/.test(tagName)) return "summary";
   if (/exact_job_title|summary|target_role|role_alignment|position/.test(tagName)) return "summary";
   if (/keyword|hard_skill|priority_keyword/.test(tagName)) return "skills";
   if (/experience|evidence|skills_only|measurable|result|impact|action_verbs|short_tenure|intern/.test(tagName)) return "experience";

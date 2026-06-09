@@ -3663,7 +3663,7 @@ function formatExactPhraseSuggestion(keywordMatch, exactJobTitle) {
   }
   const terms = unique(partial).slice(0, 5);
   if (!terms.length) return "";
-  return `你已经有类似概念，但缺少 exact phrase：${terms.join("、")}。建议只在真实经历对应的 Summary、Experience bullet 或 Skills 中补入原词，不要只靠同义词。`;
+  return `你已经有类似概念，但缺少精确岗位原词：${terms.join("、")}。建议只在真实经历对应的个人简介、经历要点或技能栏中补入原词，不要只靠同义词。`;
 }
 
 function classifyMissingKeywords(keywordMatch) {

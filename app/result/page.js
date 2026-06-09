@@ -23,6 +23,29 @@ export default function ResultPage() {
         .skill-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--ink-soft);margin-bottom:14px}
         .skill-legend span{display:inline-flex;align-items:center;gap:5px}
         .skill-legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+        .skill-section-desc{font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin:-4px 0 12px}
+        .keyword-use{font-size:10.5px;font-weight:700;border-radius:999px;padding:3px 7px;border:1px solid var(--line);white-space:nowrap;background:#fffdf7;color:var(--ink-soft)}
+        .keyword-use--skills{background:var(--jade-soft);color:var(--jade);border-color:#c2dcc6}
+        .keyword-use--experience{background:#fff7ed;color:#9a3412;border-color:#fed7aa}
+        .keyword-use--summary{background:#eef2ff;color:#4338ca;border-color:#c7d2fe}
+        .keyword-use--reference{background:#f5f5f4;color:#78716c;border-color:#e7e2d6}
+        .skill-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+        .jd-keyword-details{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+        .jd-keyword-details summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:center;gap:6px;color:var(--ink-soft);font-size:13px;font-weight:700;padding:6px 0}
+        .jd-keyword-details summary::-webkit-details-marker{display:none}
+        .jd-keyword-groups{display:grid;gap:10px;margin-top:8px}
+        .jd-keyword-groups.is-locked{filter:blur(4px);user-select:none;pointer-events:none}
+        .jd-keyword-group{border:1px solid #ede9dc;background:#fffdf7;border-radius:10px;padding:10px 11px}
+        .jd-keyword-group-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+        .jd-keyword-group-title{font-size:12px;font-weight:800;color:var(--ink);letter-spacing:.01em}
+        .jd-keyword-group-count{font-family:var(--mono);font-size:10px;color:var(--ink-mute)}
+        .jd-keyword-chips{display:flex;flex-wrap:wrap;gap:6px}
+        .jd-keyword-chip{display:inline-flex;align-items:center;gap:5px;border:1px solid #e7e2d6;background:#fff;border-radius:999px;padding:4px 8px;font-size:11.5px;color:var(--ink-soft);max-width:100%}
+        .jd-keyword-chip b{font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .jd-keyword-chip .state{width:6px;height:6px;border-radius:50%;flex-shrink:0;background:var(--warn)}
+        .jd-keyword-chip.is-have .state{background:var(--good)}
+        .jd-keyword-paywall{position:relative;min-height:142px;margin-top:10px;border:1px dashed var(--line);border-radius:10px;overflow:hidden;background:#fffdf8}
+        .jd-keyword-paywall .paywall-more-list{filter:blur(4px);user-select:none;pointer-events:none;padding:12px}
         .unlock-cta{background:linear-gradient(135deg,var(--ink) 0%,var(--indigo-deep) 100%);color:#fff;border-radius:var(--r-lg);padding:22px;text-align:center;margin-top:16px;position:relative;overflow:hidden}
         .unlock-cta::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,rgba(232,160,107,.25) 0%,transparent 50%);pointer-events:none}
         .unlock-cta > *{position:relative}
@@ -91,33 +114,32 @@ export default function ResultPage() {
           <div className="tiles" id="tilesArea">
             <details className="tile">
               <summary className="tile-summary">
-                <div className="tile-label"><span>RANKING · 同岗位排名</span><span className="chev">▾</span></div>
-                <div className="tile-value">TOP <span id="rankPct">--</span></div>
-                <div className="tile-caption">基于当前简历</div>
+                <div className="tile-label"><span>JD 匹配度</span><span className="chev">▾</span></div>
+                <div className="tile-value"><span id="rankPct">--</span></div>
+                <div className="tile-caption">基于 JD 关键词覆盖</div>
               </summary>
               <div className="tile-detail" id="rankDetail"></div>
             </details>
             <details className="tile">
               <summary className="tile-summary">
-                <div className="tile-label"><span>ATS 通过率</span><span className="chev">▾</span></div>
-                <div className="tile-value"><span id="atsScore">--</span><span style={{fontSize:'18px'}}>%</span></div>
-                <div className="tile-caption">主流系统识别</div>
+                <div className="tile-label"><span>ATS 可读性</span><span className="chev">▾</span></div>
+                <div className="tile-value tile-value-split tile-value-ats"><span><span id="atsScore">--</span><span className="tile-percent">%</span></span><span className="tile-risk-value" id="atsRiskCaption">主流系统识别</span></div>
               </summary>
               <div className="tile-detail" id="atsDetail"></div>
             </details>
             <details className="tile">
               <summary className="tile-summary">
-                <div className="tile-label"><span>SALARY · 薪资水平</span><span className="chev">▾</span></div>
+                <div className="tile-label"><span>SALARY · 薪资成长</span><span className="chev">▾</span></div>
                 <div className="tile-value" style={{fontSize:'22px'}} id="salaryRange">--</div>
-                <div className="tile-caption">顶级线 <span id="salaryTop">--</span></div>
+                <div className="tile-caption">5年上限 <span id="salaryTop">--</span></div>
               </summary>
               <div className="tile-detail" id="salaryDetail"></div>
             </details>
             <details className="tile">
               <summary className="tile-summary">
-                <div className="tile-label"><span>岗位竞争</span><span className="chev">▾</span></div>
+                <div className="tile-label"><span>AI 影响趋势</span><span className="chev">▾</span></div>
                 <div className="tile-value" style={{fontSize:'22px'}}><span id="compCount">--</span></div>
-                <div className="tile-caption">录取率 <span id="admitRate">--</span>%</div>
+                <div className="tile-caption"><span id="admitRate">待校准</span></div>
               </summary>
               <div className="tile-detail" id="compDetail"></div>
             </details>
@@ -153,11 +175,12 @@ export default function ResultPage() {
         <hr className="divider" />
 
         <section className="section">
-          <div className="section-num">技能匹配</div>
+          <div className="section-num">JD KEYWORDS</div>
           <div className="row-between mb-12" style={{marginTop:'4px'}}>
-            <h3 className="section-title" style={{fontSize:'18px',margin:0}}>JD 技能匹配</h3>
-            <div className="skill-score"><span id="skillHave">4</span><small>/<span id="skillTotal">10</span></small></div>
+            <h3 className="section-title" id="skillSectionTitle" style={{fontSize:'18px',margin:0}}>JD Keyword 清单</h3>
+            <div className="skill-score"><small>已覆盖 </small><span id="skillHave">0</span><small> / <span id="skillTotal">--</span></small></div>
           </div>
+          <p className="skill-section-desc" id="skillSectionDesc">这些是系统从 JD 中识别出的关键词。优先把待补强项写进 Summary、Skills 或 Experience。</p>
           <div className="skill-summary" id="skillSummary"></div>
           <div className="skill-legend">
             <span><i style={{background:'var(--good)'}}></i>已具备</span>
@@ -165,12 +188,12 @@ export default function ResultPage() {
           </div>
           <div className="card card-tight">
             <ul className="skill-list" id="skillListTop3"></ul>
-            <button className="skill-expand-toggle" id="skillExpandToggle" type="button">查看全部技能 ↓</button>
+            <button className="skill-expand-toggle" id="skillExpandToggle" type="button">查看更多 ↓</button>
             <div className="skill-paywall" id="skillPaywall" hidden>
               <ul className="skill-list skill-paywall-list" id="skillPaywallList"></ul>
               <div className="skill-paywall-overlay">
                 <div className="lock">🔒</div>
-                <div className="text">解锁<b style={{color:'var(--jade)'}}>全部 4 位导师</b> + <b style={{color:'var(--jade)'}}>完整改写报告</b><br/><span style={{color:'var(--ink-soft)',fontWeight:500}}>含完整技能清单</span></div>
+                <div className="text">解锁<b style={{color:'var(--jade)'}}>全部 4 位导师</b> + <b style={{color:'var(--jade)'}}>完整改写报告</b><br/><span style={{color:'var(--ink-soft)',fontWeight:500}}>含完整 JD Keyword 清单</span></div>
                 <a className="btn btn-jade" href="/payment">¥ 49 解锁完整诊断</a>
               </div>
             </div>
@@ -195,7 +218,7 @@ export default function ResultPage() {
             <div className="unlock-cta-price"><span className="now"><b>¥</b>49</span><span className="was">原价 ¥199</span></div>
             <ul className="unlock-cta-perks">
               <li>4 位大厂导师完整建议(必改 / 建议改 / 补充)</li>
-              <li>完整技能清单 + 补强路径</li>
+              <li>完整 JD Keyword 清单 + 放置建议</li>
               <li>报告导出 .md,直接喂给 ChatGPT / Claude 改简历</li>
             </ul>
             <a href="/payment" className="btn btn-jade btn-block">¥ 49 立即解锁 →</a>
@@ -209,7 +232,7 @@ export default function ResultPage() {
         </div>
       </div>
 
-      <Script src="/result-logic.js" strategy="afterInteractive" />
+      <Script src="/result-logic.js?v=ats-display-zh-20260609-4" strategy="afterInteractive" />
     </>
   );
 }

@@ -1165,6 +1165,1673 @@ function truncateAtSentence(value, maxLength = 140) {
   return cleanAndTruncate(value, maxLength);
 }
 
+function firstMeaningfulSentence(value = "", maxLength = 90) {
+  const text = String(value || "").replace(/\s+/g, " ").trim();
+  if (!text) return "";
+  const normalized = text
+    .replace(/^(HR|招聘方|面试官|导师|企业|公司|系统|ATS)[在会通常优先]*扫描简历时/g, "")
+    .replace(/^(学生|求职者|候选人)/g, "你")
+    .replace(/候选人/g, "你")
+    .replace(/求职者/g, "你")
+    .replace(/学生/g, "你")
+    .replace(/主观能动性/g, "主动推进感")
+    .replace(/关键指标/g, "重点")
+    .replace(/核心考察点/g, "重点")
+    .replace(/显著提升/g, "更容易提升")
+    .replace(/具有说服力/g, "更有说服力")
+    .replace(/\s+/g, " ")
+    .trim();
+  return cleanAndTruncate(normalized, maxLength, "");
+}
+
+function perspectiveFamilyOf(item = {}) {
+  const family = normalizeTerm(canonicalActionFamilyOf(item));
+  const tags = splitCsv(item.relatedProblemTags || item.problemTags || item.problem_tags || []);
+  const tagText = `${family} ${tags.join(" ")}`;
+  const visibleText = [
+    item.title,
+    item.topic,
+    item.problemSummary,
+    item.currentDiagnosis,
+    item.action,
+    item.actionSummary,
+    item.A_action,
+    item.mentorInsight,
+    item.I_insight,
+    item.hrPerspective,
+    item.HR_os,
+    item.user_problem_summary,
+  ].filter(Boolean).join(" ").toLowerCase();
+  const combined = `${tagText} ${visibleText}`;
+
+  // Highest-signal problem tags first. Avoid letting generic "role/target" words
+  // swallow keyword, portfolio, education, and impact cases.
+  const isSkillsFrontloadCase =
+    /skill.*前置|技能.*前置|skills.*front|skill_section_first|技能栏.*前|在校生.*技能|学生.*技能/.test(combined) ||
+    (/skills_section/.test(tagText) && /education_details|student|junior|在校|学生|课程|教育/.test(combined));
+  if (isSkillsFrontloadCase) return "skills_frontload";
+  if (/portfolio|作品集|作品|可运行.{0,12}demo|demo.{0,12}(?:作品|可运行)|game.{0,20}demo|design.{0,20}demo/.test(combined)) return "portfolio";
+  if (/github|linkedin|profile_link|project_link|header.{0,12}link|链接|入口|可验证/.test(combined)) return "links";
+  if (/visa|sponsor|relocation|relocate|opt|cpt|work_authorization|market_fit|地域|身份|搬迁/.test(combined)) return "market";
+  if (/可部署|可访问|产品形态|benchmark|基准对比|上线|deployable|deployed|deployment|productionized|live product/.test(combined)) return "deployment_evidence";
+  if (/追问|过度包装|实际参与度|参与度匹配|可信度|写得越多|被问到/.test(combined)) return "scope_truthfulness";
+  if (/数据处理|模型评估|实质性数据|数据工作|算法部署|业务决策|业务影响|可复现|持续使用|stable.{0,8}metrics|metrics.{0,8}stable|data science|data_processing|model_evaluation|model evaluation|data work|reproducible|business decision|price elasticity|促销效果|excel|pivot|vlookup|sql|window function|var|stress testing|regression model/.test(combined)) return "data_evidence";
+  if (/format|layout|date|section_order|section_structure|readability|排版|格式|日期|结构|顺序/.test(combined)) return "structure";
+  if (/generic_resume|resume_not_tailored|tailored|low_role_specificity|weak_target_role_alignment|universal_resume|多版本|一份简历|通用版|版本简历|不同岗位/.test(combined)) return "resume_versioning";
+  if (/measurable|result|impact|metric|quant|weak_action_verbs|weak_result|low_measurable|数字|量化|成果|影响/.test(combined)) return "impact";
+  if (/keyword|jd|hard_skill|skills_only|skill_match|priority_keyword|terminology|技能|关键词/.test(combined)) return "keywords";
+  if (/education|course|certificate|training|coursework|missing_coursework|gpa|课程|证书|教育背景|学校名称|评分制/.test(combined)) return "education";
+  if (/experience|bullet|evidence|project|soft_skill|cross_functional|沟通|协作|项目|经历/.test(combined)) return "experience";
+  if (/summary|position|role_alignment|role_specificity|tailored|generic_resume|exact_job_title|target_role|missing_summary|定位|岗位原词|目标岗位|通用版/.test(combined)) return "positioning";
+  return "general";
+}
+
+const MENTOR_TONE_TEMPLATES = {
+  resume_versioning: [
+    "你不是没有材料，是一份简历同时想服务太多方向。建议先拆成 1-2 个版本，让每一版都能一眼看出目标岗位。",
+    "这类问题不要靠海投硬扛。先把通用版收成 1-2 个岗位版，每版只突出最相关的经历和关键词，比做五六份散版更稳。",
+    "这里建议先收窄方向：不是所有经历都放进去，而是每版只回答一个问题——为什么你适合这个岗位。"
+  ],
+  skills_frontload: [
+    "如果你还是学生或经验不长，技能可以适当前置。不是为了炫技，而是先让 HR 看到你已经具备这个岗位的基本准备。",
+    "这块可以把 Skills 放得更有策略：先列和 JD 最贴的工具，再用经历证明你真的用过，别让相关技能藏在后面。",
+    "在校生简历要先给招聘方一个能力入口。最相关的技能和课程项目可以往前放，让人先看到你和岗位有连接。"
+  ],
+  portfolio: [
+    "作品集或 Demo 不是装饰，它是在帮你证明真的做出来了。哪怕还不完美，也比只靠文字描述更有说服力。",
+    "你这个方向最好别只靠文字说项目。可以补一个能点开的作品或 Demo，让招聘方可以马上验证你的产出。",
+    "创意、设计、游戏或内容岗位很吃作品证据。你不用等到完美才放，先让对方看到你实际做过什么。"
+  ],
+  data_evidence: [
+    "你不是不能写 Demo，但数据岗不能只停在展示层。这里要补出数据处理、模型评估或分析产出，让项目更像真正的数据工作。",
+    "这条项目要从“我做了展示”往“我处理了什么数据、怎么评估、产出了什么结论”走。这样才比较能支撑数据岗。",
+    "如果目标是数据相关岗位，算法部署后面的数据证据要补出来。只写 Demo，容易让人觉得深度还不够。"
+  ],
+  deployment_evidence: [
+    "这条项目可以更像真实产品一点。把可部署、可访问或 benchmark 对比写出来，会比只说技术点更能证明你做到了可交付。",
+    "你这里的亮点不是模型多复杂，而是东西能不能被验证。访问入口、部署方式和对比结果要补清楚。",
+    "如果项目已经能跑或能和成熟产品对比，就别让它藏在描述里。这个证据会让项目从练习题变成更像实际产出。"
+  ],
+  scope_truthfulness: [
+    "这条不是要你写少一点，而是要写得和真实参与度对得上。简历上写太满，面试被追问时反而会伤可信度。",
+    "你这条项目深度要控制在自己能讲清楚的范围内。亮点可以放大，但不能放到面试时接不住。",
+    "你有材料可以写，但每一句都要经得起追问。我们先保留最能证明能力、也最能讲清楚的部分。"
+  ],
+  positioning: [
+    "你这里不是经历不够，而是开头还没把方向说清楚。建议先把目标岗位放出来，让后面的项目和技能被放在正确语境里读。",
+    "这里建议先把定位写稳。现在的问题不是没有材料，而是招聘方第一眼还不确定你到底要投哪个方向。",
+    "这块很适合先补一条清楚的岗位线索。方向立住以后，你后面的经历才比较容易被当成相关证据。"
+  ],
+  keywords: [
+    "你这类问题不用硬塞关键词，重点是把 JD 里的词放回真实经历里。这样 ATS 能扫到，HR 也会觉得这些能力有证据。",
+    "可以先挑最该补的关键词，再找经历里的落点。不是把词堆上去，而是让它们看起来确实是你做过的事。",
+    "这里可以修得很具体：先对齐 JD 的核心词，再把它们写进 Summary、Skills 或对应 bullet，可信度会比单纯列词高很多。"
+  ],
+  experience: [
+    "你这条经历不是没价值，是现在写法还没把价值露出来。任务、方法和结果要拆清楚，让人一眼看懂你贡献在哪。",
+    "这块可以先把经历讲完整。现在像是在说你参与过，但还没说明你具体推进了什么、产出了什么。",
+    "你的材料其实可以用，只是需要从“做了什么”改成“解决了什么”。这样读起来会更像真实工作成果。"
+  ],
+  impact: [
+    "这里不用追求夸张数字，但一定要给看简历的人一个结果边界。补上规模、频率或效率，贡献就不会停留在职责描述。",
+    "你已经有事情可写，下一步是把影响讲出来。哪怕数字很朴素，也比只写负责、协助更能让人判断价值。",
+    "这条可以从结果往回改：先写你带来的变化，再补方法。这样 HR 读到时会更快知道你不是普通参与者。"
+  ],
+  structure: [
+    "这类问题看起来像排版小事，其实会影响别人愿不愿意继续读。结构先理顺，亮点才不会被格式消耗掉。",
+    "你不用大改所有内容，先把 section 顺序和格式稳定下来。读者少花力气找信息，你的经历才更容易被看见。",
+    "这里先做减法会很有效。把最相关的内容往前放，弱相关内容收住，整份简历会更像在服务同一个目标岗位。"
+  ],
+  links: [
+    "如果项目或作品能被点开验证，就不要只留在文字里。链接可以放到 header 或对应项目旁边，降低别人确认成本。",
+    "这块是低成本加分项。你已经写了项目，就尽量给招聘方一个能快速验证的入口。",
+    "这里重点是减少确认成本。能放链接就放在最容易看到的位置，让对方不用来回找证据。"
+  ],
+  education: [
+    "经验还不多的时候，课程和训练可以帮你补岗位信号。别只列名字，要写出它和目标岗位有什么关系。",
+    "这块可以当作 junior 候选人的支撑证据。把课程、项目或证书和岗位能力连起来，会比单纯罗列更有用。",
+    "如果你还在校，教育经历不只是学校名字。把相关课程、项目或证书写成能力证据，会比单纯罗列更像岗位准备。"
+  ],
+  market: [
+    "身份或地点信息不用写得很重，但要让招聘方少一点不确定。可工作、可搬迁或时间安排要说清楚。",
+    "这类信息不是能力问题，而是推进流程的问题。你先把条件讲清楚，HR 才不用在第一轮替你猜。",
+    "如果涉及 sponsorship、OPT 或 relocation，用一句干净的话交代清楚就好，避免它盖过你的能力亮点。"
+  ],
+  general: [
+    "你这里有可修改的空间，而且不是推倒重来。先抓最影响筛选的那一处改，简历会更快被读懂。",
+    "这条建议的重点是把现有材料讲得更清楚。方向对了以后，很多小修改都会变得更有效。",
+    "这块值得优先修：不是因为你不行，而是现在的写法还没帮你把优势说出来。"
+  ]
+};
+
+const HR_TONE_TEMPLATES = {
+  resume_versioning: [
+    "我会先判断这是不是为当前岗位写的版本；如果像通用版，匹配感会马上变弱。",
+    "一份简历同时投很多方向时，我很难判断该把你推给哪个团队；岗位版本越清楚，筛选越顺。",
+    "我不需要看到所有经历，我需要看到和这个 JD 最相关的证据；内容越散，越容易被当成不够聚焦。"
+  ],
+  skills_frontload: [
+    "经验不长时，我会先看技能和训练能不能补上岗位信号；相关技能藏太后面，会影响第一判断。",
+    "Skills 如果能快速对上 JD，我会更愿意继续看经历；但后面也要有项目或工作证据支撑。",
+    "学生简历我会更快扫 Skills 和课程项目；写得清楚，才容易被理解为有准备。"
+  ],
+  portfolio: [
+    "如果岗位需要作品或 Demo，我会很自然地去找链接；找不到会影响继续评估。",
+    "能点开的作品会降低判断成本；没有入口时，我只能按文字描述保守判断。",
+    "作品链接不是加分装饰，它会影响我能不能快速确认你的真实产出。"
+  ],
+  data_evidence: [
+    "如果只是 Demo 展示，我会继续看有没有数据处理、评估或分析证据；没有这些，数据岗匹配感会弱。",
+    "数据相关岗位我会看项目里有没有真实数据动作；只写部署或展示，深度判断会比较保守。",
+    "我需要看到你处理了什么数据、怎么评估结果；否则这个项目更像展示，不像数据能力证明。"
+  ],
+  deployment_evidence: [
+    "我会看这个项目是不是能被验证；如果有可访问入口、部署结果或 benchmark，可信度会明显更高。",
+    "只写用了什么技术还不够，我会更想看到它能不能跑、和谁比较、结果差在哪里。",
+    "项目如果已经产品化，我会把它当成更强证据；但入口和对比结果要写清楚。"
+  ],
+  scope_truthfulness: [
+    "写得越满，我越可能在面试里追问细节；如果讲不出来，可信度会掉得很快。",
+    "我不怕项目小，但怕描述和实际参与度对不上。写清楚自己真实负责的部分会更稳。",
+    "简历上的每个亮点都可能被追问；如果只是包装出来的贡献，面试时风险很高。"
+  ],
+  positioning: [
+    "我第一眼会先判断你到底投什么岗；如果定位不清楚，后面的经历再好也容易被归到不相关。",
+    "这块如果没有目标岗位线索，我会先降低匹配判断，因为我需要很快确认你是不是这类候选人。",
+    "我不会花很久猜你想投什么方向；岗位信号越清楚，继续细读的概率越高。"
+  ],
+  keywords: [
+    "我会用 JD 关键词快速确认基本匹配；如果核心词缺失，简历很容易在第一轮就显得不够贴合。",
+    "关键词只在 Skills 里出现还不够，我会继续看经历里有没有证据；没有证据时可信度会打折。",
+    "这类词不是写给系统看的摆设；如果真实经历里看不到，我会怀疑只是照着 JD 补词。"
+  ],
+  experience: [
+    "我看经历时会先找你具体负责什么、怎么做、交付了什么；只写参与或协助，很难判断贡献。",
+    "一条 bullet 如果没有任务和结果，我会把它当成弱信号，因为看不出你能独立承担到哪一步。",
+    "项目名本身不够，我会看你在里面的角色和产出；写不清楚时，亮点很容易被跳过。"
+  ],
+  impact: [
+    "我会看你是不是把事情做到有结果；数字不用夸张，但要让我知道规模、效率或影响边界。",
+    "如果整段都停在职责描述，我会很难判断你比其他候选人强在哪里。",
+    "结果表达会直接影响可信度；没有规模或变化，我只能按普通执行经历来理解。"
+  ],
+  structure: [
+    "排版和结构会影响我读下去的耐心；信息乱的时候，很多亮点还没被看到就已经扣分。",
+    "我不会平均阅读每个 section；越靠前、越清楚的内容，越会影响我对你的第一判断。",
+    "格式稳定不是美观问题，而是筛选效率问题；如果信息不好找，我会更快转向下一份简历。"
+  ],
+  links: [
+    "如果我能一键验证项目或作品，判断成本会低很多；没有链接时，只能按文字描述保守判断。",
+    "可验证入口会增加可信度；尤其是项目型经历，没有链接会让证据感弱一些。",
+    "我会优先相信能被快速验证的材料；链接缺失时，项目亮点容易停留在自述层面。"
+  ],
+  education: [
+    "经验不长时，我会看训练是否补得上；相关课程别只列名字，要让我看到它和岗位的关系。",
+    "如果你还是 junior，我会用课程、项目和证书判断准备度；写得太泛就很难加分。",
+    "教育背景可以补信号，但必须和岗位能力连起来；否则我只会把它当成普通课程清单。"
+  ],
+  market: [
+    "涉及 sponsorship 或 relocation 时，我会很快确认流程风险；信息清楚，不代表扣分，反而能减少来回确认。",
+    "我需要知道这位候选人能不能顺利推进到入职；身份和地点说不清，会拖慢判断。",
+    "这不是能力问题，但会影响招聘流程。你把条件讲明白，我才更容易把注意力放回经历本身。"
+  ],
+  general: [
+    "我会先看这条信息能不能帮我快速判断匹配度；如果太泛，筛选价值会变低。",
+    "这块如果说不清楚，我会保守处理，因为第一轮筛选没有太多时间帮候选人补上下文。",
+    "我需要很快看到岗位相关证据；信息越具体，进入下一轮的理由越充分。"
+  ]
+};
+
+function templateIndexForItem(item = {}, length = 1) {
+  const raw = String(item.adviceId || item.id || item.chunkId || item.chunk_id || item.title || "");
+  let hash = 0;
+  for (let i = 0; i < raw.length; i += 1) hash = (hash * 31 + raw.charCodeAt(i)) >>> 0;
+  return length ? hash % length : 0;
+}
+
+function approvedHumanized(value, status = "") {
+  const text = cleanAndTruncate(value, 180, "");
+  if (!text) return "";
+  const normalizedStatus = normalizeTerm(status || "");
+  if (!normalizedStatus || ["approved", "auto_classified", "llm_generated", "runtime"].includes(normalizedStatus)) return text;
+  return normalizedStatus === "needs_review" ? "" : text;
+}
+
+function isReportLikePerspective(value = "") {
+  const text = String(value || "");
+  return /候选人|求职者|招聘方|企业|公司|ATS|机筛|系统|面试官|简历读者|读者|HR|客户|岗位需求|关键指标|核心指标|显著提升|筛选|竞争力|匹配度|标准术语|市场份额|业务布局|普遍要求|业界普遍|市场JD|baseline技能/.test(text);
+}
+
+function isConversationalMentorText(value = "") {
+  const text = String(value || "").trim();
+  return /^(你这里|你这条|这条|这块|我会|我建议|你的|这里)/.test(text) &&
+    !isReportLikePerspective(text) &&
+    text.length <= 120;
+}
+
+function toneTargetContextText(context = {}) {
+  const internalAtsResult = context.internalAtsResult || {};
+  const text = [
+    internalAtsResult.jobTitle,
+    internalAtsResult.profile?.targetRole,
+    internalAtsResult.profile?.roleFamily,
+    internalAtsResult.jdText,
+    internalAtsResult.jobDescription,
+    internalAtsResult.rawJobDescription,
+    internalAtsResult.retrievalQuery?.targetRole,
+    internalAtsResult.retrievalQuery?.queryText,
+  ].filter(Boolean).join(" ");
+  return String(text || "").toLowerCase();
+}
+
+function hasRuntimeTargetContext(context = {}) {
+  return Boolean(toneTargetContextText(context).trim());
+}
+
+function toneTargetMatches(context = {}, pattern) {
+  if (!hasRuntimeTargetContext(context)) return true;
+  return pattern.test(toneTargetContextText(context));
+}
+
+function isDaToneContext(context = {}) {
+  return toneTargetMatches(context, /\b(da|data analyst|data analytics|analytics analyst|bi analyst|business intelligence|business analyst|product analyst|marketing analytics)\b|数据分析|商业分析|业务分析|分析师|数据岗/i);
+}
+
+function isSdeToneContext(context = {}) {
+  return toneTargetMatches(context, /\b(sde|swe|software engineer|software developer|full[-\s]?stack|backend|frontend|front[-\s]?end|back[-\s]?end)\b|软件工程|软件开发|前端|后端|全栈/i);
+}
+
+function isDataToneContext(context = {}) {
+  return toneTargetMatches(context, /\b(da|ds|data analyst|data analytics|analytics analyst|bi analyst|business intelligence|business analyst|product analyst|marketing analytics|data scientist|machine learning|ml engineer|mle)\b|数据分析|商业分析|业务分析|数据科学|机器学习|分析师|数据岗/i);
+}
+
+function isApprovedPerspectiveSafeForContext(text = "", item = {}, context = {}) {
+  if (!hasRuntimeTargetContext(context)) return true;
+  const value = String(text || "");
+  if (/\b(da|data analyst|data analytics|bi analyst|business intelligence|business analyst)\b|DA 简历|DA 经历|DA 实习|DA bullet|DA工作|数据分析岗位|数据岗/i.test(value) && !isDataToneContext(context)) {
+    return false;
+  }
+  if (/\b(sde|swe|software engineer|software developer)\b|SDE|SWE|软件工程|软件开发/i.test(value) && !isSdeToneContext(context)) {
+    return false;
+  }
+  if (/\b(pm|product manager|product management|prd)\b|产品经理|产品岗/i.test(value) && !toneTargetMatches(context, /\b(pm|product manager|product management|prd)\b|产品经理|产品岗/i)) {
+    return false;
+  }
+  if (/\b(finance|financial analyst|accounting|audit|risk|quant|banking|valuation)\b|金融|会计|审计|风控|量化|估值/i.test(value) && !toneTargetMatches(context, /\b(finance|financial analyst|accounting|audit|risk|quant|banking|valuation)\b|金融|会计|审计|风控|量化|估值/i)) {
+    return false;
+  }
+  if (/\b(marketing|consumer|social media|retention|growth)\b|营销|市场|消费者|社媒|增长/i.test(value) && !toneTargetMatches(context, /\b(marketing|consumer|social media|retention|growth)\b|营销|市场|消费者|社媒|增长/i)) {
+    return false;
+  }
+  return true;
+}
+
+function detailAwareMentorTemplate(family, rawSource = "", item = {}, context = {}) {
+  const raw = String(rawSource || "");
+  const text = [
+    raw,
+    item.title,
+    item.problemSummary,
+    item.currentDiagnosis,
+    item.action,
+    item.actionSummary,
+  ].filter(Boolean).join(" ");
+  if (/背调公司不会直接使用简历时间|背调表|毕业证书日期|简历时间模糊化|背调如实填写/i.test(text)) {
+    return "你这里可以把简历时间写得简洁，但背调表要按毕业证书日期如实填。两者不冲突，关键是不要让时间线前后矛盾。";
+  }
+  if (/sponsorship|无需担保|HR筛选阶段|ATS层面|中小公司|初创公司|成本和风险/i.test(text)) {
+    return "你这里如果不需要 sponsorship，要主动写清楚。很多中小公司在 ATS 和 HR 初筛就怕成本风险，这句能减少误杀。";
+  }
+  if (/技术关键词会传递求职方向信号|技术栈判断候选人定位|与目标岗位不符的高级工程技术|认知混乱/i.test(text)) {
+    return "你这条技术关键词要服务目标岗位定位。高级工程词如果和目标岗不符，会让 HR 误判方向，降低通过率。";
+  }
+  if (isDaToneContext(context) && /DA简历的bullet point|岗位JD中要求的技能点|按技能维度分拆|时间顺序叙事|关键词覆盖密度/i.test(text)) {
+    return "你这条 DA bullet 可以按技能维度拆，不要只按时间顺序讲故事。让 HR 一眼对到 JD 技能点，关键词密度会更有效。";
+  }
+  if (isDaToneContext(context) && /DA实习经历|技术工具链的各个环节|完整的DA工作流能力|DA工作流/i.test(text)) {
+    return "你这段 DA 实习要写出完整工作流。取数、清洗、分析、可视化各环节都有信号，才像真的做过 DA 工作。";
+  }
+  if (isDaToneContext(context) && /DA和DS简历|DA和DS简历的关键词体系|DA和DS简历侧重点|DA简历需突出.*DS简历才需要|DA强调数据查询、可视化、业务协作|用错简历版本/i.test(text)) {
+    return "你这条要分清 DA 和 DS 关键词版本。DA 写数据查询、清洗、可视化和业务协作；DS 才重点放建模和大数据工程。";
+  }
+  if (isDaToneContext(context) && /同一份工作内容|不同技术栈的语言|分析师视角|从哪里取数|如何清洗|如何整合|底层传输架构/i.test(text)) {
+    return "你这条可以换成 DA 视角写，但不是乱包装。重点写从哪里取数、怎么清洗整合，而不是底层传输架构。";
+  }
+  if (isDaToneContext(context) && /Kafka|误认为你在求DE\/DS|求DE|求DS|目标岗位精准匹配技术栈/i.test(text)) {
+    return "你这条如果目标是 DA，Kafka 这类技术关键词要谨慎放。它可能让 HR 误判你在投 DE 或 DS，反而稀释岗位定位。";
+  }
+  if (/Asana|设定里程碑|分配任务|追踪时间线|项目管理工具/i.test(text)) {
+    return "你这条 Asana 不是只写工具名。把设定里程碑、分配任务、追踪时间线这些动作写出来，跨职能执行力才会被看见。";
+  }
+  if (/SQL、Python|不提工具|具体技术关键词|数据岗位的技术能力无法被识别/i.test(text)) {
+    return "你这条数据岗经历要把 SQL、Python 这些具体技术关键词写出来。只写业务动作不提工具，ATS 和 HR 很难识别技术能力。";
+  }
+  if (/通用简历无法|岗位高度匹配|核心技能和经历|ATS系统/i.test(text)) {
+    return "你这里要避免一份通用简历打全部岗位。每个版本都要按 JD 放核心技能和经历，不然 ATS 和 HR 都很难判定匹配。";
+  }
+  if (/目标岗位定制|无关经历|分散HR注意力|方向不同的岗位需维护不同版本/i.test(text)) {
+    return "你这里要按目标岗位定制。无关经历会占版面也会分散注意力，不同方向可以维护不同版本，但每版都要更聚焦。";
+  }
+  if (/目标JD为锚点|先定目标再修简历|命中率.*泛化版/i.test(text)) {
+    return "你这里先别急着改字句，要先把目标 JD 定下来。不同职位侧重点不一样，先定目标再修，命中率会比泛化版高。";
+  }
+  if (/覆盖多种职能类型的主简历|90%重用|10%的定制|摘要行|每个职位一条要点/i.test(text)) {
+    return "你可以保留主简历做 90% 复用，再用 10% 针对 JD 调摘要和要点。这样比每次从零重写更有效率。";
+  }
+  if (/职位名称的标准化|Software Engineer Intern|行业通用的标准名称|ATS系统.*title/i.test(text)) {
+    return "你这里 title 要用市场听得懂的标准名称。像 Software Engineer Intern 这种行业通用 title，会比自创名称更容易被 ATS 和 HR 识别。";
+  }
+  if (/Job Title|Title在目标市场认知度低|定位判断|简历被忽视/i.test(text)) {
+    return "你这条 Job Title 要先对齐目标市场。title 如果别人看不懂或和方向不符，HR 很可能还没读经历就先定位错。";
+  }
+  if (/IPO客户|三年历史财务复核|内控审计.*SOC|IT cycle|revenue cycle|普通engagement/i.test(text)) {
+    return "你这段 IPO audit 要把三年历史财务复核、SOC、IT cycle 和 revenue cycle 写出来，这些细节比普通 engagement 更能说明资历。";
+  }
+  if (/Retention Marketing Specialist|lower funnel|LTV|自动化触达|现有客户/i.test(text)) {
+    return "你这条 Retention Marketing 要讲清 lower funnel。重点是现有客户 LTV、自动化触达和留存，不是泛泛写 Marketing Specialist。";
+  }
+  if (/SWOT analysis|persona analysis|建模、预测、量化分析|数据岗/i.test(text)) {
+    return "你这条数据岗项目别只放 SWOT。persona analysis、建模、预测或量化分析更能证明分析师价值，也更贴近数据岗。";
+  }
+  if (/模型告诉了你什么|模型精度|用了什么算法|数据分析项目的核心价值/i.test(text)) {
+    return "你这条数据分析项目要写洞察，不是只比模型精度。面试官更想知道模型告诉了你什么，而不是你堆了哪些算法。";
+  }
+  if (/简历不要求所有项目都已完成上线|发现问题|参与设计|推动自动化|流程优化意识/i.test(text)) {
+    return "你这条项目不一定要完全上线。发现问题、参与设计、推动自动化这些过程也有价值，尤其能体现数据或财务岗位的流程优化意识。";
+  }
+  if (/Social Media Marketing|marketing\/media\/communication|平台运营经验|软技能/i.test(text)) {
+    return "你这条 Social Media Marketing 不用被专业背景卡死。JD 通常较宽，真正要写的是平台运营经验和能落地的沟通协作。";
+  }
+  if (/真实金融场景|资产配置优化|金融科技|量化岗位|项目功能高度重叠/i.test(text)) {
+    return "你这条 ML 项目要靠真实金融场景拉开差异。资产配置优化比虚构场景更有说服力，也更贴金融科技或量化岗位。";
+  }
+  if (/计划学习的相关模型|未来学习|ATS通过率|匹配目标岗位JD关键词/i.test(text)) {
+    return "你如果列计划学习的模型，要写得像学习路线，不要包装成已掌握。它可以帮 ATS 对上 JD，也能提醒自己补技能。";
+  }
+  if (/MLE岗位|SDE工程能力|机器学习基础|Cloud Computing|System Design|调参工程/i.test(text)) {
+    return "你这条 MLE 要同时写工程和 ML。Cloud Computing、System Design 加上调参实践，才像 MLE，不只是普通 CS 项目。";
+  }
+  if (/兴趣爱好栏|hiking|看电影|面试破冰|记忆点/i.test(text)) {
+    return "你这栏兴趣不要只是罗列 hiking 或电影。能加具体数据或特别经历，才会变成记忆点，甚至能帮面试破冰。";
+  }
+  if (/设计岗位|作品集链接|设计解决方案|关键评估材料/i.test(text)) {
+    return "你这条设计岗一定要有可访问作品集。招聘经理需要直接看解决方案呈现，没有链接就像少了关键评估材料。";
+  }
+  if (/经历数量有限|差异化价值|重复工具|相似职能|技能覆盖最独特/i.test(text)) {
+    return "你这里要让每段经历服务目标岗位里的不同价值。重复工具或相似职能会占空间，保留最相关、技能覆盖最独特的经历更划算。";
+  }
+  if (/RAG\/LLM\/Agent项目泛滥|同质化严重|真实工作经验|核心差异化/i.test(text)) {
+    return "你这条 AI 经历别只靠常见 RAG、LLM、Agent 项目。真实实习或工作经验才是差异化，要把它放成主证据。";
+  }
+  if (/内部意见收集|用户问卷|customer-facing|internal|同一链条/i.test(text)) {
+    return "你这条可以把 internal 工作翻成 customer-facing 逻辑。意见收集、汇总、分析、解决方案，本质上和用户问卷到营销洞察是同一条 impact 链，也更可信。";
+  }
+  if (/医疗、银行|行业.*工具术语|大写或突出的关键词|第一印象阶段/i.test(text)) {
+    return "你这里关键词要按行业换。医疗、银行这类方向偏好的工具术语不同，大写或突出词一错，第一眼就会被判不相关。";
+  }
+  if (/Tableau|better visualizations|具体工具名称|实际操作能力/i.test(text)) {
+    return "你这条要把 Tableau 这种具体工具名写出来。better visualizations 太虚，工具关键词能让 ATS 和 HR 更快判断实操能力。";
+  }
+  if (/IC设计|工艺节点|团队现有flow|课程项目|专业感/i.test(text)) {
+    return "你这条 IC 设计要写具体节点和工具。即使是课程项目，工艺节点也能说明你和团队 flow 的匹配度。";
+  }
+  if (/跨渠道.*ins.*YouTube|channel effectiveness|广告素材|严格意义上的AB测试/i.test(text)) {
+    return "你这条别把跨渠道硬写成 A/B test。ins 和 YouTube 受众不同，更适合写 channel effectiveness；素材或文案测试才更接近严格 AB。";
+  }
+  if (/LinkedIn链接已成为北美求职简历标配|信息不透明|不够专业/i.test(text)) {
+    return "你这里 LinkedIn link 是北美简历标配。缺了会让 HR 觉得信息不够透明，至少要放一个干净、可访问的链接。";
+  }
+  if (/极短时间内理解候选人做了什么|用了什么方法|产出了什么结果|描述散乱/i.test(text)) {
+    return "你这条项目要让人很快看出做了什么、用什么方法、产出什么结果。描述散了，HR 就很难判断实际能力。";
+  }
+  if (/Bloomberg Market Concepts|BMC|金融行业广泛认可|入门级证书/i.test(text)) {
+    return "你这条 BMC 可以补金融入门信号。缺少实际金融经验时，Bloomberg Market Concepts 至少能说明你有基础准备。";
+  }
+  if (/标点符号间距|格式不整洁|粗心印象/i.test(text)) {
+    return "你这里要把标点和间距修干净。它不是小题大做，格式细节会直接影响 HR 对专业度和细心程度的判断。";
+  }
+  if (/保密客户|American auto mobile company|行业\+地区|专业又合规/i.test(text)) {
+    return "你这段咨询经历可以用行业加地区来处理保密客户。像 American auto mobile company 这种写法既合规，也不会让项目显得空。";
+  }
+  if (/技能列表堆砌不相关工具|形同虚设|经历背书|方向不清晰/i.test(text)) {
+    return "你这块 Skills 不要堆不相关工具。每个技能最好能在经历里找到背书，不然会显得方向散、可信度也弱。";
+  }
+  if (/NLP项目|基础NLP功能|NLP文本处理/i.test(text)) {
+    return "你这条 NLP 项目要从基础文本处理往 ML 商业 insight 走。ChatGPT 之后，雇主更看重能辅助决策的分析价值。";
+  }
+  if (/LinkedIn上的job posting|市场需求信号|定位自身GAP|技能组合/i.test(text)) {
+    return "你可以用 LinkedIn job posting 校准市场需求。它最直接反映雇主要的技能组合，也能帮你定位自己的 GAP。";
+  }
+  if (/工作逻辑链：分析→优化→结果|完整流程|实际能力/i.test(text)) {
+    return "你这条经历要补完整工作逻辑链：分析、优化、结果。HR 看到流程闭环，才更容易判断你的实际能力。";
+  }
+  if (/多样化经历|不同维度的能力|重复类型的经历/i.test(text)) {
+    return "你这几段经历要避免重复。每段最好展示不同能力维度，不然占了版面却没有增加信息量。";
+  }
+  if (/企业背调一般只验证|付费线上实习|Project形式|合规边界/i.test(text)) {
+    return "你这段付费线上实习可以谨慎放成 Project。企业背调通常验证参与记录，关键是不要把它包装成正式雇佣。";
+  }
+  if (/background check|技能描述有一定调整空间|不会核查具体工作内容|Work Experience/i.test(text)) {
+    return "你这里要先分清 Work Experience 和项目经历。技能描述可以调整，但栏位不能误导；能被 background check 的正式雇佣才适合放这里。";
+  }
+  if (/被动观看视频|不做作业|动手完成项目|数据分析类技能|实操内化/i.test(text)) {
+    return "你这条学习经历要落到动手项目。只看视频不做作业很难证明掌握，数据分析技能尤其要靠实操和产出说话。";
+  }
+  if (/5秒|高亮关键词|项目标题|热门大模型技术名称|Recruiter/i.test(text)) {
+    return "你这条要照顾 Recruiter 的 5 秒扫描。项目标题和高亮关键词要对上 JD，热门大模型技术名别藏在长句后面。";
+  }
+  if (/AB测试|A\/B测试|A\/B test|统计理解|业务判断|独立设计实验/i.test(text)) {
+    return "你这条 A/B test 要写出统计理解和业务判断。能独立设计实验、解释结果，比只说做过测试更有说服力。";
+  }
+  if (/ratio metric|continuous metric|t-test|z-test|统计检验/i.test(text)) {
+    return "你这条 A/B test 项目要把指标和检验讲清楚。ratio metric、continuous metric、t-test、z-test 这些选择逻辑就是深度。";
+  }
+  if (/供应链|库存分析|ABC分析|行业标准方法论|自创框架/i.test(text)) {
+    return "你这条供应链分析要点名 ABC 分析。它能说明你用的是行业方法论，不是自己随便罗列问题。";
+  }
+  if (/商业分析.*Excel|预测建模.*ML|实验分析.*AB测试|不同技术栈对应的项目/i.test(text)) {
+    return "你这份数据分析项目可以分三条线：Excel 商业分析、ML 预测建模、A/B test 实验分析。这样能覆盖不同招聘方的筛选偏好。";
+  }
+  if (/DS岗位竞争|招聘需求收缩|强投DS|ML背景不够深厚/i.test(text)) {
+    return "你这里要现实一点看 DS 和 DA。ML 背景还不深时，DA 可能更稳；不是降低目标，而是先提高整体录取概率。";
+  }
+  if (/产品文档|自我保护机制|PRD|Success Metrics|点击率|页面停留时长/i.test(text)) {
+    return "你这段 PM 经历要把 PRD 和 Success Metrics 写出来。点击率、停留时长这类指标能说明你不是只写文档，而是在做数据驱动产品。";
+  }
+  if (/相关课程列表|ATS关键词匹配|课程项目|工作经验不足/i.test(text)) {
+    return "你这条 Education 可以把相关课程和课程项目放清楚。经验还少时，它们能补 ATS 关键词，也能弥补工作经历不足。";
+  }
+  if (/加粗词汇|关键词密度|一条没有可加粗关键词/i.test(text)) {
+    return "你这条 bullet 要先想清楚哪些词值得加粗。关键词密度比条数更重要，一条没有核心词的 bullet 真的可以删。";
+  }
+  if (/CDN|CloudFront|Cloudflare|S3|对象存储|静态资源/i.test(text)) {
+    return "你这条工程项目要写 CDN 和对象存储。CloudFront、Cloudflare、S3 这类实践能让项目更像真实生产环境。";
+  }
+  if (/Tesla|前30%|OA机会|知名公司.*实习经历/i.test(text)) {
+    return "你这段 career fair 策略要保留 Tesla 这类公司信号。entry level 先做到前 30% 拿 OA，比追求完美经历更现实。";
+  }
+  if (/AI\+控制|传统背景|深度技术理解|主动追问/i.test(text)) {
+    return "你这条 AI 加控制的结合点要写清楚。它会引导面试官追问技术深度，也能和只有传统控制背景的人拉开差距。";
+  }
+  if (/Data vs Risk|Data.*Risk|Risk.*Data/i.test(text)) {
+    return "你这里 Data 和 Risk 要拆版本。关键词和侧重点不同，硬塞在同一版里会让两个方向都不够准。";
+  }
+  if (/(LinkedIn 还是官网|官网投递|敲门砖).*(关键词匹配|初步筛选)|关键词匹配.*(LinkedIn|官网|敲门砖)/i.test(text)) {
+    return "你这里不要只想投递渠道。LinkedIn 或官网都会先看关键词匹配，简历这块敲门砖要先对上岗位门槛。";
+  }
+  if (/一页简历|行业普遍标准|经验年限较短|内容过多/i.test(text)) {
+    return "你这份简历先守住一页。经验还不长时，内容过多反而会稀释重点，一页是为了让 HR 更快抓到核心。";
+  }
+  if (/Times New Roman|Cambria|视觉疲劳|可读性/i.test(text)) {
+    return "你这里字体别小看。Times New Roman 太方正容易疲劳，Cambria 在专业感和可读性之间通常更稳。";
+  }
+  if (/DA简历|行业通用工具|最大化ATS匹配率/i.test(text)) {
+    return "你这条 DA 简历要先放行业通用工具和能力关键词。它们会在多份 JD 里反复出现，能最大化 ATS 匹配率。";
+  }
+  if (/end-to-end.*ML pipeline|data processing|feature engineering|modeling|evaluation/i.test(text)) {
+    return "你这条 end-to-end ML pipeline 要保留完整链路。data processing、feature engineering、modeling、evaluation 都写到，才像能对标多个 JD。";
+  }
+  if (/成果数字和业务影响|结果埋在句尾|量化结果前置/i.test(text)) {
+    return "你这条要把量化结果前置。成果数字和业务影响埋在句尾，很容易被扫过去，先给结果会更抓眼。";
+  }
+  if (/Meta Ads|付费广告|有机内容运营|独立操作广告账户/i.test(text)) {
+    return "你这段数字营销要突出 Meta Ads 和 ROI。哪怕预算小，只要能证明独立操作广告账户，也比泛泛内容运营更有分量。";
+  }
+  if (/70%|30%|40%|异常高的指标提升|深度追问实现路径/i.test(text)) {
+    return "你这条数字别贪大。70% 这类异常提升会引来追问，30%-40% 这种合理区间反而更容易被相信。";
+  }
+  if (/字体过小|10.?11号|过于拥挤|字号联动/i.test(text)) {
+    return "你这里要把正文字号稳在 10-11 号附近。内容多时别硬挤，字号和信息量要一起调整。";
+  }
+  if (/verify functional correctness|functional correctness.*95|处理速度|细节密度/i.test(text)) {
+    return "你这条技术项目要靠细节密度取胜。与其写 verify performance，不如写 functional correctness 95% 和处理速度这类具体结果。";
+  }
+  if (/项目缺少时间标注|时间范围|经验深度|时间线/i.test(text)) {
+    return "你这条项目要补时间范围。HR 会用时间线判断经验深度，缺日期会让整段信息看起来不完整。";
+  }
+  if (/数据处理和可视化能力|单纯的开发经历|方向单一/i.test(text)) {
+    return "你这份数据分析简历不能只像开发经历。要补数据处理和可视化能力，让方向不只停在写代码。";
+  }
+  if (/供应链或运营细节|可量化的竞争优势|相对表现/i.test(text)) {
+    return "你这条供应链或运营经历要把平淡操作翻成可量化优势。HR 更看结果和相对表现，不会只因为流程细节买单。";
+  }
+  if (/直播运营|规划与复盘|助播协调|上架顺序|运营思维/i.test(text)) {
+    return "你这段直播运营要写规划和复盘。只写助播协调、上架顺序，会被看成基础执行，而不是有运营思维。";
+  }
+  if (/SQL查询|跨数据库|revenue、company size|company size|业务字段/i.test(text)) {
+    return "你这条 SQL 经历要保留跨数据库和业务字段。revenue、company size 这类字段能证明你理解业务，不只是机械写查询。";
+  }
+  if (isSdeToneContext(context) && /SWE岗位|ML系统|Gemini|图像类和语言类模型|AI应用/i.test(text)) {
+    return "你这条 SWE 经历可以写和 ML 系统整合。像 Gemini、图像模型、语言模型这些接口理解，会让 SWE 背景更有加分点。";
+  }
+  if (/传统ML|GenAI|区分.*能力|扎实的技术背景/i.test(text)) {
+    return "你这条 AI 面试准备要讲清传统 ML 和 GenAI 的差异。能说明两者边界，比只列 AI 关键词更像技术底子扎实。";
+  }
+  if (/母简历|收录所有经历|最匹配的子集|多目标岗位|多份简历版本/i.test(text)) {
+    return "你可以保留一份母简历收全经历，再按每个 JD 选最匹配的子集。这样不是多写几份，而是让每版更对焦。";
+  }
+  if (/持续迭代|不同阶段.*不同JD|掌握方法论|一次性修改成果|长期价值/i.test(text)) {
+    return "你这里要把求职当成持续迭代。不同阶段按 JD 调整简历，重点是掌握方法论，不是只追求一次性改完。";
+  }
+  if (/模型做了什么|结果如何|最基本的逻辑|写上去就代表你懂|面试官追问/i.test(text)) {
+    return "你这条 JD 里的模型关键词写上去就要能讲清楚。至少要说明模型做了什么、结果如何，不然面试追问时可信度会掉。";
+  }
+  if (/官方职位名称|reframing|重新框架|岗位叙事/i.test(text)) {
+    return "你这里不要被官方 title 卡住。把实际工作内容重新框到 target role 和岗位语言里，ATS 和 HR 才更容易看出你为什么相关。";
+  }
+  if (/Experience栏默认代表正式雇佣关系|混入课程项目|实际工作经验产生误判/i.test(text)) {
+    return "你这里要先分清 Experience 和课程项目。Experience 默认是正式雇佣或实习，课程项目混进去会让人误判你的实际工作经验。";
+  }
+  if (/background check|正式雇佣|非正式实习|Work Experience栏|信任风险/i.test(text)) {
+    return "你这里要先分清 Work Experience 和项目经历。能被 background check 的正式雇佣才适合放这里，非正式实习放错栏位会有信任风险。";
+  }
+  if (/第一眼就判断出.*目标方向|标题、Summary、技能顺序|共同服务于同一个岗位定位/i.test(text)) {
+    return "你这份简历开头要先把目标方向立住。标题、Summary、技能排序和前几条经历要服务同一个岗位，不然第一眼会被读散。";
+  }
+  if (/circuit design|logic design|硬件工程|同一份简历广泛投递/i.test(text)) {
+    return "硬件方向这里要分清 circuit design 和 logic design。不是一定要拆两版，而是先把 circuit design 这条线写准，再集中投同类岗位。";
+  }
+  if (/Analytics岗位|Tableau.*Excel.*SQL|月度dashboard|行业标配技能/i.test(text)) {
+    return "Analytics 岗这里要保留 Tableau、Excel、SQL 和 dashboard 这组信号。它们是行业标配，不是装饰词，简历里要接到具体分析场景。";
+  }
+  if (/顶级投行|投行实习|orientation|收尾presentation|1\s*[-–~至到]\s*2\s*周|实际动手时间极短/i.test(text)) {
+    return "你这段投行实习不要只靠公司名气。orientation 和收尾 presentation 各占 1-2 周时，真正动手时间有限，更要把做过的市场分析讲清楚。";
+  }
+  if (/转码|项目来源渠道|技术覆盖度|全栈|功能实现|技术选型/i.test(text)) {
+    return "转码项目这里别纠结项目从哪里来。真正要写清楚的是全栈覆盖、功能实现和技术选型，面试时也要能顺着细节讲出来。";
+  }
+  if (/RAG|policy文档|内部员工查询|业务场景|用户痛点/i.test(text)) {
+    return "你这条 RAG 项目要先写业务场景。帮内部员工查询 policy 文档，比只说做了 RAG 系统更像真实需求，也更容易让人相信项目价值。";
+  }
+  if (/每个步骤的具体实现方式|技术细节写清楚|通过ATS|基础问题|系统性思维/i.test(text)) {
+    return "你这条技术项目要写到能对上目标 JD、也能被追问。把实现方式、技术细节和 ATS 关键词放清楚，面试时才不会卡在基础问题上。";
+  }
+  if (/仅描述参与行为|参与行为的bullet|结构化的分析过程|实际能力与思维方式/i.test(text)) {
+    return "你这条别只写参与了什么。把分析过程拆出来，写清楚你怎么判断、怎么推进，能力才不会停在参与感。";
+  }
+  if (/纯点选|下载|导出|机械操作|操作步骤|分析过程|业务价值/i.test(text)) {
+    return "这条别停在点选、下载、导出这些操作。要把分析过程和业务价值写出来，不然技术含量会被读得很低。";
+  }
+  if (/publication|同一项目|同一研究|不同产出|整合在同一条目|单独列项/i.test(text)) {
+    return "同一个研究的过程和 publication 可以合在同一条下面。这样既省版面，也能让成果和你做的研究自然连在一起。";
+  }
+  if (/market方向实习生|marketing research|统计分析类课程|课程名称不完全对口/i.test(text)) {
+    return "你如果投 market 方向实习，课程也可以补信号。marketing research 或统计分析课即使不完全对口，也比课程栏完全空白更有说服力。";
+  }
+  if (/课程顺序|不同职能方向|GPA和相关课程|学术实力与岗位匹配度/i.test(text)) {
+    return "你这条 Education 可以更有方向感。GPA 和相关课程要保留，课程顺序也可以按目标职能和 JD 调整，让匹配度更快被看见。";
+  }
+  if (/低 GPA|不写不会被追问|写出反而形成减分|教育背景中少数可量化/i.test(text)) {
+    return "你这里的 GPA 要现实处理。高 GPA 可以当硬信号，低 GPA 不一定要写出来；不写通常不会被追问，硬放反而先扣印象分。";
+  }
+  if (/education是招聘方筛选的第一要素|work experience权重次之|Education放顶部|金融行业应届生|target school/i.test(text)) {
+    return "金融应届生简历里，Education 放前面是合理的。target school 和 GPA 会先帮你建立背景信号，工作经历再往下接。";
+  }
+  if (/GPA|target school|高 GPA|低 GPA|Education放顶部|金融行业应届生|教育背景中少数可量化/i.test(text)) {
+    return "应届生这里要认真处理 Education。target school 和高 GPA 是少数能快速被读懂的硬信号，低 GPA 不写通常比硬放更稳。";
+  }
+  if (/线性回归|基础ML|ML技能|ATS机筛|模型逻辑|口头解释模型/i.test(text)) {
+    return "数据分析岗位这里要补基础 ML 信号。线性回归这类模型、项目证据和口头解释能力都要对上，不然 ATS 和面试都会吃亏。";
+  }
+  if (/BA简历|每一条bullet point|紧扣岗位JD|稀释简历焦点|定位不清晰/i.test(text)) {
+    return "你这条 BA bullet 要紧扣 JD。和目标岗位不匹配的技术内容别乱放，不然焦点会被稀释，定位也会显得不清楚。";
+  }
+  if (/动词的选择|ownership等级|based on|主导者还是执行者|精准动词/i.test(text)) {
+    return "这条要把动词换准。像 based on 这种模糊说法会让人分不清你是主导还是执行，精准动词能更快说明 ownership。";
+  }
+  if (/environment artist|环境模型|关卡布局|行业标准术语|专业方向/i.test(text)) {
+    return "游戏行业这里要用标准 title。environment artist 能直接说明环境模型和关卡布局方向，比自己造一个模糊名称更容易被识别。";
+  }
+  if (/Ray专注于非结构化数据|OpenAI|阿里巴巴|腾讯|百度|字节|学校几乎不教|求职市场稀缺/i.test(text)) {
+    return "Ray 这里要写得更具体。它和文本、图片、音频、视频这类非结构化数据的分布式计算有关，放出来会比泛 AI 技能更稀缺。";
+  }
+  if (/LoRA|Stable Diffusion|inpainting|完整模型名称|具体工具或模型/i.test(text)) {
+    return "你这条 AI 项目不要只说模型。LoRA、Stable Diffusion v2 inpainting 这种完整模型名要写出来，读起来才像真的动手做过。";
+  }
+  if (/跨方向投递|数据分析类岗位ATS|直接被系统过滤/i.test(text)) {
+    return "你跨方向投递时，关键词要按岗位版本调整。数据分析版至少要让 Python、SQL、Machine Learning 这些 ATS 高频词有真实落点。";
+  }
+  if (/金融数据类岗位JD|所需工具|ATS会匹配关键词|面试前针对性复习/i.test(text)) {
+    return "金融数据岗这里可以先按 JD 补工具关键词。ATS 会先看这些词，JD 没提的通常不用抢版面，面试前再针对性复习更有效。";
+  }
+  if (/广告预算|awareness|触达量|转化类|渠道\/KOL|带单量|投放衡量/i.test(text)) {
+    return "广告投放这条要按目标选指标。awareness 看触达，转化类看渠道或 KOL 带单量，不同预算和目标不能用同一套数字讲。";
+  }
+  if (/教育游戏|游戏行为数据|学习路径|用户留存|Google Analytics/i.test(text)) {
+    return "教育游戏这条要把 Google Analytics 接到游戏行为数据。重点是怎么用数据优化学习路径和留存，而不是只写通用分析能力。";
+  }
+  if (/超链接在PDF|纯文本URL|行间距过大|full-time|写满一页|精准点击|复制/i.test(text)) {
+    return "这条格式建议很具体：PDF 里链接要方便复制，行间距别撑得太空。full-time 简历最好写满一页，但不要牺牲可读性。";
+  }
+  if (/计划课程|选课记录|在读生|列出计划课程|常见且合理/i.test(text)) {
+    return "你如果还在读，可以列计划课程，但要写得克制。它的作用是补目标岗位匹配度，不是把还没学完的内容包装成经验。";
+  }
+  if (/错落有致|过于密集|过于稀疏|适中的行长|版面整洁/i.test(text)) {
+    return "你这里要调的是阅读节奏。行长、密度和留白要稳定，太挤或太散都会让重点经历变难读。";
+  }
+  if (/结果和影响前置|浏览简历时间极短|快速筛掉|抓住阅读者眼球/i.test(text)) {
+    return "你这条要先把结果和影响放前面。HR 没时间慢慢找亮点，第一眼看不到成果就容易被快速略过。";
+  }
+  if (/敲门砖|第一印象直接决定|屡屡碰壁|不断试错和反馈/i.test(text)) {
+    return "你这里别把碰壁解读成材料没救。简历本来就是反复试出来的，先用反馈去改最影响第一印象的地方。";
+  }
+  if (/跑了多少地点|采访了多少用户|量化执行细节|早期经历|工作规模和影响力/i.test(text)) {
+    return "你这类早期经历也能量化。跑过多少地点、访谈多少用户、覆盖多大范围，这些朴素数字都能把执行量讲清楚。";
+  }
+  if (/冗余形容词|主观评价性形容词|证明能力|信息的密度|空间有限/i.test(text)) {
+    return "你这条可以先删形容词。简历空间有限，少写主观评价，多写能证明能力的动作、工具和结果。";
+  }
+  if (/美国本地经历|课程project|实验室research project|纯上课经历|不写等于白上/i.test(text)) {
+    return "你如果是在读研究生，美国本地项目别空着。课程 project 分量有限，但实验室 research project 更能补本地经历信号。";
+  }
+  if (/writing tutor|writing sample|辅导人数|成绩提升/i.test(text)) {
+    return "你这段 writing tutor 不是普通经历。可以补 writing sample、辅导人数或成绩提升，让写作能力从默认印象变成可验证证据。";
+  }
+  if (/ensure quality|3倍以上|纯描述型.*3倍|引导讨论到候选人熟悉/i.test(text)) {
+    return "你这条别只写 ensure quality。换成可验证的结果或数字，面试时也更容易把讨论带到你熟悉的部分。";
+  }
+  if (/工作经历置顶|教育背景置顶|职业人身份|经验不足|结构顺序本身传递信息/i.test(text)) {
+    return "你这里要用板块顺序表达身份定位。有经验就让工作经历先说话，应届或经验少时再让教育背景承担第一眼信号。";
+  }
+  if (/结构化流程|主动构思底稿|针对性批注|被动等待导师全部代劳|内化反馈/i.test(text)) {
+    return "你这里要先把修改流程想清楚。先自己搭底稿、再带着问题看反馈，比等别人逐句改更能把建议真正内化。";
+  }
+  if (/版本管理|通用版随时可发|定制版提高匹配度|草稿版|未完成内容/i.test(text)) {
+    return "你这里要把版本管理做好。通用版可以随时发，定制版再按岗位改；带批注或未完成内容的草稿绝对不要外发。";
+  }
+  if (/结果和价值|完整的历史叙述|最终成果中的贡献|过程中的曲折/i.test(text)) {
+    return "你这条要从历史叙述改成结果和价值。过程有多曲折不用全写，重点是你对最终成果贡献了什么。";
+  }
+  if (/VaR|Monte Carlo|风险计量|完整分析链条/i.test(text)) {
+    return "金融风险这条别被泛技能带走。VaR、Monte Carlo 和对应工具要放进完整分析链条里，才像真的懂风险计量。";
+  }
+  if (/system design|第二条求职赛道|重新框架包装|无需额外积累经验/i.test(text)) {
+    return "你已有的 system design 内容可以开第二条线。重点不是重新攒经历，而是把现有经历框成系统设计能力。";
+  }
+  if (/Strategy模式|Factory模式|接口\+实现|SWE标配|大量生产实践/i.test(text)) {
+    return "你这栏技能可以放基础设计模式。Strategy、Factory 这类软件工程标配知识不一定要有大量生产实践，但要理解原理、能讲清楚。";
+  }
+  if (/LinkedIn的experience描述|猎头评估|主页吸引力|主动联系|简单的职位名称/i.test(text)) {
+    return "你这里要补 LinkedIn experience，不只是放职位名。猎头会看主页里的经历描述，空白会降低被主动联系的机会。";
+  }
+  if (/角色定位|逐条阅读小点才能判断职责|理解成本|优先寻找.*角色/i.test(text)) {
+    if (/可量化的产出|实际影响力|impact|空洞的任务罗列/i.test(text)) {
+      return "你这条项目要同时交代角色、量化产出和 impact。只写任务会很空，先说你负责哪一块，再补结果和影响。";
+    }
+    return "你这条项目要先把角色定位写出来。别让别人读完整段才猜到你负责什么，第一句就要交代你的职责边界。";
+  }
+  if (/描述的粒度|太粗泛|太细|能反映关键能力|快速理解/i.test(text)) {
+    return "你这条要控制描述粒度。太粗看不出专业度，太细又读不动，写到能判断核心能力就够。";
+  }
+  if (/各板块的分类|无关的经历|分散阅读注意力|整体相关性评分/i.test(text)) {
+    return "你这里要先分清板块和相关性。无关经历不是中性信息，放错位置会分散注意力，也会拖低整体匹配感。";
+  }
+  if (/identify anomalies\/trends|identify anomalies|anomalies\/trends|真实案例|贴合JD关键词/i.test(text)) {
+    return "JD 写 identify anomalies 或 trends 时，简历里要接真实案例。别只复述关键词，要写你识别了什么异常或趋势、怎么判断的。";
+  }
+  if (/Bar执照|学历存在劣势|Education移至末尾|顶部信息不具竞争力/i.test(text)) {
+    return "你这里不是要突出学历，而是把更有说服力的 Bar 执照前置。Education 如果会拖第一印象，可以往后放一点。";
+  }
+  if (/业务决策支持|分析结果转化为业务决策|跨团队协作经历|soft skill与业务影响力/i.test(text)) {
+    return "数据岗这条要把分析结果怎么支持业务决策写出来。跨团队协作不是软技能口号，要接到具体决策、影响或落地动作。";
+  }
+  if (/咨询公司|不区分行业|竞争激烈|不宜过度筛选|Niche/i.test(text)) {
+    return "咨询投递这里别过度筛公司。多数非 niche 咨询公司不先分行业，能拿到面试本身就不容易，简历先保持通用咨询能力清楚。";
+  }
+  if (/RTL设计|Physical Design|Synthesis|芯片公司|Skyworks|方向不聚焦/i.test(text)) {
+    return "芯片岗位这里要先聚焦方向。RTL、Physical Design、Synthesis 是不同准备路径，简历和面试重点别在几条线之间来回跳。";
+  }
+  if (/产品说明书|个人贡献|功能列表|描述语气模糊|个人成就/i.test(text)) {
+    return "作品集或项目描述别写成产品说明书。重点是你的个人贡献、判断和产出，不是把产品功能列表搬上来。";
+  }
+  if (/实习经历.*可验证|易回答的技能点|2个核心技能维度|展开作答/i.test(text)) {
+    return "你这段实习经历可以收成 2 个核心技能维度。重点是可验证、面试时答得出来，而不是把日常工作零散铺开。";
+  }
+  if (/官方职位名称|reframing|重新框架|岗位叙事/i.test(text)) {
+    return "你这里不要被官方 title 卡住。把实际工作内容重新框到 target role 和岗位语言里，ATS 和 HR 才更容易看出你为什么相关。";
+  }
+  if (/SDE岗位|编程语言只是基础门槛|framework|数据库|云服务|我会说中文/i.test(text)) {
+    return "你这条 SDE 技能栏别只停在编程语言。语言是门槛，framework、数据库和云服务才是 ATS 关键词和真实开发能力。";
+  }
+  if (/Web GIS|GIS就业市场|GIS岗位|缺少该技能/i.test(text)) {
+    return "你如果看 GIS 岗位，Web GIS 要放出来。现在很多 GIS 招聘会直接找这类能力，缺了它竞争力会明显弱一截。";
+  }
+  if (/sustainability|ESG|city officials|residents|外部方协作|stakeholder场景/i.test(text)) {
+    return "ESG 这条别只写技术能力。city officials、residents 这些外部 stakeholder 要写出来，才像真实协作场景。";
+  }
+  if (/第一个bullet point|第一句话抓到重点|定锚|快速扫描/i.test(text)) {
+    return "你这条第一条 bullet 要有定锚作用。HR 快速扫时，第一句话抓不到重点，后面的亮点就很容易被低估。";
+  }
+  if (/部署平台|端到端系统|工程化能力|模型\/脚本实际落地|实际落地/i.test(text)) {
+    return "端到端项目这里要补部署平台。它能证明你不只是写模型或脚本，而是有把东西实际落地的工程化能力。";
+  }
+  if (/Web相关的岗位数量|C\+\+等额外技术栈|机会池|增加投递数量/i.test(text)) {
+    return "你可以把 Web 当成主机会池，同时把 C++ 这类额外技术栈当成第二入口。这样不是乱投 JD 关键词，而是扩大可匹配岗位数量。";
+  }
+  if (/Risk部门|市场风险|信用风险|中台风控|金融量化|分析类专业/i.test(text)) {
+    return "金融 Risk 这条赛道可以认真看。市场风险、信用风险、中台风控细分很多，也和量化或分析背景更容易接上。";
+  }
+  if (/金融风险管理|MFE|量化模型|模型关键词|技术背景/i.test(text)) {
+    return "你这条金融风险/MFE 要把量化模型写清楚。招聘方会用模型关键词判断技术底子，别只写风险方向兴趣。";
+  }
+  if (/Nielsen|大型快消|market research|心理学|社会学|受众细分|消费行为洞察/i.test(text)) {
+    return "你可以把快消 market research 当成切入口。Nielsen 这类第三方数据公司会看心理学、社会学背景和受众洞察能力。";
+  }
+  if (/physical design|bring up|板级测试|纯嵌入式|软硬件调试|芯片组/i.test(text)) {
+    return "嵌入式这里要按目标公司拆信号。偏芯片组就写 physical design，偏软硬件调试就突出 bring up 和板级测试。";
+  }
+  if (/recommendation|SQL monkey|Excel monkey|策略思维|分析师越往后/i.test(text)) {
+    return "你这条分析师经历不能只停在 SQL 或 Excel 操作。能写出 recommendation 和策略判断，才会和机械执行型分析拉开差距。";
+  }
+  if (/课程顺序|不同职能方向|GPA和相关课程|学术实力与岗位匹配度/i.test(text)) {
+    return "你这条 Education 可以更有方向感。GPA 和相关课程要保留，课程顺序也可以按目标职能和 JD 调整，让匹配度更快被看见。";
+  }
+  if (/强行动动词|participate|主动性|主导角色|边缘角色/i.test(text)) {
+    return "这条 bullet 要先换强动词。participate 会让人觉得你在边缘位置，动词要更准确地说明你主导或推进了什么。";
+  }
+  if (/deal经验|purchase price|交易类型|交易规模|真实deal/i.test(text)) {
+    return "你这段金融 deal 经历要把 purchase price 和交易类型写出来。即使只是初级参与，这些细节也能快速提升可信度。";
+  }
+  if (/结构化自我梳理|口头叙述|完整还原|筛选提炼|遗漏亮点/i.test(text)) {
+    return "你这里可以先用口头叙述把经历还原完整。再筛选亮点写进简历，比一开始就硬憋 bullet 更容易写出质量。";
+  }
+  if (/净资产乘以行业调节系数|信用评级得分|金融信贷|风险量化评估|具体评估维度/i.test(text)) {
+    return "金融信贷这条要写具体评估维度。净资产乘以行业调节系数、信用评级得分这类细节，比泛泛参与风险评估更有说服力。";
+  }
+  if (/共性技能栈|特性工具要求|SQL|Python|初筛通过率/i.test(text)) {
+    return "关键词这里要分层写。SQL、Python 是共性技能，特定工具要按 JD 补；这样 ATS 和 HR 都更容易判断匹配度。";
+  }
+  if (/Power BI.*Office|PL300|微软官方认证|管理层.*可视化|高性价比/i.test(text)) {
+    return "Power BI 这条要保留 PL300 和 Office 生态优势。它不是单纯工具名，而是管理层看得懂、认证成本也相对划算的信号。";
+  }
+  if (/Marketing岗位面试|叙事能力|自圆其说|逻辑清晰|经历包装/i.test(text)) {
+    return "Marketing 面试更吃叙事和逻辑。经历可以包装，但要能自圆其说，故事线清楚比硬塞技术指标更重要。";
+  }
+  if (/个人博主|自媒体运营|非传统雇主|填补简历.*空白|marketing能力/i.test(text)) {
+    return "个人博主或自媒体经历可以包装成 marketing 项目。重点是写出受众、内容策略和结果，让它补上这个方向的经历空白。";
+  }
+  if (/学校白名单|工作年限|匹配权重|泛化技能堆砌|针对性版本/i.test(text)) {
+    return "ATS 不只看关键词数量，也可能看学校、年限和方向权重。技能别泛泛堆，针对性版本会让每个方向的匹配信号更集中。";
+  }
+  if (/证书不是越多越好|基础证书|资历浅薄|稀缺或高度相关/i.test(text)) {
+    return "证书这里不是越多越好。基础证书堆太多反而显得浅，真正值得放的是稀缺、和目标岗位高度相关的认证。";
+  }
+  if (/学术研究项目|hire manager|1-2个项目|同类技能项目|高质量项目/i.test(text)) {
+    return "学术项目别并排堆太多同类内容。HR 通常不会逐条细看，挑 1-2 个质量最高、最能展开的项目会更有记忆点。";
+  }
+  if (/CFA\+买方|sell side|买方经验|跳板/i.test(text)) {
+    return "你这条职业轨迹要解释清楚。CFA 加买方经验对 sell side 可能被读成跳板心态，要提前降低这个疑虑。";
+  }
+  if (/职位title|多种不一致|两个方向都拿不到面试|关键词和title针对性替换/i.test(text)) {
+    return "简历里 title 不一致会让 HR 和 ATS 都不知道你到底投哪条线。多版本可以共用内容，但 title 和关键词要按方向替换。";
+  }
+  if (/V-Model|需求分析到测试验证|测试验证|机械\/系统工程|专业性/i.test(text)) {
+    return "机械/系统工程这条要把 V-Model 链条写出来。从需求分析到测试验证都能对上，专业可信度会比只写单点任务高。";
+  }
+  if (/市场主流|格式与市场主流不一致|违和感|找不到关键信息|格式统一/i.test(text)) {
+    return "格式这里要贴近市场主流。不是为了好看，而是避免 HR 第一眼产生违和感、找不到关键信息，影响进入实质筛选。";
+  }
+  if (/逻辑连贯的bullet|系统性思维|零散的描述|强逻辑岗位/i.test(text)) {
+    return "这几条 bullet 要连成一条逻辑线。数据分析这类强逻辑岗位，很怕零散描述，看起来会像缺少系统性思维。";
+  }
+  if (/Business Context|练习作业|实际价值的分析案例|Tableau\/SQL|商业背景/i.test(text)) {
+    return "Tableau 和 SQL 不能只像练工具。要补 Business Context，让项目从练习作业变成有实际价值的分析案例。";
+  }
+  if (/学习过程|提及mentor|学生作业|实战经验|成果与行动/i.test(text)) {
+    return "这条要从学习过程改成成果和行动。mentor 可以不用强调太多，不然 HR 容易读成学生作业，而不是实战经验。";
+  }
+  if (/编程语言熟练度|技术面试筛选|投入产出比/i.test(text)) {
+    return "技术岗准备这里很现实：刷题和编程语言熟练度直接影响能不能过技术面试筛选。简历可以写能力，但基本功也要跟上。";
+  }
+  if (/component描述|真正参与了开发|实际贡献深度|泛泛而谈/i.test(text)) {
+    return "技术项目这里要把 component 写具体。越能说清楚你参与了哪个组件、做了什么，越不像泛泛蹭项目。";
+  }
+  if (/Google Analytics|SQL和Python|无需手动下载CSV|电商数据分析|标准工作流/i.test(text)) {
+    return "电商数据分析这条要保留 Google Analytics、SQL 和 Python 的工作流。它说明你不是手动拉 CSV，而是在用标准工具组合分析用户行为。";
+  }
+  if (/skill section前置|skill section 前置|更快捕捉到关键技术关键词|提升简历通过率/i.test(text)) {
+    return "你这里可以把 Skills 往前放一点。技术类或数据岗初筛会先扫关键技术词，前置不是炫技，是帮 HR 和 ATS 更快确认匹配。";
+  }
+  if (/skill与project|skill 与 project|工具本身.*Tableau.*SQL|完整分析流程|项目栏/i.test(text)) {
+    return "你这里要分清 Skills 和 Project。Tableau、SQL 是工具；只有带完整分析流程和结果的课程项目，才适合放进项目栏。";
+  }
+  if (/口头语言能力|语言能力|多种语言|跨文化沟通/i.test(text)) {
+    if (/口头语言能力|无需单独列出|填充内容/.test(text)) {
+      return "你这条 Skills 要精简。技术和产品岗更看技术栈熟练度，口头语言能力通常面试会自然体现，单独列太多反而像填充。";
+    }
+    return "你这条语言能力可以保留，但要放在合适位置。跨文化沟通相关岗位会加分，重点是写完整、别和核心技能抢版面。";
+  }
+  if (/多版本策略|单一简历|多个方向|投递覆盖面|版本越针对性/i.test(text)) {
+    return "你不是要靠一份简历打所有岗位。多版本的价值是让每版关键词和项目侧重都更贴目标方向，覆盖面会更大也更清楚。";
+  }
+  if (/headcount|budget|电话screening|员工提离职|发布.*JD|周期.*数周|周期.*数月/i.test(text)) {
+    return "你要知道一个职位从 headcount、budget 到 JD 发布和 screening，本来就可能拖几周甚至几个月。投递节奏要按流程周期规划，不要只看岗位刚发没发。";
+  }
+  if (/SQL入门|SQL是基础筛选项|SQL.*ATS匹配率|基础操作/i.test(text)) {
+    return "SQL 这条要写成基础筛选项，不只是兴趣技能。数据相关岗位少了 SQL，ATS 和 HR 都会更难判断你够不够基本门槛。";
+  }
+  if (/上半屏|前5秒|Skills区紧跟Education|专业背景\+技能匹配|视线停留/i.test(text)) {
+    return "你这里可以利用简历上半屏。Skills 紧跟 Education 能形成专业背景加技能匹配的第一眼信号，让 HR 前 5 秒先读到重点。";
+  }
+  if (/银行类岗位|SaaS关键词|行业证书|低成本补充证书/i.test(text)) {
+    return "银行类岗位这条别只写泛技能。SaaS 关键词和行业证书对 HR/ATS 都比较敏感，低成本能补的证书可以优先补上。";
+  }
+  if (/技能列表应与目标岗位高度匹配|删除无关技能|减少ATS误判|无关技能/i.test(text)) {
+    return "你这栏 Skills 要做减法。保留和 JD 直接相关的技能，删掉弱相关项，HR 才能更快看出岗位契合，也能减少 ATS 误判。";
+  }
+  if (/跨行业|消费品|快消|电商运营逻辑|行业壁垒/i.test(text)) {
+    return "你如果转 Marketing，行业选择要现实一点。电商运营逻辑比较通用，消费品或快消又贴近背景，会比硬跨到高壁垒行业更稳。";
+  }
+  if (/workflow自动化|时间节省|百分比|可衡量改进|工具使用描述/i.test(text)) {
+    return "这条别停在用了什么工具。workflow 自动化最好写出节省了多少时间或提升了多少效率，业务价值会比工具名更有说服力。";
+  }
+  if (/used Excel|Excel.{0,20}功能|工具类描述|实际分析能力/i.test(text)) {
+    return "你这条 Excel 不能只写 used Excel。要写清楚用了什么功能、做了什么分析，工具名才会变成数据分析能力的证据。";
+  }
+  if (/PRD|Figma|产品类岗位|产品工作方式|执行力/i.test(text)) {
+    return "你这段 PM 经历要把 PRD、Figma 和跨团队协作写成具体工作方式。工具不是重点，重点是它们证明你真的按产品流程推进过。";
+  }
+  if (/模糊的action|follow-up|用了什么工具|怎么分析|framework|结构化思维/i.test(text)) {
+    return "你这条要先把 action 写具体。工具、分析方法、framework 这些细节自己先讲清楚，面试追问时才不会被动。";
+  }
+  if (/两分钟|2分钟|快速glance|第一条bullet|high level understanding|准备问题/i.test(text)) {
+    return "你要假设面试官开场只会快速 glance 两分钟。第一条 bullet 先给结论，后面再用关键词和数字帮对方形成 high level understanding。";
+  }
+  if (/学校合作|实习项目|企业项目经验|自主投递外部实习/i.test(text)) {
+    return "学校合作的实习项目可以写得更有策略。它不只是机会来源，更能证明你有真实企业项目经验，比空泛投递经历更有说服力。";
+  }
+  if (/数据设计决策|收集什么数据|从哪里获得|业务理解力|差异化亮点/i.test(text)) {
+    return "数据项目别只写用了什么工具。收集什么数据、从哪里来、为什么这样设计，反而更能体现你的业务理解力。";
+  }
+  if (/付费引流|Google Ads|社媒广告|网红营销|influencer marketing/i.test(text)) {
+    return "电商 marketing 可以先抓两个方向：付费引流和 influencer marketing。Google Ads、社媒广告这些实操信号，比泛泛写 marketing 更清楚。";
+  }
+  if (/工具\/方法 \+ 行动|streamlined X process|可解释的成果|bullet point应遵循/i.test(text)) {
+    return "这条 bullet 可以按工具/方法、行动、结果来写。即使没有百分比，也要用 streamlined process 这类真实、可解释的成果撑住。";
+  }
+  if (/PE行业|AUM|平台层级|公司规模的核心指标/i.test(text)) {
+    return "你这条 PE 经历要把 AUM 补出来。AUM 是判断平台层级的核心指标，缺了它，HR 会很难快速理解这段经历的分量。";
+  }
+  if (/scalable|production-grade|high-performance|技术形容词|具体技术栈|抽象描述/i.test(text)) {
+    return "你这里别只放 scalable、production-grade 这类形容词。要用具体技术栈、关键词、数据或实现细节撑住，不然面试一追问会很虚。";
+  }
+  if (/A\/B test|z-score|hypothesis testing|statistical analysis|统计方法/i.test(text)) {
+    return "你这条数据分析经历要把统计方法写具体。A/B test、z-score、hypothesis testing 要对上 JD，比泛泛写 statistical analysis 更能同时过 ATS 和技术筛选。";
+  }
+  if (/职位池|DA\/Marketing\/PM|投科技公司|咨询公司|灵活组合经历/i.test(text)) {
+    return "你可以把科技行业当成更大的职位池。同一技能背景能拆成 DA、Marketing、PM 等版本，但每版都要只服务一个方向。";
+  }
+  if (/新增用户数|销售增长|识别率提升|impact|实际贡献|量化指标/i.test(text)) {
+    return "你这条要把 impact 放到最前面。新增用户、销售增长、识别率提升这类数字，能让 HR 更快判断你的实际贡献。";
+  }
+  if (/partner with stakeholder|业务-数据|桥接能力|DA\/BI|转化逻辑/i.test(text)) {
+    return "你这条不能只写 partner with stakeholder。要把业务问题怎么转成数据分析讲清楚，这才是 DA/BI 岗很在意的桥接能力。";
+  }
+  if (/analyst类岗位|data analyst|business analyst|product analyst|单一title|广撒网投递/i.test(text)) {
+    return "你不用被单一 title 卡住。Data analyst、business analyst、product analyst 在互联网公司核心技能很接近，可以广撒网但简历版本要对焦。";
+  }
+  if (/全部技能准备齐全|错失机会|缺口技能|投递过程中持续补充|高度匹配/i.test(text)) {
+    return "你不用等技能全满才开始投。先投高度匹配的岗位，缺口技能边投边补，机会窗口比完美准备更重要。";
+  }
+  if (/冷门技术栈|主流框架|无法触发匹配/i.test(text)) {
+    return "你这里要把冷门技术栈翻译成主流框架能理解的信号。HR 和面试官更熟主流框架，匹配和评估都会更快。";
+  }
+  if (/Logistic regression|预测转化概率|建模语言/i.test(text)) {
+    return "你这条可以把 VLOOKUP 的业务操作升级成建模语言。Logistic regression 和转化概率预测一写出来，数据岗信号会强很多。";
+  }
+  if (/医药行业|垂直行业知识|DS求职|数据分析能力|行业经历转化/i.test(text)) {
+    return "你这段医药分析经历其实有价值。重点是把垂直行业知识和数据分析能力连起来，让它看起来是在支撑 DS，而不是只像行业经历。";
+  }
+  if (/Power BI|TB\s*级|历史数据处理|会用.*用好|复杂场景/i.test(text)) {
+    return "Power BI 这条不要只写会用。TB 级数据接入、历史数据处理这类复杂场景要写出来，才像真的用好，而不是只点过工具。";
+  }
+  if (/业务损失|风险规模|实际业务影响|技术操作本身|金额不大/i.test(text)) {
+    return "你这里要把技术动作接到业务影响。哪怕金额不大，只要能说明损失、风险规模或改进幅度，就比只写操作更有力。";
+  }
+  if (/技能栏贵精不贵多|列出不熟悉的技能|集中展示强项|暴露弱点/i.test(text)) {
+    return "你这栏 Skills 贵精不贵多。不熟的技能别硬列，集中展示真正能被追问的强项，可信度会比堆满更高。";
+  }
+  if (/LinkedIn|linkedin|自定义URL|乱码|特定城市|外地雇主|只考虑该地区/i.test(text)) {
+    return "你这里的地点和 LinkedIn 要写得干净。城市别把自己锁死在一个地区，LinkedIn URL 也要整理成专业、可点击的样子。";
+  }
+  if (/咨询类简历|consulting project|项目工作内容|问题分析|数据支撑|客户沟通|任务清单/i.test(text)) {
+    return "你这段咨询经历别只写职位名称。问题分析、数据支撑、客户沟通这些核心技能要落到具体项目任务里，实习任务清单就是很好的还原线索。";
+  }
+  if (/C\/C\+\+|操作系统编程|embedded|嵌入式|硬件\/系统|硬件系统|物理背景/i.test(text)) {
+    return "你如果投硬件/系统方向，别只写泛泛技能。C/C++、操作系统编程、嵌入式这些细分背景要说清楚，物理背景里的相关接触也可以变成证据。";
+  }
+  if (/Solution Architect|稀缺组合|云证书|Ray\s*\+?\s*大模型|Ray 加大模型/i.test(text)) {
+    return "这条不是普通证书问题。Solution Architect 只能证明一部分，Ray 加大模型才是更稀缺的组合，简历里要把这个差异化放出来。";
+  }
+  if (/(?:LLM|大语言模型|ChatGPT|多模态|图像|音频|视频|传统模型迁移|LLM架构|LLM 架构)/i.test(text)) {
+    return "你这里别只写泛 AI。LLM 现在不只是文本模型，多模态输入和传统模型往 LLM 架构迁移，都可以写成方向判断和技能准备。";
+  }
+  if (/暑期实习|summer intern|提前一年|8\s*[-–~至到]\s*9\s*月|Career Fair|春招|招募窗口|黄金窗口/i.test(text)) {
+    return "你要把美国科技公司暑期实习节奏抓早。8-9 月 Career Fair 往往就在抢次年 summer intern，春招再开始准备会明显被动。";
+  }
+  if (/ML model|generalizability|overfit|过拟合|关键词匹配|同类JD|同类 JD/i.test(text)) {
+    return "你可以把 ATS 想成一个 ML model 式的关键词匹配系统。简历要对同类 JD 有 generalizability，不要过拟合某一份 JD 到换个岗位就失效。";
+  }
+  if (family === "resume_versioning") {
+    if (/[5五]\s*份/.test(text) && /1\s*(?:至|到|-|~)\s*2|1\s*[-~]\s*2|一\s*(?:至|到)\s*两/.test(text)) {
+      return "你不用一下做 5 份简历，反而容易散。先收成 1-2 个最有把握的版本，每版只服务一个清楚的目标岗位。";
+    }
+    if (/一份简历|通用版|多个方向|混合多个方向/.test(text)) {
+      return "你不是没有材料，是一份简历同时想服务太多方向。建议先拆成 1-2 个版本，让每一版都能一眼看出目标岗位。";
+    }
+  }
+  if (family === "portfolio") {
+    if (/demo|Demo|美术粗糙|可运行|游戏|game/i.test(text)) {
+      return "你这个方向最好别只靠文字说项目，能跑起来的 Demo 会更有说服力。哪怕美术还粗糙，也能证明你真的把东西做出来了。";
+    }
+    if (/内容营销|社交媒体|创意|作品集|portfolio/i.test(text)) {
+      return "创意或内容类岗位很吃作品证据。你可以先放最能代表产出的作品集链接，让对方不用只靠文字想象你的能力。";
+    }
+  }
+  if (family === "skills_frontload") {
+    if (/在校生|学生|student|经验不长|工作经历/.test(text)) {
+      return "如果你还是学生或经验不长，技能可以适当前置。不是因为经历不重要，而是先让 HR 看到你和这个岗位有基本准备。";
+    }
+  }
+  if (/顶部信息|名校|高学历|新毕业生/.test(raw)) {
+    return "如果你的学校或学历背景强，别让它埋太深。这类顶部信息适合放到更容易被扫到的位置，先建立第一印象。";
+  }
+  if (/控制在一页|一页简历|超页|跨页断裂/.test(raw)) {
+    return "这条先别急着加内容，优先把它收回一页。简历超页或跨页时，HR 很容易还没看到重点就先被阅读成本劝退。";
+  }
+  if (/地址位置|字体大小|行间距|跨页|一页|页面空间/.test(text)) {
+    return "这条不是要你重写内容，而是先把版面空间救回来。可以从地址位置、字号和行距下手，避免重点经历被跨页切开。";
+  }
+  if (/career fair|第一眼看的是skills|技术栈快速判断|技能越丰富/i.test(text)) {
+    return "Career Fair 或初筛真的会先扫 Skills。最贴 JD 的技术栈要放清楚，但后面也要接上你实际用过的经历。";
+  }
+  if (family === "data_evidence") {
+    if (/pivot|公司规模|中小规模|规模较大|excel.{0,30}marketing|marketing.{0,30}excel/i.test(text)) {
+      return "Marketing 岗不用一律堆很重的数据工具。可以按目标公司规模取舍：中小公司突出 Excel、pivot table、vlookup，大公司再补更完整的分析工具。";
+    }
+    if (/window function|刷题|系统复习/i.test(text)) {
+      return "SQL 这块别只写会用，要补到能解释使用场景，也把 window function 这类高频点系统复习到面试能接住。";
+    }
+    if (/price elasticity|促销效果|沃尔玛|costco/i.test(text)) {
+      return "这条很适合把渠道和数据场景写出来。像 Walmart、Costco 这类渠道里的 price elasticity、促销效果分析，会让 marketing 背景更像岗位优势。";
+    }
+    if (/var|stress testing|credit risk|regression model/i.test(text)) {
+      return "金融风险这块要把术语写准。VaR、stress testing、regression model 这些词能把方向对到 credit risk，而不是只写泛金融。";
+    }
+    if (/业务决策|业务影响|可复现|持续使用|stable.{0,8}metrics|metrics.{0,8}stable|business decision|reproducible/i.test(text)) {
+      return "数据岗这里不要只强调模型复杂度。业务决策、可复现流程和 stable metrics 要写出来，让项目更像能持续使用的分析成果。";
+    }
+  }
+  if (/cross-functional|跨部门协作|文化适配|协作能力/i.test(text)) {
+    return "这条不要只写成软技能口号。cross-functional collaboration 要放回具体项目里，写清楚你和哪些团队协作、推动了什么结果。";
+  }
+  if (/非主流平台|自媒体|雇主知名度|公司知名度|知名度不高/i.test(text)) {
+    return "公司或平台名气不大时，不要急着删经历。可以补一句背景和实际工作内容，让数据分析、内容运营这些可量化产出被看见。";
+  }
+  if (/debug|prototype|医疗器械|硬件|实操能力/i.test(text)) {
+    return "硬件或医疗器械岗位很看实操。test、debug、prototype 这些动手证据要写进经历里，别让它看起来只有理论分析。";
+  }
+  if (/reframing|客户视角|内部项目|服务性|交付性|合理重新框架/i.test(text)) {
+    return "内部项目不是不能写，重点是换成客户或业务视角来讲。建议保留真实内容，但把服务对象、交付物和业务目标说清楚。";
+  }
+  if (/动态更新|两周|最新背景|新工作经历|最新实习/i.test(text)) {
+    return "这条提醒很实用：新经历不用等到结束才写。做了两周左右就可以先提炼职责和初步成果，让简历保持和目标岗位同步。";
+  }
+  if (/结构化流程|主动构思底稿|针对性批注|被动等待导师全部代劳|内化反馈/i.test(text)) {
+    return "改简历这件事不能只等别人代劳。你先主动想一版底稿，再带着问题看批注，反馈会吸收得更快。";
+  }
+  if (/Green card|无需公司提供签证担保|隐性偏见|身份标注/i.test(text)) {
+    return "Green card 这类信息可以简洁写清楚，但别指望它解决所有筛选偏见。重点还是让经历本身先站得住。";
+  }
+  if (/版面空白过多|内容单薄|bullet point数量|不增加内容|视觉效果/i.test(text)) {
+    return "版面空白太多时，先调整 bullet 数量和字数分配。不是硬加内容，而是别让简历第一眼显得材料很薄。";
+  }
+  if (/无法区分项目和正式工作|项目和正式工作|非传统行业|职能语言/.test(text)) {
+    return "这条要先把经历性质讲清楚。项目、正式工作或非传统行业经历都能用，但要改成目标岗位听得懂的职能语言。";
+  }
+  if (/soft skill|hard skill|communication|洞察输出/i.test(text)) {
+    return "金融类岗位不要只列工具，也别只写沟通能力。Python、Tableau 这类 hard skill 可以和跨团队洞察输出放在同一条证据里。";
+  }
+  if (/相关性最弱|稀释整体印象|篇幅有限|主动删除/.test(text)) {
+    return "简历不是把所有东西都塞进去。先删掉相关性最弱的条目，把篇幅留给最能支撑目标岗位的经历。";
+  }
+  if (/先总后分|首句给出量化成就|钩子|逐步拆解|分析思路/.test(text)) {
+    return "这条 bullet 可以先总后分：第一句先给量化成果当钩子，后面再拆方法和分析思路，读起来会更顺。";
+  }
+  if (/加粗关键词|强制引导视线|想不被看到都难|只扫title/i.test(text)) {
+    return "如果对方只快速扫 title 和关键词，加粗就要用得有策略。最重要的技术词可以标出来，让它不容易被跳过。";
+  }
+  if (/结构化的bullet|做了什么、用什么工具、产生什么结果|缺少技术工具和量化影响/.test(text)) {
+    return "这条不是要堆更多内容，而是把 bullet 结构补完整：做了什么、用了什么工具、产生什么结果，要让人一眼看出深度。";
+  }
+  if (/具体算法|预测任务|特征规模|模型名称|四元组|ML相关/i.test(text)) {
+    return "ML 项目别只写模型很强。模型名称、预测任务、特征规模和量化结果要放成一组，让技术能力更具体。";
+  }
+  if (/行动.*结果.*影响|学习放最后|能做什么、带来什么价值/.test(text)) {
+    return "这条要从学习过程改成工作价值。建议按行动、结果、影响的顺序写，学习内容放后面，不要抢走成果的位置。";
+  }
+  if (/Series\s*7|Series\s*66|FINRA|wealth management|stock trading|硬性资质/.test(text)) {
+    return "金融前台岗这条不能只靠关键词补。Series 7、Series 66 这类 FINRA 证照如果是硬门槛，要先确认要求，再决定简历怎么交代。";
+  }
+  if (/消费者研究|付费增长|广告投放ROI|营销漏斗|Marketing analyst/i.test(text)) {
+    return "Marketing analyst 不是一个方向。先分清你更像消费者研究，还是付费增长分析，再把经历往对应的指标和场景上靠。";
+  }
+  if (/谷歌|Meta|Doordash|Instacart|用人团队|技术栈匹配|入组完全分离/i.test(text)) {
+    return "大厂和中型公司的筛法不一样。Google、Meta 和 DoorDash、Instacart 要分开看，后者更容易让用人团队盯技术栈匹配度。";
+  }
+  if (/Tableau|可视化场景|课程实操|实际产出|项目\/经历背书/i.test(text)) {
+    return "Tableau 不要只停在 Skills 里。它最好接到课程实操或项目产出上，写清楚可视化场景和你做出的东西。";
+  }
+  if (/raw data|拿到数据|产出洞见|完整的数据分析场景|DA岗位/i.test(text)) {
+    return "DA 项目要像一条完整链路：从 raw data 出发，做分析，再产出洞见。只罗列技能，不如讲清楚你怎么解决业务问题。";
+  }
+  if (/美国电话|直接致电|沟通障碍|被联系的概率|安排面试/.test(text)) {
+    return "联系方式这块别小看。美国电话会影响 HR 能不能快速联系你，尤其是初筛沟通或安排面试时，少一个入口就多一层阻力。";
+  }
+  if (family === "education") {
+    if (/GPA|scale|4\.0|评分|字母制/i.test(text)) {
+      return "GPA 或评分制别让对方猜。scale 要写清楚，用招聘方熟悉的方式呈现，避免好成绩被读不出来。";
+    }
+  }
+  return "";
+}
+
+function detailAwareHrTemplate(family, rawSource = "", item = {}, context = {}) {
+  const text = [
+    rawSource,
+    item.hrPerspective,
+    item.HR_os,
+    item.title,
+    item.problemSummary,
+    item.currentDiagnosis,
+  ].filter(Boolean).join(" ");
+  if (/兴趣爱好栏|hiking|看电影|面试破冰|记忆点/i.test(text)) {
+    return "兴趣栏我会看有没有记忆点；只有普通爱好帮助不大，有具体数据或特别经历才比较容易留下印象。";
+  }
+  if (/设计岗位|作品集链接|设计解决方案|关键评估材料/i.test(text)) {
+    return "设计岗我会直接找作品集链接；没有可访问作品集时，设计解决方案就很难被完整评估。";
+  }
+  if (/背调公司不会直接使用简历时间|背调表|毕业证书日期|简历时间模糊化|背调如实填写/i.test(text)) {
+    return "我会把背调表和毕业证书日期当正式核验口径；简历时间可以简化，但前后不一致要能解释清楚。";
+  }
+  if (/sponsorship|无需担保|HR筛选阶段|ATS层面|中小公司|初创公司|成本和风险/i.test(text)) {
+    return "我初筛会很快看 sponsorship 要求；如果明确不需要sponsor，ATS 和中小公司 HR 都更容易继续推进。";
+  }
+  if (/技术关键词会传递求职方向信号|技术栈判断候选人定位|与目标岗位不符的高级工程技术|认知混乱/i.test(text)) {
+    return "我会用技术关键词判断候选人定位；高级工程技术如果偏离目标岗位，会让我怀疑投递方向不清。";
+  }
+  if (isDaToneContext(context) && /DA简历的bullet point|岗位JD中要求的技能点|按技能维度分拆|时间顺序叙事|关键词覆盖密度/i.test(text)) {
+    return "我会按 JD 技能点扫 DA bullet；如果只按时间线叙事，匹配信号会变慢，关键词覆盖也不够集中。";
+  }
+  if (isDaToneContext(context) && /DA实习经历|技术工具链的各个环节|完整的DA工作流能力|DA工作流/i.test(text)) {
+    return "DA 实习我会看工具链是否完整；取数、清洗、分析、可视化缺一段，都会影响我判断实操能力。";
+  }
+  if (isDaToneContext(context) && /DA和DS简历|DA和DS简历的关键词体系|DA和DS简历侧重点|DA简历需突出.*DS简历才需要|DA强调数据查询、可视化、业务协作|用错简历版本/i.test(text)) {
+    return "DA 初筛我会找查询、清洗、可视化和业务协作关键词；如果写成 DS 技术栈，很容易被判断为方向不匹配。";
+  }
+  if (isDaToneContext(context) && /同一份工作内容|不同技术栈的语言|分析师视角|从哪里取数|如何清洗|如何整合|底层传输架构/i.test(text)) {
+    return "我会看这段是否像 DA 工作：取数、清洗、整合要清楚；只讲传输架构，会让我误判成 DE 或 DS。";
+  }
+  if (isDaToneContext(context) && /Kafka|误认为你在求DE\/DS|求DE|求DS|目标岗位精准匹配技术栈/i.test(text)) {
+    return "看到 Kafka 这类技术关键词时，我会先判断你是不是投 DE/DS；如果目标是 DA，技术栈太偏会拖累定位。";
+  }
+  if (/职位名称的标准化|Software Engineer Intern|行业通用的标准名称|ATS系统.*title/i.test(text)) {
+    return "标准 title 我会直接拿来和岗位筛选条件对；像 Software Engineer Intern 这种通用名称，比自创 title 更不容易被系统误判。";
+  }
+  if (/Job Title|Title在目标市场认知度低|定位判断|简历被忽视/i.test(text)) {
+    return "我第一眼会先看 title 是否对得上目标岗位；title 太冷门或不标准时，ATS 和人工都会更容易误判。";
+  }
+  if (/IPO客户|三年历史财务复核|内控审计.*SOC|IT cycle|revenue cycle|普通engagement/i.test(text)) {
+    return "审计经历我会看项目复杂度；三年历史财务、SOC、IT cycle 和 revenue cycle 写出来，资历层级才清楚。";
+  }
+  if (/经历数量有限|差异化价值|重复工具|相似职能|技能覆盖最独特/i.test(text)) {
+    return "我会看每段经历是否提供不同证据；内容太重复时，版面占了，判断价值却没有增加。";
+  }
+  if (/保密客户|American auto mobile company|行业\+地区|专业又合规/i.test(text)) {
+    return "咨询经历我可以接受保密写法；行业加地区说清楚时，既合规，也能判断项目背景。";
+  }
+  if (/NLP项目|基础NLP功能|NLP文本处理/i.test(text)) {
+    return "NLP 项目我会看是否能产生商业 insight；只做基础文本处理，区分度会比较弱。";
+  }
+  if (/SQL、Python|不提工具|具体技术关键词|数据岗位的技术能力无法被识别/i.test(text)) {
+    return "数据岗初筛我会先扫 SQL、Python 这些具体技术词；只写业务动作，会让我很难判断技术匹配度。";
+  }
+  if (/企业背调一般只验证|付费线上实习|Project形式|合规边界/i.test(text)) {
+    return "付费线上实习我会看呈现方式是否合规；写成 Project 可以，但不能让我误以为是正式雇佣。";
+  }
+  if (/background check|技能描述有一定调整空间|不会核查具体工作内容|Work Experience/i.test(text)) {
+    return "Work Experience 我会默认可被 background check 验证；技能描述可以调整，但栏位误导会直接伤可信度。";
+  }
+  if (/简历上的LinkedIn链接|自定义URL|便于HR快速访问/i.test(text)) {
+    return "我会把 LinkedIn URL 当成第一印象细节；链接干净可访问，会降低背景确认成本。";
+  }
+  if (/跨渠道.*ins.*YouTube|channel effectiveness|广告素材|严格意义上的AB测试/i.test(text)) {
+    return "看到跨渠道对比时，我会更倾向判断为 channel effectiveness；如果写成严格 A/B test，我会追问变量是否真的可控。";
+  }
+  if (/技能列表堆砌不相关工具|形同虚设|经历背书|方向不清晰/i.test(text)) {
+    return "Skills 堆太散时，我会怀疑候选人方向不清楚；每个技能最好能在经历里找到对应证据。";
+  }
+  if (/极短时间内理解候选人做了什么|用了什么方法|产出了什么结果|描述散乱/i.test(text)) {
+    return "项目描述我会先抓做了什么、方法是什么、结果是什么；三件事散开时，实际能力会很难判断。";
+  }
+  if (/工作逻辑链：分析→优化→结果|完整流程|实际能力/i.test(text)) {
+    return "工作经历我会看分析、优化、结果有没有连起来；链条断掉时，只能按零散执行动作来判断。";
+  }
+  if (/内部意见收集|用户问卷|customer-facing|internal|同一链条/i.test(text)) {
+    return "如果 internal 工作能转成 customer-facing 逻辑，我会更容易相信 impact；只写内部流程会比较弱。";
+  }
+  if (/LinkedIn链接已成为北美求职简历标配|信息不透明|不够专业/i.test(text)) {
+    return "LinkedIn link 缺失时，我会觉得背景信息不够透明；干净可访问的链接能降低确认成本。";
+  }
+  if (/多样化经历|不同维度的能力|重复类型的经历/i.test(text)) {
+    return "我会看几段经历是不是各自提供新证据；类型太重复时，篇幅增加了，候选人画像却没有变清楚。";
+  }
+  if (/简历不要求所有项目都已完成上线|发现问题|参与设计|推动自动化|流程优化意识/i.test(text)) {
+    return "项目没完全上线我可以接受；我会看发现问题、参与设计和推动自动化这些过程有没有体现流程优化意识。";
+  }
+  if (/Power BI.*Office|PL300|微软官方认证|管理层.*可视化|高性价比/i.test(text)) {
+    return "Power BI 和 PL300 我会当成清楚的能力信号；管理层能读懂的可视化证据，也会让我更快判断商业呈现能力。";
+  }
+  if (/母简历|收录所有经历|最匹配的子集|多目标岗位|多份简历版本/i.test(text)) {
+    return "我会看这一版是不是专门服务当前岗位；母简历素材可以多，但投出来的版本必须像被筛选过。";
+  }
+  if (/持续迭代|不同阶段.*不同JD|掌握方法论|一次性修改成果|长期价值/i.test(text)) {
+    return "我会看简历有没有随 JD 调整；一直用同一版，会让我怀疑候选人没有认真对齐岗位。";
+  }
+  if (/模型做了什么|结果如何|最基本的逻辑|写上去就代表你懂|面试官追问/i.test(text)) {
+    return "看到模型相关描述，我会追问基本逻辑和结果；讲不清楚时，会怀疑这段是不是写过头。";
+  }
+  if (/官方职位名称|reframing|重新框架|岗位叙事/i.test(text)) {
+    return "我会看 title 背后的实际工作内容；如果叙事能对上目标岗位，即使官方职位名不完全一致也能继续评估。";
+  }
+  if (/跑了多少地点|采访了多少用户|量化执行细节|早期经历|工作规模和影响力/i.test(text)) {
+    return "早期经历我也会看执行规模；地点数、用户访谈数这类数字能让我更快判断工作量。";
+  }
+  if (/LinkedIn的experience描述|猎头评估|主页吸引力|主动联系|简单的职位名称/i.test(text)) {
+    return "LinkedIn experience 空白时，我会少一个判断背景的入口；只放职位名也不太能吸引猎头继续看。";
+  }
+  if (/LinkedIn|linkedin|自定义URL|乱码|特定城市|外地雇主|只考虑该地区/i.test(text)) {
+    return "我会用地点和 LinkedIn 快速判断联系与背景可信度；链接乱码或地点信号太窄，都会增加不确定感。";
+  }
+  if (/咨询类简历|consulting project|项目工作内容|问题分析|数据支撑|客户沟通|任务清单/i.test(text)) {
+    return "咨询经历我会看具体项目内容；只有职位名，没有问题分析、数据支撑或客户沟通证据，很难判断咨询能力。";
+  }
+  if (/C\/C\+\+|操作系统编程|embedded|嵌入式|硬件\/系统|硬件系统|物理背景/i.test(text)) {
+    return "系统或硬件方向我会看 C/C++、OS、嵌入式证据；只有泛技能时，很难判断是不是这条赛道的人。";
+  }
+  if (/Solution Architect|稀缺组合|云证书|Ray\s*\+?\s*大模型|Ray 加大模型/i.test(text)) {
+    return "如果候选人同时懂 Ray 和大模型，我会把它当成更稀缺的信号；只有常见云证书，区分度会弱一些。";
+  }
+  if (/Ray专注于非结构化数据|OpenAI|阿里巴巴|腾讯|百度|字节|学校几乎不教|求职市场稀缺/i.test(text)) {
+    return "Ray 我会当成 JD 里的稀缺核心技能看，尤其是非结构化数据的分布式计算；只写泛 AI 就很难体现差异。";
+  }
+  if (/LoRA|Stable Diffusion|inpainting|完整模型名称|具体工具或模型/i.test(text)) {
+    return "AI 项目我会看具体工具和模型名；LoRA、Stable Diffusion v2 inpainting 写清楚，比泛泛说用了模型可信很多。";
+  }
+  if (/(?:LLM|大语言模型|ChatGPT|多模态|图像|音频|视频|传统模型迁移|LLM架构|LLM 架构)/i.test(text)) {
+    return "AI 岗我会看你是不是跟上 LLM 和多模态趋势；只写传统模型，可能显得方向更新不够快。";
+  }
+  if (/暑期实习|summer intern|提前一年|8\s*[-–~至到]\s*9\s*月|Career Fair|春招|招募窗口|黄金窗口/i.test(text)) {
+    return "我会看候选人有没有踩准实习招募窗口；错过 8-9 月的大厂节点，后面被团队看到的机会会少很多。";
+  }
+  if (/Experience栏默认代表正式雇佣关系|混入课程项目|实际工作经验产生误判/i.test(text)) {
+    return "Experience 栏我会默认是正式雇佣或实习；课程项目混进去，会让我重新判断这段经历到底算不算工作经验。";
+  }
+  if (/background check|正式雇佣|非正式实习|Work Experience栏|信任风险/i.test(text)) {
+    return "Work Experience 我会默认可被 background check 验证；非正式项目放进来，会让我先担心经历真实性和栏位是否准确。";
+  }
+  if (/第一眼就判断出.*目标方向|标题、Summary、技能顺序|共同服务于同一个岗位定位/i.test(text)) {
+    return "我第一眼会看标题、Summary、技能排序和前几条经历是不是指向同一岗位；不一致时，很容易被当成通用版。";
+  }
+  if (/circuit design|logic design|硬件工程|同一份简历广泛投递/i.test(text)) {
+    return "硬件岗我会区分 circuit design 和 logic design；方向写准时，同一份简历投同类岗位反而更有效。";
+  }
+  if (/Analytics岗位|Tableau.*Excel.*SQL|月度dashboard|行业标配技能/i.test(text)) {
+    return "Analytics 岗我会找 Tableau、Excel、SQL 和 dashboard 证据；这些工具缺失或没有场景，匹配感会明显变弱。";
+  }
+  if (/顶级投行|投行实习|orientation|收尾presentation|1\s*[-–~至到]\s*2\s*周|实际动手时间极短/i.test(text)) {
+    return "投行实习我不会只看公司名；如果实际动手时间很短，我会更看这段市场分析到底被你讲得多扎实。";
+  }
+  if (/转码|项目来源渠道|技术覆盖度|全栈|功能实现|技术选型/i.test(text)) {
+    return "转码项目我会看全栈覆盖、功能实现和技术选型；项目来源不关键，关键是面试追细节时能不能讲清楚。";
+  }
+  if (/RAG|policy文档|内部员工查询|业务场景|用户痛点/i.test(text)) {
+    return "RAG 项目我会看它解决谁的问题；内部员工查 policy 文档这种场景，比单独写 RAG 系统更容易判断价值。";
+  }
+  if (/每个步骤的具体实现方式|技术细节写清楚|通过ATS|基础问题|系统性思维/i.test(text)) {
+    return "技术描述写清楚时，我会更相信候选人真的做过；只写大词但没有实现步骤，ATS 过了也容易在面试掉分。";
+  }
+  if (/仅描述参与行为|参与行为的bullet|结构化的分析过程|实际能力与思维方式/i.test(text)) {
+    return "只写参与行为时，我很难判断能力；看到结构化分析过程，才比较像能独立思考和推进。";
+  }
+  if (/纯点选|下载|导出|机械操作|操作步骤|分析过程|业务价值/i.test(text)) {
+    return "如果经历只停在点选、下载、导出，我会把它当成低技术含量操作；看到分析过程和业务价值才会继续评估深度。";
+  }
+  if (/publication|同一项目|同一研究|不同产出|整合在同一条目|单独列项/i.test(text)) {
+    return "研究经历我会一起看过程和产出；publication 单独飘出来时，反而不如放回对应研究里容易判断贡献。";
+  }
+  if (/market方向实习生|marketing research|统计分析类课程|课程名称不完全对口/i.test(text)) {
+    return "Market 实习我会看有没有 marketing research 或统计分析训练；课程不完全同名没关系，能补方向信号就有用。";
+  }
+  if (/课程顺序|不同职能方向|GPA和相关课程|学术实力与岗位匹配度/i.test(text)) {
+    return "在校生我会看 GPA 和课程是否服务目标方向；课程顺序调整得好，能更快看到岗位匹配信号。";
+  }
+  if (/低 GPA|不写不会被追问|写出反而形成减分|教育背景中少数可量化/i.test(text)) {
+    return "GPA 我会当成快速量化信号；高 GPA 加分，低 GPA 如果硬放出来，第一眼反而会拖弱学术印象。";
+  }
+  if (/education是招聘方筛选的第一要素|work experience权重次之|Education放顶部|金融行业应届生|target school/i.test(text)) {
+    return "金融应届生我会先扫 Education、target school 和 GPA；这个顺序能更快判断基本背景，再看实习经历。";
+  }
+  if (/GPA|target school|高 GPA|低 GPA|Education放顶部|金融行业应届生|教育背景中少数可量化/i.test(text)) {
+    return "应届生我会很快扫 Education、target school 和 GPA；高 GPA 是加分信号，低 GPA 硬放反而会拖第一印象。";
+  }
+  if (/线性回归|基础ML|ML技能|ATS机筛|模型逻辑|口头解释模型/i.test(text)) {
+    return "数据分析岗我会找基础 ML 和模型逻辑证据；线性回归这类词缺失，ATS 和人工初筛都会比较保守。";
+  }
+  if (/BA简历|每一条bullet point|紧扣岗位JD|稀释简历焦点|定位不清晰/i.test(text)) {
+    return "BA 简历我会看每条 bullet 是否贴 JD；不相关技术内容太多，会让我怀疑候选人的定位不够清楚。";
+  }
+  if (/动词的选择|ownership等级|based on|主导者还是执行者|精准动词/i.test(text)) {
+    return "我会从动词判断 ownership；based on 这类模糊词会让我追问你到底是主导、协作还是只执行一小段。";
+  }
+  if (/environment artist|环境模型|关卡布局|行业标准术语|专业方向/i.test(text)) {
+    return "游戏岗位我会先看 title 是否是行业听得懂的词；environment artist 这类标准名称能减少误判。";
+  }
+  if (/跨方向投递|数据分析类岗位ATS|直接被系统过滤/i.test(text)) {
+    return "数据分析版我会先扫 Python、SQL、Machine Learning；这些 ATS 高频词缺失时，很容易在第一轮就被过滤。";
+  }
+  if (/金融数据类岗位JD|所需工具|ATS会匹配关键词|面试前针对性复习/i.test(text)) {
+    return "金融数据岗我会先扫 JD 里的工具关键词；该出现的词没有，ATS 和人工初筛都会很难放心推进。";
+  }
+  if (/广告预算|awareness|触达量|转化类|渠道\/KOL|带单量|投放衡量/i.test(text)) {
+    return "广告投放我会看指标是否贴目标；awareness 和转化类投放看的数字不同，混在一起会显得不专业。";
+  }
+  if (/教育游戏|游戏行为数据|学习路径|用户留存|Google Analytics/i.test(text)) {
+    return "教育游戏岗位我会看数据有没有接到学习路径和用户留存；Google Analytics 只有和行为场景连起来才有分量。";
+  }
+  if (/超链接在PDF|纯文本URL|行间距过大|full-time|写满一页|精准点击|复制/i.test(text)) {
+    return "PDF 链接不好复制、行距又太空时，我会觉得版面不够成熟；full-time 简历太空也会像内容不足。";
+  }
+  if (/计划课程|选课记录|在读生|列出计划课程|常见且合理/i.test(text)) {
+    return "在读生列计划课程我可以接受，但我会把它当成准备度信号，不会等同于已经完成的项目或工作经验。";
+  }
+  if (/错落有致|过于密集|过于稀疏|适中的行长|版面整洁/i.test(text)) {
+    return "排版密度会影响我读下去的耐心；太挤或太散都会降低信息抓取效率。";
+  }
+  if (/结果和影响前置|浏览简历时间极短|快速筛掉|抓住阅读者眼球/i.test(text)) {
+    return "我第一眼会先抓结果和影响；亮点藏太后面时，很容易还没读到就被筛掉。";
+  }
+  if (/敲门砖|第一印象直接决定|屡屡碰壁|不断试错和反馈/i.test(text)) {
+    return "简历第一印象会直接影响约面机会；如果投递一直没反应，我会建议先看反馈和修改节奏。";
+  }
+  if (/跑了多少地点|采访了多少用户|量化执行细节|早期经历|工作规模和影响力/i.test(text)) {
+    return "早期经历我也会看执行规模；地点数、用户访谈数这类数字能让我更快判断工作量。";
+  }
+  if (/冗余形容词|主观评价性形容词|证明能力|信息的密度|空间有限/i.test(text)) {
+    return "主观形容词太多时，我会觉得信息密度低；动作、工具和结果比自我评价更有筛选价值。";
+  }
+  if (/美国本地经历|课程project|实验室research project|纯上课经历|不写等于白上/i.test(text)) {
+    return "在读研究生我会看有没有美国本地项目信号；实验室 research project 通常比普通课程项目更有分量。";
+  }
+  if (/ensure quality|3倍以上|纯描述型.*3倍|引导讨论到候选人熟悉/i.test(text)) {
+    return "ensure quality 这种说法我会比较警惕；有数字或可验证成果时，可信度会高很多。";
+  }
+  if (/工作经历置顶|教育背景置顶|职业人身份|经验不足|结构顺序本身传递信息/i.test(text)) {
+    return "板块顺序会影响我对候选人资历的判断；工作经历置顶更像职业人，教育背景置顶更像应届生。";
+  }
+  if (/结构化流程|主动构思底稿|针对性批注|被动等待导师全部代劳|内化反馈/i.test(text)) {
+    return "我会看候选人有没有主动整理问题和吸收反馈；只等别人逐句改，通常说明自我修订能力还不够。";
+  }
+  if (/版本管理|通用版随时可发|定制版提高匹配度|草稿版|未完成内容/i.test(text)) {
+    return "如果我收到带批注或未完成内容的草稿，会直接影响专业印象；版本管理本身也是求职基本功。";
+  }
+  if (/结果和价值|完整的历史叙述|最终成果中的贡献|过程中的曲折/i.test(text)) {
+    return "我不需要完整历史叙述；我会先看最终成果里你贡献了什么，以及这个贡献有没有价值。";
+  }
+  if (/system design|第二条求职赛道|重新框架包装|无需额外积累经验/i.test(text)) {
+    return "如果经历里已有 system design 证据，我会看它能不能支撑第二条求职赛道；框架不清楚就容易被埋掉。";
+  }
+  if (/Strategy模式|Factory模式|接口\+实现|SWE标配|大量生产实践/i.test(text)) {
+    return "软件工程初筛可以接受基础设计模式放在技能栏，但面试时我会默认你能解释 Strategy、Factory 这些原理。";
+  }
+  if (/角色定位|逐条阅读小点才能判断职责|理解成本|优先寻找.*角色/i.test(text)) {
+    if (/可量化的产出|实际影响力|impact|空洞的任务罗列/i.test(text)) {
+      return "项目经历我会同时看角色、量化产出和 impact；缺了这些，整段很容易像空洞任务清单。";
+    }
+    return "项目里角色定位不清时，我要多读很多小点才知道你负责什么；这会增加筛选成本。";
+  }
+  if (/描述的粒度|太粗泛|太细|能反映关键能力|快速理解/i.test(text)) {
+    return "描述太粗我看不出专业度，太细又影响快速判断；我会更看能直接反映核心能力的粒度。";
+  }
+  if (/各板块的分类|无关的经历|分散阅读注意力|整体相关性评分/i.test(text)) {
+    return "板块分类会影响我判断背景；无关经历放太多，会分散注意力，也会降低整体相关性。";
+  }
+  if (/业务决策支持|分析结果转化为业务决策|跨团队协作经历|soft skill与业务影响力/i.test(text)) {
+    return "数据岗我会看分析有没有支持业务决策；跨团队协作如果没有接到影响力，只会像普通软技能。";
+  }
+  if (/RTL设计|Physical Design|Synthesis|芯片公司|Skyworks|方向不聚焦/i.test(text)) {
+    return "芯片岗位我会先判断候选人投 RTL、Physical Design 还是 Synthesis；方向散了，简历和面试准备都会变弱。";
+  }
+  if (/实习经历.*可验证|易回答的技能点|2个核心技能维度|展开作答/i.test(text)) {
+    return "实习经历我会追问具体技能点；如果写得太散或答不出来，可信度会比内容少一点还更危险。";
+  }
+  if (/Marketing岗位面试|叙事能力|自圆其说|逻辑清晰|经历包装/i.test(text)) {
+    return "Marketing 面试我会听故事线是否自洽；逻辑讲不顺时，再多包装也会显得风险高。";
+  }
+  if (/职位title|多种不一致|两个方向都拿不到面试|关键词和title针对性替换/i.test(text)) {
+    return "title 不一致会让我很难判断投递方向；多版本可以共用内容，但岗位名和关键词必须对齐。";
+  }
+  if (/V-Model|需求分析到测试验证|测试验证|机械\/系统工程|专业性/i.test(text)) {
+    return "机械/系统工程岗我会看完整开发链条；能覆盖需求分析到测试验证，会比单点任务更可信。";
+  }
+  if (/市场主流|格式与市场主流不一致|违和感|找不到关键信息|格式统一/i.test(text)) {
+    return "格式和市场主流差太多时，ATS 和人工第一眼都会更费劲；信息不好找，会降低进入实质评估的机会。";
+  }
+  if (/学习过程|提及mentor|学生作业|实战经验|成果与行动/i.test(text)) {
+    return "我会更看成果和行动；如果一直强调 mentor 或学习过程，会比较像课程作业，也不容易对上 JD 里的能力要求。";
+  }
+  if (/编程语言熟练度|技术面试筛选|投入产出比/i.test(text)) {
+    return "技术岗我会默认候选人能过 JD 里的基本编程筛；刷题和语言熟练度不足，后续面试风险会很高。";
+  }
+  if (/官方职位名称|reframing|重新框架|岗位叙事/i.test(text)) {
+    return "我会看 title 背后的实际工作内容；如果叙事能对上目标岗位，即使官方职位名不完全一致也能继续评估。";
+  }
+  if (/SDE岗位|编程语言只是基础门槛|framework|数据库|云服务|我会说中文/i.test(text)) {
+    return "SDE 初筛我不会只看语言名；framework、数据库和云服务能让我更快判断候选人是否能落到真实开发任务。";
+  }
+  if (/Web GIS|GIS就业市场|GIS岗位|缺少该技能/i.test(text)) {
+    return "GIS 岗我会特别看 Web GIS；这个技能缺失时，即使有 GIS 背景，岗位匹配感也会弱很多。";
+  }
+  if (/sustainability|ESG|city officials|residents|外部方协作|stakeholder场景/i.test(text)) {
+    return "ESG 岗我会看外部协作证据；city officials 和 residents 这种 stakeholder 场景写清楚，会比泛泛协作更可信。";
+  }
+  if (/第一个bullet point|第一句话抓到重点|定锚|快速扫描/i.test(text)) {
+    return "我快速扫简历时会先看第一条 bullet；第一句话如果没有定住重点，后面内容很容易被降权。";
+  }
+  if (/部署平台|端到端系统|工程化能力|模型\/脚本实际落地|实际落地/i.test(text)) {
+    return "端到端项目我会看部署平台和落地方式；只写模型或脚本，工程化能力还不够好判断。";
+  }
+  if (/Web相关的岗位数量|C\+\+等额外技术栈|机会池|增加投递数量/i.test(text)) {
+    return "我会把 Web 技术栈当成主要机会池，再看 C++ 这类额外技能能不能打开不同岗位入口。";
+  }
+  if (/Risk部门|市场风险|信用风险|中台风控|金融量化|分析类专业/i.test(text)) {
+    return "金融 Risk 岗我会区分市场风险、信用风险和中台风控；方向写清楚，专业背景才更容易被匹配到合适团队。";
+  }
+  if (/金融风险管理|MFE|量化模型|模型关键词|技术背景/i.test(text)) {
+    return "金融风险/MFE 初筛会看量化模型关键词；模型名不清楚时，我很难判断技术背景是否够用。";
+  }
+  if (/Nielsen|大型快消|market research|心理学|社会学|受众细分|消费行为洞察/i.test(text)) {
+    return "Market research 岗我会看受众细分和消费行为洞察；心理学、社会学背景在 Nielsen 这类渠道里是相关信号。";
+  }
+  if (/physical design|bring up|板级测试|纯嵌入式|软硬件调试|芯片组/i.test(text)) {
+    return "嵌入式初筛我会区分 physical design、bring up 和板级测试；方向混在一起时，很难判断你适合哪类团队。";
+  }
+  if (/recommendation|SQL monkey|Excel monkey|策略思维|分析师越往后/i.test(text)) {
+    return "分析师经历我会看有没有 recommendation；只有 SQL 或 Excel 操作，很容易被判断成执行型而不是策略型。";
+  }
+  if (/课程顺序|不同职能方向|GPA和相关课程|学术实力与岗位匹配度/i.test(text)) {
+    return "在校生我会看 GPA 和课程是否服务目标方向；课程顺序调整得好，能更快看到岗位匹配信号。";
+  }
+  if (/强行动动词|participate|主动性|主导角色|边缘角色/i.test(text)) {
+    return "我会从动词判断角色强弱；participate 这类词会让我倾向认为候选人只是边缘参与。";
+  }
+  if (/deal经验|purchase price|交易类型|交易规模|真实deal/i.test(text)) {
+    return "金融简历我会找真实 deal、purchase price 和交易类型；这些细节缺失时，经历分量会比较难判断。";
+  }
+  if (/结构化自我梳理|口头叙述|完整还原|筛选提炼|遗漏亮点/i.test(text)) {
+    return "经历讲得散时，我会很难抓亮点；先完整还原再提炼，能减少遗漏，也更像成熟的简历材料。";
+  }
+  if (/净资产乘以行业调节系数|信用评级得分|金融信贷|风险量化评估|具体评估维度/i.test(text)) {
+    return "信贷风险岗我会看具体评估维度；净资产调节系数、信用评级得分这类细节，比参与风险评估更能判断深度。";
+  }
+  if (/共性技能栈|特性工具要求|SQL|Python|初筛通过率/i.test(text)) {
+    return "初筛我会先扫 JD 核心技能；SQL、Python 这类共性技能和岗位特定工具都要有，缺一块都会影响推进。";
+  }
+  if (/Power BI.*Office|PL300|微软官方认证|管理层.*可视化|高性价比/i.test(text)) {
+    return "Power BI 和 PL300 我会当成低成本但清楚的能力信号；管理层能读懂的可视化证据也会加分。";
+  }
+  if (/PE行业|AUM|平台层级|公司规模的核心指标/i.test(text)) {
+    return "PE 经历我会先看 AUM 这类平台规模信号；缺了它，就很难判断候选人原来平台的层级和经历分量。";
+  }
+  if (/scalable|production-grade|high-performance|技术形容词|具体技术栈|抽象描述/i.test(text)) {
+    return "看到 scalable、production-grade 这类词，我会继续追具体技术和数据；撑不住时，反而会降低可信度。";
+  }
+  if (/A\/B test|z-score|hypothesis testing|statistical analysis|统计方法/i.test(text)) {
+    return "数据岗我会看统计方法是否贴 JD；A/B test、z-score、hypothesis testing 比泛泛的 statistical analysis 更容易判断深度。";
+  }
+  if (/used Excel|Excel.{0,20}功能|工具类描述|实际分析能力/i.test(text)) {
+    return "Excel 我不会只看工具名；写出具体功能和分析场景，才比较能证明是真的数据能力。";
+  }
+  if (/PRD|Figma|产品类岗位|产品工作方式|执行力/i.test(text)) {
+    return "PM 岗我会看 PRD、Figma 和协作证据；只有工具名，没有推进方式，产品执行力会不够清楚。";
+  }
+  if (/模糊的action|follow-up|用了什么工具|怎么分析|framework|结构化思维/i.test(text)) {
+    return "看到模糊 action 时，我会追问工具、分析方法和 framework；这些细节先写清楚，面试风险会低很多。";
+  }
+  if (/两分钟|2分钟|快速glance|第一条bullet|high level understanding|准备问题/i.test(text)) {
+    return "面试前我可能只快速扫两分钟；第一条 bullet、关键词和数字如果不清楚，准备问题时就很难抓到重点。";
+  }
+  if (/writing tutor|writing sample|辅导人数|成绩提升/i.test(text)) {
+    return "看到 writing tutor 我会预设写作能力不错；如果还能看到 sample、辅导人数或成绩提升，可信度会高很多。";
+  }
+  if (/VaR|Monte Carlo|风险计量|完整分析链条/i.test(text)) {
+    return "金融风险岗我会看 VaR、Monte Carlo 和工具是否连成分析链条；孤立技能点不够判断实操深度。";
+  }
+  if (/学校合作|实习项目|企业项目经验|自主投递外部实习/i.test(text)) {
+    return "学校合作项目我会当成真实项目经验看，但前提是要写清楚企业场景和你实际承担的部分。";
+  }
+  if (/数据设计决策|收集什么数据|从哪里获得|业务理解力|差异化亮点/i.test(text)) {
+    return "数据项目我会看数据从哪里来、为什么这样收；这比只列工具更能体现业务理解。";
+  }
+  if (/付费引流|Google Ads|社媒广告|网红营销|influencer marketing/i.test(text)) {
+    return "电商 marketing 我会找 Google Ads、社媒广告或 influencer marketing 证据；方向具体，才好判断匹配度。";
+  }
+  if (/工具\/方法 \+ 行动|streamlined X process|可解释的成果|bullet point应遵循/i.test(text)) {
+    return "我会看 bullet 有没有方法、行动和结果；没有百分比也可以，但成果要真实、可解释。";
+  }
+  if (/ML model|generalizability|overfit|过拟合|关键词匹配|同类JD|同类 JD/i.test(text)) {
+    return "我会看关键词是不是能覆盖同类岗位，而不是只贴住某一份 JD；过拟合单一 JD 的简历，泛用性会比较弱。";
+  }
+  if (/地址位置|字体大小|行间距|跨页|一页|页面空间/.test(text)) {
+    return "版面如果跨页或太挤，我会更难顺着读完；这些格式细节会直接影响第一轮阅读效率。";
+  }
+  if (/career fair|第一眼看的是skills|技术栈快速判断|技能越丰富/i.test(text)) {
+    return "Career Fair 场景我会很快扫 Skills；技术栈不清楚，就很难决定要不要继续聊经历。";
+  }
+  if (/pivot|中小规模|规模较大|excel.{0,30}marketing|marketing.{0,30}excel/i.test(text)) {
+    return "Marketing 岗我会按公司规模看工具要求；Excel、pivot table、vlookup 写清楚，比泛泛说 data skills 更有用。";
+  }
+  if (/window function|刷题|系统复习/i.test(text)) {
+    return "SQL 写上去后我会默认你能被追问；如果 window function 这类常见点接不住，面试风险会很明显。";
+  }
+  if (/price elasticity|促销效果|沃尔玛|costco/i.test(text)) {
+    return "看到具体渠道和分析场景，我会更容易判断你是不是真的懂 consumer marketing 的数据工作。";
+  }
+  if (/var|stress testing|credit risk|regression model/i.test(text)) {
+    return "Credit risk 我会看术语是否对得上；VaR、stress testing、regression model 写清楚，方向感会强很多。";
+  }
+  if (/cross-functional|跨部门协作|文化适配|协作能力/i.test(text)) {
+    return "我不会只因为写了 teamwork 就加分；要看到你和哪些团队合作、推动了什么结果。";
+  }
+  if (/非主流平台|自媒体|雇主知名度|公司知名度|知名度不高/i.test(text)) {
+    return "公司名气不高不是问题，但我需要快速知道它做什么，以及你在里面交付了什么。";
+  }
+  if (/debug|prototype|医疗器械|硬件|实操能力/i.test(text)) {
+    return "硬件或医疗器械岗位我会找 test、debug、prototype 证据；只有理论分析时，匹配判断会保守。";
+  }
+  if (/reframing|客户视角|内部项目|服务性|交付性|合理重新框架/i.test(text)) {
+    return "内部项目可以写，但我会看它服务了谁、交付了什么；只讲内部流程，外部价值会不清楚。";
+  }
+  if (/动态更新|两周|最新背景|新工作经历|最新实习/i.test(text)) {
+    return "我会看简历是不是反映最新经历；新实习如果完全没写，相关性可能被低估。";
+  }
+  if (/结构化流程|主动构思底稿|针对性批注|被动等待导师全部代劳|内化反馈/i.test(text)) {
+    return "如果候选人只等别人代改，我会担心他讲不清自己的经历；先有底稿再吸收反馈，面试也更稳。";
+  }
+  if (/Green card|无需公司提供签证担保|隐性偏见|身份标注/i.test(text)) {
+    return "Green card 能降低一部分流程顾虑，但不会替代能力判断；经历本身不清楚时，这个信息帮不了太多。";
+  }
+  if (/版面空白过多|内容单薄|bullet point数量|不增加内容|视觉效果/i.test(text)) {
+    return "空白太多会让我觉得内容偏薄；合理分配 bullet 数量和字数，比硬塞无关经历更好。";
+  }
+  if (/无法区分项目和正式工作|项目和正式工作|非传统行业|职能语言/.test(text)) {
+    return "如果我分不清这是项目还是正式工作，判断会变慢；用岗位职能语言写清楚，会更容易被归到相关经历。";
+  }
+  if (/顶部信息|名校|高学历|新毕业生/.test(text)) {
+    return "顶部信息会影响我第一眼的判断；学校或学历是强信号时，放清楚会提高继续读的概率。";
+  }
+  if (/soft skill|hard skill|communication|洞察输出/i.test(text)) {
+    return "金融类岗位我会同时看工具和协作输出；只有 Python、Tableau 或只有 communication，都不如两者有项目证据。";
+  }
+  if (/相关性最弱|稀释整体印象|篇幅有限|主动删除/.test(text)) {
+    return "我不会平均看所有经历；弱相关内容太多时，反而会稀释最该被看到的岗位证据。";
+  }
+  if (/先总后分|首句给出量化成就|钩子|逐步拆解|分析思路/.test(text)) {
+    return "我会先抓第一句有没有结果；先给成果，再展开方法，会比一开始就进细节更容易读下去。";
+  }
+  if (/加粗关键词|强制引导视线|想不被看到都难|只扫title/i.test(text)) {
+    return "我快速扫简历时会被加粗词引导；加粗对了能帮我抓重点，加粗错了也会放大噪音。";
+  }
+  if (/结构化的bullet|做了什么、用什么工具、产生什么结果|缺少技术工具和量化影响/.test(text)) {
+    return "一条 bullet 至少要让我看到任务、工具和结果；缺任何一块，能力深度都会比较难判断。";
+  }
+  if (/具体算法|预测任务|特征规模|模型名称|四元组|ML相关/i.test(text)) {
+    return "ML 项目我会找模型、任务、特征规模和结果；只有模糊模型描述，很难判断技术含量。";
+  }
+  if (/行动.*结果.*影响|学习放最后|能做什么、带来什么价值/.test(text)) {
+    return "企业更关心你能交付什么；如果 bullet 先讲学习过程，我会比较难判断业务价值。";
+  }
+  if (/Series\s*7|Series\s*66|FINRA|wealth management|stock trading|硬性资质/.test(text)) {
+    return "金融前台岗我会先看硬性资质；Series 7、Series 66 这类要求不符合时，关键词再像也很难推进。";
+  }
+  if (/消费者研究|付费增长|广告投放ROI|营销漏斗|Marketing analyst/i.test(text)) {
+    return "Marketing analyst 我会先判断你是哪一类；消费者研究和付费增长的证据不一样，写混会削弱匹配感。";
+  }
+  if (/谷歌|Meta|Doordash|Instacart|用人团队|技术栈匹配|入组完全分离/i.test(text)) {
+    return "不同公司筛选逻辑差很多；如果是用人团队直接看，技术栈不贴会比大厂通筛更伤。";
+  }
+  if (/Tableau|可视化场景|课程实操|实际产出|项目\/经历背书/i.test(text)) {
+    return "Tableau 只列在 Skills 里我不会太买单；我会继续找有没有真实 dashboard、课程实操或项目产出。";
+  }
+  if (/raw data|拿到数据|产出洞见|完整的数据分析场景|DA岗位/i.test(text)) {
+    return "DA 经历我会看完整数据链路；只写工具名，没有 raw data 到洞见的过程，匹配度会弱。";
+  }
+  if (/美国电话|直接致电|沟通障碍|被联系的概率|安排面试/.test(text)) {
+    return "如果联系信息不完整，我安排初筛会多一步确认；美国电话缺失时，确实可能降低联系效率。";
+  }
+  if (family === "data_evidence" && /业务决策|业务影响|可复现|持续使用|stable.{0,8}metrics|metrics.{0,8}stable|business decision|reproducible/i.test(text)) {
+    return "我会看这个分析是不是能影响业务、能不能复现、metrics 是否稳定；只有复杂模型，不一定代表项目够强。";
+  }
+  return "";
+}
+
+function humanizeMentorInsight(item = {}, context = {}) {
+  const dbText = approvedHumanized(
+    item.humanizedMentorInsight || item.humanized_mentor_insight,
+    item.perspectiveReviewStatus || item.perspective_review_status
+  );
+  if (dbText && isApprovedPerspectiveSafeForContext(dbText, item, context)) return dbText;
+
+  const rawSource = item.mentorInsight || item.I_insight || item.reason || item.mentorLens || item.P_mentor || "";
+  const source = decontextualizeAdviceText(
+    rawSource,
+    ""
+  );
+  const family = perspectiveFamilyOf(item);
+  const templates = MENTOR_TONE_TEMPLATES[family] || MENTOR_TONE_TEMPLATES.general;
+  const template = detailAwareMentorTemplate(family, rawSource, item, context) ||
+    templates[templateIndexForItem(item, templates.length)];
+  const concrete = firstMeaningfulSentence(source, 72);
+  if (!concrete) return template;
+  if ((isReportLikePerspective(rawSource) || isReportLikePerspective(source)) && !isConversationalMentorText(concrete)) {
+    return template;
+  }
+  if (isConversationalMentorText(concrete)) {
+    return cleanAndTruncate(concrete, 120, template);
+  }
+  return template;
+}
+
+function humanizeHrPerspective(item = {}, context = {}) {
+  const dbText = approvedHumanized(
+    item.humanizedHrPerspective || item.humanized_hr_perspective,
+    item.perspectiveReviewStatus || item.perspective_review_status
+  );
+  if (dbText && isApprovedPerspectiveSafeForContext(dbText, item, context)) return dbText;
+
+  const rawSource = [
+    item.hrPerspective || item.HR_os || item.hrPov || item.recruiterPerspective || item.recruiter_perspective || "",
+    item.I_insight || item.mentorInsight || "",
+  ].filter(Boolean).join(" ");
+  const source = decontextualizeAdviceText(
+    item.hrPerspective || item.HR_os || item.hrPov || item.recruiterPerspective || item.recruiter_perspective || "",
+    ""
+  );
+  const family = perspectiveFamilyOf(item);
+  const templates = HR_TONE_TEMPLATES[family] || HR_TONE_TEMPLATES.general;
+  const detailTemplate = detailAwareHrTemplate(family, rawSource, item, context);
+  const template = detailTemplate ||
+    templates[templateIndexForItem(item, templates.length)];
+  if (detailTemplate) return detailTemplate;
+  if (!source) return template;
+  const concise = firstMeaningfulSentence(source, 82);
+  if (/^(我|这|如果|一条|关键词|排版|可验证|经验)/.test(concise) && concise.length <= 100) {
+    return cleanAndTruncate(concise, 110, template);
+  }
+  return template;
+}
+
+function normalizedPerspectiveKey(value = "") {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/\s+/g, "")
+    .replace(/[，。；、,.!?;:："'“”‘’（）()\[\]{}<>]/g, "")
+    .slice(0, 42);
+}
+
+function variantPerspective(item = {}, role = "hr", usedKeys = new Set()) {
+  const family = perspectiveFamilyOf(item);
+  const templates = role === "mentor"
+    ? (MENTOR_TONE_TEMPLATES[family] || MENTOR_TONE_TEMPLATES.general)
+    : (HR_TONE_TEMPLATES[family] || HR_TONE_TEMPLATES.general);
+  for (let offset = 0; offset < templates.length; offset += 1) {
+    const candidate = templates[(templateIndexForItem(item, templates.length) + offset) % templates.length];
+    const key = normalizedPerspectiveKey(candidate);
+    if (!usedKeys.has(key)) return candidate;
+  }
+  return templates[0];
+}
+
+function avoidRepeatedPerspectives(items = []) {
+  const mentorKeys = new Set();
+  const hrKeys = new Set();
+  return (items || []).map((item) => {
+    if (!item || typeof item !== "object") return item;
+    const next = { ...item };
+    const mentorText = next.mentorInsight || next.mentorLens || next.reason || "";
+    const mentorKey = normalizedPerspectiveKey(mentorText);
+    if (mentorKey && mentorKeys.has(mentorKey)) {
+      const replacement = variantPerspective(next, "mentor", mentorKeys);
+      next.mentorInsight = replacement;
+      next.mentorLens = replacement;
+      next.reason = next.reason || replacement;
+    }
+    const finalMentorKey = normalizedPerspectiveKey(next.mentorInsight || next.mentorLens || next.reason || "");
+    if (finalMentorKey) mentorKeys.add(finalMentorKey);
+
+    const hrText = next.hrPerspective || next.HR_os || "";
+    const hrKey = normalizedPerspectiveKey(hrText);
+    if (hrKey && hrKeys.has(hrKey)) {
+      const replacement = variantPerspective(next, "hr", hrKeys);
+      next.hrPerspective = replacement;
+      next.HR_os = replacement;
+    }
+    const finalHrKey = normalizedPerspectiveKey(next.hrPerspective || next.HR_os || "");
+    if (finalHrKey) hrKeys.add(finalHrKey);
+    return next;
+  });
+}
+
 function roleSafeActionSummary(row, retrievalQuery = {}) {
   if (hasConflictingRoleExamples(row, retrievalQuery)) {
     return "根据目标岗位维护不同版本简历，把最相关的技能、项目和关键词放到对应版本里。";
@@ -1311,6 +2978,11 @@ function formatAdviceCardForPublic(row, retrievalQuery = {}) {
     titleReviewStatus: row.title_review_status || "",
     titleSource: row.title_source || "",
     titleConfidence: row.title_confidence || null,
+    humanizedMentorInsight: row.humanized_mentor_insight || "",
+    humanizedHrPerspective: row.humanized_hr_perspective || "",
+    perspectiveReviewStatus: row.perspective_review_status || "",
+    perspectiveSource: row.perspective_source || "",
+    perspectiveConfidence: row.perspective_confidence || null,
   };
 }
 
@@ -1330,7 +3002,13 @@ function baseSelectSql(where, limit = 500) {
       retrieval_scope,
       action_specificity, display_action_mode, generalized_action,
       activation_role_family, activation_keywords, grounding_terms,
-      canonical_action_family, action_depth, action_review_status
+      canonical_action_family, action_depth, action_review_status,
+      canonical_title, title_review_status, title_source, title_confidence,
+      to_jsonb(segments)->>'humanized_mentor_insight' AS humanized_mentor_insight,
+      to_jsonb(segments)->>'humanized_hr_perspective' AS humanized_hr_perspective,
+      to_jsonb(segments)->>'perspective_review_status' AS perspective_review_status,
+      to_jsonb(segments)->>'perspective_source' AS perspective_source,
+      NULLIF(to_jsonb(segments)->>'perspective_confidence', '')::numeric AS perspective_confidence
     FROM segments
     WHERE (${where})
       AND (retrieval_scope IS NULL OR retrieval_scope = 'resume_edit')
@@ -1675,6 +3353,7 @@ function targetSectionFromCard(card = {}) {
   const text = `${card.title || ""} ${card.problemSummary || ""} ${card.actionSummary || ""} ${card.topic || ""}`.toLowerCase();
   const actionFamily = card._actionFamily || inferAdviceActionFamily(card);
   if (actionFamily === "skills_section") return "skills";
+  if (actionFamily === "summary_creation") return "summary";
   if (actionFamily === "summary_positioning") return "summary";
   if (actionFamily === "keyword_visibility" || actionFamily === "jd_terminology") return "overall";
   if (actionFamily === "project_evidence" && /project|项目/.test(text)) return "projects";
@@ -1707,6 +3386,7 @@ function priorityLaneFromSeverity(severity) {
 
 function problemFamilyForTag(tag = "") {
   if (/jd|keyword|hard_skill|priority_keyword/.test(tag)) return "keyword";
+  if (/missing_summary/.test(tag)) return "summary_missing";
   if (/summary|target_role|role_alignment|position|exact_job_title/.test(tag)) return "positioning";
   if (/experience|evidence|skills_only|bullet|project_details/.test(tag)) return "experience";
   if (/measurable|result|impact|action_verbs/.test(tag)) return "impact";
@@ -1727,6 +3407,7 @@ function inferAdviceActionFamily(card = {}) {
     card.targetSection,
   ].filter(Boolean).join(" ").toLowerCase();
 
+  if (/missing_summary|缺少\s*summary|没有\s*summary|新增\s*summary|补上\s*summary|add\s+(?:a\s+)?summary/.test(text)) return "summary_creation";
   if (/压缩至?一页|控制在一页|一页以内|行间距|字体|字号|页边距|删除不相关.*(活动|activity|获奖|award)|activity section|获奖记录/.test(text)) return "format_structure";
   if (/排序|顺序|置于前列|放到前面|靠前|提前|移至后面|移到后面|reorder|section order/.test(text)) return "section_relevance_order";
   if (/植入|嵌入|正文bullet|bullet point.*关键词|关键词.*bullet|关键词.*经历/.test(text)) return "keyword_in_experience";
@@ -1763,6 +3444,7 @@ function actionFamiliesForProblemFamily(family = "") {
       "general_resume_edit",
     ]),
     positioning: new Set([
+      "summary_creation",
       "summary_positioning",
       "resume_versioning",
       "role_persona_alignment",
@@ -1770,6 +3452,11 @@ function actionFamiliesForProblemFamily(family = "") {
       "project_selection",
       "skills_section",
       "jd_terminology",
+      "general_resume_edit",
+    ]),
+    summary_missing: new Set([
+      "summary_creation",
+      "summary_positioning",
       "general_resume_edit",
     ]),
     experience: new Set([
@@ -1812,6 +3499,8 @@ function isActionFamilyCompatibleWithProblems(card = {}, targetProblemTags = [])
   const related = relatedTagsForCard(card, targetProblemTags);
   if (!related.length) return false;
   const actionFamily = card._actionFamily || inferAdviceActionFamily(card);
+  const actionText = card.action || card.actionSummary || "";
+  if (actionText && !related.some((tag) => actionMatchesProblemTag(tag, actionText))) return false;
   return related.some((tag) => actionFamiliesForProblemFamily(problemFamilyForTag(tag)).has(actionFamily));
 }
 
@@ -1822,7 +3511,7 @@ function forceAdvicePriority(item, priority) {
 }
 
 function resolveHrPerspective(item = {}) {
-  return decontextualizeAdviceText(
+  const raw = decontextualizeAdviceText(
     item.hrPerspective ||
     item.HR_os ||
     item.hrPov ||
@@ -1831,6 +3520,7 @@ function resolveHrPerspective(item = {}) {
     "",
     ""
   );
+  return cleanAndTruncate(raw, 140, "");
 }
 
 function normalizePremiumAdvicePriorities(mentors = []) {
@@ -2117,6 +3807,7 @@ function isBulletReadabilityAdvice(card = {}) {
 function titleForCurrentProblem(relatedProblemTags = [], card = {}) {
   const tags = new Set(relatedProblemTags);
   const text = `${card.title || ""} ${card.problemSummary || ""} ${card.actionSummary || ""} ${card.action || ""} ${card.topic || ""}`.toLowerCase();
+  if (tags.has("missing_summary")) return "先补上 Summary 段落";
   if (tags.has("missing_exact_job_title")) return "补上目标岗位原词";
   if (tags.has("generic_resume_positioning") || tags.has("low_role_specificity")) return "聚焦目标岗位定位";
   const hasKeywordProblem = tags.has("low_jd_keyword_match") || tags.has("missing_priority_keywords") || tags.has("low_hard_skill_match");
@@ -2201,6 +3892,7 @@ function chineseActionFallbackForCard(card = {}, defaultAction = "") {
   if (chineseCandidate) return chineseCandidate;
   const family = canonicalActionFamilyOf(card);
   const fallbacks = {
+    summary_creation: "先新增 2-3 行 Summary：第一句写目标岗位，第二句连接你最相关的经历、技能和可量化成果。",
     summary_positioning: "先把 Summary 改成目标岗位导向：写出目标岗位原词，并用一句话连接你的经历与 JD 核心职责。",
     jd_keyword_alignment: "对照 JD 提取真实掌握的核心关键词，把它们补进 Skills，并写进最相关的 Experience bullet。",
     experience_evidence: "选择最相关的一段经历，把 bullet 改成「动作 + 方法/工具 + 结果」结构，让关键词有真实证据支撑。",
@@ -2221,11 +3913,389 @@ function normalizeDisplayActionLanguage(action = "", card = {}, defaultAction = 
   return text;
 }
 
+function displayTargetRole(internalAtsResult = {}, fallback = "目标岗位") {
+  return internalAtsResult.jobTitle ||
+    internalAtsResult.profile?.targetRole ||
+    internalAtsResult.metrics?.checks?.exactJobTitle?.targetTitle ||
+    fallback;
+}
+
+function targetRoleTextForGovernance(internalAtsResult = {}) {
+  const facts = internalAtsResult.resumeFacts || {};
+  return [
+    internalAtsResult.jobTitle,
+    internalAtsResult.profile?.targetRole,
+    internalAtsResult.profile?.roleFamily,
+    internalAtsResult.profile?.seniority,
+    facts.roleEvidence?.targetRoleFamily,
+    facts.roleEvidence?.targetRole,
+    facts.jobDescriptionText,
+    internalAtsResult.jobDescription,
+    internalAtsResult.jdText,
+    internalAtsResult.rawJobDescription,
+  ].filter(Boolean).join(" ");
+}
+
+function resumeEvidenceTextForGovernance(internalAtsResult = {}) {
+  const facts = internalAtsResult.resumeFacts || {};
+  return [
+    internalAtsResult.resumeText,
+    internalAtsResult.rawResumeText,
+    facts.rawText,
+    JSON.stringify(facts.experience || {}),
+    JSON.stringify(facts.projects || {}),
+    JSON.stringify(facts.skills || {}),
+    JSON.stringify(facts.education || {}),
+  ].filter(Boolean).join(" ");
+}
+
+function isRotationTargetRole(internalAtsResult = {}) {
+  return /管培|管理培训|management\s*trainee|graduate\s*trainee|rotat(?:e|ion|ional)|轮岗/i
+    .test(targetRoleTextForGovernance(internalAtsResult));
+}
+
+function familyRoleGuardResult(card = {}, internalAtsResult = {}) {
+  const family = canonicalActionFamilyOf(card);
+  const roleText = targetRoleTextForGovernance(internalAtsResult).toLowerCase();
+  const resumeText = resumeEvidenceTextForGovernance(internalAtsResult).toLowerCase();
+  const combined = `${roleText} ${resumeText}`;
+
+  if (family === "rotation_readiness" && !isRotationTargetRole(internalAtsResult)) {
+    return { allowed: false, reason: "rotation_role_not_present" };
+  }
+
+  if (family === "manager_assist_evidence") {
+    const roleOk = /assistant|assist|coordinator|administrative|admin|operations?\s*(support|coordinator|assistant)?|运营支持|运营助理|行政|助理|协调/.test(roleText);
+    const resumeOk = /assist|support|coordinate|coordinat|admin|manager|supervisor|协助|支持|协调|主管|经理|跟进/.test(resumeText);
+    if (!roleOk && !resumeOk) return { allowed: false, reason: "manager_assist_not_grounded" };
+  }
+
+  if (family === "business_reporting") {
+    const roleOk = /report|reporting|analysis|analy[sz]e|data|dashboard|metrics|operation|运营|分析|报告|报表|数据|指标/.test(roleText);
+    const resumeOk = /report|summary|analysis|analy[sz]e|data|excel|dashboard|presentation|metrics|报告|报表|分析|数据|汇总|整理|指标/.test(resumeText);
+    if (!roleOk || !resumeOk) return { allowed: false, reason: "business_reporting_not_grounded" };
+  }
+
+  if (family === "process_improvement") {
+    const roleOk = /process|operation|workflow|improvement|optimi[sz]e|efficiency|quality|流程|运营|优化|改进|效率|质量/.test(roleText);
+    const resumeOk = /process|workflow|improv|optimi[sz]e|efficien|standardi[sz]e|document|流程|优化|改进|效率|规范|文档|整理/.test(resumeText);
+    if (!roleOk || !resumeOk) return { allowed: false, reason: "process_improvement_not_grounded" };
+  }
+
+  if (family === "cross_functional_delivery") {
+    const roleOk = /cross[-\s]?functional|stakeholder|coordinate|collaborat|team|operation|project|跨部门|协作|协调|团队|项目|运营/.test(roleText);
+    const resumeOk = /cross[-\s]?functional|stakeholder|coordinate|collaborat|team|partner|teacher|manager|client|协作|协调|团队|同学|老师|经理|客户|交付/.test(resumeText);
+    if (!roleOk || !resumeOk) return { allowed: false, reason: "cross_functional_not_grounded" };
+  }
+
+  if (family === "learning_adaptability") {
+    const roleOk = isRotationTargetRole(internalAtsResult) || /entry|junior|trainee|new grad|fast[-\s]?paced|learn|adapt|初级|应届|快速学习|适应/.test(roleText);
+    const resumeOk = /learn|adapt|new|training|course|self[-\s]?study|快速学习|适应|培训|课程|新/.test(combined);
+    if (!roleOk || !resumeOk) return { allowed: false, reason: "learning_adaptability_not_grounded" };
+  }
+
+  if (family === "customer_business_exposure") {
+    const roleOk = /customer|client|user|sales|service|business|operation|客户|用户|销售|服务|业务|运营/.test(roleText);
+    const resumeOk = /customer|client|user|sales|service|business|survey|research|客户|用户|销售|服务|业务|调研|需求/.test(resumeText);
+    if (!roleOk || !resumeOk) return { allowed: false, reason: "customer_business_not_grounded" };
+  }
+
+  return { allowed: true, reason: "passed" };
+}
+
+function exactJobTitleCoherencePatch(item = {}, internalAtsResult = {}) {
+  const tags = new Set(item.relatedProblemTags || []);
+  if (!tags.has("missing_exact_job_title")) return null;
+  if (tags.has("missing_summary")) return null;
+  const text = [
+    item.title,
+    item.currentDiagnosis,
+    item.problemSummary,
+    item.action,
+    item.actionSummary,
+  ].filter(Boolean).join(" ");
+  const hasCompetingProblem = [...tags].some((tag) =>
+    tag !== "missing_exact_job_title" &&
+    !/target_role|role_alignment|summary|job_title|exact_title|role_specificity|generic_resume_positioning/.test(tag)
+  );
+  const isVisibleExactTitleCard =
+    /补上目标岗位原词|岗位原词|精确职位|职位名称|exact (?:target )?(?:job )?title|job title|target title/i.test(text);
+  if (hasCompetingProblem && !isVisibleExactTitleCard) return null;
+  if (!isVisibleExactTitleCard && tags.size > 1) return null;
+  const targetRole = displayTargetRole(internalAtsResult);
+  return {
+    title: "补上目标岗位原词",
+    mentorLens: `ATS 和 recruiter 会优先查找目标岗位原词；如果 Summary 没有出现 ${targetRole}，系统可能无法稳定判断你的投递方向。`,
+    action: `在 Summary 第一或第二句自然加入 ${targetRole}，并紧接一句说明你和该岗位核心职责相关的经历或项目证据。`,
+    reason: "岗位原词放在 Summary 能最快建立职位定位，也能帮助后续 Skills 和 Experience 的关键词被正确解释。",
+    targetSection: "summary",
+    canonicalActionFamily: "summary_positioning",
+    actionDepth: "rewrite",
+  };
+}
+
+function normalizedKeywordText(internalAtsResult = {}) {
+  return arrayOf(internalAtsResult.topMissingKeywords || internalAtsResult.priorityMissingKeywords)
+    .map((item) => typeof item === "string" ? item : item?.term || item?.keyword || "")
+    .filter(Boolean)
+    .slice(0, 3)
+    .join("、");
+}
+
+function actionMatchesProblemTag(tag = "", action = "") {
+  const text = String(action || "").toLowerCase();
+  const checks = {
+    missing_summary: /summary|概要|总结|新增|补上|开头|2-3\s*行/,
+    missing_exact_job_title: /summary|岗位原词|职位名称|精确职位|target title|job title|exact.*title|target role|目标岗位/,
+    weak_summary_role_alignment: /summary|定位|目标岗位|target role|岗位原词|headline/,
+    weak_target_role_alignment: /summary|定位|目标岗位|jd|关键词|最相关|顺序|靠前|target role|role/,
+    low_role_specificity: /summary|定位|目标岗位|岗位原词|具体岗位|target role|role/,
+    generic_resume_positioning: /版本|方向|summary|定位|目标岗位|相关内容|target role|tailor/,
+    low_jd_keyword_match: /jd|ats|keyword|关键词|skills?|技能|experience|经历|bullet|核心词/,
+    low_hard_skill_match: /keyword|关键词|skills?|技能|tool|工具|experience|经历|bullet|核心职责/,
+    missing_priority_keywords: /keyword|关键词|skills?|技能|jd|experience|经历|bullet|核心词/,
+    weak_experience_keyword_evidence: /experience|经历|bullet|项目|证据|使用场景|工具|方法|结果/,
+    keywords_only_in_skills: /experience|经历|bullet|skills?|技能|证据|使用场景|做过/,
+    low_measurable_results: /量化|数字|结果|成果|影响|规模|频率|效率|metric|impact|result/,
+    weak_result_orientation: /量化|数字|结果|成果|影响|产出|业务价值|result|impact/,
+    weak_action_verbs: /action verb|动词|主动|开头|led|built|improved|created|managed|delivered/,
+    short_tenure_unclear: /intern|internship|实习|短期|时长|项目周期|稳定性|title/,
+    education_details_missing: /education|course|coursework|课程|证书|certificate|training|教育|gpa|项目训练/,
+    missing_portfolio: /portfolio|作品集|个人网站|project link|项目链接|链接|入口|behance|dribbble/,
+    missing_linkedin: /linkedin|领英|職業資料|职业资料|链接|header|头部/,
+    missing_github_link: /github|gitlab|repo|repository|代码|仓库|项目链接|链接/,
+    uploaded_non_pdf_format: /pdf|格式|format|导出|提交|文件|版面|ats|解析/,
+    file_naming_issue: /文件名|file name|命名|pdf|提交/,
+    first_person_summary: /第一人称|first person|summary|客观|i\b|my\b|me\b|改写/,
+    missing_section_dates: /日期|date|时间|timeline|时间线|section|倒序/,
+  };
+  return checks[tag] ? checks[tag].test(text) : true;
+}
+
+function problemCoherencePatchForTag(tag = "", item = {}, internalAtsResult = {}) {
+  const targetRole = displayTargetRole(internalAtsResult);
+  const keywordText = normalizedKeywordText(internalAtsResult);
+  const keywordPhrase = keywordText || "目标 JD 中真实掌握的核心关键词";
+  const templates = {
+    missing_summary: {
+      title: "先补上 Summary 段落",
+      action: `新增 2-3 行 Summary：第一句写目标岗位 ${targetRole}，第二句连接你最相关的经历、技能和可量化成果。`,
+      targetSection: "summary",
+      canonicalActionFamily: "summary_creation",
+      actionDepth: "create",
+    },
+    weak_summary_role_alignment: {
+      title: "让 Summary 更贴近目标岗位",
+      action: `把 Summary 改成 ${targetRole} 导向：写出目标岗位原词，并用一句话连接你最相关的经历、技能和 JD 核心职责。`,
+      targetSection: "summary",
+      canonicalActionFamily: "summary_positioning",
+      actionDepth: "rewrite",
+    },
+    weak_target_role_alignment: {
+      title: "聚焦目标岗位定位",
+      action: `围绕 ${targetRole} 重排 Summary、Skills 和最靠前的经历，把最相关的职责、关键词和结果证据放到前面，弱相关内容收住。`,
+      targetSection: "overall",
+      canonicalActionFamily: "summary_positioning",
+      actionDepth: "structure",
+    },
+    low_role_specificity: {
+      title: "聚焦目标岗位定位",
+      action: `把简历主线收束到 ${targetRole}：Summary 写清目标岗位，Skills 和前两段经历只优先展示与该岗位直接相关的关键词和证据。`,
+      targetSection: "overall",
+      canonicalActionFamily: "summary_positioning",
+      actionDepth: "structure",
+    },
+    generic_resume_positioning: {
+      title: "按申请方向维护简历版本",
+      action: `不要用同一版覆盖所有岗位；为 ${targetRole} 单独维护一版简历，把该岗位最相关的 Summary、Skills、项目和经历放到前面。`,
+      targetSection: "overall",
+      canonicalActionFamily: "summary_positioning",
+      actionDepth: "structure",
+    },
+    low_jd_keyword_match: {
+      title: "补齐 JD 关键词证据",
+      action: `优先确认你真实掌握的 ${keywordPhrase}，把它们写进 Skills，并至少选择一条最相关的 Experience bullet 说明使用场景、任务和结果。`,
+      targetSection: "skills",
+      canonicalActionFamily: "jd_keyword_alignment",
+      actionDepth: "rewrite",
+    },
+    low_hard_skill_match: {
+      title: "补齐 JD 缺失技能",
+      action: `把 ${keywordPhrase} 这类硬技能补进 Skills，并在 Experience 或 Projects 中写出你实际使用它们解决了什么问题。`,
+      targetSection: "skills",
+      canonicalActionFamily: "jd_keyword_alignment",
+      actionDepth: "rewrite",
+    },
+    missing_priority_keywords: {
+      title: "补齐 JD 缺失关键词",
+      action: `对照 JD 先补 ${keywordPhrase} 等高优先级关键词；每个关键词都尽量配一条经历或项目证据，避免只堆在 Skills。`,
+      targetSection: "skills",
+      canonicalActionFamily: "jd_keyword_alignment",
+      actionDepth: "rewrite",
+    },
+    weak_experience_keyword_evidence: {
+      title: "把技能写进经历 bullet",
+      action: `选择最相关的一段 Experience，把目标岗位核心技能写成「动作 + 方法/工具 + 结果」的 bullet，让关键词有真实使用证据。`,
+      targetSection: "experience",
+      canonicalActionFamily: "experience_evidence",
+      actionDepth: "rewrite",
+    },
+    keywords_only_in_skills: {
+      title: "把技能写进经历 bullet",
+      action: "不要只把核心技能放在 Skills；至少挑 1-2 个关键词写进 Experience bullet，说明你在什么任务中用过、产出了什么结果。",
+      targetSection: "experience",
+      canonicalActionFamily: "experience_evidence",
+      actionDepth: "rewrite",
+    },
+    low_measurable_results: {
+      title: "强化 bullet 的结果表达",
+      action: "为核心 bullet 补充数量、频率、规模、效率或结果，例如处理量、覆盖范围、故障率、响应时间、转化率或节省成本。",
+      targetSection: "experience",
+      canonicalActionFamily: "quantified_impact",
+      actionDepth: "rewrite",
+    },
+    weak_result_orientation: {
+      title: "强化 bullet 的结果表达",
+      action: "把职责型 bullet 改成结果型表达：先写动作和方法，再补产出、影响或业务价值，让 HR 能判断你做出了什么。",
+      targetSection: "experience",
+      canonicalActionFamily: "quantified_impact",
+      actionDepth: "rewrite",
+    },
+    weak_action_verbs: {
+      title: "替换更有力的 action verbs",
+      action: "检查每条 Experience bullet 的开头动词，用更主动的 action verbs 替换「负责、参与、协助」这类弱动词，并接上具体方法和结果。",
+      targetSection: "experience",
+      canonicalActionFamily: "quantified_impact",
+      actionDepth: "rewrite",
+    },
+    short_tenure_unclear: {
+      title: "说明短期经历性质",
+      action: "如果这段经历是实习，请在 title 中明确标注 Intern / Internship；如果不是核心相关经历，用项目周期或产出说明这段短期经历的边界。",
+      targetSection: "experience",
+      canonicalActionFamily: "experience_evidence",
+      actionDepth: "clarify",
+    },
+    education_details_missing: {
+      title: "调整教育背景信息",
+      action: `只保留和 ${targetRole} 相关的课程、证书、训练或课程项目，并说明它们如何支撑岗位要求；弱相关教育细节可以删减。`,
+      targetSection: "education",
+      canonicalActionFamily: "education_signal",
+      actionDepth: "rewrite",
+    },
+    missing_portfolio: {
+      title: "补上作品集入口",
+      action: "在简历头部补上可点击的 portfolio / personal website / project link，并确保最相关作品能直接打开、能验证你的实际产出。",
+      targetSection: "header",
+      canonicalActionFamily: "profile_links",
+      actionDepth: "create",
+    },
+    missing_linkedin: {
+      title: "补上 LinkedIn 链接",
+      action: "在简历头部补上可点击的 LinkedIn 链接，并确保头像、经历时间线、职位名称和简历内容保持一致。",
+      targetSection: "header",
+      canonicalActionFamily: "profile_links",
+      actionDepth: "create",
+    },
+    missing_github_link: {
+      title: "补上项目或代码链接",
+      action: "在简历头部或 Projects 中补上 GitHub / repo / project link，并确保链接可点击、README 能说明项目目标、技术栈和运行方式。",
+      targetSection: "header",
+      canonicalActionFamily: "profile_links",
+      actionDepth: "create",
+    },
+    uploaded_non_pdf_format: {
+      title: "稳定简历提交格式",
+      action: "导出并提交稳定的一页 PDF 版本，检查字体、间距、日期和 section 顺序在 PDF 中没有错位，降低 ATS 解析失败风险。",
+      targetSection: "format",
+      canonicalActionFamily: "format_cleanup",
+      actionDepth: "fix",
+    },
+    file_naming_issue: {
+      title: "稳定简历提交格式",
+      action: "把简历文件名改成清晰稳定的格式，例如 Firstname_Lastname_Resume.pdf，并用 PDF 提交，避免文件名或格式影响筛选效率。",
+      targetSection: "format",
+      canonicalActionFamily: "format_cleanup",
+      actionDepth: "fix",
+    },
+    first_person_summary: {
+      title: "改掉 Summary 第一人称",
+      action: "把 Summary 里的 I / my / me 等第一人称删掉，改成客观的岗位定位句：目标岗位 + 相关技能/经历 + 可量化成果。",
+      targetSection: "summary",
+      canonicalActionFamily: "summary_positioning",
+      actionDepth: "rewrite",
+    },
+    missing_section_dates: {
+      title: "补齐经历日期",
+      action: "补齐 Experience、Education、Projects 或 Activities 中缺失的日期，并统一月份/年份格式，按倒序展示经历时间线。",
+      targetSection: "overall",
+      canonicalActionFamily: "format_cleanup",
+      actionDepth: "fix",
+    },
+  };
+  const template = templates[tag];
+  if (!template) return null;
+  return {
+    ...template,
+    mentorLens: item.mentorLens,
+    reason: item.reason,
+  };
+}
+
+function applyProblemCoherencePatch(item = {}, internalAtsResult = {}) {
+  const exactPatch = exactJobTitleCoherencePatch(item, internalAtsResult);
+  if (exactPatch) {
+    return {
+      ...item,
+      ...exactPatch,
+      problemSummary: item.currentDiagnosis || item.problemSummary || "",
+      actionSummary: exactPatch.action,
+      mentorInsight: exactPatch.mentorLens,
+    };
+  }
+  const orderedTags = [
+    "missing_summary",
+    "missing_exact_job_title",
+    "weak_summary_role_alignment",
+    "weak_target_role_alignment",
+    "low_role_specificity",
+    "generic_resume_positioning",
+    "low_jd_keyword_match",
+    "low_hard_skill_match",
+    "missing_priority_keywords",
+    "weak_experience_keyword_evidence",
+    "keywords_only_in_skills",
+    "low_measurable_results",
+    "weak_result_orientation",
+    "weak_action_verbs",
+    "short_tenure_unclear",
+    "education_details_missing",
+    "missing_portfolio",
+    "missing_linkedin",
+    "missing_github_link",
+    "uploaded_non_pdf_format",
+    "file_naming_issue",
+    "first_person_summary",
+    "missing_section_dates",
+  ];
+  const tags = new Set(item.relatedProblemTags || []);
+  const tag = orderedTags.find((candidate) => tags.has(candidate) && !actionMatchesProblemTag(candidate, item.action || item.actionSummary || ""));
+  const patch = tag ? problemCoherencePatchForTag(tag, item, internalAtsResult) : null;
+  if (!patch) return item;
+  return {
+    ...item,
+    ...patch,
+    problemSummary: item.currentDiagnosis || item.problemSummary || "",
+    actionSummary: patch.action,
+    mentorInsight: patch.mentorLens,
+  };
+}
+
 function titleFallbackForCard(card = {}) {
   const canonical = card.canonicalTitle || card.canonical_title;
   if (canonical && !titleGovernance.isBadVisibleTitle(canonical)) return canonical;
   const family = canonicalActionFamilyOf(card);
   const titles = {
+    summary_creation: "先补上 Summary 段落",
     summary_positioning: "优化 Summary 岗位定位",
     jd_keyword_alignment: "补齐 JD 关键词证据",
     experience_evidence: "优化经历 bullet 证据",
@@ -2481,8 +4551,13 @@ function jdRequiredTextFromFacts(facts = {}) {
 
 function actionPreconditionGate(card = {}, internalAtsResult = {}) {
   if (!hasResumeFacts(internalAtsResult)) {
+    const familyGuard = familyRoleGuardResult(card, internalAtsResult);
+    if (!familyGuard.allowed) return familyGuard;
     return { allowed: true, reason: "resumeFacts_missing", fallbackMode: "resumeFacts_missing" };
   }
+
+  const familyGuard = familyRoleGuardResult(card, internalAtsResult);
+  if (!familyGuard.allowed) return familyGuard;
 
   const facts = internalAtsResult.resumeFacts || {};
   const sections = facts.sections || {};
@@ -2662,6 +4737,10 @@ function isCardAlignedWithTargetProblems(card = {}, targetProblemTags = []) {
   return related.length > 0;
 }
 
+function isDisplayableByFamilyRoleGuard(item = {}, internalAtsResult = {}) {
+  return familyRoleGuardResult(item, internalAtsResult).allowed;
+}
+
 // Returns true if the card's own problem summary is topically aligned with its advice
 // (i.e. we should use the DB summary rather than generating from ATS data)
 function cardHasOwnDiagnosis(card) {
@@ -2702,16 +4781,28 @@ function toAdviceItem(card = {}, targetProblemTags = [], index = 0, includePremi
   }
   const useGeneralizedPerspective = shouldUseGeneralizedPerspective(card, governedAction);
   // mentorLens: new schema field; for DB-adapted rows derive from P_mentor if helpful
-  const mentorLens = useGeneralizedPerspective
+  const rawMentorLens = useGeneralizedPerspective
     ? generalizedMentorLensForCard(card)
     : card.mentorLens || card.P_mentor || "";
   // reason: new schema field; for DB-adapted rows, I_insight is the closest analog
-  const reason = useGeneralizedPerspective
+  const rawReason = useGeneralizedPerspective
     ? generalizedReasonForCard(card)
     : card.reason || card.I_insight || "";
-  const hrPerspective = useGeneralizedPerspective
+  const rawHrPerspective = useGeneralizedPerspective
     ? generalizedHrPerspectiveForCard(card)
     : resolveHrPerspective(card);
+  const toneContext = { internalAtsResult, targetProblemTags, useGeneralizedPerspective };
+  const mentorPerspective = humanizeMentorInsight({
+    ...card,
+    mentorLens: rawMentorLens,
+    reason: rawReason,
+    mentorInsight: card.mentorInsight || card.I_insight || rawReason || rawMentorLens,
+  }, toneContext);
+  const hrPerspective = humanizeHrPerspective({
+    ...card,
+    hrPerspective: rawHrPerspective,
+    HR_os: rawHrPerspective,
+  }, toneContext);
   // evidence: explicit chips array; populated by fallback templates or buildAdviceEvidence later
   const evidence = Array.isArray(card.evidence) ? [...card.evidence] : [];
 
@@ -2722,13 +4813,13 @@ function toAdviceItem(card = {}, targetProblemTags = [], index = 0, includePremi
     : titleForCurrentProblem(relatedProblemTags, card);
   const title = normalizeDisplayTitle(titleBase, card);
 
-  const item = {
+  let item = {
     adviceId: card.adviceId || `fallback_${index}`,
     title,
-    mentorLens,
+    mentorLens: mentorPerspective,
     currentDiagnosis: normalizeDisplayDiagnosis(currentDiagnosis),
     action,
-    reason,
+    reason: mentorPerspective,
     evidence,
     // backward compat aliases
     problemSummary: normalizeDisplayDiagnosis(currentDiagnosis),
@@ -2747,6 +4838,11 @@ function toAdviceItem(card = {}, targetProblemTags = [], index = 0, includePremi
     titleReviewStatus: card.titleReviewStatus || card.title_review_status || "",
     titleSource: card.titleSource || card.title_source || "",
     titleConfidence: card.titleConfidence || card.title_confidence || null,
+    humanizedMentorInsight: card.humanizedMentorInsight || card.humanized_mentor_insight || "",
+    humanizedHrPerspective: card.humanizedHrPerspective || card.humanized_hr_perspective || "",
+    perspectiveReviewStatus: card.perspectiveReviewStatus || card.perspective_review_status || "",
+    perspectiveSource: card.perspectiveSource || card.perspective_source || "",
+    perspectiveConfidence: card.perspectiveConfidence || card.perspective_confidence || null,
     mentorSource: {
       mentorName: card.mentorName || card.mentor_name || "",
       company: inferCompanyFromMentor(card),
@@ -2758,11 +4854,12 @@ function toAdviceItem(card = {}, targetProblemTags = [], index = 0, includePremi
   };
   if (includePremiumFields) {
     const suppressContext = useGeneralizedPerspective || hasMismatchedCaseStudyAdvice(card, targetProblemTags);
-    item.mentorInsight = suppressContext ? "" : decontextualizeAdviceText(card.mentorInsight || card.I_insight || card.mentorLens || card.P_mentor || "", "");
+    item.mentorInsight = suppressContext ? mentorPerspective : mentorPerspective;
     item.example = suppressContext ? "" : decontextualizeAdviceText(card.example || card.E_example || "", "");
     item.hrPerspective = hrPerspective;
     item.HR_os = item.hrPerspective;
   }
+  item = applyProblemCoherencePatch(item, internalAtsResult);
   return item;
 }
 
@@ -2883,6 +4980,7 @@ function selectGlobalAdviceItems(candidates, targetProblemTags, count, coveredTa
   function canAddCard(card, options = {}) {
     if (hasUnsupportedIdentityAssumption(card)) return false;
     if (hasUnsupportedBackgroundAssumption(card)) return false;
+    if (!isDisplayableByFamilyRoleGuard(card, internalAtsResult)) return false;
     const actionFamily = canonicalActionFamilyOf(card);
     const actionDepth = actionDepthOf(card);
     const renderedTitle = renderedCardTitle(card, targetProblemTags);
@@ -2947,6 +5045,7 @@ function selectGlobalAdviceItems(candidates, targetProblemTags, count, coveredTa
     for (const item of fallback) {
       if (selectedItems.length >= count) break;
       if (usedAdviceIds.has(item.adviceId)) continue;
+      if (!isDisplayableByFamilyRoleGuard(item, internalAtsResult)) continue;
       if (!canAddToTwelveAdviceBundle(item, [...(userProfile.seedAdviceItems || []), ...selectedItems])) continue;
       selectedItems.push(item);
       usedAdviceIds.add(item.adviceId);
@@ -2960,7 +5059,12 @@ function selectGlobalAdviceItems(candidates, targetProblemTags, count, coveredTa
 function fallbackAdviceForObligation(obligation = {}, context = {}) {
   const roleName = context.roleName || "目标岗位";
   const targetRole = context.targetRole || roleName;
-  const keywordText = (obligation.keywords || []).filter(Boolean).join("、");
+  const contextKeywords = arrayOf(context.topMissingKeywords || context.missingKeywords)
+    .map((item) => typeof item === "string" ? item : item?.term || item?.keyword || "")
+    .filter(Boolean);
+  const keywordText = [...new Set([...(obligation.keywords || []), ...contextKeywords].filter(Boolean))]
+    .slice(0, 3)
+    .join("、");
   const tag = obligation.tag || "resume_optimization_gap";
   const dimensionLabels = {
     A: "格式规范",
@@ -2991,6 +5095,24 @@ function fallbackAdviceForObligation(obligation = {}, context = {}) {
       action: "如果这段经历是实习，请在 title 中明确标注 Intern / Internship；如果不是核心相关经历，评估是否保留，或在 bullet 中用项目周期说明这段经历的边界和产出。",
       reason: "把短期经历解释清楚，可以降低 HR 的负面猜测，也让 ATS 和人工筛选更准确理解经历性质。",
       evidence: ["短期经历未说明", "HR 稳定性疑虑", "Experience 时间线需澄清"],
+    };
+  }
+
+  if (tag === "missing_summary") {
+    return {
+      ...base,
+      title: "先补上 Summary 段落",
+      mentorLens: "没有 Summary 时，简历开头缺少岗位定位入口；先搭出这一段，后续目标岗位原词和 JD 关键词才有自然承载位置。",
+      currentDiagnosis: obligation.message || "简历缺少 Summary 段落，HR 和 ATS 需要先有一条清晰的岗位定位线索。",
+      action: `新增 2-3 行 Summary：第一句写目标岗位 ${targetRole}，第二句连接你最相关的经历、技能和可量化成果；先把段落搭起来，再补具体关键词。`,
+      reason: "先补结构，再优化关键词，顺序会更自然，也避免把关键词硬塞到不存在的 section 里。",
+      HR_os: "我第一眼会先看简历开头能不能说明你投什么岗位；没有 Summary 时，后面的技能和经历更容易被读散。",
+      hrPerspective: "我第一眼会先看简历开头能不能说明你投什么岗位；没有 Summary 时，后面的技能和经历更容易被读散。",
+      evidence: ["缺少 Summary", "岗位定位入口不足", "需要先补结构"],
+      relatedProblemTags: ["missing_summary"],
+      canonicalActionFamily: "summary_creation",
+      actionDepth: "create",
+      targetSection: "summary",
     };
   }
 
@@ -3131,6 +5253,9 @@ function fallbackAdviceItems(internalAtsResult = {}, count = 3, usedTags = new S
   const sortedObligations = obligations
     .filter((obligation) => obligation.required !== false)
     .sort((a, b) => {
+      const aMissingSummary = a.tag === "missing_summary" ? 1 : 0;
+      const bMissingSummary = b.tag === "missing_summary" ? 1 : 0;
+      if (aMissingSummary !== bMissingSummary) return bMissingSummary - aMissingSummary;
       const severityDiff = severityWeight(b.severity) - severityWeight(a.severity);
       if (Math.abs(severityDiff) > 1e-9) return severityDiff;
       const aDim = a.source === "dimensions" ? 1 : 0;
@@ -3143,7 +5268,11 @@ function fallbackAdviceItems(internalAtsResult = {}, count = 3, usedTags = new S
     const coverageKey = obligation.id || obligation.tag;
     const keywordKey = `${obligation.tag}:${(obligation.keywords || []).join("|").toLowerCase()}`;
     if (usedTags.has(coverageKey) || (usedTags.has(obligation.tag) && !obligation.keywords?.length) || usedTags.has(keywordKey)) continue;
-    const item = fallbackAdviceForObligation(obligation, { roleName, targetRole });
+    const item = fallbackAdviceForObligation(obligation, {
+      roleName,
+      targetRole,
+      topMissingKeywords: internalAtsResult.topMissingKeywords || internalAtsResult.priorityMissingKeywords,
+    });
     if (selected.some((existing) => existing.adviceId === item.adviceId)) continue;
     selected.push(item);
     usedTags.add(coverageKey);
@@ -3430,6 +5559,7 @@ function fallbackAdviceItems(internalAtsResult = {}, count = 3, usedTags = new S
   ];
   for (const template of templates) {
     if (selected.length >= count) break;
+    if (!isDisplayableByFamilyRoleGuard(template, internalAtsResult)) continue;
     if (template.relatedProblemTags.some((tag) => !usedTags.has(tag))) {
       selected.push(template);
       template.relatedProblemTags.forEach((tag) => usedTags.add(tag));
@@ -3437,6 +5567,7 @@ function fallbackAdviceItems(internalAtsResult = {}, count = 3, usedTags = new S
   }
   for (const template of templates) {
     if (selected.length >= count) break;
+    if (!isDisplayableByFamilyRoleGuard(template, internalAtsResult)) continue;
     if (!selected.some((item) => item.adviceId === template.adviceId)) selected.push(template);
   }
   return selected.slice(0, count);
@@ -3545,9 +5676,15 @@ function adviceCoversObligation(item = {}, obligation = {}) {
   const tag = obligation.tag || "";
   const relatedTags = new Set(item.relatedProblemTags || []);
   if (tag && relatedTags.has(tag)) {
+    if (!actionMatchesProblemTag(tag, item.action || item.actionSummary || "")) return false;
     const kws = obligation.keywords || [];
     if (!kws.length) return true;
-    const text = adviceTextForCoverage(item);
+    const text = [
+      item.action,
+      item.actionSummary,
+      item.title,
+      ...(item.evidence || []),
+    ].filter(Boolean).join(" ").toLowerCase();
     return kws.some((kw) => kw && text.includes(String(kw).toLowerCase()));
   }
   const text = adviceTextForCoverage(item);
@@ -3713,6 +5850,26 @@ function normalizeFreeAdviceVisibleDiversity(adviceItems = [], candidateItems = 
   const priorityOrder = ["high", "medium", "low"];
   const selected = [];
   const usedIds = new Set();
+  const hasMissingSummaryProblem = targetProblemTags.some((item) => (item.tag || item) === "missing_summary");
+  if (hasMissingSummaryProblem) {
+    const missingSummaryAdvice = fallbackAdviceForObligation({
+      id: "missing_summary",
+      tag: "missing_summary",
+      dimension: "F",
+      severity: "high",
+      message: "简历缺少 Summary 段落，HR 和 ATS 需要先有一条清晰的岗位定位线索。",
+      targetSection: "summary",
+      coverageFamily: "positioning",
+    }, {
+      roleName: internalAtsResult.jobTitle || internalAtsResult.profile?.targetRole || "目标岗位",
+      targetRole: internalAtsResult.jobTitle || internalAtsResult.profile?.targetRole || "目标岗位",
+      topMissingKeywords: internalAtsResult.topMissingKeywords || internalAtsResult.priorityMissingKeywords,
+    });
+    if (canAddVisibleAdvice(missingSummaryAdvice, selected, targetProblemTags)) {
+      selected.push(missingSummaryAdvice);
+      if (missingSummaryAdvice.adviceId) usedIds.add(missingSummaryAdvice.adviceId);
+    }
+  }
   for (const item of adviceItems) {
     if (!item || (item.adviceId && usedIds.has(item.adviceId))) continue;
     if (!canAddVisibleAdvice(item, selected, targetProblemTags)) continue;
@@ -3734,7 +5891,18 @@ function normalizeFreeAdviceVisibleDiversity(adviceItems = [], candidateItems = 
     selected.push(item);
     if (item.adviceId) usedIds.add(item.adviceId);
   }
-  return selected.slice(0, 3).map((item, index) =>
+  const ordered = hasMissingSummaryProblem
+    ? selected.slice(0, 3).sort((a, b) => {
+        const aCreate = visibleAdviceIntent(a) === "summary_creation" ? 1 : 0;
+        const bCreate = visibleAdviceIntent(b) === "summary_creation" ? 1 : 0;
+        if (aCreate !== bCreate) return bCreate - aCreate;
+        const aSummaryOptimize = visibleAdviceIntent(a) === "summary_positioning" ? 1 : 0;
+        const bSummaryOptimize = visibleAdviceIntent(b) === "summary_positioning" ? 1 : 0;
+        if (aSummaryOptimize !== bSummaryOptimize) return aSummaryOptimize - bSummaryOptimize;
+        return 0;
+      })
+    : selected.slice(0, 3);
+  return ordered.map((item, index) =>
     forceAdvicePriority(item, priorityOrder[index] || item.priority || "medium")
   );
 }
@@ -4000,6 +6168,7 @@ function selectFreeMentorPlan(candidates, internalAtsResult) {
   adviceItems = normalizeFreeAdviceLanes(adviceItems, internalAtsResult);
   adviceItems = normalizeAdviceBundleDiversity(adviceItems, alternativeItems, internalAtsResult, 3);
   adviceItems = normalizeFreeAdviceVisibleDiversity(adviceItems, alternativeItems, targetProblemTags, internalAtsResult);
+  adviceItems = avoidRepeatedPerspectives(adviceItems);
 
   // Step 5: Choose displayed mentor — pick best bucket that covers most problems
   let plan;
@@ -4101,6 +6270,7 @@ function visibleAdviceText(item = {}) {
 function visibleAdviceIntent(item = {}) {
   const family = canonicalActionFamilyOf(item);
   const text = visibleAdviceText(item).toLowerCase();
+  if (family === "summary_creation" || /missing_summary|缺少\s*summary|新增\s*summary|补上\s*summary|add\s+(?:a\s+)?summary/.test(text)) return "summary_creation";
   if (family === "profile_links" || /linkedin|github|portfolio|project link|可验证|链接|入口|header/.test(text)) return "profile_links";
   if (family === "education_signal" || /education|course|certificate|lab\/project|课程|证书|训练|教育背景|junior/.test(text)) return "education_training";
   if (family === "quantified_impact" || /量化|结果表达|职责描述|规模|频率|效率|impact|metrics?|数字/.test(text)) return "quantified_result";
@@ -4137,7 +6307,7 @@ function canAddVisibleAdvice(item = {}, existingItems = [], targetProblemTags = 
   const intentCount = existingItems.filter((existing) => visibleAdviceIntent(existing) === intent).length;
   const hasSkillsOrder = existingItems.some((existing) => visibleAdviceIntent(existing) === "skills_order");
   if (intent === "profile_links" && !hasExplicitProfileLinkProblem(targetProblemTags)) return false;
-  if (["summary_positioning", "quantified_result", "education_training", "profile_links"].includes(intent) && intentCount >= 1) return false;
+  if (["summary_creation", "summary_positioning", "quantified_result", "education_training", "profile_links"].includes(intent) && intentCount >= 1) return false;
   if (intent === "jd_keywords" && (intentCount >= 1 || hasSkillsOrder)) return false;
   return true;
 }
@@ -4148,7 +6318,7 @@ function canAddVisibleAdviceRelaxed(item = {}, existingItems = [], targetProblem
   const intent = visibleAdviceIntent(item);
   const intentCount = existingItems.filter((existing) => visibleAdviceIntent(existing) === intent).length;
   if (intent === "profile_links" && !hasExplicitProfileLinkProblem(targetProblemTags)) return false;
-  if (["summary_positioning", "quantified_result", "education_training", "profile_links"].includes(intent) && intentCount >= 1) return false;
+  if (["summary_creation", "summary_positioning", "quantified_result", "education_training", "profile_links"].includes(intent) && intentCount >= 1) return false;
   if (intent === "jd_keywords" && intentCount >= 1) return false;
   return true;
 }
@@ -4189,6 +6359,263 @@ function normalizePaidAdviceVisibleDiversity(paidItems = [], freeItems = [], tar
     if (item.adviceId) usedIds.add(item.adviceId);
   }
   return selected.slice(0, 9);
+}
+
+function cleanDisplayExample(example = "") {
+  const text = String(example || "").trim();
+  if (!text) return "";
+  if (/^[（(]?\s*无具体示例\s*[）)]?$/i.test(text)) return "";
+  if (/^\?{3,}$/.test(text)) return "";
+  if (/^(?:n\/a|none|null|undefined|-|—)$/i.test(text)) return "";
+  return text;
+}
+
+function displayLabelForAdvice(item = {}) {
+  const intent = visibleAdviceIntent(item);
+  const family = canonicalActionFamilyOf(item);
+  const labels = {
+    summary_creation: "开头定位",
+    summary_positioning: "开头定位",
+    jd_keywords: "JD 关键词",
+    jd_keyword_alignment: "JD 关键词",
+    keyword_visibility: "JD 关键词",
+    jd_terminology: "JD 关键词",
+    skills_order: "技能区块",
+    skills_section: "技能区块",
+    experience_evidence: "经历证据",
+    project_evidence: "项目证据",
+    quantified_result: "量化成果",
+    quantified_impact: "量化成果",
+    education_training: "教育证书",
+    education_signal: "教育证书",
+    cross_functional_delivery: "协作交付",
+    business_reporting: "报告产出",
+    process_improvement: "流程改进",
+    manager_assist_evidence: "协助证据",
+    learning_adaptability: "学习适应",
+    customer_business_exposure: "客户业务",
+    format_cleanup: "格式结构",
+    section_structure: "格式结构",
+    profile_links: "资料链接",
+    transferable_framing: "岗位语言",
+  };
+  return labels[intent] || labels[family] || "简历修改";
+}
+
+function fallbackPerspectiveForFamily(item = {}, role = "mentor") {
+  const family = canonicalActionFamilyOf(item);
+  const mentor = {
+    education_signal: "这条要把课程、证书或训练写成岗位能力证据；只列课程名不够，要说明它支撑了哪项职责。",
+    quantified_impact: "这条要把 impact 放到经历里，用数量、频率、规模或效率说明贡献，避免只写负责和参与。",
+    cross_functional_delivery: "这条不要只写 teamwork，要写清楚协作对象、推进动作和最后交付物。",
+    business_reporting: "报告类经历要写清楚分析对象、报告产出和服务的判断，否则只像工具使用记录。",
+    process_improvement: "流程改进要回到真实任务里，写发现了什么低效点、怎么整理或优化、留下了什么结果。",
+    manager_assist_evidence: "assist 后面要有具体任务和交付物，才会像能接住日常运营或支持工作的候选人。",
+    learning_adaptability: "学习适应力最好用一段新任务经历证明，而不是只在 Summary 里自我评价。",
+    customer_business_exposure: "客户或业务意识要写到具体对象和需求里，让人看懂你支持了什么业务场景。",
+    summary_creation: "没有 Summary 时，先搭出岗位定位入口；后续关键词和经历证据才有承载位置。",
+    summary_positioning: "岗位定位要先收束主线，让开头、技能和最靠前经历都指向同一个目标岗位。",
+    jd_keyword_alignment: "关键词不要只堆在 Skills，最好回到真实经历里，让 ATS 扫得到，HR 也看得到证据。",
+  };
+  const hr = {
+    education_signal: "我会看教育信息能不能补足岗位训练证据；课程、证书和 lab/project 要和目标职责有关系。",
+    quantified_impact: "我会优先看结果和规模；只有职责没有数字时，很难判断实际贡献。",
+    cross_functional_delivery: "我不会只因为写了 teamwork 就加分；要看到你和谁协作、推动了什么、交付了什么。",
+    business_reporting: "我会问这份分析最后给谁看、用来做什么；能讲清产出，经历才更像工作能力。",
+    process_improvement: "我会看候选人有没有发现问题和优化流程的意识，而不是只完成被分配的任务。",
+    manager_assist_evidence: "我会看 assist 后面到底是什么事；写清楚任务和产出，才像能马上上手的人。",
+    learning_adaptability: "我想看到你过去怎么学新东西并完成交付，而不是只看到一句愿意学习。",
+    customer_business_exposure: "我会看你是否理解服务对象和业务需求；只写内部任务会少一层岗位感。",
+    summary_creation: "我第一眼会看简历开头能不能说明你投什么岗位；没有 Summary 时，后面的信息更容易被读散。",
+    summary_positioning: "我会看标题、Summary、技能排序和前几条经历是不是指向同一岗位。",
+    jd_keyword_alignment: "我会用 JD 关键词快速确认基本匹配；核心词缺失时，第一轮就容易显得不贴合。",
+  };
+  return (role === "hr" ? hr : mentor)[family] || (role === "hr"
+    ? "我会看这条修改能不能直接降低筛选成本，而不是只让文字更好看。"
+    : "这条建议要回到真实经历里，写出目标岗位能读懂的职责、证据和结果。");
+}
+
+function perspectiveMatchesFamily(text = "", item = {}) {
+  const family = canonicalActionFamilyOf(item);
+  const value = String(text || "").toLowerCase();
+  const itemContext = [
+    item.title,
+    item.currentDiagnosis,
+    item.problemSummary,
+    item.action,
+    item.actionSummary,
+  ].filter(Boolean).join(" ").toLowerCase();
+  if (family === "quantified_impact" &&
+      /新增用户|销售增长|识别率|sales growth|new users|recognition rate/.test(value) &&
+      !/新增用户|销售增长|识别率|sales growth|new users|recognition rate/.test(itemContext)) {
+    return false;
+  }
+  const checks = {
+    education_signal: /education|course|certificate|training|lab|project|课程|证书|训练|教育|项目/,
+    quantified_impact: /量化|数字|数量|频率|规模|效率|结果|成果|贡献|impact|metric|result/,
+    cross_functional_delivery: /协作|协调|跨部门|对象|推进|交付|team|stakeholder|collaborat|coordinate/,
+    business_reporting: /报告|报表|分析|汇总|产出|决策|report|analysis|dashboard|summary/,
+    process_improvement: /流程|优化|改进|效率|规范|process|workflow|improv|efficien/,
+    manager_assist_evidence: /assist|support|协助|支持|经理|主管|任务|产出|交付/,
+    learning_adaptability: /学习|适应|新任务|上手|learn|adapt|training/,
+    customer_business_exposure: /客户|用户|业务|服务|需求|customer|client|user|business|service/,
+    summary_creation: /summary|开头|定位|岗位|入口/,
+    summary_positioning: /summary|定位|岗位|主线|目标/,
+    jd_keyword_alignment: /jd|ats|关键词|技能|匹配|keyword|skills/,
+  };
+  return checks[family] ? checks[family].test(value) : true;
+}
+
+function sanitizePerspectiveForDisplay(text = "", item = {}, role = "mentor") {
+  const cleaned = String(text || "")
+    .replace(/^(导师|HR)\s*/i, "")
+    .trim();
+  if (!cleaned || !perspectiveMatchesFamily(cleaned, item)) {
+    return fallbackPerspectiveForFamily(item, role);
+  }
+  return cleaned;
+}
+
+function sanitizeEvidenceForDisplay(item = {}, internalAtsResult = {}) {
+  const family = canonicalActionFamilyOf(item);
+  const explicit = Array.isArray(item.evidence) ? item.evidence : [];
+  const familyEvidence = {
+    summary_creation: ["缺少 Summary", "岗位定位入口不足", "需要先补结构"],
+    summary_positioning: ["岗位定位", "开头主线", "目标岗位"],
+    jd_keyword_alignment: ["JD 关键词", "ATS 匹配", "经历证据"],
+    skills_section: ["Skills 排序", "技能区块", "JD 关键词"],
+    experience_evidence: ["经历证据", "技能使用场景", "岗位职责"],
+    project_evidence: ["项目证据", "交付物", "岗位相关性"],
+    quantified_impact: ["量化结果", "成果表达", "影响规模"],
+    education_signal: ["课程/证书", "教育训练", "岗位能力证据"],
+    cross_functional_delivery: ["协作对象", "推进动作", "交付物"],
+    business_reporting: ["报告产出", "分析对象", "业务判断"],
+    process_improvement: ["流程改进", "效率优化", "文档沉淀"],
+    manager_assist_evidence: ["协助对象", "任务细节", "交付结果"],
+    learning_adaptability: ["快速学习", "新任务", "交付证据"],
+    customer_business_exposure: ["客户/用户", "业务需求", "服务场景"],
+    format_cleanup: ["ATS 可读性", "格式一致", "时间线"],
+    section_structure: ["Section 顺序", "岗位主线", "信息优先级"],
+    profile_links: ["资料链接", "可验证入口", "Header 信息"],
+    transferable_framing: ["可迁移能力", "岗位语言", "经历叙事"],
+  };
+  if (familyEvidence[family]) return familyEvidence[family].slice(0, 3);
+  return explicit.length ? explicit.slice(0, 3) : buildAdviceEvidence(item, null, internalAtsResult);
+}
+
+function rewriteSummaryActionForMissingSummary(item = {}, internalAtsResult = {}) {
+  const tags = new Set(item.relatedProblemTags || []);
+  const hasMissingSummary = tags.has("missing_summary");
+  if (!hasMissingSummary || visibleAdviceIntent(item) === "summary_creation") return item;
+  const targetRole = displayTargetRole(internalAtsResult);
+  const intent = visibleAdviceIntent(item);
+  if (intent === "summary_positioning") {
+    return {
+      ...item,
+      action: `在新建的 Summary 中自然加入 ${targetRole}，再用一句话连接你最相关的经历、技能和 JD 核心职责。`,
+      actionSummary: `在新建的 Summary 中自然加入 ${targetRole}，再用一句话连接你最相关的经历、技能和 JD 核心职责。`,
+    };
+  }
+  if (intent === "jd_keywords") {
+    return {
+      ...item,
+      action: `先建好 Summary，再把 ${targetRole} 和真实掌握的 JD 核心关键词分配到 Summary、Skills 与最相关的 Experience bullet。`,
+      actionSummary: `先建好 Summary，再把 ${targetRole} 和真实掌握的 JD 核心关键词分配到 Summary、Skills 与最相关的 Experience bullet。`,
+    };
+  }
+  return item;
+}
+
+function sanitizeAdviceItemForDisplay(item = {}, internalAtsResult = {}) {
+  const patched = rewriteSummaryActionForMissingSummary(item, internalAtsResult);
+  const example = cleanDisplayExample(patched.example || patched.E_example || "");
+  const mentorText = patched.mentorInsight || patched.mentorLens || patched.reason || "";
+  const hrText = patched.hrPerspective || patched.HR_os || patched.hrPov || patched.recruiterPerspective || "";
+  return {
+    ...patched,
+    example,
+    mentorLens: sanitizePerspectiveForDisplay(mentorText, patched, "mentor"),
+    mentorInsight: sanitizePerspectiveForDisplay(mentorText, patched, "mentor"),
+    reason: sanitizePerspectiveForDisplay(mentorText, patched, "mentor"),
+    hrPerspective: sanitizePerspectiveForDisplay(hrText, patched, "hr"),
+    HR_os: sanitizePerspectiveForDisplay(hrText, patched, "hr"),
+    evidence: sanitizeEvidenceForDisplay(patched, internalAtsResult),
+    displayAdviceType: displayLabelForAdvice(patched),
+    topicCluster: displayLabelForAdvice(patched),
+  };
+}
+
+function normalizeAdviceBundleForDisplay(items = [], internalAtsResult = {}, options = {}) {
+  const limit = options.limit || items.length;
+  const maxPerIntent = options.maxPerIntent || (limit <= 3 ? 1 : 2);
+  const targetProblemTags = options.targetProblemTags || problemTagsFromInternal(internalAtsResult);
+  const hasMissingSummary = targetProblemTags.some((item) => (item.tag || item) === "missing_summary") ||
+    items.some((item) => (item.relatedProblemTags || []).includes("missing_summary"));
+  const selected = [];
+  const intentCounts = new Map();
+  const familyDepths = new Map();
+  const usedIds = new Set();
+
+  function add(item) {
+    if (!item) return false;
+    item = sanitizeAdviceItemForDisplay(item, internalAtsResult);
+    if (!isDisplayableByFamilyRoleGuard(item, internalAtsResult)) return false;
+    if (item.adviceId && usedIds.has(item.adviceId)) return false;
+    const intent = visibleAdviceIntent(item);
+    const family = canonicalActionFamilyOf(item);
+    const depth = actionDepthOf(item);
+    if ((intentCounts.get(intent) || 0) >= maxPerIntent) return false;
+    if (!familyDepths.has(family)) familyDepths.set(family, new Set());
+    if ((familyDepths.get(family) || new Set()).has(depth)) return false;
+    selected.push(item);
+    if (item.adviceId) usedIds.add(item.adviceId);
+    intentCounts.set(intent, (intentCounts.get(intent) || 0) + 1);
+    familyDepths.get(family).add(depth);
+    return true;
+  }
+
+  if (hasMissingSummary) {
+    const existingSummary = items.find((item) => visibleAdviceIntent(item) === "summary_creation") ||
+      fallbackAdviceForObligation({
+        id: "missing_summary",
+        tag: "missing_summary",
+        dimension: "F",
+        severity: "high",
+        message: "简历缺少 Summary 段落，HR 和 ATS 需要先有一条清晰的岗位定位线索。",
+        targetSection: "summary",
+        coverageFamily: "positioning",
+      }, {
+        roleName: displayTargetRole(internalAtsResult),
+        targetRole: displayTargetRole(internalAtsResult),
+        topMissingKeywords: internalAtsResult.topMissingKeywords || internalAtsResult.priorityMissingKeywords,
+      });
+    add({ ...existingSummary, priority: "high" });
+  }
+
+  const dependencyOrder = {
+    summary_creation: 0,
+    jd_keywords: hasMissingSummary ? 1 : 2,
+    summary_positioning: hasMissingSummary ? 2 : 0,
+  };
+  const ordered = [...items].sort((a, b) => {
+    const aIntent = visibleAdviceIntent(a);
+    const bIntent = visibleAdviceIntent(b);
+    const aDep = dependencyOrder[aIntent] ?? 5;
+    const bDep = dependencyOrder[bIntent] ?? 5;
+    if (aDep !== bDep) return aDep - bDep;
+    return severityWeight(b.priority || "medium") - severityWeight(a.priority || "medium");
+  });
+
+  for (const item of ordered) {
+    if (selected.length >= limit) break;
+    add(item);
+  }
+  return selected.slice(0, limit).map((item, index) => {
+    if (index === 0 && hasMissingSummary && visibleAdviceIntent(item) === "summary_creation") {
+      return forceAdvicePriority(item, "high");
+    }
+    return item;
+  });
 }
 
 function finalPremiumTopUpAdviceItems(internalAtsResult = {}) {
@@ -4402,6 +6829,7 @@ function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan =
       newItem = fallbackAdviceForObligation(obligation, {
         roleName: internalAtsResult.jobTitle || profile.targetRole || "目标岗位",
         targetRole: internalAtsResult.jobTitle || profile.targetRole || "目标岗位",
+        topMissingKeywords: internalAtsResult.topMissingKeywords || internalAtsResult.priorityMissingKeywords,
       });
     }
     if (!newItem) continue;
@@ -4428,9 +6856,16 @@ function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan =
   }
 
   paidItems = normalizePaidAdviceVisibleDiversity(paidItems, freeItems, targetProblemTags, internalAtsResult).slice(0, 9);
+  const displayBundleItems = normalizeAdviceBundleForDisplay(
+    avoidRepeatedPerspectives([...freeItems, ...paidItems]),
+    internalAtsResult,
+    { limit: 12, maxPerIntent: 2, targetProblemTags }
+  );
+  const displayFreeItems = displayBundleItems.slice(0, freeItems.length);
+  const displayPaidItems = displayBundleItems.slice(freeItems.length);
 
   const logoPool = [
-    ...buildMentorLogoPoolFromItems([...freeItems, ...paidItems]),
+    ...buildMentorLogoPoolFromItems([...displayFreeItems, ...displayPaidItems]),
     ...buildMentorLogoPoolFromCandidates(eligibleCandidates, 16),
   ].reduce((acc, item) => {
     if (item.company && item.companyLogo && !acc.some((existing) => existing.company === item.company)) acc.push(item);
@@ -4445,10 +6880,10 @@ function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan =
       companyLogo: null,
       mentorTitle: "简历策略组",
       badges: ["免费建议", "问题优先"],
-    }, freeItems, targetProblemTags, 0),
-    mentorFromBucket({ mentorId: "paid_advice_bundle_1", mentorName: "付费建议 1", company: "MentorX", mentorTitle: "简历策略组" }, paidItems.slice(0, 3), targetProblemTags, 1),
-    mentorFromBucket({ mentorId: "paid_advice_bundle_2", mentorName: "付费建议 2", company: "MentorX", mentorTitle: "简历策略组" }, paidItems.slice(3, 6), targetProblemTags, 2),
-    mentorFromBucket({ mentorId: "paid_advice_bundle_3", mentorName: "付费建议 3", company: "MentorX", mentorTitle: "简历策略组" }, paidItems.slice(6, 9), targetProblemTags, 3),
+    }, displayFreeItems, targetProblemTags, 0),
+    mentorFromBucket({ mentorId: "paid_advice_bundle_1", mentorName: "付费建议 1", company: "MentorX", mentorTitle: "简历策略组" }, displayPaidItems.slice(0, 3), targetProblemTags, 1),
+    mentorFromBucket({ mentorId: "paid_advice_bundle_2", mentorName: "付费建议 2", company: "MentorX", mentorTitle: "简历策略组" }, displayPaidItems.slice(3, 6), targetProblemTags, 2),
+    mentorFromBucket({ mentorId: "paid_advice_bundle_3", mentorName: "付费建议 3", company: "MentorX", mentorTitle: "简历策略组" }, displayPaidItems.slice(6, 9), targetProblemTags, 3),
   ].map((mentor) => ({ ...mentor, mentorLogoPool: logoPool }));
 
   // ── 補漏：確保高優先 obligation 至少被一條建議覆蓋 ──────────────
@@ -4470,6 +6905,7 @@ function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan =
       const fallbackItem = !coverCandidate ? fallbackAdviceForObligation(problem, {
         roleName: internalAtsResult.jobTitle || profile.targetRole || "目标岗位",
         targetRole: internalAtsResult.jobTitle || profile.targetRole || "目标岗位",
+        topMissingKeywords: internalAtsResult.topMissingKeywords || internalAtsResult.priorityMissingKeywords,
       }) : null;
       // 找最合適的導師（優先選和這個 card 同一個 mentorName 的，或最後一個導師）
       const targetMentor = (coverCandidate && mentors.find((m) => m.mentorName === coverCandidate.mentorName)) || mentors[mentors.length - 1];
@@ -4478,9 +6914,10 @@ function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan =
         const newItem = coverCandidate
           ? toAdviceItem(coverCandidate, targetProblemTags, 0, true, internalAtsResult, new Set())
           : fallbackItem;
-        if (newItem && canAddVisibleAdviceRelaxed(newItem, allAdviceItems, targetProblemTags)) {
-          targetMentor.adviceItems.push(newItem);
-          allAdviceItems.push(newItem);
+        if (newItem && isDisplayableByFamilyRoleGuard(newItem, internalAtsResult) && canAddVisibleAdviceRelaxed(newItem, allAdviceItems, targetProblemTags)) {
+          const sanitized = sanitizeAdviceItemForDisplay(newItem, internalAtsResult);
+          targetMentor.adviceItems.push(sanitized);
+          allAdviceItems.push(sanitized);
         }
         allCovered.add(problem.id || tag);
         continue;
@@ -4494,15 +6931,26 @@ function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan =
         : fallbackItem;
       const idx = targetMentor.adviceItems.indexOf(toReplace);
       const bundleWithoutReplace = allAdviceItems.filter((item) => item !== toReplace);
-      if (newItem && idx !== -1 && canAddVisibleAdviceRelaxed(newItem, bundleWithoutReplace, targetProblemTags)) {
-        targetMentor.adviceItems[idx] = newItem;
-        allAdviceItems.push(newItem);
+      if (newItem && idx !== -1 && isDisplayableByFamilyRoleGuard(newItem, internalAtsResult) && canAddVisibleAdviceRelaxed(newItem, bundleWithoutReplace, targetProblemTags)) {
+        const sanitized = sanitizeAdviceItemForDisplay(newItem, internalAtsResult);
+        targetMentor.adviceItems[idx] = sanitized;
+        allAdviceItems.push(sanitized);
       }
       allCovered.add(problem.id || tag);
     }
   }
 
-  const normalizedMentors = normalizePremiumAdvicePriorities(mentors.slice(0, 4).map((mentor) => ({
+  const finalBundle = normalizeAdviceBundleForDisplay(
+    mentors.flatMap((mentor) => mentor.adviceItems || []),
+    internalAtsResult,
+    { limit: 12, maxPerIntent: 2, targetProblemTags }
+  );
+  const finalMentors = mentors.slice(0, 4).map((mentor, index) => ({
+    ...mentor,
+    adviceItems: finalBundle.slice(index * 3, index * 3 + 3),
+  }));
+
+  const normalizedMentors = normalizePremiumAdvicePriorities(finalMentors.map((mentor) => ({
     ...mentor,
     adviceItems: mentor.adviceItems.slice(0, 3),
   })));
@@ -4622,6 +7070,23 @@ function buildPublicSafeEvidence(item, atsResult = {}) {
 }
 
 function formatPublicFreeMentorAdvice(freeMentorPlan, internalAtsResult = {}) {
+  const displayItems = avoidRepeatedPerspectives((freeMentorPlan.adviceItems || []).map((item) => {
+    const mentorPerspective = humanizeMentorInsight(item, { internalAtsResult });
+    const hrPerspective = humanizeHrPerspective(item, { internalAtsResult });
+    return {
+      ...item,
+      mentorLens: mentorPerspective,
+      mentorInsight: mentorPerspective,
+      reason: item.reason || mentorPerspective,
+      hrPerspective,
+      HR_os: hrPerspective,
+    };
+  }));
+  const normalizedDisplayItems = normalizeAdviceBundleForDisplay(displayItems, internalAtsResult, {
+    limit: 3,
+    maxPerIntent: 1,
+    targetProblemTags: problemTagsFromInternal(internalAtsResult).slice(0, 6),
+  });
   return {
     mentorId: freeMentorPlan.mentorId,
     mentorName: freeMentorPlan.mentorName,
@@ -4632,25 +7097,26 @@ function formatPublicFreeMentorAdvice(freeMentorPlan, internalAtsResult = {}) {
     badges: freeMentorPlan.badges || [],
     matchReason: freeMentorPlan.matchReason,
     matchedProblems: freeMentorPlan.matchedProblems || [],
-    mentorLogoPool: freeMentorPlan.mentorLogoPool || buildMentorLogoPoolFromItems(freeMentorPlan.adviceItems || []),
-    adviceItems: (freeMentorPlan.adviceItems || []).slice(0, 3).map((item) => {
+    mentorLogoPool: freeMentorPlan.mentorLogoPool || buildMentorLogoPoolFromItems(normalizedDisplayItems || []),
+    adviceItems: normalizedDisplayItems.slice(0, 3).map((item) => {
       // Resolve canonical new-schema fields, supporting both native and adapted cards
       const currentDiagnosis = normalizeDisplayDiagnosis(item.currentDiagnosis || item.problemSummary || "");
       const action = normalizeDisplayActionLanguage(item.action || item.actionSummary || "", item, "优先把目标岗位关键词、相关技能和经历证据放到 Summary、Skills 和 Experience 中。");
-      const hrPerspective = resolveHrPerspective(item);
-      return {
+      const hrPerspective = sanitizePerspectiveForDisplay(item.hrPerspective || item.HR_os || humanizeHrPerspective(item, { internalAtsResult }), item, "hr");
+      const mentorPerspective = sanitizePerspectiveForDisplay(item.mentorInsight || item.mentorLens || humanizeMentorInsight(item, { internalAtsResult }), item, "mentor");
+      const displayItem = {
         adviceId: item.adviceId,
         title: normalizeDisplayTitle(item.title, item),
         // ── New schema fields ──
-        mentorLens: item.mentorLens || item.P_mentor || "",
+        mentorLens: mentorPerspective,
         currentDiagnosis,
         action,
-        reason: item.reason || item.I_insight || "",
-        evidence: buildAdviceEvidence(item, null, internalAtsResult),
+        reason: mentorPerspective,
+        evidence: sanitizeEvidenceForDisplay(item, internalAtsResult),
         // ── Explanation metadata (issue-first) ──
         matchReason: item.matchReason || "",
         mentorFitType: item.mentorFitType || "",
-        topicCluster: item.topicCluster || inferTopicCluster(item),
+        topicCluster: item.displayAdviceType || item.topicCluster || inferTopicCluster(item),
         confidenceScore: item.confidenceScore || null,
         adviceTransferScope: item.adviceTransferScope || "",
         canonicalActionFamily: canonicalActionFamilyOf(item),
@@ -4663,37 +7129,53 @@ function formatPublicFreeMentorAdvice(freeMentorPlan, internalAtsResult = {}) {
         relatedProblemTags: item.relatedProblemTags || [],
         priority: item.priority || "medium",
         // Rich mentor voice fields
-        mentorInsight: item.mentorInsight || item.I_insight || item.mentorLens || item.P_mentor || "",
-        example: item.example || item.E_example || "",
+        mentorInsight: mentorPerspective,
+        example: cleanDisplayExample(item.example || item.E_example || ""),
         hrPerspective,
         HR_os: hrPerspective,
         source: item.source || "db",
         mentorSource: item.mentorSource || null,
       };
+      return sanitizeAdviceItemForDisplay(applyProblemCoherencePatch(displayItem, internalAtsResult), internalAtsResult);
     }),
   };
 }
 
 function formatPremiumMentorReport(premiumMentorPlan, internalAtsResult) {
-  const mentors = premiumMentorPlan.slice(0, 4).map((mentor) => ({
+  const allInputItems = premiumMentorPlan.slice(0, 4).flatMap((mentor) => mentor.adviceItems || []);
+  const displayItemsById = new Map(avoidRepeatedPerspectives(allInputItems.map((item) => {
+    const mentorPerspective = humanizeMentorInsight(item, { internalAtsResult });
+    const hrPerspective = humanizeHrPerspective(item, { internalAtsResult });
+    return {
+      ...item,
+      mentorLens: mentorPerspective,
+      mentorInsight: mentorPerspective,
+      reason: mentorPerspective,
+      hrPerspective,
+      HR_os: hrPerspective,
+    };
+  })).map((item) => [item.adviceId || `${item.title}:${item.action || item.actionSummary}`, item]));
+  const rawMentors = premiumMentorPlan.slice(0, 4).map((mentor) => ({
     ...mentor,
     adviceItems: (mentor.adviceItems || []).slice(0, 3).map((item) => {
+      item = displayItemsById.get(item.adviceId || `${item.title}:${item.action || item.actionSummary}`) || item;
       const currentDiagnosis = normalizeDisplayDiagnosis(item.currentDiagnosis || item.problemSummary || "");
       const action = normalizeDisplayActionLanguage(item.action || item.actionSummary || "", item, "优先把目标岗位关键词、相关技能和经历证据放到 Summary、Skills 和 Experience 中。");
-      const hrPerspective = resolveHrPerspective(item);
-      return {
+      const hrPerspective = sanitizePerspectiveForDisplay(item.hrPerspective || item.HR_os || humanizeHrPerspective(item, { internalAtsResult }), item, "hr");
+      const mentorPerspective = sanitizePerspectiveForDisplay(item.mentorInsight || item.mentorLens || humanizeMentorInsight(item, { internalAtsResult }), item, "mentor");
+      const displayItem = {
         adviceId: item.adviceId,
         title: normalizeDisplayTitle(item.title, item),
         // New schema fields
-        mentorLens: item.mentorLens || item.P_mentor || "",
+        mentorLens: mentorPerspective,
         currentDiagnosis,
         action,
-        reason: item.reason || item.I_insight || "",
-        evidence: buildAdviceEvidence(item, null, internalAtsResult),
+        reason: mentorPerspective,
+        evidence: sanitizeEvidenceForDisplay(item, internalAtsResult),
         // Explanation metadata
         matchReason: item.matchReason || "",
         mentorFitType: item.mentorFitType || "",
-        topicCluster: item.topicCluster || inferTopicCluster(item),
+        topicCluster: item.displayAdviceType || item.topicCluster || inferTopicCluster(item),
         confidenceScore: item.confidenceScore || null,
         adviceTransferScope: item.adviceTransferScope || "",
         canonicalActionFamily: canonicalActionFamilyOf(item),
@@ -4703,8 +7185,8 @@ function formatPremiumMentorReport(premiumMentorPlan, internalAtsResult) {
         problemSummary: currentDiagnosis,
         actionSummary: action,
         // Paid-only premium fields
-        mentorInsight: item.mentorInsight || item.I_insight || item.mentorLens || item.P_mentor || "",
-        example: item.example || "",
+        mentorInsight: mentorPerspective,
+        example: cleanDisplayExample(item.example || ""),
         hrPerspective,
         HR_os: hrPerspective,
         targetSection: item.targetSection || "overall",
@@ -4713,7 +7195,17 @@ function formatPremiumMentorReport(premiumMentorPlan, internalAtsResult) {
         source: item.source,
         mentorSource: item.mentorSource || null,
       };
+      return sanitizeAdviceItemForDisplay(applyProblemCoherencePatch(displayItem, internalAtsResult), internalAtsResult);
     }),
+  }));
+  const normalizedAllAdviceItems = normalizeAdviceBundleForDisplay(rawMentors.flatMap((mentor) => mentor.adviceItems), internalAtsResult, {
+    limit: 12,
+    maxPerIntent: 2,
+    targetProblemTags: obligationsFromInternal(internalAtsResult),
+  });
+  const mentors = rawMentors.map((mentor, index) => ({
+    ...mentor,
+    adviceItems: normalizedAllAdviceItems.slice(index * 3, index * 3 + 3),
   }));
   const allAdviceItems = mentors.flatMap((mentor) => mentor.adviceItems);
   return {
@@ -4785,6 +7277,9 @@ module.exports = {
   normalizeDisplayActionLanguage,
   normalizeDisplayTitle,
   normalizeDisplayDiagnosis,
+  humanizeMentorInsight,
+  humanizeHrPerspective,
+  avoidRepeatedPerspectives,
   formatPublicFreeMentorAdvice,
   formatPremiumMentorReport,
   formatAdviceCard,

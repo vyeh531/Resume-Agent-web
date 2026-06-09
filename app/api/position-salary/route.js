@@ -1,59 +1,45 @@
-import db from '../../../database';
+import salaryTrajectory from '../../../services/salaryTrajectory.js';
 
-const GENERIC_TITLE_WORDS = new Set([
-  'intern','interns','internship','senior','junior','lead','staff','principal',
-  'associate','manager','analyst','engineer','specialist','coordinator','director',
-  'officer','executive','assistant','advisor','consultant','developer','designer',
-  'architect','head','vp','president','entry','level','mid','remote','full','part',
-]);
+const { buildSalaryTrajectory } = salaryTrajectory;
 
-async function fuzzyRow(pool, table, cols, jobTitle) {
-  const sel = 'SELECT ' + cols + ' FROM ' + table;
-
-  // 1. Exact match
-  let r = await pool.query(sel + ' WHERE LOWER(position_title) = LOWER($1) LIMIT 1', [jobTitle]);
-  if (r.rows[0]) return r.rows[0];
-
-  // 2. LIKE both ways
-  r = await pool.query(
-    sel + " WHERE LOWER(position_title) LIKE LOWER($1) OR LOWER($2) LIKE LOWER('%' || position_title || '%') LIMIT 1",
-    ['%' + jobTitle + '%', jobTitle]
-  );
-  if (r.rows[0]) return r.rows[0];
-
-  // 3. Word-level — skip generic words to avoid misfires
-  const meaningful = jobTitle
-    .split(/[\s\-\/]+/)
-    .filter(w => w.length >= 5 && !GENERIC_TITLE_WORDS.has(w.toLowerCase()));
-
-  for (const w of meaningful.slice(0, 3)) {
-    r = await pool.query(sel + ' WHERE LOWER(position_title) LIKE LOWER($1) LIMIT 1', ['%' + w + '%']);
-    if (r.rows[0]) return r.rows[0];
-  }
-
-  return null;
+function jsonResponse(payload, init) {
+  return Response.json(payload, init);
 }
 
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const jobTitle = (searchParams.get('jobTitle') || '').trim();
-    if (!jobTitle) return Response.json({ error: 'jobTitle is required' }, { status: 400 });
-
-    const pool = db.getPool();
-    const row  = await fuzzyRow(pool, 'position_skills', 'position_title, salary_range', jobTitle);
-    if (!row || !row.salary_range) {
-      return Response.json({ success: true, found: false, salary_range: null });
+    const jdText = (searchParams.get('jdText') || '').trim();
+    const location = (searchParams.get('location') || '').trim();
+    const resumeText = (searchParams.get('resumeText') || '').trim();
+    const roleFamily = (searchParams.get('roleFamily') || '').trim();
+    const targetRole = (searchParams.get('targetRole') || '').trim();
+    if (!jobTitle && !jdText) {
+      return jsonResponse({ error: 'jobTitle or jdText is required' }, { status: 400 });
     }
-
-    return Response.json({
-      success: true,
-      found: true,
-      position_title: row.position_title,
-      salary_range: row.salary_range,
-    });
+    return jsonResponse(buildSalaryTrajectory({ jobTitle, jdText, location, resumeText, roleFamily, targetRole }));
   } catch (error) {
     console.error('[position-salary]', error);
-    return Response.json({ error: error.message }, { status: 500 });
+    return jsonResponse({ error: error.message }, { status: 500 });
+  }
+}
+
+export async function POST(request) {
+  try {
+    const body = await request.json().catch(() => ({}));
+    const jobTitle = (body.jobTitle || '').trim();
+    const jdText = (body.jdText || '').trim();
+    const location = (body.location || '').trim();
+    const resumeText = (body.resumeText || '').trim();
+    const roleFamily = (body.roleFamily || '').trim();
+    const targetRole = (body.targetRole || '').trim();
+    if (!jobTitle && !jdText) {
+      return jsonResponse({ error: 'jobTitle or jdText is required' }, { status: 400 });
+    }
+    return jsonResponse(buildSalaryTrajectory({ jobTitle, jdText, location, resumeText, roleFamily, targetRole }));
+  } catch (error) {
+    console.error('[position-salary]', error);
+    return jsonResponse({ error: error.message }, { status: 500 });
   }
 }

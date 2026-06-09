@@ -1,0 +1,62 @@
+[
+  {
+    "role_family": "logistics_operations_support",
+    "family_label": "Logistics / Operations Support",
+    "soc_codes": ["43-5061", "43-5071", "53-3031", "53-1047"],
+    "keywords": ["logistics", "operations support", "pickup", "dispatch", "warehouse", "delivery", "parcel", "fleet", "shipping", "receiving", "揽收", "调度", "仓库", "物流", "快递", "末端", "运营支持"]
+  },
+  {
+    "role_family": "supply_chain_operations",
+    "family_label": "Supply Chain / Operations",
+    "soc_codes": ["13-1081", "43-5061", "11-3071"],
+    "keywords": ["supply chain", "logistician", "logistics analyst", "operations analyst", "transportation analyst", "inventory", "fulfillment", "供应链", "物流分析", "库存", "履约"]
+  },
+  {
+    "role_family": "data_analytics",
+    "family_label": "Data Analytics",
+    "soc_codes": ["15-2051", "15-2041", "13-1111"],
+    "keywords": ["data analyst", "data analytics", "business intelligence", "bi analyst", "sql", "tableau", "power bi", "数据分析", "商业分析", "报表", "指标"]
+  },
+  {
+    "role_family": "software_engineering",
+    "family_label": "Software Engineering",
+    "soc_codes": ["15-1252", "15-1254", "15-1253"],
+    "keywords": ["software engineer", "software developer", "frontend", "backend", "full stack", "sde", "web developer", "软件工程师", "前端", "后端", "全栈"]
+  },
+  {
+    "role_family": "product_management",
+    "family_label": "Product Management",
+    "soc_codes": ["11-2021", "11-1021", "13-1082"],
+    "keywords": ["product manager", "associate product manager", "apm", "product owner", "growth product", "产品经理", "产品负责人"]
+  },
+  {
+    "role_family": "marketing",
+    "family_label": "Marketing / Growth",
+    "soc_codes": ["13-1161", "11-2021", "27-3031"],
+    "keywords": ["marketing", "growth", "social media", "smm", "campaign", "content marketing", "seo", "sem", "市场", "营销", "增长", "社媒", "内容运营"]
+  },
+  {
+    "role_family": "finance_accounting",
+    "family_label": "Finance / Accounting",
+    "soc_codes": ["13-2011", "13-2051", "13-2099"],
+    "keywords": ["financial analyst", "finance", "accounting", "accountant", "audit", "tax", "fp&a", "会计", "审计", "财务", "金融分析"]
+  },
+  {
+    "role_family": "business_operations",
+    "family_label": "Business Operations",
+    "soc_codes": ["13-1199", "13-1111", "13-1082"],
+    "keywords": ["business operations", "operations specialist", "program coordinator", "project coordinator", "business analyst", "运营专员", "项目协调", "业务运营"]
+  },
+  {
+    "role_family": "human_resources",
+    "family_label": "Human Resources",
+    "soc_codes": ["13-1071", "13-1075", "11-3121"],
+    "keywords": ["human resources", "hr specialist", "recruiter", "talent acquisition", "people operations", "人力资源", "招聘", "人才招聘"]
+  },
+  {
+    "role_family": "customer_support",
+    "family_label": "Customer Support / Success",
+    "soc_codes": ["43-4051", "13-1199", "11-1021"],
+    "keywords": ["customer support", "customer service", "customer success", "client success", "support specialist", "客服", "客户支持", "客户成功"]
+  }
+]

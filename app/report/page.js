@@ -9,6 +9,8 @@ export default function ReportPage() {
         .report-headline .num{font-style:italic;color:var(--indigo);font-size:32px;}
         .report-headline .gap{font-style:italic;color:var(--rose);font-weight:700;}
         .report-issue{font-size:14px;color:var(--ink-soft);line-height:1.6;border-left:3px solid var(--apricot);padding:4px 0 4px 12px;margin:12px 0 0;}
+        .report-metrics .tile{display:block;}
+        .report-metrics .tile-caption b{color:var(--ink);font-weight:700;}
         .export-card{background:linear-gradient(135deg,var(--paper-warm) 0%,var(--jade-soft) 100%);border:1px solid #b8d6bd;border-radius:var(--r-lg);padding:18px 18px 16px;margin:0 0 22px;position:relative;overflow:hidden;box-shadow:var(--shadow-soft);}
         .export-card::before{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(47,107,79,.18) 0%,transparent 70%);pointer-events:none;}
         .export-card-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;position:relative;}
@@ -28,9 +30,31 @@ export default function ReportPage() {
         .skill-row:last-child{border-bottom:none;}
         .skill-name{font-size:14px;font-weight:500;}
         .skill-name .priority{font-family:var(--mono);font-size:10px;color:var(--ink-mute);margin-right:8px;}
+        .skill-section-desc{font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin:-2px 0 12px;}
+        .skill-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;}
+        .keyword-use{font-size:10.5px;font-weight:700;border-radius:999px;padding:3px 7px;border:1px solid var(--line);white-space:nowrap;background:#fffdf7;color:var(--ink-soft);}
+        .keyword-use--skills{background:var(--jade-soft);color:var(--jade);border-color:#c2dcc6;}
+        .keyword-use--experience{background:#fff7ed;color:#9a3412;border-color:#fed7aa;}
+        .keyword-use--summary{background:#eef2ff;color:#4338ca;border-color:#c7d2fe;}
+        .keyword-use--reference{background:#f5f5f4;color:#78716c;border-color:#e7e2d6;}
         .skill-extra[hidden]{display:none!important;}
         .skill-expand-toggle{width:100%;margin-top:8px;border:1px dashed var(--line);background:var(--paper-warm);border-radius:10px;padding:10px 12px;font-size:13px;font-weight:700;color:var(--jade);cursor:pointer}
         .skill-expand-toggle:hover{background:var(--jade-soft)}
+        .jd-keyword-details{margin-top:12px;border-top:1px solid var(--line);padding-top:10px;}
+        .jd-keyword-details[hidden]{display:none!important;}
+        .jd-keyword-details summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:center;gap:6px;color:var(--ink-soft);font-size:13px;font-weight:700;padding:6px 0;}
+        .jd-keyword-details summary::-webkit-details-marker{display:none;}
+        .jd-keyword-groups{display:grid;gap:10px;margin-top:8px;}
+        .jd-keyword-group{border:1px solid #ede9dc;background:#fffdf7;border-radius:10px;padding:10px 11px;}
+        .jd-keyword-group-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;}
+        .jd-keyword-group-title{font-size:12px;font-weight:800;color:var(--ink);letter-spacing:.01em;}
+        .jd-keyword-group-count{font-family:var(--mono);font-size:10px;color:var(--ink-mute);}
+        .jd-keyword-chips{display:flex;flex-wrap:wrap;gap:6px;}
+        .jd-keyword-chip{display:inline-flex;align-items:center;gap:5px;border:1px solid #e7e2d6;background:#fff;border-radius:999px;padding:4px 8px;font-size:11.5px;color:var(--ink-soft);max-width:100%;}
+        .jd-keyword-chip b{font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+        .jd-keyword-chip .state{width:6px;height:6px;border-radius:50%;flex-shrink:0;background:var(--warn);}
+        .jd-keyword-chip.is-have .state{background:var(--good);}
+        .jd-keyword-chip .keyword-use{font-size:9.5px;padding:2px 6px;}
         .service-card{background:linear-gradient(135deg,var(--paper-warm) 0%,var(--paper-deep) 100%);border:1px solid var(--line);border-radius:var(--r-lg);padding:26px 22px 22px;margin-top:12px;position:relative;overflow:hidden;}
         .service-card::before{content:"";position:absolute;left:-40px;bottom:-40px;width:140px;height:140px;background:radial-gradient(circle,rgba(232,160,107,.22) 0%,transparent 70%);pointer-events:none;}
         .service-card-title{font-family:var(--serif);font-weight:700;font-size:22px;line-height:1.3;text-align:center;margin:0 0 8px;position:relative;letter-spacing:-0.01em;}
@@ -67,7 +91,7 @@ export default function ReportPage() {
 
         <div className="banner fade-in">
           <div className="banner-check">✓</div>
-          <div>已解锁 · 完整报告已为你生成</div>
+          <div>完整报告已为你生成</div>
         </div>
 
         <div className="export-card">
@@ -93,25 +117,73 @@ export default function ReportPage() {
           <h2 className="section-title" style={{fontSize:'22px'}}>先看大盘</h2>
           <div className="card card-tight">
             <h3 className="report-headline">
-              你的当前简历综合评分 <span className="num">75</span> 分，离获得大厂 <span className="gap">$200K</span> 薪资仍有差距。
+              你的当前简历综合评分 <span className="num" id="reportHeadlineScore">--</span> 分，<br/>
+              离顶级 Offer 线 <span className="gap" id="reportHeadlineSalaryTop">待校准</span> 仍有差距。
             </h3>
             <p className="report-issue" id="coreIssue"></p>
           </div>
           <div className="card card-tight mt-16">
-            <div className="section-num" style={{marginBottom:6}}>JD 技能匹配</div>
+            <div className="section-num" id="reportSkillSectionTitle" style={{marginBottom:6}}>JD Keyword 清单</div>
+            <p className="skill-section-desc" id="reportSkillSectionDesc">这些是系统从 JD 中识别出的关键词。优先把待补强项写进 Summary、Skills 或 Experience。</p>
             <div className="ai-insight">
               <p className="ai-insight-diagnosis">
                 <span className="ico">💡</span>正在加载技能匹配数据…
               </p>
             </div>
             <ul className="skill-list" id="skillList"></ul>
+            <button className="skill-expand-toggle" id="reportSkillExpandToggle" type="button" hidden>查看更多 ↓</button>
+            <details className="jd-keyword-details" id="jdKeywordDetails">
+              <summary><span>查看全部 JD 关键词</span><span>▾</span></summary>
+              <div className="jd-keyword-groups" id="jdKeywordCategoryList"></div>
+            </details>
+          </div>
+        </section>
+
+        <hr className="divider" />
+
+        <section className="section report-metrics" id="reportDataMetrics">
+          <div className="section-num">02 · 数据维度</div>
+          <h2 className="section-title" style={{fontSize:'22px'}}>四个判断维度</h2>
+          <p className="section-desc">这里对应结果页的四张预览卡片，点击展开查看完整说明。</p>
+          <div className="tiles" id="reportDataTiles">
+            <details className="tile">
+              <summary className="tile-summary">
+                <div className="tile-label"><span>JD 匹配度</span><span className="chev">▼</span></div>
+                <div className="tile-value"><span id="reportRankPct">--</span></div>
+                <div className="tile-caption">基于 JD 关键词覆盖</div>
+              </summary>
+              <div className="tile-detail" id="reportRankDetail"></div>
+            </details>
+            <details className="tile">
+              <summary className="tile-summary">
+                <div className="tile-label"><span>ATS 可读性</span><span className="chev">▼</span></div>
+                <div className="tile-value tile-value-split tile-value-ats"><span><span id="reportAtsScore">--</span><span className="tile-percent">%</span></span><span className="tile-risk-value" id="reportAtsRiskCaption">主流系统识别</span></div>
+              </summary>
+              <div className="tile-detail" id="reportAtsDetail"></div>
+            </details>
+            <details className="tile">
+              <summary className="tile-summary">
+                <div className="tile-label"><span>SALARY · 薪资成长</span><span className="chev">▼</span></div>
+                <div className="tile-value" style={{fontSize:'22px'}} id="reportSalaryRange">成长潜力</div>
+                <div className="tile-caption">5年上限 <b id="reportSalaryTop">待校准</b></div>
+              </summary>
+              <div className="tile-detail" id="reportSalaryDetail"></div>
+            </details>
+            <details className="tile">
+              <summary className="tile-summary">
+                <div className="tile-label"><span>AI 影响趋势</span><span className="chev">▼</span></div>
+                <div className="tile-value" style={{fontSize:'22px'}}><span id="reportAiImpactLevel">--</span></div>
+                <div className="tile-caption"><span id="reportAiImpactCaption">待校准</span></div>
+              </summary>
+              <div className="tile-detail" id="reportAiImpactDetail"></div>
+            </details>
           </div>
         </section>
 
         <hr className="divider" />
 
         <section className="section" id="atsDetailSection">
-          <div className="section-num">02 · ATS 诊断</div>
+          <div className="section-num">03 · ATS 诊断</div>
           <h2 className="section-title" style={{fontSize:'22px'}}>系统评分详情</h2>
           <div className="card card-tight" style={{background:'linear-gradient(135deg,rgba(168,213,186,.08) 0%,rgba(232,160,107,.06) 100%)',border:'1px solid rgba(168,213,186,.2)'}}>
             <div style={{display:'flex',flexDirection:'column',alignItems:'center',marginBottom:'16px',position:'relative'}}>
@@ -128,7 +200,7 @@ export default function ReportPage() {
         <hr className="divider" />
 
         <section className="section" id="mentors">
-          <div className="section-num">03 · 12 条导师建议</div>
+          <div className="section-num">04 · 完整导师建议</div>
           <h2 className="section-title" style={{fontSize:'22px'}}>每个角度都有人帮你看过了</h2>
           <div id="mentorLogoIntroSlot"></div>
           <div id="mentorsList"></div>
@@ -137,7 +209,7 @@ export default function ReportPage() {
         <hr className="divider" />
 
         <section className="section" id="service">
-          <div className="section-num">04 · 升级服务</div>
+          <div className="section-num">05 · 升级服务</div>
           <h2 className="section-title" style={{fontSize:'22px'}}>想走得更远?</h2>
           <div className="service-card">
             <h3 className="service-card-title">加 1 位<em>求职导师</em>，<br/>享端到端专业服务</h3>
@@ -163,7 +235,7 @@ export default function ReportPage() {
       </div>
 
       <Script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" strategy="lazyOnload" />
-      <Script src="/report-logic.js" strategy="afterInteractive" />
+      <Script src="/report-logic.js?v=ats-display-zh-20260609-4" strategy="afterInteractive" />
     </>
   );
 }
