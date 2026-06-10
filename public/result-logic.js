@@ -164,12 +164,22 @@ function atsListTopicKey(text) {
   const lower = value.toLowerCase();
   const normalized = normalizeAtsListText(value);
   const has = (pattern) => pattern.test(value) || pattern.test(lower);
+  // fine-grained keys checked first
+  if (has(/\u628a.{0,10}(?:\u5173\u952e\u8bcd|\u6280\u80fd|\u539f\u8bcd).{0,15}(?:\u5199\u8fdb|\u653e\u8fdb|\u8fc1\u79fb|\u8865\u8fdb|\u52a0\u8fdb).{0,15}(?:\u7ecf\u5386|\u8981\u70b9|\u6280\u80fd\u680f|\u7b80\u4ecb)|\u628a.{0,6}\u6280\u80fd\u680f.{0,10}\u8fc1\u79fb|\u8865\u9f50.{0,20}(?:\u5c97\u4f4d)?\u5173\u952e\u8bcd|\u8fc1\u79fb.{0,8}\u7ecf\u5386\u8981\u70b9/i)) return "keyword-placement";
+  if (has(/(?:\u6dfb\u52a0|\u5148\u5199|\u91cd\u5199|\u65b0\u589e|\u7f3a\u5c11).{0,6}\u4e2a\u4eba\u7b80\u4ecb|\u4e2a\u4eba\u7b80\u4ecb.{0,6}(?:\u6bb5\u843d|\u6dfb\u52a0|\u65b0\u589e|\u7f3a\u5931)|\u5148.{0,4}\u4e2a\u4eba\u7b80\u4ecb\u6bb5\u843d/i)) return "write-summary";
+  if (has(/\u91cd\u6392.{0,8}\u7b80\u5386|\u6574\u4f53.{0,8}\u91cd\u65b0\u7ec4\u7ec7|\u56f4\u7ed5\u76ee\u6807\u5c97\u4f4d.{0,6}\u91cd\u65b0|\u4e3b\u7ebf\u4e0d\u591f\u6e05\u695a/i)) return "structure-reorganize";
+  if (has(/\u7edf\u4e00.{0,10}(?:headline|\u4e2a\u4eba\u7b80\u4ecb|\u7ecf\u5386\u6807\u9898)|headline.{0,6}\u5c97\u4f4d|\u804c\u4f4d\u540d\u79f0.{0,6}\u4e00\u81f4|\u5c97\u4f4d\u540d\u79f0.{0,6}\u4e0d\u591f\u4e00\u81f4/i)) return "headline-consistency";
+  if (has(/\u88ab\u52a8(?:\u8bed\u6001|\u53e5)|\u6539\u6210\u4e3b\u52a8|\u4e3b\u52a8\u8d21\u732e|\u91cd\u590d.{0,4}\u52a8\u4f5c\u52a8\u8bcd|\u52a8\u8bcd.{0,4}\u5c42\u6b21|\u66ff\u6362.{0,4}\u52a8\u8bcd/i)) return "verbs-passive";
+  if (has(/\u5730\u70b9.{0,6}\u5de5\u4f5c\u6388\u6743|relocation|\u5de5\u4f5c\u6388\u6743|\u5230\u5c97\u65b9\u5f0f|work\s*authorization/i)) return "location-auth";
+  if (has(/\u4e0d\u591f\u65b0|\u66f4\u65b0.{0,6}\u5f53\u524d\u72b6\u6001|\u7b80\u5386\u5185\u5bb9.{0,4}\u65b0|\u6700\u8fd1\u7ecf\u5386.{0,6}\u4e0d\u591f|\u66f4\u65b0.{0,20}(?:\u7ecf\u5386|\u9879\u76ee|\u65e5\u671f)/i)) return "recency";
+  if (has(/\u534f\u4f5c|\u6c9f\u901a|\u9886\u5bfc\u529b|stakeholder|soft.{0,4}skill|\u8f6f\u6280\u80fd/i)) return "soft-skills";
+  // broad buckets
   if (has(/summary|\u4e2a\u4eba\u7b80\u4ecb|\u5b9a\u4f4d|\u76ee\u6807\u5c97\u4f4d|\u539f\u8bcd|job\s*title|target\s*role/i)) return "positioning";
   if (has(/jd|keyword|\u5173\u952e\u8bcd|\u6280\u80fd|\u5de5\u5177|\u9886\u57df\u8bcd|\u5339\u914d|\u8986\u76d6|\u7f3a\u5931|\u8865\u9f50/i)) return "keywords";
   if (has(/\u91cf\u5316|\u6210\u679c|\u7ed3\u679c|\u5f71\u54cd|\u6548\u7387|\u767e\u5206\u6bd4|\u91d1\u989d|impact|result|measurable/i)) return "impact";
   if (has(/bullet|\u7ecf\u5386|\u8bc1\u636e|\u9879\u76ee|action\s*\+\s*method|\u52a8\u4f5c|\u65b9\u6cd5/i)) return "experience-evidence";
   if (has(/\u65f6\u95f4\u5012\u5e8f|chronolog|\u65e5\u671f|\u5e74\u4efd/i)) return "chronology";
-  if (has(/\u4e2d\u56fd|\u7f8e\u56fd|us-based|willing\s*to\s*relocate|relocat/i)) return "market-fit";
+  if (has(/\u4e2d\u56fd|\u7f8e\u56fd|\u975e\u76ee\u6807\u5e02\u573a|us-based|willing\s*to\s*relocate|relocat/i)) return "market-fit";
   if (has(/email|phone|linkedin|github|portfolio|\u8054\u7cfb|\u90ae\u7bb1|\u4f5c\u54c1\u96c6|\u94fe\u63a5/i)) return "profile-links";
   if (has(/\u683c\u5f0f|\u6587\u4ef6|format|file/i)) return "format";
   if (has(/intern|internship|\u5b9e\u4e60|\u65f6\u957f\u4e0d\u8db3|\u77ed\u671f/i)) return "tenure";
@@ -372,7 +382,9 @@ function simplifySuggestionText(text) {
     .replace(/系统\s+和\s+招聘方/g, "系统和招聘方")
     .replace(/\s+(个人简介段落|个人简介)/g, "$1")
     .replace(/(系统和招聘方)\s+/g, "$1")
-    .replace(/这是\s+系统和招聘方/g, "这是系统和招聘方");
+    .replace(/这是\s+系统和招聘方/g, "这是系统和招聘方")
+    .replace(/([一-鿿＀-￯]) +([一-鿿＀-￯，。、：；！？])/g, "$1$2")
+    .replace(/([一-鿿＀-￯，。、：；！？]) +([一-鿿＀-￯])/g, "$1$2");
 }
 function normalizeSuggestionListLegacy() {
   const raw = [
@@ -406,7 +418,7 @@ function normalizeSuggestionList() {
     const nextItems = dedupeAtsList([...items, item], { max: 3 });
     if (nextItems.length > items.length) items.push(item);
   }
-  return dedupeAtsList(items, { max: 3 });
+  return items.slice(0, 3);
 }
 function resultProblemFallbacks() {
   return [
@@ -438,7 +450,7 @@ function normalizeProblemList() {
     const nextItems = dedupeAtsList([...items, item], { max: 3 });
     if (nextItems.length > items.length) items.push(item);
   }
-  return dedupeAtsList(items, { max: 3 });
+  return items.slice(0, 3);
 }
 function getRoleSignalText() {
   return [
@@ -1848,10 +1860,9 @@ function getJdSkillDisplayCount(skills) {
   return { have, total, weak: Math.max(total - have, 0) };
 }
 function renderSkillSection(skills) {
-  const isPaid = Boolean(s.isPaid);
-  const visibleCount = isPaid ? skills.length : Math.min(skills.length, 3);
+  const visibleCount = Math.min(skills.length, 3);
   const visibleSkills = skills.slice(0, visibleCount);
-  const hiddenSkills = isPaid ? [] : skills.slice(visibleCount);
+  const hiddenSkills = skills.slice(visibleCount);
   const jdCount = getJdKeywordCount(atsResult);
   const counts = jdCount ? {
     have: jdCount.matched,
@@ -2318,14 +2329,9 @@ if (atsResult && atsResult.atsScore) {
     ).join("") + renderAtsPreviewMoreButton("problems") + renderPaywallMoreBlock("problems");
   }
 
-  // 优先建议
-  const suggestionsEl = document.getElementById("atsSuggestions");
-  if (suggestionsEl) {
-    const suggestions = normalizeSuggestionList();
-    suggestionsEl.innerHTML = suggestions.map((sg) =>
-      `<li style="margin-bottom:10px;padding-left:20px;position:relative;line-height:1.5;"><span style="position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--jade);"></span>${escapeHtml(sg)}</li>`
-    ).join("") + renderAtsPreviewMoreButton("suggestions") + renderPaywallMoreBlock("suggestions");
-  }
+  // 优先建议 — 暂时隐藏，与下方建议重复
+  // const suggestionsEl = document.getElementById("atsSuggestions");
+  // if (suggestionsEl) { ... }
 
   // Keep the first three bullets visible; clicking the header only reveals the paid teaser.
   function toggleAtsPreviewDetails(el, chev) {
@@ -2333,7 +2339,7 @@ if (atsResult && atsResult.atsScore) {
     el.open = true;
     el.classList.toggle("is-expanded");
     const expanded = el.classList.contains("is-expanded");
-    if (chev) chev.style.transform = expanded ? "rotate(0deg)" : "rotate(-90deg)";
+    if (chev) chev.style.transform = expanded ? "rotate(180deg)" : "rotate(0deg)";
     el.querySelectorAll(".ats-preview-more").forEach(btn => {
       btn.textContent = expanded ? "收起" : "查看更多";
     });
@@ -2360,7 +2366,7 @@ if (atsResult && atsResult.atsScore) {
       });
     });
     const chev = document.getElementById(chevId);
-    if (chev) chev.style.transform = "rotate(-90deg)";
+    if (chev) chev.style.transform = "rotate(0deg)";
     el.querySelectorAll(".ats-preview-more").forEach(btn => { btn.textContent = "查看更多"; });
   });
 

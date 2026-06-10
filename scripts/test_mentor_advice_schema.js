@@ -1706,6 +1706,221 @@ test("mentor rules backfill fast lane only approves high-signal rows", () => {
   assert.strictEqual(broad.review.fastLaneApproved, false);
 });
 
+test("mentor rules backfill bulk safe approves advisory-only template rows", () => {
+  const row = mentorInsightRulesBackfill.buildOutput({
+    id: 90303,
+    retrieval_scope: "resume_edit",
+    P_mentor: "This project experience is valuable but currently reads like a task list without enough context about what the student did, how they did it, and why it mattered for the target role. The resume should make the work easier to understand.",
+    A_action: "Rewrite the project bullet so it explains the task, method, and result in a more complete way.",
+    I_insight: "",
+  });
+  assert.strictEqual(row.mentor_rule_family, "experience");
+  assert.ok(row.review.flags.includes("mentor_generic_template_risk"));
+  assert.strictEqual(row.review.recommendation, "approved");
+  assert.strictEqual(row.review.bulkSafeApproved, true);
+});
+
+test("mentor rules backfill bulk safe still blocks HR voice and lost high-signal terms", () => {
+  const hrVoice = mentorInsightRulesBackfill.reviewMentor({
+    id: 90304,
+    retrieval_scope: "resume_edit",
+    P_mentor: "Resume lacks portfolio link.",
+    A_action: "Add a portfolio link under the name.",
+    I_insight: "",
+  }, "HR 会先看有没有作品集链接，没有的话会影响初筛。");
+  assert.ok(hrVoice.flags.includes("mentor_hr_voice_risk"));
+  assert.strictEqual(hrVoice.recommendation, "needs_review");
+
+  const lostSignal = mentorInsightRulesBackfill.reviewMentor({
+    id: 90305,
+    retrieval_scope: "resume_edit",
+    P_mentor: "Project should mention Yelp API and clustering.",
+    A_action: "Use Yelp API data and clustering to show analysis depth.",
+    I_insight: "",
+  }, "你这个项目可以写得更完整一点，先把方法和结果补清楚。");
+  assert.ok(lostSignal.flags.includes("lost_required_signal"));
+  assert.strictEqual(lostSignal.recommendation, "needs_review");
+});
+
+test("mentor rules bulk classifier keeps process-engineer and JD-matching specifics", () => {
+  const process = mentorInsightRulesBackfill.buildOutput({
+    id: 90306,
+    retrieval_scope: "resume_edit",
+    problem_tags: "low_role_specificity,weak_target_role_alignment",
+    P_mentor: "Graduate chemistry background with catalysis can support process engineer work in chemical plants.",
+    A_action: "Connect catalysis, key parameter monitoring, and control-console tuning to process engineer daily work.",
+    H_hook: "看催化反应和塔里面需要关注哪几个参数。",
+    I_insight: "",
+  });
+  assert.strictEqual(process.mentor_rule_family, "research_industry_positioning");
+  assert.ok(/process engineer|催化反应|参数/.test(process.proposed.humanized_mentor_insight));
+
+  const matching = mentorInsightRulesBackfill.buildOutput({
+    id: 90307,
+    retrieval_scope: "resume_edit",
+    problem_tags: "low_role_specificity,weak_target_role_alignment",
+    P_mentor: "Resume keyword coverage is too low for ATS.",
+    A_action: "Collect 10 target JDs, run resume-JD matching score, add missing keywords, then validate with 5-7 new JDs.",
+    I_insight: "",
+  });
+  assert.strictEqual(matching.mentor_rule_family, "keyword_evidence");
+  assert.ok(/10 份|matching score|5-7 份/.test(matching.proposed.humanized_mentor_insight));
+});
+
+test("mentor rules bulk classifier handles strategy and interview rows without keyword drift", () => {
+  const cases = [
+    {
+      row: {
+        id: 94001,
+        retrieval_scope: "resume_edit",
+        P_mentor: "Student is unsure how many bullet points each experience should have.",
+        A_action: "Write 3-5 bullet points per work or project experience, keeping density useful but not redundant.",
+      },
+      family: "bullet_count_density",
+      must: /3-5|bullet|任务|方法|结果/,
+    },
+    {
+      row: {
+        id: 94002,
+        retrieval_scope: "resume_edit",
+        P_mentor: "Several students use the same project template, so identical wording may look duplicated.",
+        A_action: "Use ChatGPT to rewrite wording while keeping the project title and core facts unchanged.",
+      },
+      family: "template_differentiation",
+      must: /项目模板|措辞|雷同|核心事实/,
+    },
+    {
+      row: {
+        id: 94003,
+        retrieval_scope: "job_search",
+        P_mentor: "The market is tough for new grad full-time roles, but ICC contract jobs are more available.",
+        A_action: "Consider contract jobs as a 3-6 month project path before applying to full-time roles again.",
+      },
+      family: "contract_path_strategy",
+      must: /contract|3-6|美国经验|正职/,
+    },
+    {
+      row: {
+        id: 94004,
+        retrieval_scope: "interview",
+        P_mentor: "LeetCode around 200 problems may be enough for intern or ICC, but not enough for full time big tech.",
+        A_action: "Continue LeetCode practice and focus on high-frequency Java questions.",
+      },
+      family: "interview_prep_depth",
+      must: /LeetCode|Intern|full time|高频题/,
+    },
+    {
+      row: {
+        id: 94005,
+        retrieval_scope: "interview",
+        P_mentor: "Modern control theory is academic; most industry systems still use PID and frequency domain analysis.",
+        A_action: "Review Bode plot, Nyquist plot, PID, servo drive, actuator, and system identification.",
+      },
+      family: "controls_engineering_depth",
+      must: /PID|Bode|Nyquist|system identification/,
+    },
+    {
+      row: {
+        id: 94006,
+        retrieval_scope: "resume_edit",
+        P_mentor: "A project only says product features and misses market launch thinking.",
+        A_action: "Add user survey, user study, target audience, campaign, and go-to-market plan.",
+      },
+      family: "product_business_framing",
+      must: /user survey|user study|go-to-market|目标用户/,
+    },
+    {
+      row: {
+        id: 94007,
+        retrieval_scope: "resume_edit",
+        P_mentor: "Only listing Azure narrows the company match; tech companies and startups often use AWS or Google Cloud.",
+        A_action: "Show AWS first if available, then Google Cloud; keep Azure for Microsoft-related applications.",
+      },
+      family: "cloud_platform_positioning",
+      must: /Azure|AWS|Google Cloud|科技公司/,
+    },
+  ];
+
+  for (const c of cases) {
+    const output = mentorInsightRulesBackfill.buildOutput({
+      problem_tags: "",
+      I_insight: "",
+      ...c.row,
+    });
+    assert.strictEqual(output.mentor_rule_family, c.family, `${c.family}: ${output.mentor_rule_family}`);
+    assert.ok(c.must.test(output.proposed.humanized_mentor_insight), output.proposed.humanized_mentor_insight);
+    assert.strictEqual(output.review.recommendation, "approved", JSON.stringify(output.review));
+    assert.ok(!/HR|招聘|我初筛|我第一眼|我会帮你|我会把|我会从|我会陪你/.test(output.proposed.humanized_mentor_insight), output.proposed.humanized_mentor_insight);
+  }
+});
+
+test("mentor rules detail keepers preserve top hold signals", () => {
+  const cases = [
+    {
+      row: {
+        id: 94101,
+        retrieval_scope: "resume_edit",
+        P_mentor: "Finance student is targeting Business Analyst and Accounting roles, but the resume mixes Advisory and valuation language.",
+        A_action: "Split Finance, Accounting, and Business Analyst positioning so each version has the right evidence.",
+      },
+      family: "finance_accounting_positioning",
+      must: /Finance|Accounting|Business Analyst|Advisory/,
+    },
+    {
+      row: {
+        id: 94102,
+        retrieval_scope: "resume_edit",
+        P_mentor: "The DA project starts from raw data but the resume only lists SQL and Python.",
+        A_action: "Show the raw data flow, analysis, visualization, and dashboard result for BA and DS readers.",
+      },
+      family: "analytics_visualization_evidence",
+      must: /DA\/DS|raw data|visualization|dashboard/,
+    },
+    {
+      row: {
+        id: 94103,
+        retrieval_scope: "resume_edit",
+        P_mentor: "The Portfolio case study and research paper are useful but currently hidden as generic project text.",
+        A_action: "Describe the Portfolio case study, paper status, research role, and contribution.",
+      },
+      family: "portfolio_research_artifact",
+      must: /Portfolio|paper|research|contribution/,
+    },
+    {
+      row: {
+        id: 94104,
+        retrieval_scope: "resume_edit",
+        P_mentor: "The RAG chatbot project lacks evaluation details.",
+        A_action: "Explain faithfulness, answer relevance, context recall, and chatbot evaluation instead of only saying AI API.",
+      },
+      family: "rag_chatbot_evaluation",
+      must: /RAG|evaluation|faithfulness|answer relevance|context recall/,
+    },
+    {
+      row: {
+        id: 94105,
+        retrieval_scope: "resume_edit",
+        P_mentor: "The student lists linear regression but cannot explain the analytics method clearly.",
+        A_action: "Explain variables, target, result, limitations, and how linear regression supports the business analytics conclusion.",
+      },
+      family: "analytics_method_truthfulness",
+      must: /linear regression|变量|结果|限制/,
+    },
+  ];
+
+  for (const c of cases) {
+    const output = mentorInsightRulesBackfill.buildOutput({
+      problem_tags: "",
+      I_insight: "",
+      ...c.row,
+    });
+    assert.strictEqual(output.mentor_rule_family, c.family, `${c.family}: ${output.mentor_rule_family}`);
+    assert.ok(c.must.test(output.proposed.humanized_mentor_insight), output.proposed.humanized_mentor_insight);
+    assert.strictEqual(output.review.recommendation, "approved", JSON.stringify(output.review));
+    assert.ok(!/HR|招聘|我初筛|我第一眼|我会帮你|我会把|我会从|我会陪你/.test(output.proposed.humanized_mentor_insight), output.proposed.humanized_mentor_insight);
+  }
+});
+
 test("mentor LLM generation review blocks overactive or HR-like mentor copy", () => {
   const row = {
     id: 90401,

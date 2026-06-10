@@ -114,7 +114,7 @@ export default function ResultPage() {
           <div className="tiles" id="tilesArea">
             <details className="tile">
               <summary className="tile-summary">
-                <div className="tile-label"><span>JD 匹配度</span><span className="chev">▾</span></div>
+                <div className="tile-label"><span>JD 匹配度</span><span className="chev">▼</span></div>
                 <div className="tile-value"><span id="rankPct">--</span></div>
                 <div className="tile-caption">基于 JD 关键词覆盖</div>
               </summary>
@@ -122,14 +122,14 @@ export default function ResultPage() {
             </details>
             <details className="tile">
               <summary className="tile-summary">
-                <div className="tile-label"><span>ATS 可读性</span><span className="chev">▾</span></div>
+                <div className="tile-label"><span>ATS 可读性</span><span className="chev">▼</span></div>
                 <div className="tile-value tile-value-split tile-value-ats"><span><span id="atsScore">--</span><span className="tile-percent">%</span></span><span className="tile-risk-value" id="atsRiskCaption">主流系统识别</span></div>
               </summary>
               <div className="tile-detail" id="atsDetail"></div>
             </details>
             <details className="tile">
               <summary className="tile-summary">
-                <div className="tile-label"><span>SALARY · 薪资成长</span><span className="chev">▾</span></div>
+                <div className="tile-label"><span>SALARY · 薪资成长</span><span className="chev">▼</span></div>
                 <div className="tile-value" style={{fontSize:'22px'}} id="salaryRange">--</div>
                 <div className="tile-caption">5年上限 <span id="salaryTop">--</span></div>
               </summary>
@@ -137,7 +137,7 @@ export default function ResultPage() {
             </details>
             <details className="tile">
               <summary className="tile-summary">
-                <div className="tile-label"><span>AI 影响趋势</span><span className="chev">▾</span></div>
+                <div className="tile-label"><span>AI 影响趋势</span><span className="chev">▼</span></div>
                 <div className="tile-value" style={{fontSize:'22px'}}><span id="compCount">--</span></div>
                 <div className="tile-caption"><span id="admitRate">待校准</span></div>
               </summary>

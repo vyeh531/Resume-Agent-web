@@ -65,9 +65,10 @@ function extractTitleFromJD(jdText) {
     .replace(/\s*[（(](?:junior|senior|entry[-\s]?level|full[-\s]?time|part[-\s]?time|internship|intern|co-?op|new\s*grad|全职|兼职|实习|校招)[^）)]*[）)]\s*$/i, "")
     .replace(/\s+/g, " ")
     .trim();
-  const roleNouns = /(engineer|developer|scientist|analyst|manager|management\s+trainee|trainee|designer|consultant|researcher|architect|specialist|associate|intern|coordinator|assistant|support|officer|实习|管培生|工程师|分析师|经理|顾问|研究员|设计师|专员|助理|主管|负责人|产品|运营|算法|机器学习|软件|前端|后端)/i;
+  const roleNouns = /(engineer|developer|scientist|analyst|manager|management\s+trainee|trainee|designer|consultant|researcher|architect|specialist|associate|intern|coordinator|assistant|support|officer|director|lead|strategist|recruiter|writer|editor|实习|管培生|工程师|分析师|经理|顾问|研究员|设计师|专员|助理|主管|负责人|产品|运营|算法|机器学习|软件|前端|后端)/i;
   const locationWords = /\b(remote|hybrid|onsite|on-site|virginia|tennessee|california|new york|seattle|boston|austin|atlanta|miami|los angeles|wa|ca|ny|tx|fl|tn|va)\b|弗吉尼亚|田纳西|加州|纽约|西雅图|洛杉矶|亚特兰大|迈阿密|远程|地点|地区|城市/i;
   const sectionNoise = /responsibilities|requirements|qualifications|about us|description|summary|duties|tasks|projects|policies|procedures|goals|薪资|职责|要求|资格|福利|公司|公司介绍|我们|工作内容|任职要求|岗位职责/i;
+  const seniorityPrefix = /^(?:Senior|Sr\.?|Junior|Jr\.?|Lead|Principal|Staff|Associate|Head\s+of|Mid[- ]Level|Entry[- ]Level|New\s+Grad)\s+/i;
   const isLikelyTitle = (value, allowNoRoleNoun = false) => {
     const title = normalizeTitle(value);
     if (!title || title.length < 2 || title.length > 80) return false;
@@ -76,31 +77,79 @@ function extractTitleFromJD(jdText) {
     return allowNoRoleNoun || roleNouns.test(title);
   };
 
-  // 1. Explicit label markers (EN + ZH, including 【岗位】 bracket format)
-  const labelPatterns = [
+  // 1a. Explicit label markers (key: value format) — allowNoRoleNoun because these are definitive
+  const strictLabelPatterns = [
     /【(?:岗位|职位|职称|职务|招聘岗位|应聘岗位)】\s*[：:]\s*([^\n【]+)/g,
     /^(?:岗位|职位|职称|职务|招聘职位|应聘职位)\s*[：:\-–]\s*(.+)/gm,
-    /^(?:job\s+title|position|role|title)\s*[:\-–]\s*(.+)/gim,
-    /(?:we(?:'re|\s+are)\s+(?:looking|hiring|seeking)\s+(?:for\s+)?(?:an?\s+)?)([\w\s\-\/]+?)(?:\s*(?:to|who|that|\.|,|$))/gi,
-    /(?:join\s+us\s+as\s+(?:an?\s+)?)([\w\s\-\/]+?)(?:\s*(?:\.|,|$))/gi,
+    /^(?:job\s+title|position\s+title|position|role\s+title|role|title|opening)\s*[:\-–]\s*(.+)/gim,
   ];
-  for (const re of labelPatterns) {
+  for (const re of strictLabelPatterns) {
     for (const m of text.matchAll(re)) {
       const title = normalizeTitle(m[1]).replace(/[.!?。！？]$/, "").trim();
-      if (isLikelyTitle(title, true)) return title;
+      const wordCount = title.split(/\s+/).length;
+      if (wordCount <= 7 && isLikelyTitle(title, true)) return title;
     }
   }
 
-  // 2. First non-empty line that looks like a job title
+  // 1b. Sentence-embedded hiring phrases — require roleNoun to avoid matching generic words like "someone"
+  const sentencePatterns = [
+    /(?:we(?:'re|\s+are)\s+(?:looking|hiring|seeking)\s+(?:for\s+)?(?:an?\s+)?)([\w\s\-\/]+?)(?:\s*(?:to\b|who\b|that\b|and\b|\.|,|$))/gi,
+    /(?:join\s+us\s+as\s+(?:an?\s+)?)([\w\s\-\/]+?)(?:\s*(?:to\b|who\b|and\b|to\s+help\b|\.|,|$))/gi,
+    /(?:\bhiring\s+(?:an?\s+)?)([\w\s\-\/]+?)(?:\s*(?:to\b|who\b|and\b|\.|,|!|$))/gi,
+  ];
+  for (const re of sentencePatterns) {
+    for (const m of text.matchAll(re)) {
+      const title = normalizeTitle(m[1]).replace(/[.!?。！？]$/, "").trim();
+      const wordCount = title.split(/\s+/).length;
+      if (wordCount <= 7 && isLikelyTitle(title, false)) return title;
+    }
+  }
+
+  // 2. "As a/an/the [Title], ..." — extremely common in LinkedIn, Greenhouse, Lever JDs
+  const asAPattern = /\bAs\s+(?:an?\s+|the\s+)((?:(?:Senior|Sr\.?|Junior|Jr\.?|Lead|Principal|Staff|Head|Associate|Entry[- ]Level|Mid[- ]Level)\s+)?(?:\w+(?:\s+\w+){0,4}))\s*,/gi;
+  for (const m of text.matchAll(asAPattern)) {
+    const title = normalizeTitle(m[1]).replace(/[.!?。！？]$/, "").trim();
+    const wordCount = title.split(/\s+/).length;
+    if (wordCount <= 6 && isLikelyTitle(title)) return title;
+  }
+
+  // 3. "The [Title] will/is responsible for/leads/manages..." — Indeed, Workday Role Summary style
+  //    e.g. "The Senior Software Engineer will lead the delivery of..."
+  const titleWillPattern = /\bThe\s+((?:(?:Senior|Sr\.?|Junior|Jr\.?|Lead|Principal|Staff|Associate|Head)\s+)?(?:\w+(?:\s+\w+){0,4}))\s+(?:will\b|is\s+responsible|leads?\b|manages?\b|oversees?\b|works?\s+(?:closely|with)\b)/gi;
+  for (const m of text.matchAll(titleWillPattern)) {
+    const title = normalizeTitle(m[1])
+      .replace(/\s+(?:will|is|leads?|manages?|oversees?|works?)$/i, "")
+      .replace(/[.!?。！？]$/, "")
+      .trim();
+    const wordCount = title.split(/\s+/).length;
+    if (wordCount >= 2 && wordCount <= 6 && isLikelyTitle(title)) return title;
+  }
+
+  // 4. Title embedded after section intro headers like "Role Summary:", "About the Role:", "About This Position:"
+  //    — scan the first paragraph of these sections for an embedded title
+  const sectionIntroMatch = text.match(
+    /^(?:role\s+summary|about\s+(?:the\s+)?(?:role|position|this\s+role|this\s+position|the\s+job)|position\s+(?:summary|overview)|job\s+(?:summary|overview))\s*[:\-–]?\s*\n+([\s\S]{0,600})/im
+  );
+  if (sectionIntroMatch) {
+    const para = sectionIntroMatch[1].split(/\n\n/)[0];
+    for (const re of [asAPattern, titleWillPattern]) {
+      re.lastIndex = 0;
+      for (const m of para.matchAll(re)) {
+        const title = normalizeTitle(m[1]).replace(/[.!?。！？]$/, "").trim();
+        const wordCount = title.split(/\s+/).length;
+        if (wordCount >= 2 && wordCount <= 6 && isLikelyTitle(title)) return title;
+      }
+    }
+  }
+
+  // 5. First non-empty line that looks like a job title
   //    (short, not a sentence, not all-caps noise like "JOB DESCRIPTION")
   const beforeDuties = text.split(/(?:【\s*)?(?:岗位职责|工作职责|工作内容|responsibilities|duties)(?:\s*】)?\s*[：:]?/i)[0] || text;
   const lines = beforeDuties.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
-  for (const line of lines.slice(0, 6)) {
-    // Skip lines that are obviously headers / noise
-    if (/^(job\s+description|about\s+(us|the\s+role|this\s+role)|overview|summary|responsibilities|requirements|qualifications)/i.test(line)) continue;
+  for (const line of lines.slice(0, 8)) {
+    if (/^(job\s+description|about\s+(us|the\s+role|this\s+role|this\s+position)|role\s+summary|position\s+(?:summary|overview)|job\s+(?:summary|overview)|overview|summary|responsibilities|requirements|qualifications)/i.test(line)) continue;
     if (/^[A-Z\s\-&]+$/.test(line) && line.length > 30) continue; // all-caps long header
     if (line.length < 3 || line.length > 70) continue;
-    // Looks title-like if it has mixed case or is 1-4 words
     const wordCount = line.split(/\s+/).length;
     if (wordCount <= 6 && !/[.?!。？！]$/.test(line) && isLikelyTitle(line, false)) return normalizeTitle(line);
   }
@@ -1058,6 +1107,7 @@ function buildRetrievalQuery(internalAtsResult) {
       seniority,
       topics,
     },
+    resumeFacts: internalAtsResult.resumeFacts || null,
   };
 }
 

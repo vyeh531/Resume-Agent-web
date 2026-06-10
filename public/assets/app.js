@@ -145,8 +145,8 @@ function inferTargetJobFromJD(jdText) {
     return allowNoRoleNoun || roleWords.test(title);
   }
   const labeledPatterns = [
-    /^\s*(?:【\s*)?(?:job\s*title|position\s*title|role\s*title|target\s*(?:role|position)|目标岗位|岗位|职位|职称|职务|招聘岗位|应聘岗位)(?:\s*】)?\s*[:：\-–]\s*([^\n|;；]+)/gim,
-    /^\s*(?:job\s*title|position\s*title|role\s*title|target\s*(?:role|position))\s*[:\-]\s*([^\n|;]+)/gim,
+    /^\s*(?:【\s*)?(?:job\s*title|position\s*title|position|role\s*title|role|title|opening|target\s*(?:role|position)|目标岗位|岗位|职位|职称|职务|招聘岗位|应聘岗位)(?:\s*】)?\s*[:：\-–]\s*([^\n|;；]+)/gim,
+    /^\s*(?:job\s*title|position\s*title|position|role\s*title|role|title|opening|target\s*(?:role|position))\s*[:\-]\s*([^\n|;]+)/gim,
   ];
   for (const pattern of labeledPatterns) {
     for (const match of text.matchAll(pattern)) {
@@ -181,6 +181,7 @@ function normalizeExtractedTargetJobTitle(value) {
   return String(value || "")
     .replace(/^\s*\u3010(?:\u76ee\u6807\u5c97\u4f4d|\u5c97\u4f4d|\u804c\u4f4d|\u804c\u79f0|\u804c\u52a1|\u62db\u8058\u5c97\u4f4d|\u5e94\u8058\u5c97\u4f4d)\u3011\s*[\uff1a:]\s*/i, "")
     .replace(/^\s*(?:\u76ee\u6807\u5c97\u4f4d|\u5c97\u4f4d|\u804c\u4f4d|\u804c\u79f0|\u804c\u52a1|\u62db\u8058\u5c97\u4f4d|\u5e94\u8058\u5c97\u4f4d)\s*[\uff1a:\-–]\s*/i, "")
+    .replace(/^\s*(?:job\s+title|position\s+title|position|role\s+title|role|title|opening)\s*[:\-–]\s*/i, "")
     .replace(/\s*[（(](?:junior|senior|entry[-\s]?level|full[-\s]?time|part[-\s]?time|internship|intern|co-?op|new\s*grad|全职|兼职|实习|校招)[^）)]*[）)]\s*$/i, "")
     .replace(/\s+/g, " ")
     .trim();
@@ -206,13 +207,29 @@ function extractTargetJobFromJD(jdText) {
     return allowNoRoleNoun || roleWords.test(title);
   }
   const labeledPatterns = [
-    /^\s*(?:\u3010\s*)?(?:job\s*title|position\s*title|role\s*title|target\s*(?:role|position)|\u76ee\u6807\u5c97\u4f4d|\u5c97\u4f4d|\u804c\u4f4d|\u804c\u79f0|\u804c\u52a1|\u62db\u8058\u5c97\u4f4d|\u5e94\u8058\u5c97\u4f4d)(?:\s*\u3011)?\s*[:\uff1a\-–]\s*([^\n|;\uff1b]+)/gim,
-    /^\s*(?:job\s*title|position\s*title|role\s*title|target\s*(?:role|position))\s*[:\-]\s*([^\n|;]+)/gim,
+    /^\s*(?:\u3010\s*)?(?:job\s*title|position\s*title|position|role\s*title|role|title|opening|target\s*(?:role|position)|\u76ee\u6807\u5c97\u4f4d|\u5c97\u4f4d|\u804c\u4f4d|\u804c\u79f0|\u804c\u52a1|\u62db\u8058\u5c97\u4f4d|\u5e94\u8058\u5c97\u4f4d)(?:\s*\u3011)?\s*[:\uff1a\-–]\s*([^\n|;\uff1b]+)/gim,
+    /^\s*(?:job\s*title|position\s*title|position|role\s*title|role|title|opening|target\s*(?:role|position))\s*[:\-]\s*([^\n|;]+)/gim,
   ];
   for (const pattern of labeledPatterns) {
     for (const match of text.matchAll(pattern)) {
       const title = match && clean(match[1]);
       if (isLikelyTitle(title, true)) return title;
+    }
+  }
+
+  // Sentence-embedded hiring phrases (LinkedIn "As a", Indeed "The X will", Handshake "hiring a")
+  const sentencePatterns = [
+    /\bAs\s+(?:an?\s+|the\s+)((?:(?:Senior|Sr\.?|Junior|Jr\.?|Lead|Principal|Staff|Associate|Head)\s+)?(?:\w+(?:\s+\w+){0,4}))\s*,/gi,
+    /\bThe\s+((?:(?:Senior|Sr\.?|Junior|Jr\.?|Lead|Principal|Staff|Associate|Head)\s+)?(?:\w+(?:\s+\w+){0,4}))\s+(?:will\b|is\s+responsible|leads?\b|manages?\b)/gi,
+    /(?:we(?:'re|\s+are)\s+(?:looking|hiring|seeking)\s+(?:for\s+)?(?:an?\s+)?)([\w\s\-\/]+?)(?:\s*(?:to\b|who\b|that\b|and\b|\.|,|$))/gi,
+    /(?:join\s+us\s+as\s+(?:an?\s+)?)([\w\s\-\/]+?)(?:\s*(?:to\b|who\b|and\b|\.|,|$))/gi,
+    /(?:\bhiring\s+(?:an?\s+)?)([\w\s\-\/]+?)(?:\s*(?:to\b|who\b|and\b|\.|,|!|$))/gi,
+  ];
+  for (const re of sentencePatterns) {
+    for (const m of text.matchAll(re)) {
+      const t = clean(m[1]).replace(/\s+(?:will|is|leads?|manages?)$/i, "").replace(/[.!?]*$/, "").trim();
+      const wc = t.split(/\s+/).length;
+      if (wc >= 2 && wc <= 6 && isLikelyTitle(t, false)) return t;
     }
   }
   const dutyLeadWords = /^(rotate|assist|participate|develop|analy[sz]e|complete|provide|learn|create|help|support|work|collaborate|manage\s+day[-\s]?to[-\s]?day)\b/i;

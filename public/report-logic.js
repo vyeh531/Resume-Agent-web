@@ -161,12 +161,30 @@ function atsListTopicKey(text) {
   const lower = value.toLowerCase();
   const normalized = normalizeAtsListText(value);
   const has = (pattern) => pattern.test(value) || pattern.test(lower);
+  // \u2500\u2500 fine-grained keys checked first \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+  // "\u628a\u5173\u952e\u8bcd/\u6280\u80fd\u5199\u8fdb\u7ecf\u5386\u8981\u70b9" \u2014 suggestions 5/6/7 all collapse here
+  if (has(/\u628a.{0,10}(?:\u5173\u952e\u8bcd|\u6280\u80fd|\u539f\u8bcd).{0,15}(?:\u5199\u8fdb|\u653e\u8fdb|\u8fc1\u79fb|\u8865\u8fdb|\u52a0\u8fdb).{0,15}(?:\u7ecf\u5386|\u8981\u70b9|\u6280\u80fd\u680f|\u7b80\u4ecb)|\u628a.{0,6}\u6280\u80fd\u680f.{0,10}\u8fc1\u79fb|\u8865\u9f50.{0,20}(?:\u5c97\u4f4d)?\u5173\u952e\u8bcd|\u8fc1\u79fb.{0,8}\u7ecf\u5386\u8981\u70b9/i)) return "keyword-placement";
+  // "\u6dfb\u52a0/\u91cd\u5199\u4e2a\u4eba\u7b80\u4ecb" \u2014 suggestions 1 & 3 / problem "\u7f3a\u5c11\u4e2a\u4eba\u7b80\u4ecb" all collapse here
+  if (has(/(?:\u6dfb\u52a0|\u5148\u5199|\u91cd\u5199|\u65b0\u589e|\u7f3a\u5c11).{0,6}\u4e2a\u4eba\u7b80\u4ecb|\u4e2a\u4eba\u7b80\u4ecb.{0,6}(?:\u6bb5\u843d|\u6dfb\u52a0|\u65b0\u589e|\u7f3a\u5931)|\u5148.{0,4}\u4e2a\u4eba\u7b80\u4ecb\u6bb5\u843d/i)) return "write-summary";
+  // "\u6574\u4f53\u91cd\u6392/\u91cd\u65b0\u7ec4\u7ec7" \u2014 separate from positioning
+  if (has(/\u91cd\u6392.{0,8}\u7b80\u5386|\u6574\u4f53.{0,8}\u91cd\u65b0\u7ec4\u7ec7|\u56f4\u7ed5\u76ee\u6807\u5c97\u4f4d.{0,6}\u91cd\u65b0|\u4e3b\u7ebf\u4e0d\u591f\u6e05\u695a/i)) return "structure-reorganize";
+  // "\u7edf\u4e00headline/\u5c97\u4f4d\u8bed\u8a00\u4e00\u81f4\u6027"
+  if (has(/\u7edf\u4e00.{0,10}(?:headline|\u4e2a\u4eba\u7b80\u4ecb|\u7ecf\u5386\u6807\u9898)|headline.{0,6}\u5c97\u4f4d|\u804c\u4f4d\u540d\u79f0.{0,6}\u4e00\u81f4|\u5c97\u4f4d\u540d\u79f0.{0,6}\u4e0d\u591f\u4e00\u81f4/i)) return "headline-consistency";
+  // "\u88ab\u52a8\u8bed\u6001/\u91cd\u590d\u52a8\u8bcd"
+  if (has(/\u88ab\u52a8(?:\u8bed\u6001|\u53e5)|\u6539\u6210\u4e3b\u52a8|\u4e3b\u52a8\u8d21\u732e|\u91cd\u590d.{0,4}\u52a8\u4f5c\u52a8\u8bcd|\u52a8\u8bcd.{0,4}\u5c42\u6b21|\u66ff\u6362.{0,4}\u52a8\u8bcd/i)) return "verbs-passive";
+  // "\u5730\u70b9/\u5de5\u4f5c\u6388\u6743/relocation"
+  if (has(/\u5730\u70b9.{0,6}\u5de5\u4f5c\u6388\u6743|relocation|\u5de5\u4f5c\u6388\u6743|\u5230\u5c97\u65b9\u5f0f|work\s*authorization/i)) return "location-auth";
+  // "\u7b80\u5386\u4e0d\u591f\u65b0/\u9700\u8981\u66f4\u65b0"
+  if (has(/\u4e0d\u591f\u65b0|\u66f4\u65b0.{0,6}\u5f53\u524d\u72b6\u6001|\u7b80\u5386\u5185\u5bb9.{0,4}\u65b0|\u6700\u8fd1\u7ecf\u5386.{0,6}\u4e0d\u591f|\u66f4\u65b0.{0,20}(?:\u7ecf\u5386|\u9879\u76ee|\u65e5\u671f)/i)) return "recency";
+  // "\u534f\u4f5c/\u8f6f\u6280\u80fd/\u9886\u5bfc\u529b"
+  if (has(/\u534f\u4f5c|\u6c9f\u901a|\u9886\u5bfc\u529b|stakeholder|soft.{0,4}skill|\u8f6f\u6280\u80fd/i)) return "soft-skills";
+  // \u2500\u2500 broad buckets \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
   if (has(/summary|\u4e2a\u4eba\u7b80\u4ecb|\u5b9a\u4f4d|\u76ee\u6807\u5c97\u4f4d|\u539f\u8bcd|job\s*title|target\s*role/i)) return "positioning";
   if (has(/jd|keyword|\u5173\u952e\u8bcd|\u6280\u80fd|\u5de5\u5177|\u9886\u57df\u8bcd|\u5339\u914d|\u8986\u76d6|\u7f3a\u5931|\u8865\u9f50/i)) return "keywords";
   if (has(/\u91cf\u5316|\u6210\u679c|\u7ed3\u679c|\u5f71\u54cd|\u6548\u7387|\u767e\u5206\u6bd4|\u91d1\u989d|impact|result|measurable/i)) return "impact";
   if (has(/bullet|\u7ecf\u5386|\u8bc1\u636e|\u9879\u76ee|action\s*\+\s*method|\u52a8\u4f5c|\u65b9\u6cd5/i)) return "experience-evidence";
   if (has(/\u65f6\u95f4\u5012\u5e8f|chronolog|\u65e5\u671f|\u5e74\u4efd/i)) return "chronology";
-  if (has(/\u4e2d\u56fd|\u7f8e\u56fd|us-based|willing\s*to\s*relocate|relocat/i)) return "market-fit";
+  if (has(/\u4e2d\u56fd|\u7f8e\u56fd|\u975e\u76ee\u6807\u5e02\u573a|us-based|willing\s*to\s*relocate|relocat/i)) return "market-fit";
   if (has(/email|phone|linkedin|github|portfolio|\u8054\u7cfb|\u90ae\u7bb1|\u4f5c\u54c1\u96c6|\u94fe\u63a5/i)) return "profile-links";
   if (has(/\u683c\u5f0f|\u6587\u4ef6|format|file/i)) return "format";
   if (has(/intern|internship|\u5b9e\u4e60|\u65f6\u957f\u4e0d\u8db3|\u77ed\u671f/i)) return "tenure";
@@ -521,13 +539,13 @@ function normalizeSuggestionList() {
   ]
     .map(simplifySuggestionText)
     .filter(Boolean);
-  const items = dedupeAtsList(raw, { topicDedupe: false });
+  const items = dedupeAtsList(raw, { topicDedupe: true });
   for (const item of reportSuggestionFallbacks()) {
     if (items.length >= 3) break;
-    const nextItems = dedupeAtsList([...items, item], { topicDedupe: false });
+    const nextItems = dedupeAtsList([...items, item], { topicDedupe: true });
     if (nextItems.length > items.length) items.push(item);
   }
-  return dedupeAtsList(items, { topicDedupe: false });
+  return dedupeAtsList(items, { topicDedupe: true });
 }
 function reportProblemFallbacks() {
   return [
@@ -545,7 +563,7 @@ function normalizeProblemList() {
     .map(repairTargetRoleProblem)
     .map(simplifySuggestionText)
     .filter(Boolean);
-  if (tagItems.length) return dedupeAtsList(tagItems, { topicDedupe: false });
+  if (tagItems.length) return dedupeAtsList(tagItems, { topicDedupe: true });
 
   const raw = [
     ...(atsResult.keyProblems || []),
@@ -558,13 +576,13 @@ function normalizeProblemList() {
     .map(repairTargetRoleProblem)
     .map(simplifySuggestionText)
     .filter(Boolean);
-  const items = dedupeAtsList(raw, { topicDedupe: false });
+  const items = dedupeAtsList(raw, { topicDedupe: true });
   for (const item of reportProblemFallbacks()) {
     if (items.length >= 3) break;
-    const nextItems = dedupeAtsList([...items, item], { topicDedupe: false });
+    const nextItems = dedupeAtsList([...items, item], { topicDedupe: true });
     if (nextItems.length > items.length) items.push(item);
   }
-  return dedupeAtsList(items, { topicDedupe: false });
+  return dedupeAtsList(items, { topicDedupe: true });
 }
 function renderAtsProblemItem(text) {
   return `<li style="margin-bottom:10px;padding-left:20px;position:relative;line-height:1.5;"><span style="position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--rose);"></span>${escapeHtml(text)}</li>`;
@@ -703,7 +721,6 @@ function renderMentorLogoIntro(pool) {
   return `
     <div class="mentor-logo-intro" id="mentorLogoIntro">
       <p class="mentor-logo-copy">由 MentorX 导师知识库中的真实大厂经验交叉匹配，系统会优先挑出最贴合你简历问题的建议。</p>
-      ${renderMentorLogoMarquee(STATIC_MENTOR_COMPANY_LOGOS)}
     </div>`;
 }
 
@@ -815,27 +832,73 @@ if (headlineEl) headlineEl.textContent = atsScore || "--";
   if (aiCaptionEl) aiCaptionEl.textContent = aiTrend.caption;
   if (aiDetailEl) aiDetailEl.innerHTML = renderStackedRows(aiTrend.rows);
 
-  const tiles = Array.from(document.querySelectorAll("#reportDataTiles .tile"));
-  if (tiles.length) {
-    const syncClosedTileHeight = () => {
-      tiles.forEach((tile) => {
+  (function syncTileRowHeights() {
+    const tiles = Array.from(document.querySelectorAll("#reportDataTiles .tile"));
+    if (!tiles.length) return;
+
+    function measureExpandedTileHeight(tile) {
+      const rect = tile.getBoundingClientRect();
+      const clone = tile.cloneNode(true);
+      clone.open = true;
+      clone.style.position = "absolute";
+      clone.style.visibility = "hidden";
+      clone.style.pointerEvents = "none";
+      clone.style.left = "-9999px";
+      clone.style.top = "0";
+      clone.style.width = `${rect.width}px`;
+      clone.style.minHeight = "";
+      clone.style.height = "auto";
+      document.body.appendChild(clone);
+      const height = clone.offsetHeight;
+      clone.remove();
+      return height;
+    }
+
+    function measureClosedTileHeight(tile) {
+      const rect = tile.getBoundingClientRect();
+      const clone = tile.cloneNode(true);
+      clone.open = false;
+      clone.style.position = "absolute";
+      clone.style.visibility = "hidden";
+      clone.style.pointerEvents = "none";
+      clone.style.left = "-9999px";
+      clone.style.top = "0";
+      clone.style.width = `${rect.width}px`;
+      clone.style.minHeight = "";
+      clone.style.height = "auto";
+      document.body.appendChild(clone);
+      const height = clone.offsetHeight;
+      clone.remove();
+      return height;
+    }
+
+    function updateAllRows() {
+      tiles.forEach(tile => {
+        tile.classList.remove("is-row-equal-height");
         tile.style.minHeight = "";
       });
-      const closedHeight = Math.max(...tiles.map((tile) => {
-        const wasOpen = tile.open;
-        tile.open = false;
-        const height = tile.offsetHeight;
-        tile.open = wasOpen;
-        return height;
-      }));
-      tiles.forEach((tile) => {
-        if (!tile.open) tile.style.minHeight = `${closedHeight}px`;
+
+      const closedBaseHeight = Math.max(...tiles.map(measureClosedTileHeight));
+      tiles.forEach(tile => {
+        if (!tile.open) tile.style.minHeight = `${closedBaseHeight}px`;
       });
-    };
-    tiles.forEach((tile) => tile.addEventListener("toggle", syncClosedTileHeight));
-    window.addEventListener("resize", syncClosedTileHeight);
-    requestAnimationFrame(syncClosedTileHeight);
-  }
+
+      for (let i = 0; i < tiles.length; i += 2) {
+        const pair = tiles.slice(i, i + 2);
+        const rowHeight = Math.max(...pair.map(measureExpandedTileHeight));
+        const openTiles = pair.filter(tile => tile.open);
+        const targets = openTiles.length === pair.length ? pair : openTiles;
+        targets.forEach(tile => {
+          tile.classList.add("is-row-equal-height");
+          tile.style.minHeight = `${rowHeight}px`;
+        });
+      }
+    }
+
+    tiles.forEach(tile => tile.addEventListener("toggle", updateAllRows));
+    window.addEventListener("resize", updateAllRows);
+    updateAllRows();
+  })();
 })();
 
 (async function loadReportSalaryTrajectory() {
@@ -966,10 +1029,7 @@ if (headlineEl) headlineEl.textContent = atsScore || "--";
       <ul style="list-style:none;padding:0;margin:0;font-size:13px;">
         ${problems.map(renderAtsProblemItem).join("")}
       </ul>` : ""}
-      ${suggestions.length ? `<div style="font-size:13px;font-weight:600;color:var(--jade);margin:14px 0 8px;">✨ 优先建议</div>
-      <ul style="list-style:none;padding:0;margin:0;font-size:13px;">
-        ${suggestions.map(renderAtsSuggestionItem).join("")}
-      </ul>` : ""}`;
+      /* 优先建议 — 暂时隐藏，与下方建议重复 */`;
   }
 })();
 
@@ -1021,34 +1081,35 @@ function renderSkillList(skills){
 function renderKeywordCategories(items) {
   const detailsEl = document.getElementById("jdKeywordDetails");
   const listEl = document.getElementById("jdKeywordCategoryList");
+  const expandBtn = document.getElementById("jdKeywordExpandToggle");
   if (!detailsEl || !listEl) return;
-  const grouped = Object.keys(KEYWORD_CATEGORY_CONFIG).map((group) => ({
-    group,
-    label: KEYWORD_CATEGORY_CONFIG[group].label,
-    items: items.filter((item) => item.group === group),
-  })).filter((group) => group.items.length);
-  if (!grouped.length) {
+  if (!items.length) {
     detailsEl.hidden = true;
     listEl.innerHTML = "";
+    if (expandBtn) expandBtn.hidden = true;
     return;
   }
   detailsEl.hidden = false;
-  listEl.innerHTML = grouped.map((group) => `
-    <div class="jd-keyword-group">
-      <div class="jd-keyword-group-head">
-        <span class="jd-keyword-group-title">${escapeHtml(group.label)}</span>
-        <span class="jd-keyword-group-count">${group.items.length}</span>
-      </div>
-      <div class="jd-keyword-chips">
-        ${group.items.map((item) => `
-          <span class="jd-keyword-chip ${item.status === "have" ? "is-have" : ""}" title="${escapeAttr(item.placement.label)}">
-            <span class="state"></span><b>${escapeHtml(item.name)}</b>
-            <span class="keyword-use ${item.placement.className}">${escapeHtml(item.placement.label)}</span>
-          </span>
-        `).join("")}
-      </div>
-    </div>
-  `).join("");
+  const VISIBLE = 10;
+  const chipHtml = (item, hidden) =>
+    `<span class="jd-keyword-chip ${item.status === "have" ? "is-have" : ""}"${hidden ? " hidden" : ""} title="${escapeAttr(item.placement.label)}">
+      <span class="state"></span><b>${escapeHtml(item.name)}</b>
+      <span class="keyword-use ${item.placement.className}">${escapeHtml(item.placement.label)}</span>
+    </span>`;
+  listEl.innerHTML = items.map((item, i) => chipHtml(item, i >= VISIBLE)).join("");
+  if (expandBtn) {
+    const hiddenCount = Math.max(0, items.length - VISIBLE);
+    expandBtn.hidden = hiddenCount === 0;
+    expandBtn.textContent = "查看更多 ↓";
+    let open = false;
+    expandBtn.onclick = () => {
+      open = !open;
+      listEl.querySelectorAll(".jd-keyword-chip").forEach((el, i) => {
+        el.hidden = !open && i >= VISIBLE;
+      });
+      expandBtn.textContent = open ? "收起 ↑" : "查看更多 ↓";
+    };
+  }
 }
 (async function loadSkills(){
   const keywordItems = buildKeywordItems();
@@ -1117,8 +1178,7 @@ function renderKeywordCategories(items) {
     probSection.innerHTML = `
       ${problems.length ? `<div style="font-size:13px;font-weight:600;color:var(--rose);margin-bottom:8px;">🔍 关键问题</div>
       <ul style="list-style:none;padding:0;margin:0;font-size:13px;">${problems.map(renderAtsProblemItem).join("")}</ul>` : ""}
-      ${suggestions.length ? `<div style="font-size:13px;font-weight:600;color:var(--jade);margin:14px 0 8px;">✨ 优先建议</div>
-      <ul style="list-style:none;padding:0;margin:0;font-size:13px;">${suggestions.map(renderAtsSuggestionItem).join("")}</ul>` : ""}`;
+      /* 优先建议 — 暂时隐藏，与下方建议重复 */`;
   }
 })();
 
@@ -1209,6 +1269,47 @@ function renderAdviceBundle(items, logoPool) {
       <div>${advice}</div>
     </article>
   `;
+}
+
+function getCompanyLogo(company) {
+  if (!company) return "";
+  const lower = company.toLowerCase();
+  const match = STATIC_MENTOR_COMPANY_LOGOS.find(item => item.company && item.company.toLowerCase() === lower);
+  return match ? match.companyLogo : "";
+}
+
+function renderMentorGroupHeader(mentor, groupIdx, totalGroups) {
+  const logoUrl = mentor.companyLogo || getCompanyLogo(mentor.company);
+  const mentorDisplayName = mentor.mentorName || "X导师";
+  const logoHtml = logoUrl
+    ? `<div style="width:44px;height:44px;border-radius:10px;background:#fff;border:1px solid #EDE9DC;display:flex;align-items:center;justify-content:center;padding:6px;flex-shrink:0;"><img src="${escapeAttr(logoUrl)}" alt="${escapeAttr(mentor.company||"")}" style="max-width:100%;max-height:100%;object-fit:contain;"></div>`
+    : avatarCircle(mentor.company || mentorDisplayName, 44);
+  return `
+    <div style="display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid #EDE9DC;margin-bottom:20px;">
+      ${logoHtml}
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:700;font-size:17px;color:#111827;line-height:1.2;">${escapeHtml(mentorDisplayName)}</div>
+        ${mentor.company ? `<div style="font-size:12px;color:#6B7280;margin-top:3px;">${escapeHtml(mentor.company)}</div>` : ""}
+        ${mentor.mentorTitle ? `<div style="font-size:11px;color:#9CA3AF;margin-top:2px;">${escapeHtml(mentor.mentorTitle)}</div>` : ""}
+      </div>
+      <span style="font-size:11px;color:#9CA3AF;font-weight:500;flex-shrink:0;">导师 ${groupIdx+1} / ${totalGroups}</span>
+    </div>`;
+}
+
+function renderMentorGroup(mentor, groupIdx, totalGroups) {
+  const adviceItems = (mentor.adviceItems || []).filter(item => !isUnsafeReportAdvice(item));
+  if (!adviceItems.length) return "";
+  const advice = adviceItems.map((item, i) => renderAdviceItem(item, i)).join("");
+  return `
+    <article style="background:#FFFDF6;border:1px solid #EDE9DC;border-radius:22px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:16px;">
+      ${renderMentorGroupHeader(mentor, groupIdx, totalGroups)}
+      <div>${advice}</div>
+    </article>`;
+}
+
+function renderMentorGrouped(mentors) {
+  const valid = (mentors || []).filter(m => (m.adviceItems || []).some(item => !isUnsafeReportAdvice(item)));
+  return valid.map((m, i) => renderMentorGroup(m, i, valid.length)).join("");
 }
 
 function adviceIdentity(item) {
@@ -1403,7 +1504,9 @@ if (mentorLogoIntroSlot) {
 }
 const mentorsListEl = document.getElementById("mentorsList");
 if (mentorsListEl) {
-  if (premiumAdviceItems && premiumAdviceItems.length > 0) {
+  if (premiumMentors && premiumMentors.length > 0 && premiumMentors.some(m => (m.adviceItems || []).length > 0)) {
+    mentorsListEl.innerHTML = renderMentorGrouped(premiumMentors);
+  } else if (premiumAdviceItems && premiumAdviceItems.length > 0) {
     mentorsListEl.innerHTML = renderAdviceBundle(premiumAdviceItems, mentorLogoPool);
   } else if (legacyMentors && legacyMentors.length > 0) {
     mentorsListEl.innerHTML = legacyMentors.map((m,i)=>renderPremiumMentorCard(m,i)).join("");

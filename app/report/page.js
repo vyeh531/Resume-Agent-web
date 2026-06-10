@@ -9,8 +9,8 @@ export default function ReportPage() {
         .report-headline .num{font-style:italic;color:var(--indigo);font-size:32px;}
         .report-headline .gap{font-style:italic;color:var(--rose);font-weight:700;}
         .report-issue{font-size:14px;color:var(--ink-soft);line-height:1.6;border-left:3px solid var(--apricot);padding:4px 0 4px 12px;margin:12px 0 0;}
-        .report-metrics .tile{display:block;}
         .report-metrics .tile-caption b{color:var(--ink);font-weight:700;}
+        .tile-value-ats #reportAtsScore{font-size:30px;}
         .export-card{background:linear-gradient(135deg,var(--paper-warm) 0%,var(--jade-soft) 100%);border:1px solid #b8d6bd;border-radius:var(--r-lg);padding:18px 18px 16px;margin:0 0 22px;position:relative;overflow:hidden;box-shadow:var(--shadow-soft);}
         .export-card::before{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(47,107,79,.18) 0%,transparent 70%);pointer-events:none;}
         .export-card-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;position:relative;}
@@ -37,13 +37,11 @@ export default function ReportPage() {
         .keyword-use--experience{background:#fff7ed;color:#9a3412;border-color:#fed7aa;}
         .keyword-use--summary{background:#eef2ff;color:#4338ca;border-color:#c7d2fe;}
         .keyword-use--reference{background:#f5f5f4;color:#78716c;border-color:#e7e2d6;}
-        .skill-extra[hidden]{display:none!important;}
+        .skill-extra[hidden],.report-skill-extra[hidden]{display:none!important;}
         .skill-expand-toggle{width:100%;margin-top:8px;border:1px dashed var(--line);background:var(--paper-warm);border-radius:10px;padding:10px 12px;font-size:13px;font-weight:700;color:var(--jade);cursor:pointer}
         .skill-expand-toggle:hover{background:var(--jade-soft)}
         .jd-keyword-details{margin-top:12px;border-top:1px solid var(--line);padding-top:10px;}
         .jd-keyword-details[hidden]{display:none!important;}
-        .jd-keyword-details summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:center;gap:6px;color:var(--ink-soft);font-size:13px;font-weight:700;padding:6px 0;}
-        .jd-keyword-details summary::-webkit-details-marker{display:none;}
         .jd-keyword-groups{display:grid;gap:10px;margin-top:8px;}
         .jd-keyword-group{border:1px solid #ede9dc;background:#fffdf7;border-radius:10px;padding:10px 11px;}
         .jd-keyword-group-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;}
@@ -51,6 +49,7 @@ export default function ReportPage() {
         .jd-keyword-group-count{font-family:var(--mono);font-size:10px;color:var(--ink-mute);}
         .jd-keyword-chips{display:flex;flex-wrap:wrap;gap:6px;}
         .jd-keyword-chip{display:inline-flex;align-items:center;gap:5px;border:1px solid #e7e2d6;background:#fff;border-radius:999px;padding:4px 8px;font-size:11.5px;color:var(--ink-soft);max-width:100%;}
+        .jd-keyword-chip[hidden]{display:none!important;}
         .jd-keyword-chip b{font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
         .jd-keyword-chip .state{width:6px;height:6px;border-radius:50%;flex-shrink:0;background:var(--warn);}
         .jd-keyword-chip.is-have .state{background:var(--good);}
@@ -132,10 +131,6 @@ export default function ReportPage() {
             </div>
             <ul className="skill-list" id="skillList"></ul>
             <button className="skill-expand-toggle" id="reportSkillExpandToggle" type="button" hidden>查看更多 ↓</button>
-            <details className="jd-keyword-details" id="jdKeywordDetails">
-              <summary><span>查看全部 JD 关键词</span><span>▾</span></summary>
-              <div className="jd-keyword-groups" id="jdKeywordCategoryList"></div>
-            </details>
           </div>
         </section>
 

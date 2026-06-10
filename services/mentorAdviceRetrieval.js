@@ -2927,14 +2927,66 @@ function buildCardTitle(row) {
   return p;
 }
 
+// Numbered option markers used in compound advice text (e.g. ①…；②…)
+const COMPOUND_OPTION_RE = /[①②③④⑤]|（[123]）|\b[123][.)]\s/;
+
+// Map each option in a compound advice string to conditions already satisfied by the resume.
+// Returns a cleaned string with satisfied options removed; if only one option remains,
+// strips the "choose one of the following" preamble.
+function sanitizeCompoundAdviceText(text, resumeFacts) {
+  if (!text || !resumeFacts || !COMPOUND_OPTION_RE.test(text)) return text;
+
+  const sections = resumeFacts.sections || {};
+
+  // Split on numbered markers, keeping the marker with each segment
+  const parts = text.split(/((?:[①②③④⑤]|（[123]）|\b[123][.)]\s))/);
+  // parts: [preamble, marker1, body1, marker2, body2, ...]
+  if (parts.length < 5) return text; // need at least 2 options
+
+  const preamble = parts[0];
+  const options = [];
+  for (let i = 1; i < parts.length - 1; i += 2) {
+    options.push({ marker: parts[i], body: parts[i + 1] });
+  }
+
+  const isSatisfied = (body) => {
+    const b = body.toLowerCase();
+    if (/technical\s+skills?|技能.*板块|技能.*区|skills?\s*(section|板块|模块)|在.*education.*列.*skills?/i.test(b) && sections.hasSkills === true) return true;
+    if (/summary|个人简介|顶部.*段落|加.*summary|写.*2[-–]?3\s*行/i.test(b) && sections.hasSummary === true) return true;
+    return false;
+  };
+
+  const kept = options.filter((o) => !isSatisfied(o.body));
+  if (kept.length === options.length) return text; // nothing removed
+  if (kept.length === 0) return text; // all removed — leave as-is, gate should have blocked it
+
+  if (kept.length === 1) {
+    // Single option left — strip the "choose one" preamble and the marker
+    const cleanedPreamble = preamble
+      .replace(/选择以下\S*种方式之一[：:]/g, "")
+      .replace(/以下\S*种方式[：:]/g, "")
+      .replace(/两种方案[之一]*[：:]/g, "")
+      .trimEnd();
+    const body = kept[0].body.trimStart();
+    return (cleanedPreamble ? cleanedPreamble + body : body).trim();
+  }
+
+  // Multiple options remain — re-assemble with original markers
+  return preamble + kept.map((o, idx) => {
+    const newMarker = ["①", "②", "③", "④", "⑤"][idx];
+    return newMarker + o.body;
+  }).join("");
+}
+
 function formatAdviceCardForPublic(row, retrievalQuery = {}) {
   const preliminary = resolvedGovernedAction(row, governanceContextFromRetrievalQuery(retrievalQuery), roleSafeActionSummary(row, retrievalQuery));
+  const resumeFacts = retrievalQuery.resumeFacts || null;
   return {
     adviceId: row.id ? `seg_${row.id}` : row.chunk_id,
     chunkId: row.chunk_id || null,
     title: buildCardTitle(row),
     problemSummary: cleanAndTruncate(row.user_problem_summary || row.P_mentor, 180),
-    actionSummary: preliminary.action,
+    actionSummary: decontextualizeActionText(sanitizeCompoundAdviceText(preliminary.action, resumeFacts) || ""),
     rawActionSummary: row.A_action || row.action_summary || "",
     mentorInsight: row.I_insight || "",
     example: row.E_example || "",
@@ -3865,6 +3917,53 @@ function decontextualizeAdviceText(value, fallback = "") {
   return cleanAndTruncate(text, 500, fallback);
 }
 
+/**
+ * decontextualizeActionText
+ *
+ * Strips student-specific parenthetical examples from action text before display.
+ * These examples were valid advice for the original student but would confuse
+ * other users who see different project/company names than their own.
+ *
+ * Keeps generic tool/skill examples: （如Excel、Python、SQL）
+ * Strips student-specific project/client names:
+ *   - （如Dyson和diffuser项目中的3D建模...）   — brand/product names
+ *   - （如fake news project和校园park track项目）— named personal projects
+ *   - （如 E Commerce Consumer Analysis、Yoyo Engagement Optimization）— project titles
+ *   - （如：中东small cap公司，总资产1.42亿...） — specific client context
+ */
+/**
+ * decontextualizeActionText
+ *
+ * Strips student-specific parenthetical examples from action text.
+ * Keeps generic tool/skill examples: （如Excel、Python、SQL）
+ * Strips student-specific content:
+ *   - "（如Dyson和diffuser项目中的...）"  — named projects joined by 和/与
+ *   - "（如：中东small cap公司，总资产1.42亿...）" — colon + specific client context
+ *   - "（如 E Commerce Consumer Analysis、Yoyo Engagement Optimization）"
+ *     — English multi-word project titles (has spaces, no Chinese chars)
+ */
+function decontextualizeActionText(text = "") {
+  let t = String(text || "").trim();
+  if (!t) return t;
+  t = t
+    // Pattern 1: "（如X和Y项目...）" — named projects joined by 和/与
+    .replace(/（如[^）]{0,100}(?:和|与)[^）]{0,60}项目[^）]*）/g, "")
+    // Pattern 2: "（如：long specific context）" — colon-introduced specific context
+    .replace(/（如[：:][^）]{15,200}）/g, "")
+    // Pattern 3: "（如EnglishMultiWordProject、AnotherProject）"
+    //   — English multi-word phrases (has spaces) with no Chinese chars = likely project titles
+    .replace(/（如\s*([A-Za-z][A-Za-z0-9\s,、&/-]{8,})\s*）/g, (match, content) => {
+      const hasChinese = /[一-鿿]/.test(content);
+      const hasInternalSpace = /[ \t]/.test(content.trim());
+      return (!hasChinese && hasInternalSpace) ? "" : match;
+    })
+    .replace(/\s+/g, " ")
+    .replace(/，，/g, "，")
+    .replace(/，\s*。/g, "。")
+    .trim();
+  return t;
+}
+
 function isSystemPlaceholderAdviceText(value = "") {
   const text = String(value || "");
   return /当前报告可用的导师建议不足\s*12\s*条|导师建议不足\s*12\s*条|简历优化建议\s*\d+|report-fallback/i.test(text);
@@ -4640,6 +4739,21 @@ function actionPreconditionGate(card = {}, internalAtsResult = {}) {
       Number(experience.quantifiedBulletCount || 0) >= 3 &&
       experience.hasMeasurableResults === true) {
     return { allowed: false, reason: "quantification_already_sufficient" };
+  }
+
+  // Block summary-creation advice if resume already has a Summary section.
+  // Run before the education gate because summary cards may mention "education" as context.
+  const isSummaryCreationAdvice = /新增\s*summary|补上\s*summary|add\s+(?:a\s+)?summary|写.*summary|summary\s*段落|个人简介.*段落|先.*summary/i.test(text);
+  if (isSummaryCreationAdvice && sections.hasSummary === true) {
+    return { allowed: false, reason: "summary_already_present" };
+  }
+
+  // Block skills-section-creation advice if resume already has a Skills section.
+  // Run before the education gate because these cards often mention "Education" as a placement hint
+  // (e.g. "list Technical Skills after Education"), which would otherwise trigger the education gate.
+  const isSkillsSectionCreationAdvice = /新增.*技能|加.*skills?\s*section|在.*education.*列.*skills?|technical\s+skills?\s*区|skills?\s*板块|skills?\s*模块/i.test(text);
+  if (isSkillsSectionCreationAdvice && sections.hasSkills === true) {
+    return { allowed: false, reason: "skills_section_already_present" };
   }
 
   const isEducationAdvice = /coursework|course work|education|certificate|certification|training|课程|教育|证书|lab\/project|lab project|课程项目/i.test(text);
@@ -6466,6 +6580,26 @@ function perspectiveMatchesFamily(text = "", item = {}) {
   return checks[family] ? checks[family].test(value) : true;
 }
 
+/**
+ * Return the approved humanized_mentor_insight from the DB if present,
+ * bypassing tone templates and family-match checks entirely.
+ * Returns "" when absent or not approved.
+ */
+function resolvedApprovedDbMentorInsight(item = {}) {
+  const text = cleanAndTruncate(
+    item.humanizedMentorInsight || item.humanized_mentor_insight, 180, ""
+  );
+  if (!text) return "";
+  const status = normalizeTerm(
+    item.perspectiveReviewStatus || item.perspective_review_status || ""
+  );
+  // Empty status = legacy approved rows; explicit "approved" and similar are also trusted.
+  if (!status || ["approved", "auto_classified", "llm_generated", "runtime"].includes(status)) {
+    return text;
+  }
+  return "";
+}
+
 function sanitizePerspectiveForDisplay(text = "", item = {}, role = "mentor") {
   const cleaned = String(text || "")
     .replace(/^(导师|HR)\s*/i, "")
@@ -6529,14 +6663,19 @@ function rewriteSummaryActionForMissingSummary(item = {}, internalAtsResult = {}
 function sanitizeAdviceItemForDisplay(item = {}, internalAtsResult = {}) {
   const patched = rewriteSummaryActionForMissingSummary(item, internalAtsResult);
   const example = cleanDisplayExample(patched.example || patched.E_example || "");
-  const mentorText = patched.mentorInsight || patched.mentorLens || patched.reason || "";
+  // Prefer approved humanized_mentor_insight; only fall through to family-match sanitize if absent.
+  const approvedDbMentor = resolvedApprovedDbMentorInsight(patched);
+  const mentorText = approvedDbMentor || patched.mentorInsight || patched.mentorLens || patched.reason || "";
+  const resolvedMentor = approvedDbMentor
+    ? approvedDbMentor
+    : sanitizePerspectiveForDisplay(mentorText, patched, "mentor");
   const hrText = patched.hrPerspective || patched.HR_os || patched.hrPov || patched.recruiterPerspective || "";
   return {
     ...patched,
     example,
-    mentorLens: sanitizePerspectiveForDisplay(mentorText, patched, "mentor"),
-    mentorInsight: sanitizePerspectiveForDisplay(mentorText, patched, "mentor"),
-    reason: sanitizePerspectiveForDisplay(mentorText, patched, "mentor"),
+    mentorLens: resolvedMentor,
+    mentorInsight: resolvedMentor,
+    reason: resolvedMentor,
     hrPerspective: sanitizePerspectiveForDisplay(hrText, patched, "hr"),
     HR_os: sanitizePerspectiveForDisplay(hrText, patched, "hr"),
     evidence: sanitizeEvidenceForDisplay(patched, internalAtsResult),
@@ -7071,7 +7210,9 @@ function buildPublicSafeEvidence(item, atsResult = {}) {
 
 function formatPublicFreeMentorAdvice(freeMentorPlan, internalAtsResult = {}) {
   const displayItems = avoidRepeatedPerspectives((freeMentorPlan.adviceItems || []).map((item) => {
-    const mentorPerspective = humanizeMentorInsight(item, { internalAtsResult });
+    // Prefer approved humanized_mentor_insight from DB; fall back to tone-template pipeline.
+    const mentorPerspective = resolvedApprovedDbMentorInsight(item)
+      || humanizeMentorInsight(item, { internalAtsResult });
     const hrPerspective = humanizeHrPerspective(item, { internalAtsResult });
     return {
       ...item,
@@ -7103,7 +7244,8 @@ function formatPublicFreeMentorAdvice(freeMentorPlan, internalAtsResult = {}) {
       const currentDiagnosis = normalizeDisplayDiagnosis(item.currentDiagnosis || item.problemSummary || "");
       const action = normalizeDisplayActionLanguage(item.action || item.actionSummary || "", item, "优先把目标岗位关键词、相关技能和经历证据放到 Summary、Skills 和 Experience 中。");
       const hrPerspective = sanitizePerspectiveForDisplay(item.hrPerspective || item.HR_os || humanizeHrPerspective(item, { internalAtsResult }), item, "hr");
-      const mentorPerspective = sanitizePerspectiveForDisplay(item.mentorInsight || item.mentorLens || humanizeMentorInsight(item, { internalAtsResult }), item, "mentor");
+      const mentorPerspective = resolvedApprovedDbMentorInsight(item)
+        || sanitizePerspectiveForDisplay(item.mentorInsight || item.mentorLens || humanizeMentorInsight(item, { internalAtsResult }), item, "mentor");
       const displayItem = {
         adviceId: item.adviceId,
         title: normalizeDisplayTitle(item.title, item),
@@ -7144,7 +7286,9 @@ function formatPublicFreeMentorAdvice(freeMentorPlan, internalAtsResult = {}) {
 function formatPremiumMentorReport(premiumMentorPlan, internalAtsResult) {
   const allInputItems = premiumMentorPlan.slice(0, 4).flatMap((mentor) => mentor.adviceItems || []);
   const displayItemsById = new Map(avoidRepeatedPerspectives(allInputItems.map((item) => {
-    const mentorPerspective = humanizeMentorInsight(item, { internalAtsResult });
+    // Prefer approved humanized_mentor_insight from DB; fall back to tone-template pipeline.
+    const mentorPerspective = resolvedApprovedDbMentorInsight(item)
+      || humanizeMentorInsight(item, { internalAtsResult });
     const hrPerspective = humanizeHrPerspective(item, { internalAtsResult });
     return {
       ...item,
@@ -7162,7 +7306,8 @@ function formatPremiumMentorReport(premiumMentorPlan, internalAtsResult) {
       const currentDiagnosis = normalizeDisplayDiagnosis(item.currentDiagnosis || item.problemSummary || "");
       const action = normalizeDisplayActionLanguage(item.action || item.actionSummary || "", item, "优先把目标岗位关键词、相关技能和经历证据放到 Summary、Skills 和 Experience 中。");
       const hrPerspective = sanitizePerspectiveForDisplay(item.hrPerspective || item.HR_os || humanizeHrPerspective(item, { internalAtsResult }), item, "hr");
-      const mentorPerspective = sanitizePerspectiveForDisplay(item.mentorInsight || item.mentorLens || humanizeMentorInsight(item, { internalAtsResult }), item, "mentor");
+      const mentorPerspective = resolvedApprovedDbMentorInsight(item)
+        || sanitizePerspectiveForDisplay(item.mentorInsight || item.mentorLens || humanizeMentorInsight(item, { internalAtsResult }), item, "mentor");
       const displayItem = {
         adviceId: item.adviceId,
         title: normalizeDisplayTitle(item.title, item),
@@ -7247,6 +7392,7 @@ module.exports = {
   extractGroundingTermsFromAdvice,
   isResumeGroundedAdvice,
   isGovernedAdviceDisplayable,
+  sanitizeCompoundAdviceText,
   actionPreconditionGate,
   canonicalActionFamilyOf,
   actionDepthOf,

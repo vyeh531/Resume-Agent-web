@@ -21,6 +21,7 @@ const SCOPE = stringArg("--scope", "resume_edit");
 const OUT_DIR = stringArg("--out-dir", path.join("artifacts", "mentor-insight-rules"));
 const APPLY_FILE = stringArg("--apply-file", "");
 const PERSPECTIVE_SOURCE = "mentor_rules_from_p_mentor";
+const BULK_SAFE_MODE = !argv.includes("--strict-review");
 
 const SELECT_COLUMNS = `
   id, chunk_id, retrieval_scope, topic, "L1", "L2", advice_type,
@@ -51,6 +52,119 @@ const MENTOR_OVERACTIVE_PATTERNS = [
   /我会从.{0,12}(?:下手|开始|改)/,
   /我会把.{0,28}(?:放|补|拆|收|写|改|接|标|删|理顺|讲清楚)/,
 ];
+
+const MENTOR_HR_VOICE_PATTERNS = [
+  /\bHR\b/i,
+  /招聘/,
+  /我初筛/,
+  /我第一眼/,
+  /recruiter/i,
+];
+
+const BULK_SAFE_FAMILIES = new Set([
+  "positioning",
+  "multi_version_resume",
+  "education",
+  "skills_frontload",
+  "skills_structure",
+  "skills_grouping",
+  "keyword",
+  "keyword_evidence",
+  "portfolio_link",
+  "profile_links",
+  "portfolio_quality",
+  "ux_research_portfolio",
+  "ai_portfolio_priority",
+  "impact",
+  "core_contribution_first",
+  "experience",
+  "format",
+  "page_overflow",
+  "word_ruler_format",
+  "pdf_submission",
+  "document_rebuild",
+  "contact_info_format",
+  "date_format",
+  "work_authorization",
+  "project_depth_chain",
+  "project_capability_map",
+  "project_differentiation",
+  "project_name_specificity",
+  "business_value_framing",
+  "metric_terminology",
+  "quantified_formula",
+  "role_title_reframing",
+  "title_role_truthfulness",
+  "cross_industry_language",
+  "customer_segment_framing",
+  "research_to_analytics",
+  "research_publication",
+  "research_industry_positioning",
+  "research_role_fit",
+  "industry_resume_order",
+  "truthfulness",
+  "truthful_impact",
+  "skill_truthfulness",
+  "skill_truthfulness_linux",
+  "hardware_truthfulness",
+  "hardware_project_proof",
+  "instrumentation_truthfulness",
+  "intern_scope_truthfulness",
+  "rag_evaluation",
+  "multi_agent",
+  "dual_track_project",
+  "dual_marketing_version",
+  "channel_marketing_scope",
+  "data_project_relevance",
+  "onboarding_analysis",
+  "social_media_metrics",
+  "industry_research_info",
+  "ownership_voice",
+  "leadership_relevance",
+  "space_reallocation",
+  "experience_structure",
+  "interests_section",
+  "redundant_content_cleanup",
+  "acronym_explanation",
+  "summary_confidence",
+  "title_bullet_format",
+  "process_efficiency_reframing",
+  "cpa_eligibility",
+  "bullet_count_density",
+  "template_differentiation",
+  "contract_path_strategy",
+  "interview_prep_depth",
+  "company_interview_strategy",
+  "coursework_translation",
+  "engineering_tool_depth",
+  "controls_engineering_depth",
+  "cloud_platform_positioning",
+  "product_business_framing",
+  "management_kpi_story",
+  "metric_truthfulness",
+  "finance_accounting_positioning",
+  "analytics_visualization_evidence",
+  "portfolio_research_artifact",
+  "rag_chatbot_evaluation",
+  "analytics_method_truthfulness",
+]);
+
+const BULK_ADVISORY_FLAGS = new Set([
+  "lost_detail_risk",
+  "mentor_generic_template_risk",
+]);
+
+const BLOCKING_FLAGS = new Set([
+  "mentor_too_short",
+  "mentor_too_long",
+  "wrong_family_risk",
+  "lost_specific_terms",
+  "lost_required_signal",
+  "mentor_overactive_voice_risk",
+  "mentor_hr_voice_risk",
+  "mentor_not_conversational",
+  "manual_hold_id_29",
+]);
 
 function numberArg(name, fallback) {
   const raw = argv.find((arg) => arg.startsWith(`${name}=`));
@@ -124,6 +238,23 @@ function normalizedSource(row = {}) {
 
 function classifyMentorRowOverride(row = {}) {
   const primary = normalizedSource(row).toLowerCase();
+  if (hasAny(primary, [/\brag\b|chatbot|llm|faithfulness|context recall|answer relevance|evaluation|evaluate|ai api/]) && !hasAny(primary, [/bleu|rag.*bleu|bleu.*rag|rag system|llm|fine-tuning|post-training|mcp|ai agent/])) return "rag_chatbot_evaluation";
+  if (hasAny(primary, [/linear regression|segmentation analysis|statistical analysis|business analytics|analytics method|regression model|线性回归|分组分析/]) && !hasAny(primary, [/社科|research_to_analytics/])) return "analytics_method_truthfulness";
+  if (hasAny(primary, [/portfolio|作品集|personal website|case study|paper|论文|research role|实验室|研究院/]) && !hasAny(primary, [/notion|portfolio link|作品集.*链接|名字下方.*portfolio|published research|published paper|已发表|正式发表|3-5|质量参差|portfolio quality|user persona|journey map|ux|phd|博士|education.*last|教育.*最后|工业界.*教育/])) return "portfolio_research_artifact";
+  if (hasAny(primary, [/finance|accounting|business analyst|advisory|\bvaluation\b|dcf|equity research|investment|pe\/vc|credit risk|金融|会计|信贷/]) && !hasAny(primary, [/cpa eligible|cpa eligibility|eligible date|150|public accounting|ba.*marketing analytics|marketing analytics.*ba|marketing intern|social media|competitor research|竞品|社媒/])) return "finance_accounting_positioning";
+  if (hasAny(primary, [/visualization|dashboard|tableau|power bi|raw data|\bba\b|\bds\b|business analyst|data analyst|data science|data project|可视化|仪表盘/]) && !hasAny(primary, [/yelp api|clustering|ba.*marketing analytics|marketing analytics.*ba|marketing analyst|general marketing|marketing intern|title.*marketing|competitor research|竞品|社媒|resume-jd matching|matching score|cross-industry|internal terminology|industry-specific|行业专有|内部术语|跨行业|two resumes|multiple versions|\bpm\b/])) return "analytics_visualization_evidence";
+  if (hasAny(primary, [/3\s*(?:~|-|to)\s*5.{0,18}bullet|bullet point.{0,30}3\s*(?:~|-|to)\s*5|每段.{0,18}3\s*(?:~|-|到)\s*5/])) return "bullet_count_density";
+  if (hasAny(primary, [/same.{0,20}project template|项目模板|简历雷同|措辞.{0,12}改写|chatgpt.{0,30}改写|高度雷同|同一个.{0,12}模板/])) return "template_differentiation";
+  if (hasAny(primary, [/leetcode|刷题|coding interview|spring boot.{0,40}(?:面试|八股)|dependency injection|\bioc\b|技术面试/])) return "interview_prep_depth";
+  if (hasAny(primary, [/amazon.{0,60}(?:面试|应届|new grad|保底)|behavioral interview|简历相关问题|对照简历提问/])) return "company_interview_strategy";
+  if (hasAny(primary, [/contract.{0,30}(?:job|岗位|project|路线)|\bicc\b|new grad.{0,40}contract|正式岗位难求|3至6个月|3-6个月/])) return "contract_path_strategy";
+  if (hasAny(primary, [/course name|课程名称|form.{0,20}motion|课程内容|浓缩为.{0,12}phrase/])) return "coursework_translation";
+  if (hasAny(primary, [/control theory|frequency domain|system identification|bode|nyquist|\bpid\b|state space|经典控制|频域|系统辨识/])) return "controls_engineering_depth";
+  if (hasAny(primary, [/solidworks|catia|\bcad\b|\bfea\b|servo drive|actuator|motor类型|工程设计软件/])) return "engineering_tool_depth";
+  if (hasAny(primary, [/azure|aws|google cloud|\bs3\b|\bec2\b|lambda|多云|cloud platform/])) return "cloud_platform_positioning";
+  if (hasAny(primary, [/go-to-market|go to market|user survey|user study|market推广|市场推广|目标受众|campaign|产品商业化/])) return "product_business_framing";
+  if (hasAny(primary, [/pipeline management|\bkpi\b|季度目标|绩效指标|管理目标|结构化管理/])) return "management_kpi_story";
+  if (hasAny(primary, [/估值区间|模型精度|难以核实|自圆其说|口头阐述|background explanation/])) return "metric_truthfulness";
   if (hasAny(primary, [/negotiat|client meeting|meeting minutes|sales intern|intern.*responsib/])) return "intern_scope_truthfulness";
   if (hasAny(primary, [/yelp api|clustering|visualization|api.*restaurant|restaurant.*api/])) return "project_depth_chain";
   if (hasAny(primary, [/llm|rag system|ai api|chatbot evaluation|data cleaning.*data transformation/])) return "project_capability_map";
@@ -221,6 +352,9 @@ function classifyMentorRow(row = {}) {
   if (hasAny(primary, [/skills.*分类|skills.*结构|programming languages|libraries|frameworks|tools|技能板块|技能版块|技能.*重组/])) return "skills_structure";
   if (hasAny(primary, [/sponsorship|work authorization|\bh-?1b\b|\bopt\b|\bcpt\b|\bvisa\b|身份|担保|工签/i])) return "work_authorization";
   if (hasAny(primary, [/linkedin|github|portfolio|作品集|个人网站|personal website|project link|链接|联系/])) return "profile_links";
+  if (scope === "resume_edit" && hasAny(primary, [/ats|skill keywords?|关键词匹配|机筛|matching score|resume[- ]?jd matching|匹配分数|未匹配关键词|技能词汇匹配/])) return "keyword_evidence";
+  if (scope === "resume_edit" && hasAny(primary, [/process engineer|catalysis|催化反应|控制台参数|关键参数监控|化工流程/])) return "research_industry_positioning";
+  if (scope === "resume_edit" && hasAny(primary, [/药企|化工厂|cro|contractor|多版简历|多份简历|不同求职方向|不同方向准备|pharma|chemical plant/])) return "multi_version_resume";
   if (scope === "resume_edit" && /generic_resume_positioning|resume_not_tailored_to_jd|low_role_specificity|weak_target_role_alignment/.test(tags)) return "positioning";
   if (hasAny(primary, [/一份.*简历.*所有|通用简历|多版本|简历版本|tailor|not tailored|投递方向|目标岗位.{0,12}版本|版本.{0,12}目标岗位/])) return "positioning";
   if (hasAny(primary, [/format|layout|margins?|narrow|0\.5|single|before=0|after=0|\bword\b|word文档|pdf|排版|版面|一页|超页|行距|页边距|字号|跨页|bullet.*两行|3-5条/])) return "format";
@@ -240,6 +374,27 @@ function extractConcreteTerms(row = {}) {
   const text = sourceTextForGeneration(row);
   const patterns = [
     /Spring Boot/i,
+    /AWS/i,
+    /Azure/i,
+    /Google Cloud/i,
+    /\bS3\b/i,
+    /\bEC2\b/i,
+    /Lambda/i,
+    /LeetCode/i,
+    /dependency injection/i,
+    /\bIOC\b/i,
+    /Solidworks/i,
+    /CATIA/i,
+    /\bFEA\b/i,
+    /\bCAD\b/i,
+    /\bPID\b/i,
+    /Bode/i,
+    /Nyquist/i,
+    /system identification/i,
+    /Go-to-market/i,
+    /user survey/i,
+    /user study/i,
+    /\bKPI\b/i,
     /REST(?:ful)? API/i,
     /Redis/i,
     /PyTorch/i,
@@ -423,6 +578,89 @@ function generateMentorInsight(row = {}) {
   const family = classifyMentorRow(row);
   const source = sourceTextForGeneration(row);
 
+  if (family === "finance_accounting_positioning") {
+    if (/public accounting|cpa eligible|cpa eligibility|150/i.test(source)) {
+      return "你投 public accounting 时，CPA eligible date 和 150 学分要写得很清楚。这不是装饰信息，而是 Accounting 岗位会直接看的资格信号。";
+    }
+    if (/business analyst|accounting|advisory/i.test(source)) {
+      return "你这份 Finance 简历要把 Business Analyst、Accounting 和 Advisory 的定位分开。每个方向保留对应项目证据，不要让同一段经历同时承担太多角色。";
+    }
+    if (/credit risk|valuation|dcf|equity research|investment|pe\/vc/i.test(source)) {
+      return "你这段 Finance 经历要把赛道说准。credit risk、valuation、DCF 或 Equity Research 这些词要接到具体分析动作，不要只写成泛泛的金融实习。";
+    }
+    return "你这份 Finance 或 Business Analyst 方向的简历要先收住定位。建议把 Accounting、Advisory 或分析项目各自放回对应语境，别让经历看起来什么都想投。";
+  }
+  if (family === "analytics_visualization_evidence") {
+    if (/raw data/i.test(source)) {
+      return "你这段 DA/DS/BA 项目要从 raw data 开始讲清楚。SQL、Python、分析、visualization 或 dashboard 产出要串起来，读者才看得出完整链条。";
+    }
+    if (/tableau|power bi|dashboard|visualization/i.test(source)) {
+      return "你这里不要只列 Tableau、Power BI 或 visualization。建议补出 dashboard 服务了什么问题、谁会看、最后产生什么决策价值。";
+    }
+    return "BA/DS 相关经历不要只堆技术词。建议把分析问题、数据处理、visualization 和结论串起来，让这条 bullet 像真的解决过业务问题。";
+  }
+  if (family === "portfolio_research_artifact") {
+    if (/paper|论文|published research|research paper/i.test(source)) {
+      return "Portfolio 里如果放 paper 或 published research，要标清研究主题、发表状态和你的贡献。这样论文经历不会被误读成普通课堂项目。";
+    }
+    if (/portfolio|作品集|notion|case study|personal website/i.test(source)) {
+      return "Portfolio 不是附加装饰，尤其设计、PM 或项目型经历要让入口清楚。建议把作品集或 case study 放到容易点开的位置，并说明它证明了什么能力。";
+    }
+    return "研究院、实验室或 research role 的经历要先看目标方向。能服务研究岗位就保留细节；如果投普通数据或运营岗，就要翻译成更通用的项目证据。";
+  }
+  if (family === "rag_chatbot_evaluation") {
+    if (/rag/i.test(source)) {
+      return "RAG chatbot 项目不要只写接了 AI API，evaluation 口径也要讲清楚。faithfulness、answer relevance 和 context recall 这些指标要放进项目描述里。";
+    }
+    return "LLM 或 chatbot 项目要把 evaluation 写出来。建议说明怎么评估回答质量、失败案例和改进方向，不然项目容易像只接了一个 AI API。";
+  }
+  if (family === "analytics_method_truthfulness") {
+    if (/linear regression/i.test(source)) {
+      return "linear regression 这类方法能写，但前提是你真的能解释。建议补清楚变量、目标、结果和限制，别让方法词停在看起来会用的层面。";
+    }
+    return "分析方法不要只写名词。segmentation analysis、statistical analysis 或 business analytics 都要接到问题、方法和结论，面试追问时才讲得圆。";
+  }
+
+  if (family === "bullet_count_density") {
+    return "你这段经历不是 bullet 越多越好。一般 3-5 条就够，重点是每条都讲清任务、方法和结果，不要为了撑篇幅把信息写散。";
+  }
+  if (family === "template_differentiation") {
+    return "同一个项目模板可以借结构，但措辞一定要改出自己的版本。项目 title 和核心事实保留，bullet 表达换成你的动作和结果，避免看起来和同学简历雷同。";
+  }
+  if (family === "contract_path_strategy") {
+    return "现在正职确实不好上岸，contract 可以当成过渡路线看。先用 3-6 个月项目积累美国经验，后面再把这些项目整理成更有分量的正职筹码。";
+  }
+  if (family === "interview_prep_depth") {
+    if (/leetcode|刷题/i.test(source)) {
+      return "你现在的刷题量要按面试难度分层看。Intern 或 ICC 可能够用，但冲 full time 或大厂时，LeetCode 还要继续补高频题和语言熟练度。";
+    }
+    return withTerms("这块准备不要停在会背词。Spring Boot、dependency injection、IOC 这类概念要能用自己的项目解释出来，面试追问时才站得住。", row, "");
+  }
+  if (family === "company_interview_strategy") {
+    return "Amazon 这类目标可以当保底，但也不能只靠运气。建议把简历项目和行为面试故事先讲顺，基础刷题保持住，这样遇到简历 deep dive 比较稳。";
+  }
+  if (family === "coursework_translation") {
+    return "课程名如果太抽象，就不要原样丢在简历上。可以把 Form、Motion 这类名字压成一句读得懂的 phrase，让别人快速知道你训练过什么能力。";
+  }
+  if (family === "engineering_tool_depth") {
+    return withTerms("工程软件不要只写会用，要写到能做什么。Solidworks、CATIA、FEA 这类工具如果和设计、热力或流体分析有关，最好把使用场景讲出来。", row, "");
+  }
+  if (family === "controls_engineering_depth") {
+    return withTerms("控制方向这里要写出工程判断，不只是课本名词。PID、Bode、Nyquist、system identification 这些内容，要接到真实系统为什么这样设计。", row, "");
+  }
+  if (family === "cloud_platform_positioning") {
+    return withTerms("云平台经验要按投递对象摆顺。Azure 可以保留，但如果目标是科技公司或创业公司，AWS 和 Google Cloud 的相关项目证据会更通用。", row, "");
+  }
+  if (family === "product_business_framing") {
+    return withTerms("产品项目不要只写功能做出来了。可以补 user survey、user study 或 go-to-market plan，让别人看到你也想过目标用户和推出路径。", row, "");
+  }
+  if (family === "management_kpi_story") {
+    return withTerms("Pipeline management 这种说法要写到可解释。建议补 KPI 怎么设、目标怎么拆、团队怎么复盘，不然容易像一句日常职责。", row, "");
+  }
+  if (family === "metric_truthfulness") {
+    return "数字不是越多越好，关键是能不能解释来源。估值区间、模型精度这类背景很重的数字，可以简历上少写一点，把方法和逻辑留到面试展开。";
+  }
+
   if (family === "intern_scope_truthfulness") {
     if (!/negotiat/i.test(source)) {
       return "你这段 sales intern 不是没内容，是要写得更像真实实习职责。可以先用总领句讲业务开发或销售支持，再补 lead research、cold calls 或量化结果。";
@@ -467,9 +705,9 @@ function generateMentorInsight(row = {}) {
   }
   if (family === "portfolio_link") {
     if (/notion/i.test(source)) {
-      return "作品集链接要放在别人一眼能点到的位置。建议把 Notion portfolio 放在名字下方，和 LinkedIn、邮箱一起排清楚，别让 HR 自己找。";
+      return "作品集链接要放在别人一眼能点到的位置。建议把 Notion portfolio 放在名字下方，和 LinkedIn、邮箱一起排清楚，别让读者自己找。";
     }
-    return "作品集链接要做成可以一键打开的入口。建议放在名字下方或联系信息行，确保 URL 能点击，不要让 HR 手动复制粘贴。";
+    return "作品集链接要做成可以一键打开的入口。建议放在名字下方或联系信息行，确保 URL 能点击，不要让读者手动复制粘贴。";
   }
   if (family === "contact_info_format") {
     return "简历顶部联系方式要按美国求职习惯整理。手机号、location、email 和 LinkedIn 放在姓名下方；如果还用国内号码，建议换成本地号码。";
@@ -514,7 +752,7 @@ function generateMentorInsight(row = {}) {
     return "你这里不要只写效率变高，要把怎么算写出来。像接单率用接单数除以派单数、等待时间用前后差值，数字才有可信度。";
   }
   if (family === "onboarding_analysis") {
-    return "HR 实习也可以写出数据分析感。把 onboarding 数据、SQL 提取、training 因素和 90-day productivity 结果串起来，比单纯写协助入职更有说服力。";
+    return "人力相关实习也可以写出数据分析感。把 onboarding 数据、SQL 提取、training 因素和 90-day productivity 结果串起来，比单纯写协助入职更有说服力。";
   }
   if (family === "date_format") {
     return "日期格式这种细节不用写得花，统一、清楚就好。月份缩写和时间范围保持一致，读者扫经历顺序时才不会被格式打断。";
@@ -529,6 +767,9 @@ function generateMentorInsight(row = {}) {
     return "你这里要把和数据无关的公益活动让位给更贴近 DA/BA 的项目。像从蔚来、比亚迪、长安年报提数据做分析，就比普通活动更能证明方向。";
   }
   if (family === "multi_version_resume") {
+    if (/药企|化工厂|cro|contractor|pharma|chemical plant/i.test(source)) {
+      return "你这里适合按投递方向拆版本，不要用一份简历同时打药企、化工厂和 CRO。药企版突出 NMR/HPLC，化工厂版突出 GC 和流程参数，CRO 或 contractor 再保留更通用的分析能力。";
+    }
     return "你不是没有材料，是方向需要拆开。BA、PM 或 DS 版本可以各自保留不同重点，这样同一段经历才不会同时服务太多岗位。";
   }
   if (family === "business_value_framing") {
@@ -584,6 +825,9 @@ function generateMentorInsight(row = {}) {
     return withTerms("你这块 Skills 不是越多越好，关键是分类逻辑要一致。建议按语言、库、框架平台和工具重排，读者会更快抓到技术栈。", row);
   }
   if (family === "keyword_evidence") {
+    if (/10份|十份|matching score|匹配分数|resume[- ]?jd matching|未匹配关键词/i.test(source)) {
+      return "你这里可以把 JD 匹配当成一轮迭代来做。先拿 10 份目标 JD 跑 matching score，把缺的关键词揉回对应经历，再用新的 5-7 份 JD 验证，不要只凭感觉改。";
+    }
     return withTerms("你这里不要只把技能放在 Skills 清单里。建议把真实用过的关键词写进项目或经历 bullet，可信度会比单纯列词高很多。", row);
   }
   if (family === "keyword") {
@@ -596,7 +840,7 @@ function generateMentorInsight(row = {}) {
     return "你这里可以先把可验证入口补齐。LinkedIn、GitHub、作品集或项目链接不是装饰，是让别人更快确认你真的做过。";
   }
   if (family === "work_authorization") {
-    return "这类信息不是能力问题，但会影响招聘推进。建议把 sponsorship 或 OPT/CPT 状态说清楚，避免对方因为不确定而先放下。";
+    return "这类信息不是能力问题，但会影响后续推进。建议把 sponsorship 或 OPT/CPT 状态说清楚，避免对方因为不确定而先放下。";
   }
   if (family === "rag_evaluation") {
     return "你这条 RAG 项目不要只写做了系统，评估口径也要讲对。忠实性、答案相关性和上下文召回率，比随手写 BLEU 更能说明你真的懂场景。";
@@ -608,6 +852,9 @@ function generateMentorInsight(row = {}) {
     return "你这类 RAG 或 LLM 项目不能只靠项目名称取胜。建议写出真实问题、差异化数据或评估方法，不然很容易和教程项目混在一起。";
   }
   if (family === "research_industry_positioning") {
+    if (/process engineer|catalysis|催化反应|控制台参数|关键参数监控|化工流程/i.test(source)) {
+      return "你这段化工背景不是只能当学术经历写。建议把催化反应、关键参数监控和调参逻辑接到 process engineer 的日常工作上，让读者看出你知道岗位现场在看什么。";
+    }
     return "你这段研究不是不能放，而是要翻译成产业能看懂的应用场景。建议点出它对应哪些行业问题，别只停在方法和 novelty。";
   }
   if (family === "research_publication") {
@@ -621,7 +868,7 @@ function generateMentorInsight(row = {}) {
       return "你这里要先把营销指标定义讲准。CVR 和 CPA 不是装饰词，最好说明各自代表什么、怎么计算，否则会显得只是堆术语。";
     }
     if (/finance|金融/i.test(source)) {
-      return "你这里不是不能写金融指标，而是要看投递对象。除非目标就是 finance 岗位，否则建议改成更通用的数据分析语言，避免非金融 HR 第一眼看不懂。";
+      return "你这里不是不能写金融指标，而是要看投递对象。除非目标就是 finance 岗位，否则建议改成更通用的数据分析语言，避免非金融背景的读者第一眼看不懂。";
     }
     return "你这里要先把指标词用准。User engagement 和 conversion rate 不是一回事，术语混用会让人怀疑基础分析判断。";
   }
@@ -746,6 +993,10 @@ function reviewMentor(row, mentorText) {
     flags.push("mentor_overactive_voice_risk");
     reasons.push("Mentor copy sounds like direct operation instead of advice.");
   }
+  if (MENTOR_HR_VOICE_PATTERNS.some((pattern) => pattern.test(mentorText))) {
+    flags.push("mentor_hr_voice_risk");
+    reasons.push("Mentor copy contains HR/recruiting-screen voice instead of mentor advice.");
+  }
   if (
     original.length > 120 &&
     extractConcreteTerms(row).length === 0 &&
@@ -758,15 +1009,24 @@ function reviewMentor(row, mentorText) {
     flags.push("mentor_not_conversational");
     reasons.push("Mentor copy may not read like senior-schoolmate advice.");
   }
-  if (Number(row.id) === 29) {
-    flags.push("manual_hold_id_29");
-    reasons.push("id=29 is explicitly held from automatic approval.");
-  }
+  const blockingFlags = flags.filter((flag) => BLOCKING_FLAGS.has(flag));
+  const advisoryFlags = flags.filter((flag) => !BLOCKING_FLAGS.has(flag));
+  const bulkSafeApproved = BULK_SAFE_MODE &&
+    BULK_SAFE_FAMILIES.has(family) &&
+    blockingFlags.length === 0 &&
+    advisoryFlags.every((flag) => BULK_ADVISORY_FLAGS.has(flag));
+  const recommendation = flags.length === 0 || bulkSafeApproved ? "approved" : "needs_review";
+  const finalFlags = flags.length ? flags : ["good_as_is"];
+  const finalReasons = reasons.length ? reasons : ["No mentor-only heuristic risks detected."];
 
   const review = {
-    flags: flags.length ? flags : ["good_as_is"],
-    reasons: reasons.length ? reasons : ["No mentor-only heuristic risks detected."],
-    recommendation: flags.length ? "needs_review" : "approved",
+    flags: finalFlags,
+    reasons: finalReasons,
+    recommendation,
+    blockingFlags,
+    advisoryFlags,
+    bulkSafeApproved,
+    bulkSafeMode: BULK_SAFE_MODE,
     sourceFieldsUsed: ["P_mentor", "A_action", "action_summary", "user_problem_summary", "H_hook", "E_example"],
     detailReviewFields: ["P_mentor", "A_action", "action_summary", "user_problem_summary", "H_hook", "E_example", "I_insight"],
     originalCategories,
@@ -827,6 +1087,7 @@ function summarize(rows) {
   return rows.reduce((acc, row) => {
     for (const flag of row.review.flags) acc[flag] = (acc[flag] || 0) + 1;
     if (row.review.fastLaneApproved) acc.fast_lane_approved = (acc.fast_lane_approved || 0) + 1;
+    if (row.review.bulkSafeApproved) acc.bulk_safe_approved = (acc.bulk_safe_approved || 0) + 1;
     return acc;
   }, {});
 }
@@ -844,6 +1105,9 @@ function writeCsv(filePath, rows) {
     "mentor_rule_family",
     "recommendation",
     "fast_lane_approved",
+    "bulk_safe_approved",
+    "blocking_flags",
+    "advisory_flags",
     "review_flags",
     "review_reasons",
     "P_mentor",
@@ -863,6 +1127,9 @@ function writeCsv(filePath, rows) {
       row.mentor_rule_family,
       row.review.recommendation,
       row.review.fastLaneApproved ? "true" : "false",
+      row.review.bulkSafeApproved ? "true" : "false",
+      (row.review.blockingFlags || []).join("|"),
+      (row.review.advisoryFlags || []).join("|"),
       row.review.flags.join("|"),
       row.review.reasons.join("|"),
       row.original.P_mentor,
@@ -1019,6 +1286,7 @@ async function main() {
     scope: SCOPE,
     overwrite: OVERWRITE,
     fastLaneOnly: FAST_LANE_ONLY,
+    bulkSafeMode: BULK_SAFE_MODE,
     resumeAfterId: RESUME_AFTER_ID,
     offset: START_OFFSET,
     applyChunkSize: APPLY_CHUNK_SIZE,
@@ -1100,6 +1368,7 @@ module.exports = {
   detailTextForReview,
   cardFromRow,
   classifyMentorRow,
+  extractConcreteTerms,
   generateMentorInsight,
   reviewMentor,
   isFastLaneApproved,
