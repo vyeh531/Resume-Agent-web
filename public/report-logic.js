@@ -131,6 +131,42 @@ const STATIC_MENTOR_COMPANY_LOGOS = [
   { company: "Sony", companyLogo: "/logos/Sony AI America Inc.png" },
   { company: "FedEx", companyLogo: "/logos/FedEx.png" },
   { company: "Amtrak", companyLogo: "/logos/Amtrak.png" },
+  // Finance – variants & additions
+  { company: "Barclays", companyLogo: "/logos/Barclays.png" },
+  { company: "Wells Fargo", companyLogo: "https://logo.clearbit.com/wellsfargo.com" },
+  { company: "Visa", companyLogo: "https://logo.clearbit.com/visa.com" },
+  { company: "UBS", companyLogo: "https://logo.clearbit.com/ubs.com" },
+  { company: "Pimco", companyLogo: "https://logo.clearbit.com/pimco.com" },
+  { company: "PIMCO", companyLogo: "https://logo.clearbit.com/pimco.com" },
+  { company: "Credit Suisse", companyLogo: "https://logo.clearbit.com/credit-suisse.com" },
+  { company: "JP Morgan Chase", companyLogo: "/logos/JPMorganChase.png" },
+  { company: "J.P. Morgan", companyLogo: "/logos/JPMorganChase.png" },
+  { company: "Bank of America Merrill Lynch", companyLogo: "/logos/Bank of America.png" },
+  { company: "BOA", companyLogo: "/logos/Bank of America.png" },
+  { company: "Citi", companyLogo: "/logos/Citigroup.png" },
+  { company: "E&Y", companyLogo: "/logos/EY.png" },
+  { company: "Ernst & Young", companyLogo: "/logos/EY.png" },
+  { company: "PricewaterhouseCoopers", companyLogo: "/logos/PRICE WATERHOUSE COOPERS.png" },
+  { company: "BCG", companyLogo: "/logos/Boston Consulting Group.png" },
+  { company: "Boston Consulting Group", companyLogo: "/logos/Boston Consulting Group.png" },
+  { company: "McKinsey & Company", companyLogo: "/logos/McKinsey & Company.png" },
+  // Tech – missing popular companies
+  { company: "Facebook", companyLogo: "/logos/Meta.png" },
+  { company: "LinkedIn", companyLogo: "https://logo.clearbit.com/linkedin.com" },
+  { company: "Broadcom", companyLogo: "https://logo.clearbit.com/broadcom.com" },
+  { company: "Roblox", companyLogo: "https://logo.clearbit.com/roblox.com" },
+  { company: "eBay", companyLogo: "https://logo.clearbit.com/ebay.com" },
+  { company: "Yelp", companyLogo: "https://logo.clearbit.com/yelp.com" },
+  { company: "Western Digital", companyLogo: "https://logo.clearbit.com/westerndigital.com" },
+  { company: "Compass", companyLogo: "https://logo.clearbit.com/compass.com" },
+  { company: "IQVIA", companyLogo: "https://logo.clearbit.com/iqvia.com" },
+  { company: "Verizon", companyLogo: "/logos/Verizon.png" },
+  { company: "T-Mobile", companyLogo: "/logos/T-Mobile.png" },
+  { company: "Hewlett Packard Enterprise", companyLogo: "/logos/Hewlett Packard Enterprise.png" },
+  { company: "salesforce", companyLogo: "/logos/Salesforce.png" },
+  { company: "AWS", companyLogo: "/logos/Amazon Web Services, Inc.png" },
+  { company: "GM", companyLogo: "/logos/General Motors.png" },
+  { company: "GE", companyLogo: "/logos/General Electric.png" },
 ];
 function getJdMatchRatio(ats) {
   const value = ats?.jdMatchRatio ?? ats?.raw?.jdMatchRatio ?? ats?.raw?.metrics?.jdMatchRatio ?? ats?.metrics?.jdMatchRatio;
@@ -1028,8 +1064,7 @@ if (headlineEl) headlineEl.textContent = atsScore || "--";
       ${problems.length ? `<div style="font-size:13px;font-weight:600;color:var(--rose);margin-bottom:8px;">🔍 关键问题</div>
       <ul style="list-style:none;padding:0;margin:0;font-size:13px;">
         ${problems.map(renderAtsProblemItem).join("")}
-      </ul>` : ""}
-      /* 优先建议 — 暂时隐藏，与下方建议重复 */`;
+      </ul>` : ""}`;
   }
 })();
 
@@ -1177,8 +1212,7 @@ function renderKeywordCategories(items) {
     const suggestions = normalizeSuggestionList();
     probSection.innerHTML = `
       ${problems.length ? `<div style="font-size:13px;font-weight:600;color:var(--rose);margin-bottom:8px;">🔍 关键问题</div>
-      <ul style="list-style:none;padding:0;margin:0;font-size:13px;">${problems.map(renderAtsProblemItem).join("")}</ul>` : ""}
-      /* 优先建议 — 暂时隐藏，与下方建议重复 */`;
+      <ul style="list-style:none;padding:0;margin:0;font-size:13px;">${problems.map(renderAtsProblemItem).join("")}</ul>` : ""}`;
   }
 })();
 
@@ -1281,9 +1315,10 @@ function getCompanyLogo(company) {
 function renderMentorGroupHeader(mentor, groupIdx, totalGroups) {
   const logoUrl = mentor.companyLogo || getCompanyLogo(mentor.company);
   const mentorDisplayName = mentor.mentorName || "X导师";
+  const avatarFallback = avatarCircle(mentor.company || mentorDisplayName, 44);
   const logoHtml = logoUrl
-    ? `<div style="width:44px;height:44px;border-radius:10px;background:#fff;border:1px solid #EDE9DC;display:flex;align-items:center;justify-content:center;padding:6px;flex-shrink:0;"><img src="${escapeAttr(logoUrl)}" alt="${escapeAttr(mentor.company||"")}" style="max-width:100%;max-height:100%;object-fit:contain;"></div>`
-    : avatarCircle(mentor.company || mentorDisplayName, 44);
+    ? `<div id="logo-wrap-${groupIdx}" style="width:44px;height:44px;border-radius:10px;background:#fff;border:1px solid #EDE9DC;display:flex;align-items:center;justify-content:center;padding:6px;flex-shrink:0;"><img src="${escapeAttr(logoUrl)}" alt="${escapeAttr(mentor.company||"")}" style="max-width:100%;max-height:100%;object-fit:contain;" onerror="var w=this.closest('[id^=logo-wrap-]');if(w){w.style.padding='0';w.style.background='transparent';w.style.border='none';w.innerHTML='${avatarFallback.replace(/'/g,"&#39;").replace(/\n/g,"")}'}"></div>`
+    : avatarFallback;
   return `
     <div style="display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid #EDE9DC;margin-bottom:20px;">
       ${logoHtml}
@@ -1310,6 +1345,60 @@ function renderMentorGroup(mentor, groupIdx, totalGroups) {
 function renderMentorGrouped(mentors) {
   const valid = (mentors || []).filter(m => (m.adviceItems || []).some(item => !isUnsafeReportAdvice(item)));
   return valid.map((m, i) => renderMentorGroup(m, i, valid.length)).join("");
+}
+
+function flattenAllAdviceItems() {
+  const seen = new Set();
+  const out = [];
+  const sources = [
+    ...(s.premiumAdviceItems || []),
+    ...((s.premiumMentors || []).flatMap(m => m.adviceItems || [])),
+  ];
+  for (const item of sources) {
+    if (isUnsafeReportAdvice(item)) continue;
+    const key = item.adviceId || adviceIdentity(item);
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    out.push(item);
+    if (out.length >= 12) break;
+  }
+  return out;
+}
+
+function groupAdviceItemsByMentor(items) {
+  const mentorBuckets = new Map();
+  const fallback = [];
+  for (const item of (items || [])) {
+    const src = item.mentorSource;
+    const company = src?.company || "";
+    const mentorName = src?.mentorName || "";
+    if (!company && !mentorName) {
+      fallback.push(item);
+      continue;
+    }
+    const key = company || mentorName;
+    if (!mentorBuckets.has(key)) {
+      mentorBuckets.set(key, {
+        mentorName,
+        company,
+        companyLogo: src?.companyLogo || getCompanyLogo(company),
+        mentorTitle: src?.mentorTitle || "",
+        adviceItems: [],
+      });
+    }
+    mentorBuckets.get(key).adviceItems.push(item);
+  }
+  return { mentorGroups: [...mentorBuckets.values()], fallback };
+}
+
+function renderMentorGroupedFromAdviceItems() {
+  const items = flattenAllAdviceItems();
+  const { mentorGroups, fallback } = groupAdviceItemsByMentor(items);
+  const allGroups = fallback.length
+    ? [{ mentorName: "MentorX 导师", company: "MentorX", companyLogo: "/logo/MentorX.png", mentorTitle: "简历修改导师", adviceItems: fallback }, ...mentorGroups]
+    : mentorGroups;
+  if (!allGroups.length) return `<p style="color:var(--ink-soft);font-size:14px;padding:16px 0;">导师建议加载失败，请返回首页重新提交简历。</p>`;
+  return allGroups.map((g, i) => renderMentorGroup(g, i, allGroups.length)).join("");
 }
 
 function adviceIdentity(item) {
@@ -1504,10 +1593,9 @@ if (mentorLogoIntroSlot) {
 }
 const mentorsListEl = document.getElementById("mentorsList");
 if (mentorsListEl) {
-  if (premiumMentors && premiumMentors.length > 0 && premiumMentors.some(m => (m.adviceItems || []).length > 0)) {
-    mentorsListEl.innerHTML = renderMentorGrouped(premiumMentors);
-  } else if (premiumAdviceItems && premiumAdviceItems.length > 0) {
-    mentorsListEl.innerHTML = renderAdviceBundle(premiumAdviceItems, mentorLogoPool);
+  const hasAnyAdvice = (premiumAdviceItems && premiumAdviceItems.length > 0) || (s.premiumMentors || []).some(m => (m.adviceItems || []).length > 0);
+  if (hasAnyAdvice) {
+    mentorsListEl.innerHTML = renderMentorGroupedFromAdviceItems();
   } else if (legacyMentors && legacyMentors.length > 0) {
     mentorsListEl.innerHTML = legacyMentors.map((m,i)=>renderPremiumMentorCard(m,i)).join("");
   } else {

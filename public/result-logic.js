@@ -418,13 +418,18 @@ function normalizeSuggestionList() {
     const nextItems = dedupeAtsList([...items, item], { max: 3 });
     if (nextItems.length > items.length) items.push(item);
   }
+  // 兜底：topic 去重后仍不足 3 条，放宽到精确去重确保显示 3 条
+  for (const item of fallbacks) {
+    if (items.length >= 3) break;
+    if (!items.includes(item)) items.push(item);
+  }
   return items.slice(0, 3);
 }
 function resultProblemFallbacks() {
   return [
-    "岗位描述关键词匹配仍有提升空间。",
-    "简历定位需要更贴近目标岗位。",
-    "经历证据需要更清楚地支撑核心技能。",
+    "简历缺少个人简介段落，岗位定位线索不够清晰。",       // write-summary
+    "经历中的量化结果偏少，建议补充百分比或规模数据。",   // impact
+    "简历整体结构还没有围绕目标岗位重新组织。",           // structure-reorganize
   ];
 }
 function normalizeProblemList() {
@@ -449,6 +454,11 @@ function normalizeProblemList() {
     if (items.length === 3) break;
     const nextItems = dedupeAtsList([...items, item], { max: 3 });
     if (nextItems.length > items.length) items.push(item);
+  }
+  // 兜底：topic 去重后仍不足 3 条，放宽到精确去重确保显示 3 条
+  for (const item of fallbacks) {
+    if (items.length >= 3) break;
+    if (!items.includes(item)) items.push(item);
   }
   return items.slice(0, 3);
 }

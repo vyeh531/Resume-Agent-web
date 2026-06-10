@@ -163,7 +163,7 @@ export default function ResultPage() {
               </summary>
               <ul id="atsProblems" style={{listStyle:'none',padding:0,margin:'8px 0 0',fontSize:'13px'}}></ul>
             </details>
-            <details id="atsSuggestionsDetails" className="ats-preview-details" style={{marginTop:'12px'}} open>
+            <details id="atsSuggestionsDetails" className="ats-preview-details" style={{marginTop:'12px'}} open hidden>
               <summary style={{cursor:'pointer',fontSize:'13px',fontWeight:700,color:'var(--jade)',listStyle:'none',display:'flex',alignItems:'center',gap:'6px',padding:'4px 0'}}>
                 <span>✨ 优先建议</span><span id="atsSuggestionsChev" style={{fontSize:'11px',transition:'transform .2s'}}>▾</span>
               </summary>
