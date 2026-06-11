@@ -290,7 +290,7 @@ function classifyMentorRowOverride(row = {}) {
   if (hasAny(primary, [/ba.*pm|pm.*ba|ds.*ba|marketing\/cryptocurrency|two versions|two resumes|两边同时|两份简历|两个版本/])) return "multi_version_resume";
   if (!hasAny(primary, [/cpa eligible|eligible date|150|public accounting|坐考/]) && hasAny(primary, [/\bcvr\b|\bcpa\b|cost per acquisition|conversion rate|指标定义|术语定义/])) return "metric_terminology";
   if (hasAny(primary, [/profit|cost|forecast|business value|商业价值|提升利润|降低成本|预测能力|为我所用/])) return "business_value_framing";
-  if (hasAny(primary, [/cross.*industry|da\/ba|行业|è¡Œä¸š|internal terminology|内部术语/])) return "";
+  if (hasAny(primary, [/cross.*industry|da\/ba|行业|internal terminology|内部术语/])) return "";
   if (hasAny(primary, [/yolo|coco|you only look once|abbreviation|acronym|缩写|全称/])) return "acronym_explanation";
   if (hasAny(primary, [/pdf.*google doc|pdf.*google docs|google doc.*pdf|google docs.*pdf|导出.*pdf|pdf格式|pdf.*递交/])) return "";
   if (hasAny(primary, [/google doc|google docs|microsoft word|start from scratch|badcase|bad case|纯文本|从零开始|重新排版/])) return "document_rebuild";

@@ -31,9 +31,9 @@ function atsRiskText(risk) {
 }
 function riskToneClass(risk) {
   const text = String(risk || "");
-  if (/高|é«˜|high|severe|red/i.test(text)) return "risk-high";
-  if (/中|ä¸­|medium|mid|moderate|orange|yellow/i.test(text)) return "risk-medium";
-  if (/低|ä½Ž|low|green/i.test(text)) return "risk-low";
+  if (/高|high|severe|red/i.test(text)) return "risk-high";
+  if (/中|medium|mid|moderate|orange|yellow/i.test(text)) return "risk-medium";
+  if (/低|low|green/i.test(text)) return "risk-low";
   return "risk-pending";
 }
 function escapeHtml(str) {
@@ -2200,7 +2200,7 @@ function renderLockedAdvicePreview(preview) {
   const topics = (preview.topics || []).slice(0, 4).map(t => `<span class="cred-pill">${escapeHtml(t)}</span>`).join("");
   areaEl.innerHTML = `
     <article class="locked-mentor-v2" style="position:relative;overflow:hidden;min-height:190px;">
-      <div style="font-size:12px;font-weight:600;color:var(--ink-soft);font-family:var(--mono);margin:0 0 8px;">${preview.lockedAdviceCount || 9} æ¡ä»˜è´¹æ·±åº¦å»ºè®®</div>
+      <div style="font-size:12px;font-weight:600;color:var(--ink-soft);font-family:var(--mono);margin:0 0 8px;">${preview.lockedAdviceCount || 9} 条付费深度建议</div>
       <div class="cred-pills" style="margin-bottom:10px;">${topics}</div>
       <div class="locked-preview-overlay">${renderUnlockMiniCta()}</div>
     </article>`;

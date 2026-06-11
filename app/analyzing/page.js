@@ -106,9 +106,9 @@ export default function AnalyzingPage() {
             const myEnd = stepBoundaries[idx];
             const prevEnd = idx === 0 ? 0 : stepBoundaries[idx - 1];
             const status = li.querySelector(".step-status");
-            if (pct >= myEnd){ li.dataset.state = "done"; status.textContent = "å®Œæˆ"; }
-            else if (pct >= prevEnd){ li.dataset.state = "active"; status.textContent = "è¿›è¡Œä¸­â€¦"; }
-            else { li.dataset.state = "pending"; status.textContent = "ç­‰å¾…"; }
+            if (pct >= myEnd){ li.dataset.state = "done"; status.textContent = "完成"; }
+            else if (pct >= prevEnd){ li.dataset.state = "active"; status.textContent = "进行中…"; }
+            else { li.dataset.state = "pending"; status.textContent = "等待"; }
           });
         }
         function storeCompletedReport(result) {
@@ -150,7 +150,7 @@ export default function AnalyzingPage() {
               return;
             }
             if (job.status === "failed") {
-              subStatusEl.textContent = "åˆ†æžå¤±è´¥ï¼Œè¯·è¿”å›žé¦–é¡µé‡è¯•";
+              subStatusEl.textContent = "分析失败，请返回首页重试";
               Store.set({ analysisJobError: job.error || "analysis failed" });
               return;
             }

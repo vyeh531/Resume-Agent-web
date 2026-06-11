@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 
 const fs = require("fs");
 const path = require("path");
@@ -25,16 +25,16 @@ const csvArg = process.argv.find((arg) => arg.startsWith("--csv="));
 const CSV_PATH = csvArg ? csvArg.slice("--csv=".length).trim() : "";
 
 const CATEGORY_PATTERNS = {
-  positioning: /å®šä½|ç›®æ ‡å²—ä½|æŠ•é€’æ–¹å‘|é€šç”¨ç‰ˆ|ç‰ˆæœ¬|tailor|JD|å²—ä½åŽŸè¯|role|position/i,
-  keyword: /å…³é”®è¯|æŠ€èƒ½|Skills|SQL|Python|Tableau|Excel|VLOOKUP|pivot|VaR|stress testing|regression|prototype|debug|test|ATS|JD/i,
-  portfolio: /ä½œå“é›†|ä½œå“|Demo|å¯è¿è¡Œ|portfolio|å¯è®¿é—®|é“¾æŽ¥|Github|project link/i,
-  education: /è¯¾ç¨‹|è¯ä¹¦|æ•™è‚²|GPA|å­¦æ ¡|å­¦åŽ†|åæ ¡|course|certificate|education/i,
-  format: /æ ¼å¼|æŽ’ç‰ˆ|ç‰ˆé¢|ä¸€é¡µ|è¶…é¡µ|è·¨é¡µ|å­—å·|è¡Œè·|æ—¥æœŸ|åœ°å€|section|layout|PDF|Word/i,
-  impact: /é‡åŒ–|æ•°å­—|ç»“æžœ|æˆæžœ|å½±å“|è§„æ¨¡|æ•ˆçŽ‡|æå‡|impact|metrics?|measurable/i,
-  truthfulness: /è¿½é—®|å¯ä¿¡åº¦|çœŸå®ž|åŒ…è£…|è™šæž„|æ³¨æ°´|å‚ä¸Žåº¦|èƒŒè°ƒ|background check|è®²ä¸å‡ºæ¥/i,
-  data: /æ•°æ®|æ¨¡åž‹|åˆ†æž|è¯„ä¼°|ç®—æ³•|ä¸šåŠ¡å†³ç­–|ä¸šåŠ¡å½±å“|å¯å¤çŽ°|cohort|ML|DS|DA|model|analysis/i,
-  collaboration: /åä½œ|æ²Ÿé€š|cross-functional|stakeholder|communication|å›¢é˜Ÿ/i,
-  market: /èº«ä»½|relocation|sponsorship|OPT|CPT|æœ¬åœ°|åœ°å€|æ¸ é“|å¸‚åœº|å…¬å¸è§„æ¨¡|consumer|marketing/i,
+  positioning: /定位|目标岗位|投递方向|通用版|版本|tailor|JD|岗位原词|role|position/i,
+  keyword: /关键词|技能|Skills|SQL|Python|Tableau|Excel|VLOOKUP|pivot|VaR|stress testing|regression|prototype|debug|test|ATS|JD/i,
+  portfolio: /作品集|作品|Demo|可运行|portfolio|可访问|链接|Github|project link/i,
+  education: /课程|证书|教育|GPA|学校|学历|名校|course|certificate|education/i,
+  format: /格式|排版|版面|一页|超页|跨页|字号|行距|日期|地址|section|layout|PDF|Word/i,
+  impact: /量化|数字|结果|成果|影响|规模|效率|提升|impact|metrics?|measurable/i,
+  truthfulness: /追问|可信度|真实|包装|虚构|注水|参与度|背调|background check|讲不出来/i,
+  data: /数据|模型|分析|评估|算法|业务决策|业务影响|可复现|cohort|ML|DS|DA|model|analysis/i,
+  collaboration: /协作|沟通|cross-functional|stakeholder|communication|团队/i,
+  market: /身份|relocation|sponsorship|OPT|CPT|本地|地址|渠道|市场|公司规模|consumer|marketing/i,
 };
 
 const NORMAL_CATEGORY_PATTERNS = {
@@ -77,22 +77,22 @@ const DETAIL_PATTERNS = [
   /stable metrics/i,
   /benchmark/i,
   /GPA|scale|4\.0/i,
-  /1\s*(?:è‡³|åˆ°|-|~)\s*2|1-2|5\s*ä»½/i,
+  /1\s*(?:至|到|-|~)\s*2|1-2|5\s*份/i,
   /Walmart|Costco|price elasticity/i,
   /Cohort Analysis/i,
-  /ML|Machine Learning|æ¨¡åž‹åç§°|é¢„æµ‹ä»»åŠ¡|ç‰¹å¾è§„æ¨¡/i,
+  /ML|Machine Learning|模型名称|预测任务|特征规模/i,
   /cross-functional|stakeholder|communication/i,
-  /background check|èƒŒè°ƒ/i,
+  /background check|背调/i,
 ];
 
 const GENERIC_PATTERNS = [
-  /ä½ è¿™é‡Œæœ‰å¯ä¿®æ”¹çš„ç©ºé—´/,
-  /ä¸æ˜¯æŽ¨å€’é‡æ¥/,
-  /æ–¹å‘å¯¹äº†ä»¥åŽ/,
-  /æŠŠçŽ°æœ‰ææ–™è®²å¾—æ›´æ¸…æ¥š/,
-  /ä¸æ˜¯æ²¡æœ‰ææ–™/,
-  /ä¸æ˜¯æ²¡ä»·å€¼/,
-  /ä¼˜å…ˆä¿®çš„ä¿¡å·/,
+  /你这里有可修改的空间/,
+  /不是推倒重来/,
+  /方向对了以后/,
+  /把现有材料讲得更清楚/,
+  /不是没有材料/,
+  /不是没价值/,
+  /优先修的信号/,
 ];
 
 const MENTOR_OVERACTIVE_PATTERNS = [
@@ -132,7 +132,7 @@ function normalizedTextKey(value = "") {
   return String(value || "")
     .toLowerCase()
     .replace(/\s+/g, "")
-    .replace(/[ï¼Œã€‚ï¼›ã€,.!?;:ï¼š"'â€œâ€â€˜â€™ï¼ˆï¼‰()\[\]{}<>]/g, "")
+    .replace(/[，。；、,.!?;:："'“”‘’（）()\[\]{}<>]/g, "")
     .slice(0, 56);
 }
 

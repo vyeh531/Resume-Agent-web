@@ -285,7 +285,7 @@ export default function ReportPage() {
       </div>
 
       <Script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" strategy="lazyOnload" />
-      <Script src="/report-logic.js?v=pdf-stage-export-20260611-1" strategy="afterInteractive" />
+      <Script src="/report-logic.js?v=utf8-source-clean-20260611-1" strategy="afterInteractive" />
     </>
   );
 }

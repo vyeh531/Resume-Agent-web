@@ -2817,7 +2817,7 @@ function hasLinkedInSignal(text) {
 function cleanHeadingTitle(line) {
   return String(line || "")
     .trim()
-    .replace(/[:ï¼š]\s*$/, "")
+    .replace(/[:：]\s*$/, "")
     .replace(/\s+/g, " ");
 }
 

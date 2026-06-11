@@ -1963,14 +1963,14 @@ function aiPdfPlacementLabel(item = {}) {
   const raw = item.placement?.label || item.whereToAdd || "";
   if (/summary/i.test(raw)) return "Summary";
   if (/skills?/i.test(raw)) return "Skills";
-  if (/experience|ç»åŽ†|经历/.test(raw)) return "Experience";
-  if (/reference|å‚è€ƒ|参考/.test(raw)) return "Reference only";
+  if (/experience|经历/.test(raw)) return "Experience";
+  if (/reference|参考/.test(raw)) return "Reference only";
   return raw || "Reference only";
 }
 function aiPdfPriorityRank(item = {}) {
   const p = String(item.priority || item.priorityLabel || "").toLowerCase();
-  if (p === "high" || p === "p0" || /å¿…æ”¹|必改|critical/.test(p)) return 0;
-  if (p === "medium" || p === "p1" || /å»ºè®®|建议/.test(p)) return 1;
+  if (p === "high" || p === "p0" || /必改|critical/.test(p)) return 0;
+  if (p === "medium" || p === "p1" || /建议/.test(p)) return 1;
   return 2;
 }
 function collectAiPdfKeywords() {
@@ -2023,20 +2023,18 @@ function renderAiPdfAdvice(adviceItems) {
     return `<p>暂无导师建议。请 AI 使用关键词和关键问题，按“动作 + 方法/工具 + 结果/影响”的结构改写简历。</p>`;
   }
   return adviceItems.map((item, index) => {
-    const rewrite = buildRewriteExample(item);
     const diagnosis = item.currentDiagnosis || item.problemSummary || "";
     const action = item.action || item.actionSummary || "";
     const insight = item.mentorInsight || item.mentorLens || item.reason || item.I_insight || item.P_mentor || "";
     const hrPov = item.hrPerspective || item.HR_os || item.hrPov || item.recruiterPerspective || HR_PERSPECTIVE_LOOKUP.get(String(item.adviceId || "")) || HR_PERSPECTIVE_LOOKUP.get(adviceIdentity(item)) || "";
     const priority = aiPdfPriorityRank(item) === 0 ? "高优先级" : aiPdfPriorityRank(item) === 1 ? "中优先级" : "补充优化";
     return `<div class="ai-pdf-advice">
-      <div><span class="ai-pdf-label">${escapeHtml(priority)}</span><span class="ai-pdf-meta">建议 ${index + 1}</span></div>
+      <div><span class="ai-pdf-label">${escapeHtml(priority)}</span><span class="ai-pdf-meta">Advice ${index + 1} · ${escapeHtml(sectionLabel(item.targetSection || "overall"))}</span></div>
       <h3>${escapeHtml(item.title || `修改建议 ${index + 1}`)}</h3>
-      ${diagnosis ? `<p><strong>现状诊断：</strong>${escapeHtml(diagnosis)}</p>` : ""}
-      ${action ? `<p><strong>建议动作：</strong>${escapeHtml(action)}</p>` : ""}
-      ${insight ? `<p><strong>导师视角：</strong>${escapeHtml(insight)}</p>` : ""}
-      ${hrPov ? `<p><strong>HR/招聘视角：</strong>${escapeHtml(hrPov)}</p>` : ""}
-      ${(rewrite.before || rewrite.after) ? `<p><strong>改写示例：</strong>${escapeHtml(rewrite.before)} → ${escapeHtml(rewrite.after)}</p>` : ""}
+      ${diagnosis ? `<p><strong>AI needs to fix:</strong> ${escapeHtml(diagnosis)}</p>` : ""}
+      ${action ? `<p><strong>Rewrite instruction:</strong> ${escapeHtml(action)}</p>` : ""}
+      ${insight ? `<p><strong>Mentor rationale:</strong> ${escapeHtml(insight)}</p>` : ""}
+      ${hrPov ? `<p><strong>Recruiter signal:</strong> ${escapeHtml(hrPov)}</p>` : ""}
     </div>`;
   }).join("");
 }
@@ -2197,7 +2195,6 @@ async function exportPDF(){
         logging: false,
         backgroundColor: '#f6f3ec',
         windowWidth: exportWidth,
-        width: exportWidth,
         scrollX: 0,
         scrollY: 0
       },
@@ -2234,7 +2231,6 @@ async function exportAiRewritePDF(){
         logging: false,
         backgroundColor: '#f6f3ec',
         windowWidth: exportWidth,
-        width: exportWidth,
         scrollX: 0,
         scrollY: 0
       },
@@ -2251,3 +2247,92 @@ async function exportAiRewritePDF(){
 }
 window.exportPDF = exportPDF;
 window.exportAiRewritePDF = exportAiRewritePDF;
+
+function collectPrintStyles() {
+  return Array.from(document.querySelectorAll('style,link[rel="stylesheet"]'))
+    .map((node) => node.outerHTML)
+    .join("\n");
+}
+function printDocumentFromHtml(html, title = "MentorX PDF") {
+  const iframe = document.createElement("iframe");
+  iframe.setAttribute("aria-hidden", "true");
+  iframe.style.cssText = [
+    "position:fixed",
+    "left:-10000px",
+    "top:0",
+    "width:794px",
+    "height:1123px",
+    "border:0",
+    "opacity:0",
+    "pointer-events:none"
+  ].join(";");
+  document.body.appendChild(iframe);
+  const doc = iframe.contentDocument || iframe.contentWindow.document;
+  doc.open();
+  doc.write(`<!doctype html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <title>${escapeHtml(title)}</title>
+        ${collectPrintStyles()}
+        <style>
+          @page { size: A4 portrait; margin: 12mm; }
+          html, body { margin: 0 !important; padding: 0 !important; background: #f6f3ec !important; }
+          body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+          .page { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; border: 0 !important; background: #f6f3ec !important; }
+          .banner, .export-card, .footnote { display: none !important; }
+          .brandbar { padding: 0 0 14px !important; }
+          .brand-img { height: 42px !important; }
+          .section { margin: 22px 0 !important; }
+          .section-title { font-size: 20px !important; margin: 3px 0 8px !important; }
+          .card, .tile, .service-card { border-radius: 12px !important; box-shadow: none !important; }
+          .card { padding: 16px !important; }
+          .tiles { gap: 10px !important; }
+          .section, .card, .tile, .service-card, .advice-example, .ai-pdf-card, .ai-pdf-advice { break-inside: auto !important; page-break-inside: auto !important; }
+          h1, h2, h3, .section-title, .ai-pdf-label { break-after: avoid; page-break-after: avoid; }
+          .ai-rewrite-pdf { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; background: #f6f3ec !important; }
+          .ai-rewrite-pdf h1 { font-size: 24px !important; margin: 8px 0 6px !important; }
+          .ai-rewrite-pdf h2 { font-size: 16px !important; }
+          .ai-rewrite-pdf h3 { font-size: 12.5px !important; }
+          .ai-pdf-card { margin: 6px 0 !important; padding: 9px 11px !important; border-radius: 8px !important; box-shadow: none !important; }
+          .ai-pdf-card p, .ai-pdf-card li { font-size: 11.5px !important; line-height: 1.5 !important; }
+          .ai-pdf-advice { margin-top: 7px !important; padding-top: 7px !important; }
+          .ai-pdf-grid { grid-template-columns: 1fr 1fr !important; }
+          .ai-pdf-chip { font-size: 10.5px !important; }
+        </style>
+      </head>
+      <body>${html}</body>
+    </html>`);
+  doc.close();
+  const waitForIframeReady = async () => {
+    const root = doc.body;
+    if (doc.fonts?.ready) await doc.fonts.ready.catch(() => {});
+    await waitForReportImages(root);
+    await new Promise((resolve) => setTimeout(resolve, 150));
+  };
+
+  waitForIframeReady().then(() => {
+    const win = iframe.contentWindow;
+    const cleanup = () => setTimeout(() => iframe.remove(), 500);
+    win.onafterprint = cleanup;
+    win.focus();
+    win.print();
+    setTimeout(cleanup, 3000);
+  }).catch((err) => {
+    console.error(err);
+    iframe.remove();
+  });
+}
+function exportPDFPrint(){
+  const pageEl = document.querySelector(".page");
+  if (!pageEl) return;
+  const clone = pageEl.cloneNode(true);
+  clone.querySelectorAll(".banner,.export-card,.footnote").forEach((el) => el.remove());
+  printDocumentFromHtml(clone.outerHTML, "MentorX-report");
+}
+function exportAiRewritePDFPrint(){
+  const el = buildAiRewritePdfElement();
+  printDocumentFromHtml(el.outerHTML, "MentorX-AI-resume-rewrite-prompt");
+}
+window.exportPDF = exportPDFPrint;
+window.exportAiRewritePDF = exportAiRewritePDFPrint;
