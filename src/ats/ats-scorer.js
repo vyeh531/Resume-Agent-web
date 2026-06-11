@@ -1194,7 +1194,7 @@ function getBulletLines(text) {
     });
 }
 
-function parseSections(text) {
+function parseSectionsLegacy(text) {
   const sections = {};
   const lines = normalizeText(text).split("\n");
   let current = "header";
@@ -1203,12 +1203,12 @@ function parseSections(text) {
   // Patterns include space-merged variants (e.g. "TECHNICALSKILLS") because
   // pdf-parse strips spaces, turning section headers into single merged words.
   const headingMap = [
-    [/^(summary|profile|professionalsummary|professional summary|careerobjective|career objective|objective)\b/i, "summary"],
-    [/^(experience|workexperience|work experience|professionalexperience|professional experience|employment)\b/i, "experience"],
-    [/^(projects?|projectexperience|project experience|selectedprojects|selected projects)\b/i, "projects"],
-    [/^(skills?|technicalskills?|technical skills?|coreskills?|core skills?|competencies)\b/i, "skills"],
-    [/^(education|academicbackground|academic background)\b/i, "education"],
-    [/^(certifications?|licenses?|awards?|honors?)\b/i, "certifications"]
+    ["summary", /^(summary|profile|professionalsummary|professional summary|careerobjective|career objective|objective)\b/i, ["summary", "profile", "professionalsummary", "professional summary", "careerobjective", "career objective", "objective"]],
+    ["experience", /^(experience|workexperience|work experience|professionalexperience|professional experience|employment)\b/i, ["professionalexperience", "professional experience", "workexperience", "work experience", "experience", "employment"]],
+    ["projects", /^(projects?|projectexperience|project experience|selectedprojects|selected projects)\b/i, ["projectexperience", "project experience", "selectedprojects", "selected projects", "projects", "project"]],
+    ["skills", /^(skills?|technicalskills?|technical skills?|coreskills?|core skills?|competencies)\b/i, ["technicalskills", "technical skills", "coreskills", "core skills", "competencies", "skills", "skill"]],
+    ["education", /^(education|academicbackground|academic background)\b/i, ["academicbackground", "academic background", "education"]],
+    ["certifications", /^(certifications?|licenses?|awards?|honors?)\b/i, ["certifications", "certification", "licenses", "license", "awards", "award", "honors", "honor"]]
   ];
 
   for (const rawLine of lines) {
@@ -1223,6 +1223,55 @@ function parseSections(text) {
   }
 
   return Object.fromEntries(Object.entries(sections).map(([key, value]) => [key, value.join("\n").trim()]));
+}
+
+function parseSections(text) {
+  const sections = {};
+  const lines = normalizeText(text).split("\n");
+  let current = "header";
+  sections[current] = [];
+
+  const headingMap = [
+    ["summary", /^(summary|profile|professionalsummary|professional summary|careerobjective|career objective|objective)\b/i, ["summary", "profile", "professionalsummary", "professional summary", "careerobjective", "career objective", "objective"]],
+    ["experience", /^(experience|workexperience|work experience|professionalexperience|professional experience|employment)\b/i, ["professionalexperience", "professional experience", "workexperience", "work experience", "experience", "employment"]],
+    ["projects", /^(projects?|projectexperience|project experience|selectedprojects|selected projects)\b/i, ["projectexperience", "project experience", "selectedprojects", "selected projects", "projects", "project"]],
+    ["skills", /^(skills?|technicalskills?|technical skills?|coreskills?|core skills?|competencies)\b/i, ["technicalskills", "technical skills", "coreskills", "core skills", "competencies", "skills", "skill"]],
+    ["education", /^(education|academicbackground|academic background)\b/i, ["academicbackground", "academic background", "education"]],
+    ["certifications", /^(certifications?|licenses?|awards?|honors?)\b/i, ["certifications", "certification", "licenses", "license", "awards", "award", "honors", "honor"]]
+  ];
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    const cleaned = line.replace(/[:\uFF1A]$/, "");
+    const matched = headingMap.find(([, re, aliases]) =>
+      re.test(cleaned) || Boolean(extractInlineHeadingText(cleaned, aliases))
+    );
+    if (matched) {
+      current = matched[0];
+      sections[current] = sections[current] || [];
+      const inlineText = extractInlineHeadingText(cleaned, matched[2]);
+      if (inlineText) sections[current].push(inlineText);
+      continue;
+    }
+    sections[current].push(rawLine);
+  }
+
+  return Object.fromEntries(Object.entries(sections).map(([key, value]) => [key, value.join("\n").trim()]));
+}
+
+function extractInlineHeadingText(line, aliases) {
+  const value = String(line || "").trim();
+  const sortedAliases = [...aliases].sort((a, b) => b.length - a.length);
+  for (const alias of sortedAliases) {
+    const escaped = alias.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\\ /g, "\\s+");
+    const spaced = value.match(new RegExp(`^${escaped}\\s*[:\\-–—]?\\s+(.+)$`, "i"));
+    if (spaced) return spaced[1].trim();
+
+    const compactAlias = alias.replace(/\s+/g, "");
+    const compact = value.match(new RegExp(`^${compactAlias}([A-Z][\\s\\S]+)$`, "i"));
+    if (compact) return compact[1].trim();
+  }
+  return "";
 }
 
 function sectionText(sections, names) {
@@ -3663,7 +3712,7 @@ function formatExactPhraseSuggestion(keywordMatch, exactJobTitle) {
   }
   const terms = unique(partial).slice(0, 5);
   if (!terms.length) return "";
-  return `你已经有类似概念，但缺少精确岗位原词：${terms.join("、")}。建议只在真实经历对应的个人简介、经历要点或技能栏中补入原词，不要只靠同义词。`;
+  return `你已经有类似概念，但缺少 exact phrase：${terms.join("、")}。建议只在真实经历对应的 Summary、Experience bullet 或 Skills 中补入原词，不要只靠同义词。`;
 }
 
 function classifyMissingKeywords(keywordMatch) {
