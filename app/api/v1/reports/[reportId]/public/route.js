@@ -8,8 +8,9 @@ function reportTokenFromRequest(request) {
   );
 }
 
-export async function GET(request, { params }) {
+export async function GET(request, { params: paramsPromise }) {
   try {
+    const params = await paramsPromise;
     const access = await db.validateReportAccess(params.reportId, {
       token: reportTokenFromRequest(request),
       userId: request.headers.get('x-user-id') || null,

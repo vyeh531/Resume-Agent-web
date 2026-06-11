@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>Download Company Logos</title>
+<style>
+  body { font-family: monospace; padding: 24px; background: #f9f9f9; }
+  h2 { margin-bottom: 16px; }
+  #log { white-space: pre; font-size: 13px; line-height: 1.7; }
+  .ok { color: #16a34a; }
+  .fail { color: #dc2626; }
+  #btn { padding: 10px 20px; font-size: 15px; cursor: pointer; background: #111; color: #fff; border: none; border-radius: 8px; margin-bottom: 20px; }
+  #note { font-size: 13px; color: #555; margin-bottom: 16px; line-height: 1.6; }
+</style>
+</head>
+<body>
+<h2>Company Logo Downloader</h2>
+<p id="note">
+  點「開始下載」後，瀏覽器會依序下載每個 logo（共 44 個）。<br>
+  下載完成後，把所有 .png 檔案移動到 <code>public/logos/</code> 資料夾。<br>
+  部分瀏覽器可能需要允許「多個檔案下載」的權限。
+</p>
+<button id="btn" onclick="startDownload()">開始下載</button>
+<div id="log"></div>
+
+<script>
+const LOGOS = [
+  { name: "LinkedIn",           domain: "linkedin.com" },
+  { name: "Broadcom",           domain: "broadcom.com" },
+  { name: "Wells Fargo",        domain: "wellsfargo.com" },
+  { name: "Visa",               domain: "visa.com" },
+  { name: "UBS",                domain: "ubs.com" },
+  { name: "Pimco",              domain: "pimco.com" },
+  { name: "Credit Suisse",      domain: "credit-suisse.com" },
+  { name: "Roblox",             domain: "roblox.com" },
+  { name: "eBay",               domain: "ebay.com" },
+  { name: "Yelp",               domain: "yelp.com" },
+  { name: "Western Digital",    domain: "westerndigital.com" },
+  { name: "Compass",            domain: "compass.com" },
+  { name: "IQVIA",              domain: "iqvia.com" },
+  { name: "Netflix",            domain: "netflix.com" },
+  { name: "Stripe",             domain: "stripe.com" },
+  { name: "Lyft",               domain: "lyft.com" },
+  { name: "Airbnb",             domain: "airbnb.com" },
+  { name: "Palantir",           domain: "palantir.com" },
+  { name: "Databricks",         domain: "databricks.com" },
+  { name: "Workday",            domain: "workday.com" },
+  { name: "ServiceNow",         domain: "servicenow.com" },
+  { name: "Atlassian",          domain: "atlassian.com" },
+  { name: "Zoom",               domain: "zoom.us" },
+  { name: "Slack",              domain: "slack.com" },
+  { name: "Twitter",            domain: "twitter.com" },
+  { name: "Pinterest",          domain: "pinterest.com" },
+  { name: "Coinbase",           domain: "coinbase.com" },
+  { name: "DoorDash",           domain: "doordash.com" },
+  { name: "Instacart",          domain: "instacart.com" },
+  { name: "Square",             domain: "squareup.com" },
+  { name: "Rivian",             domain: "rivian.com" },
+  { name: "Waymo",              domain: "waymo.com" },
+  { name: "Lockheed Martin",    domain: "lockheedmartin.com" },
+  { name: "Raytheon",           domain: "raytheon.com" },
+  { name: "Boeing",             domain: "boeing.com" },
+  { name: "Northrop Grumman",   domain: "northropgrumman.com" },
+  { name: "Medtronic",          domain: "medtronic.com" },
+  { name: "Abbott",             domain: "abbott.com" },
+  { name: "Pfizer",             domain: "pfizer.com" },
+  { name: "Eli Lilly",          domain: "lilly.com" },
+  { name: "Genentech",          domain: "gene.com" },
+  { name: "Gilead",             domain: "gilead.com" },
+  { name: "Verizon",            domain: "verizon.com" },
+  { name: "T-Mobile",           domain: "t-mobile.com" },
+];
+
+const log = document.getElementById("log");
+function print(msg, cls) {
+  const span = document.createElement("span");
+  if (cls) span.className = cls;
+  span.textContent = msg + "\n";
+  log.appendChild(span);
+}
+
+async function downloadOne(name, domain) {
+  const url = `https://logo.clearbit.com/${domain}`;
+  try {
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const blob = await resp.blob();
+    if (blob.size === 0) throw new Error("empty");
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${name}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    print(`✓ ${name}`, "ok");
+  } catch (e) {
+    print(`✗ ${name} — ${e.message}`, "fail");
+  }
+}
+
+async function startDownload() {
+  document.getElementById("btn").disabled = true;
+  log.innerHTML = "";
+  print(`開始下載 ${LOGOS.length} 個 logo...\n`);
+  for (const { name, domain } of LOGOS) {
+    await downloadOne(name, domain);
+    await new Promise(r => setTimeout(r, 300)); // 避免觸發 rate limit
+  }
+  print(`\n完成！請把下載的 .png 檔案移到 public/logos/ 資料夾。`);
+  document.getElementById("btn").disabled = false;
+}
+</script>
+</body>
+</html>

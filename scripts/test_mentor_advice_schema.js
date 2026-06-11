@@ -45,9 +45,14 @@ const {
   avoidRepeatedPerspectives,
   selectPremiumMentorPlan,
   formatPremiumMentorReport,
+  isDisplayableInsiderKnowledge,
+  buildInsiderKnowledgeTip,
 } = require("../services/mentorAdviceRetrieval");
 const mentorInsightRulesBackfill = require("./backfill_segments_mentor_insight_rules");
 const mentorInsightLlmGeneration = require("./generate_segments_mentor_insight_llm");
+const {
+  formatPremiumUnlockedReport,
+} = require("../src/ats/report-formatter");
 
 // Re-load the module to get non-exported helpers via internal eval
 // Instead, test exported functions + manually construct what fallbackAdviceItems produces
@@ -166,6 +171,67 @@ test("adviceItems contain mentorLens, currentDiagnosis, action, reason, evidence
   assert.ok(item.reason, "reason should be populated");
   assert.ok(Array.isArray(item.evidence), "evidence should be array");
   assert.ok(item.evidence.length > 0, "evidence should be populated");
+});
+
+test("premium report preserves rewriteExample and legacy beforeAfter fields", () => {
+  const internal = {
+    priorityMissingKeywords: [],
+    structuredSuggestions: [],
+    keywordMatch: { categories: {} },
+    problemTags: [],
+  };
+  const report = formatPremiumUnlockedReport(internal, {
+    mentors: [{
+      mentorId: "m_rewrite",
+      mentorName: "Rewrite mentor",
+      adviceItems: [{
+        adviceId: "rewrite_item",
+        title: "Rewrite weak bullet",
+        example: "Built SQL dashboard for weekly KPI reporting.",
+        rewriteExample: {
+          before: "Made reports every week.",
+          after: "Built SQL dashboard for weekly KPI reporting.",
+        },
+        beforeAfter: {
+          before: "Made reports.",
+          after: "Built SQL dashboard.",
+        },
+      }],
+    }],
+    allAdviceItems: [{
+      adviceId: "rewrite_item",
+      title: "Rewrite weak bullet",
+      example: "Built SQL dashboard for weekly KPI reporting.",
+      rewriteExample: {
+        before: "Made reports every week.",
+        after: "Built SQL dashboard for weekly KPI reporting.",
+      },
+      beforeAfter: {
+        before: "Made reports.",
+        after: "Built SQL dashboard.",
+      },
+    }],
+  });
+  const item = report.allAdviceItems[0];
+  assert.deepStrictEqual(item.rewriteExample, {
+    before: "Made reports every week.",
+    after: "Built SQL dashboard for weekly KPI reporting.",
+  });
+  assert.deepStrictEqual(item.beforeAfter, {
+    before: "Made reports.",
+    after: "Built SQL dashboard.",
+  });
+});
+
+test("report logic renders example as rewrite-after fallback", () => {
+  const source = fs.readFileSync(path.join(__dirname, "..", "public", "report-logic.js"), "utf8");
+  assert.ok(/function buildRewriteExample/.test(source), "buildRewriteExample should exist");
+  assert.ok(/explicitAfter \|\| firstTextValue\(\[example\]\)/.test(source), "example should feed rewrite after fallback");
+  assert.ok(/renderRewriteExampleCard\(item\)/.test(source), "advice renderer should use rewrite card");
+  assert.ok(/改前/.test(source), "rewrite card should label before text");
+  assert.ok(/改后/.test(source), "rewrite card should label after text");
+  assert.ok(/\\u7121Summary/.test(source), "missing Summary rewrite before should show 無Summary");
+  assert.ok(/&#20851;&#38190;&#38382;&#39064;/.test(source), "key-problem heading should use encoding-safe text");
 });
 
 // ─── TEST 6: backward compat aliases ─────────────────────────────────────
@@ -1946,6 +2012,58 @@ test("mentor LLM generation review blocks overactive or HR-like mentor copy", ()
   });
   assert.strictEqual(hrLike.review.recommendation, "needs_review");
   assert.ok(hrLike.review.flags.includes("mentor_hr_voice_risk"));
+});
+
+test("company insider knowledge keeps market insight separate from advice POV", () => {
+  const retrievalQuery = {
+    targetRole: "Data Analyst",
+    roleFamily: "data_analyst",
+    priorityKeywords: ["SQL", "Tableau"],
+    filters: {
+      roleFamily: ["data_analyst"],
+      targetRoles: ["data_analyst"],
+    },
+  };
+  const row = {
+    id: 91001,
+    chunk_id: "seg_91001",
+    mentor_company: "Amazon",
+    mentor_name: "Y导师",
+    mentor_title: "Marketing Manager",
+    topic: "技术技能补强",
+    L1: "技能提升",
+    role_family: "data_analyst",
+    target_roles: "data_analyst,marketing_analytics",
+    keywords: "SQL,Tableau,marketing analytics",
+    mentor_quality_score: 0.95,
+    I_insight: "Amazon Marketing Analytics 岗位通常更看重 SQL 和 Excel 的数据处理能力，Tableau/Power BI 是常见加分项，Python/R 多半属于 preferred 而不是硬性门槛。",
+  };
+
+  assert.strictEqual(isDisplayableInsiderKnowledge(row, retrievalQuery), true);
+  const tip = buildInsiderKnowledgeTip(row, retrievalQuery);
+  assert.strictEqual(tip.company, "Amazon");
+  assert.strictEqual(tip.sourceMentorName, "Y导师");
+  assert.strictEqual(tip.sourceTopic, "技术技能补强");
+  assert.ok(tip.knowledgeTitle.includes("Amazon"));
+  assert.ok(/sql/i.test(tip.relevanceReason));
+  assert.equal(Object.prototype.hasOwnProperty.call(tip, "insightType"), false);
+  assert.equal(Object.prototype.hasOwnProperty.call(tip, "hrPerspective"), false);
+});
+
+test("company insider knowledge rejects direct resume actions", () => {
+  const retrievalQuery = {
+    targetRole: "Data Analyst",
+    roleFamily: "data_analyst",
+    filters: { roleFamily: ["data_analyst"], targetRoles: ["data_analyst"] },
+  };
+  const row = {
+    mentor_company: "Amazon",
+    role_family: "data_analyst",
+    target_roles: "data_analyst",
+    I_insight: "Amazon 岗位看重 SQL，因此建议你把 SQL 写进 Skills，并在简历中补充 Tableau bullet。",
+  };
+
+  assert.strictEqual(isDisplayableInsiderKnowledge(row, retrievalQuery), false);
 });
 
 console.log(`\nAfter action precondition tests: ${passed + failed} tests: ${passed} passed, ${failed} failed`);

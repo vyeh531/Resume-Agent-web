@@ -1,8 +1,9 @@
 import db from '../../../../../../database';
 import { formatDebugReport } from '../../../../../../src/ats/report-formatter';
 
-export async function GET(request, { params }) {
+export async function GET(request, { params: paramsPromise }) {
   try {
+    const params = await paramsPromise;
     const debugAllowed =
       process.env.NODE_ENV !== 'production' ||
       (process.env.DEBUG_REPORT_SECRET &&

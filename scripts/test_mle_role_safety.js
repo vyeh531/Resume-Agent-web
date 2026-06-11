@@ -13,6 +13,7 @@ const {
   isAdviceRoleSafe,
   isCardAlignedWithTargetProblems,
   inferAdviceActionFamily,
+  humanizeHrPerspective,
 } = require("../services/mentorAdviceRetrieval");
 
 const targetRole = "Machine Learning Engineer Intern (MLE)";
@@ -208,6 +209,64 @@ assert.strictEqual(
   }),
   "project_evidence",
   "project evidence advice should have its own action family"
+);
+
+const mleHrPerspective = humanizeHrPerspective(
+  {
+    title: "Keep the latest relevant projects",
+    currentDiagnosis: "The resume is weakly aligned to Machine Learning Engineer Intern (MLE).",
+    actionSummary: "Prepare a dedicated AI resume version, keep AI and LLM projects, and weaken unrelated full stack or Android experience.",
+    hrPerspective: "The direction is not focused, so resume and interview preparation will be weaker.",
+    HR_os: "The direction is not focused, so resume and interview preparation will be weaker.",
+  },
+  {
+    internalAtsResult: {
+      jobTitle: targetRole,
+      profile: {
+        targetRole,
+        roleFamily,
+      },
+    },
+  }
+);
+
+assert.match(
+  mleHrPerspective,
+  /MLE|Applied ML|LLM|模型|评估|部署/,
+  "MLE HR perspective should stay in ML context"
+);
+assert.ok(
+  !/芯片|RTL|Physical Design|Synthesis/i.test(mleHrPerspective),
+  `MLE HR perspective should not use hardware examples: ${mleHrPerspective}`
+);
+
+const mleModelHrPerspective = humanizeHrPerspective(
+  {
+    title: "Add basic ML evidence",
+    currentDiagnosis: "The resume has low JD keyword match for MLE.",
+    actionSummary: "Add model evaluation and explainable machine learning project evidence.",
+    hrPerspective: "基础ML、线性回归、模型逻辑和口头解释模型是 ATS 和人工初筛会看的信号。",
+    HR_os: "基础ML、线性回归、模型逻辑和口头解释模型是 ATS 和人工初筛会看的信号。",
+  },
+  {
+    internalAtsResult: {
+      jobTitle: targetRole,
+      profile: {
+        targetRole,
+        roleFamily,
+      },
+    },
+  }
+);
+
+assert.match(
+  mleModelHrPerspective,
+  /MLE|模型|评估|项目证据/,
+  "MLE model HR perspective should stay in MLE wording"
+);
+assert.ok(
+  !/数据分析岗|数据分析岗位|数据分析版/i.test(mleModelHrPerspective),
+  `MLE model HR perspective should not use data analyst wording: ${mleModelHrPerspective}`
 );
 
 console.log("MLE role safety regression passed");

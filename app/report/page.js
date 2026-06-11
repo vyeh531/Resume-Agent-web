@@ -21,6 +21,33 @@ export default function ReportPage() {
         .export-card-perks{list-style:none;padding:0;margin:0 0 16px;display:flex;flex-direction:column;gap:7px;position:relative;}
         .export-card-perks li{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink);line-height:1.4;}
         .export-card-perks .check{width:18px;height:18px;border-radius:50%;background:var(--jade);color:#fff;display:grid;place-items:center;font-size:10px;font-weight:700;flex-shrink:0;}
+        .export-card-actions{display:flex;flex-direction:column;gap:10px;position:relative;}
+        .btn-ai-prompt{background:#fffdf7;color:var(--jade);border:1.5px solid var(--jade);box-shadow:none;}
+        .btn-ai-prompt:hover{background:var(--jade-soft);}
+        .export-card-hint{font-size:12px;color:var(--ink-soft);line-height:1.5;text-align:center;margin:0;font-weight:600;}
+        .ai-rewrite-pdf{width:794px;max-width:794px;background:var(--paper);color:var(--ink);font-family:var(--sans);padding:34px 48px 44px;line-height:1.55;letter-spacing:0;}
+        .ai-rewrite-pdf *{box-sizing:border-box;}
+        .ai-rewrite-pdf h1{font-family:var(--serif);font-size:28px;line-height:1.15;margin:10px 0 8px;letter-spacing:0;font-weight:800;}
+        .ai-rewrite-pdf h2{font-family:var(--serif);font-size:18px;line-height:1.25;margin:0 0 10px;font-weight:800;letter-spacing:0;}
+        .ai-rewrite-pdf h3{font-size:14px;line-height:1.35;margin:0 0 8px;font-weight:800;letter-spacing:0;}
+        .ai-rewrite-pdf p{font-size:12.5px;line-height:1.65;margin:0;color:var(--ink-soft);}
+        .ai-rewrite-pdf ul,.ai-rewrite-pdf ol{margin:8px 0 0;padding-left:20px;font-size:12.5px;line-height:1.6;color:var(--ink-soft);}
+        .ai-rewrite-pdf li{margin:3px 0;}
+        .ai-pdf-brand{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:18px;}
+        .ai-pdf-brand img{height:44px;width:auto;}
+        .ai-pdf-kicker{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--jade);font-weight:800;text-transform:uppercase;}
+        .ai-pdf-card{background:#fffdf7;border:1px solid #ede9dc;border-radius:12px;padding:14px 16px;margin:12px 0;break-inside:avoid;page-break-inside:avoid;}
+        .ai-pdf-card.ai-pdf-prompt{background:#f3fbf5;border-color:#c2dcc6;}
+        .ai-pdf-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+        .ai-pdf-chip-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+        .ai-pdf-chip{display:inline-flex;align-items:center;gap:5px;border:1px solid #e7e2d6;background:#fff;border-radius:999px;padding:4px 8px;font-size:11px;color:var(--ink-soft);line-height:1.3;}
+        .ai-pdf-chip strong{color:var(--ink);font-weight:800;}
+        .ai-pdf-chip.weak{border-color:#fed7aa;background:#fff7ed;color:#9a3412;}
+        .ai-pdf-chip.have{border-color:#c2dcc6;background:#f0f9f2;color:#2f6b4f;}
+        .ai-pdf-meta{font-family:var(--mono);font-size:10px;color:var(--ink-mute);margin-top:2px;}
+        .ai-pdf-advice{border-top:1px dashed var(--line);padding-top:12px;margin-top:12px;break-inside:avoid;page-break-inside:avoid;}
+        .ai-pdf-advice:first-of-type{border-top:none;padding-top:0;margin-top:0;}
+        .ai-pdf-label{display:inline-flex;font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;background:#eef2ff;color:#4338ca;margin-right:6px;}
         .ai-insight{margin:14px 0 16px;padding:14px 16px;background:linear-gradient(135deg,var(--jade-soft) 0%,var(--paper-warm) 100%);border:1px solid #b8d6bd;border-radius:var(--r-md);}
         .ai-insight-diagnosis{font-size:13px;line-height:1.65;color:var(--ink);margin:0;font-weight:500;}
         .ai-insight-diagnosis .ico{margin-right:4px;font-size:15px;}
@@ -64,9 +91,10 @@ export default function ReportPage() {
         .service-list li strong{display:block;font-size:14px;color:var(--ink);margin-bottom:2px;}
         .service-list li span{color:var(--ink-soft);}
         .service-list .num-badge{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;background:var(--terracotta);color:#fff;display:grid;place-items:center;font-family:var(--serif);font-style:italic;font-weight:700;font-size:13px;}
-        .service-cta-block{background:var(--paper-warm);border:1px dashed var(--rose);border-radius:var(--r-md);padding:18px 16px;text-align:center;margin-bottom:10px;position:relative;}
+        .service-cta-block{background:#fffdf7;border:1px solid rgba(47,107,79,.18);border-radius:14px;padding:18px 16px 20px;text-align:center;margin:18px auto 12px;position:relative;max-width:286px;box-shadow:0 1px 0 rgba(24,24,22,.04),0 12px 22px -18px rgba(24,24,22,.24);}
         .service-handle{font-family:var(--mono);font-size:12px;color:var(--ink);font-weight:600;margin-top:6px;}
-        .service-cta-text{font-size:13px;color:var(--ink);font-weight:600;margin-bottom:4px;}
+        .service-cta-text{font-size:14px;color:var(--ink);font-weight:800;margin:0 0 12px;line-height:1.35;}
+        .service-qr{width:190px;height:190px;object-fit:contain;margin:0 auto;border-radius:10px;border:1px solid #ede9dc;background:#fff;padding:7px;box-shadow:0 1px 8px rgba(24,24,22,.08);}
         .service-foot{font-size:11px;color:var(--ink-mute);text-align:center;line-height:1.6;position:relative;}
         .logo-marquee{overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#fffdf7;margin:0 0 16px;padding:10px 0}
         .logo-marquee-track{display:flex;gap:14px;width:max-content;animation:logo-scroll 72s linear infinite}
@@ -77,7 +105,22 @@ export default function ReportPage() {
         .mentor-logo-copy{font-size:12.5px;line-height:1.55;color:var(--ink-soft);margin:0 0 8px}
         @keyframes logo-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
         body.exporting .banner, body.exporting .export-card, body.exporting .footnote{display:none!important;}
-        body.exporting .page{box-shadow:none!important;border:none!important;margin:0 auto!important;}
+        body.exporting{background:var(--paper)!important;}
+        body.exporting .page{
+          width:794px!important;
+          max-width:794px!important;
+          margin:0 auto!important;
+          padding:32px 48px 44px!important;
+          box-shadow:none!important;
+          border:none!important;
+          background:var(--paper)!important;
+          transform:none!important;
+        }
+        body.exporting .section{break-inside:avoid;page-break-inside:avoid;}
+        body.exporting .card,
+        body.exporting .tile,
+        body.exporting .service-card,
+        body.exporting .advice-example{break-inside:avoid;page-break-inside:avoid;}
       `}</style>
 
       <div className="page">
@@ -109,6 +152,10 @@ export default function ReportPage() {
           <button className="btn btn-jade btn-block" onClick={() => window.exportPDF && window.exportPDF()}>
             ⬇ 下载 PDF 报告
           </button>
+          <button className="btn btn-block btn-ai-prompt" onClick={() => window.exportAiRewritePDF && window.exportAiRewritePDF()} style={{marginTop:'10px'}}>
+            &#19979;&#36733; AI &#25913;&#31616;&#21382;&#25351;&#20196;&#21253;
+          </button>
+          <p className="export-card-hint">&#19978;&#20256;&#36825;&#20221;&#25351;&#20196;&#21253; + &#20320;&#30340;&#21407;&#31616;&#21382;&#65292;&#35753; AI &#25353;&#20851;&#38190;&#35789;&#21644;&#23548;&#24072;&#24314;&#35758;&#30452;&#25509;&#37325;&#20889;&#12290;</p>
         </div>
 
         <section className="section" id="summary">
@@ -203,12 +250,20 @@ export default function ReportPage() {
 
         <hr className="divider" />
 
+        <section className="section" id="insider-tips" style={{display:'none'}}>
+          <div className="section-num">05 · 公司内幕</div>
+          <h2 className="section-title" style={{fontSize:'22px'}}>导师亲述：这些公司到底看什么</h2>
+          <div id="insiderTipsList"></div>
+        </section>
+
+        <hr className="divider" id="insider-tips-divider" style={{display:'none'}} />
+
         <section className="section" id="service">
-          <div className="section-num">05 · 升级服务</div>
+          <div className="section-num" id="serviceNum">05 · 升级服务</div>
           <h2 className="section-title" style={{fontSize:'22px'}}>想走得更远?</h2>
           <div className="service-card">
-            <h3 className="service-card-title">加 1 位<em>求职导师</em>，<br/>享端到端专业服务</h3>
-            <p className="service-card-sub">从简历到 Offer，一路有人陪。<br/>真人大厂在职导师，匹配你的目标公司 / 岗位 / 学校背景。</p>
+            <h3 className="service-card-title">升级<em>专属求职顾问服务</em>，<br/>由大厂导师团队为你定制方案</h3>
+            <p className="service-card-sub">从简历精修、投递策略到面试冲刺，享受高匹配度个人化陪跑。<br/>专业大厂在职导师团队，按目标公司 / 岗位 / 学校背景为你甄选匹配。</p>
             <ul className="service-list">
               <li><span className="num-badge">1</span><strong>求职策略 1v1</strong><span>定位 + 投递时间线 + 公司清单 + 风险评估</span></li>
               <li><span className="num-badge">2</span><strong>简历精修</strong><span>项目级深度改写，逐句对照 JD 优化</span></li>
@@ -217,7 +272,7 @@ export default function ReportPage() {
             </ul>
             <div className="service-cta-block">
               <div className="service-cta-text">扫码添加专属求职导师</div>
-              <div className="service-handle">客服微信：<b>mentorx-zhushou</b></div>
+              <img className="service-qr" src="/qr.jpg" alt="扫码添加专属求职导师" />
             </div>
             <div className="service-foot">老学员 9 折优惠 · 不满意 7 天内全额退款 · 支持月度陪跑套餐</div>
           </div>
@@ -230,7 +285,7 @@ export default function ReportPage() {
       </div>
 
       <Script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" strategy="lazyOnload" />
-      <Script src="/report-logic.js?v=ats-display-zh-20260609-4" strategy="afterInteractive" />
+      <Script src="/report-logic.js?v=pdf-stage-export-20260611-1" strategy="afterInteractive" />
     </>
   );
 }

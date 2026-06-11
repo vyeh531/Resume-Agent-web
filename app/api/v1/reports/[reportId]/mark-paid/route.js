@@ -8,8 +8,9 @@ function tokenFromRequest(request) {
   );
 }
 
-export async function POST(request, { params }) {
+export async function POST(request, { params: paramsPromise }) {
   try {
+    const params = await paramsPromise;
     if (process.env.NODE_ENV === 'production' && process.env.PAYMENT_MOCK_ENABLED !== 'true') {
       return Response.json({ success: false, error: 'NOT_FOUND' }, { status: 404 });
     }

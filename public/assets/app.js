@@ -18,16 +18,17 @@ window.Store = window.Store || {
 };
 
 const ANALYSIS_MESSAGES = [
-  ["正在读取简历…",        "解析 PDF / DOCX 内容与目标岗位信息"],
-  ["正在调用 ATS 评分…",   "检测关键词覆盖、岗位相关度与格式风险"],
-  ["正在匹配导师建议…",    "从真实导师建议库中筛选最相关的简历修改建议"],
-  ["正在组装免费诊断…",    "只返回免费可见的问题、建议与导师建议"],
-  ["正在保存报告…",        "生成结果页与后续解锁凭证"],
+  ["正在扫描你的履历亮点…", "先找出最能打动 HR 的经历、技能和项目证据"],
+  ["正在对照目标岗位 JD…", "逐项比对关键词、职责语言和岗位匹配信号"],
+  ["正在匹配大厂导师经验…", "从真实辅导案例里筛选与你背景最接近的优化方向"],
+  ["正在定位高优先级问题…", "优先抓出最影响通过率的格式、关键词和表达短板"],
+  ["正在生成你的初步诊断…", "把最关键的简历风险和提升机会整理成清晰报告"],
 ];
 const PAYMENT_MESSAGES = [
-  ["正在确认支付…", "正在校验支付状态与报告权限"],
-  ["正在解锁导师建议…", "释放 12 条完整导师建议与 HR 视角"],
-  ["正在生成完整报告…", "同步技能清单、改写路径和公司导师背景"],
+  ["正在为你匹配知名大厂导师…", "优先筛选与你目标岗位最相关的真实辅导经验"],
+  ["正在解锁大厂级简历视角…", "从 HR 初筛、ATS 命中和导师建议里抓出最该改的地方"],
+  ["正在生成你的高分改写路线…", "把关键词、经历亮点和岗位语言整理成更像 offer 简历的版本"],
+  ["正在点亮完整报告…", "完整诊断马上就绪，准备查看你的专属提升方案"],
 ];
 
 function showLoader(text, subtext, rotate, options = {}) {
@@ -35,16 +36,17 @@ function showLoader(text, subtext, rotate, options = {}) {
   if (!o) {
     o = document.createElement("div");
     o.className = "loader-overlay";
-    o.innerHTML = '<div class="loader-container"><div class="loader-dots"><span></span><span></span><span></span></div><div class="loader-text"></div><div class="loader-subtext"></div><div class="loader-progress"><div class="loader-progress-fill"></div></div><div class="loader-progress-label">0%</div></div>';
+    o.innerHTML = '<div class="loader-container"><div class="loader-badge">MentorX premium matching</div><div class="loader-dots"><span></span><span></span><span></span></div><div class="loader-text"></div><div class="loader-subtext"></div><div class="loader-progress"><div class="loader-progress-fill"></div></div><div class="loader-progress-label">0%</div></div>';
     document.body.appendChild(o);
     const s = document.createElement("style");
-    s.textContent = ".loader-overlay{position:fixed;inset:0;background:rgba(15,23,42,.82);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:9999;opacity:0;pointer-events:none;transition:opacity .3s}.loader-overlay.show{opacity:1;pointer-events:auto}.loader-container{text-align:center;color:#f8fafc;padding:0 32px;max-width:360px;width:min(360px,100%)}.loader-dots{display:flex;gap:10px;justify-content:center;margin-bottom:24px}.loader-dots span{width:11px;height:11px;border-radius:50%;background:#6ee7b7;animation:ldBounce 1.4s infinite ease-in-out both}.loader-dots span:nth-child(1){animation-delay:-.32s}.loader-dots span:nth-child(2){animation-delay:-.16s}@keyframes ldBounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}.loader-text{font-size:19px;font-weight:700;margin-bottom:10px;transition:opacity .35s;color:#f8fafc;letter-spacing:-.01em}.loader-subtext{font-size:14px;color:#94a3b8;line-height:1.5;transition:opacity .35s}.loader-progress{height:8px;border-radius:999px;background:rgba(255,255,255,.14);overflow:hidden;margin:22px auto 8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}.loader-progress-fill{height:100%;width:0%;border-radius:inherit;background:linear-gradient(90deg,#6ee7b7,#f8c37d,#fb7185);transition:width .45s ease;position:relative}.loader-progress-fill::after{content:\"\";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);animation:ldShimmer 1.35s linear infinite}@keyframes ldShimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}.loader-progress-label{font-size:11px;color:#cbd5e1;font-family:ui-monospace,Menlo,Consolas,monospace}";
+    s.textContent = ".loader-overlay{position:fixed;inset:0;background:radial-gradient(circle at 50% 38%,rgba(232,160,107,.18),transparent 34%),rgba(15,23,42,.86);backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;z-index:9999;opacity:0;pointer-events:none;transition:opacity .3s}.loader-overlay.show{opacity:1;pointer-events:auto}.loader-container{text-align:center;color:#f8fafc;padding:30px 32px 28px;max-width:380px;width:min(380px,calc(100% - 40px));border:1px solid rgba(255,255,255,.13);border-radius:24px;background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.045));box-shadow:0 30px 80px -34px rgba(0,0,0,.85)}.loader-badge{display:inline-flex;align-items:center;justify-content:center;margin:0 auto 18px;padding:6px 10px;border-radius:999px;background:rgba(232,160,107,.16);border:1px solid rgba(248,195,125,.38);color:#f8c37d;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-family:ui-monospace,Menlo,Consolas,monospace}.loader-dots{display:flex;gap:10px;justify-content:center;margin-bottom:22px}.loader-dots span{width:11px;height:11px;border-radius:50%;background:#f8c37d;box-shadow:0 0 18px rgba(248,195,125,.45);animation:ldBounce 1.4s infinite ease-in-out both}.loader-dots span:nth-child(1){animation-delay:-.32s}.loader-dots span:nth-child(2){animation-delay:-.16s}@keyframes ldBounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}.loader-text{font-size:20px;font-weight:800;margin-bottom:10px;transition:opacity .35s;color:#fffaf2;letter-spacing:0;line-height:1.25}.loader-subtext{font-size:14px;color:#d5dce8;line-height:1.6;transition:opacity .35s;min-height:44px}.loader-progress{height:8px;border-radius:999px;background:rgba(255,255,255,.14);overflow:hidden;margin:22px auto 8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}.loader-progress-fill{height:100%;width:0%;border-radius:inherit;background:linear-gradient(90deg,#6ee7b7,#f8c37d,#fb7185);transition:width .45s ease;position:relative}.loader-progress-fill::after{content:\"\";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);animation:ldShimmer 1.35s linear infinite}@keyframes ldShimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}.loader-progress-label{font-size:11px;color:#cbd5e1;font-family:ui-monospace,Menlo,Consolas,monospace}";
     document.head.appendChild(s);
   }
   const textEl    = o.querySelector(".loader-text");
   const subtextEl = o.querySelector(".loader-subtext");
   const progressEl = o.querySelector(".loader-progress-fill");
   const progressLabelEl = o.querySelector(".loader-progress-label");
+  const badgeEl = o.querySelector(".loader-badge");
   textEl.textContent    = text    || "";
   subtextEl.textContent = subtext || "";
   o.classList.add("show");
@@ -62,6 +64,7 @@ function showLoader(text, subtext, rotate, options = {}) {
   const mode = options.mode || (rotate === "payment" ? "payment" : "analysis");
   const shouldRotate = Boolean(rotate);
   const isPayment = mode === "payment";
+  if (badgeEl) badgeEl.style.display = isPayment ? "inline-flex" : "none";
   let progress = isPayment ? 35 : (shouldRotate ? 8 : (text && text.includes("完成") ? 100 : 18));
   if (progressEl) progressEl.style.width = progress + "%";
   if (progressLabelEl) progressLabelEl.textContent = progress + "%";
@@ -352,7 +355,7 @@ async function waitForAnalysisJobAndRedirect(btn) {
     return;
   }
 
-  showLoader("正在调用 ATS 评分…", "检测技能覆盖、岗位相关度与格式风险", true);
+  showLoader("正在扫描你的履历亮点…", "先找出最能打动 HR 的经历、技能和项目证据", true);
   try {
     const job = await getAnalysisJobAPI(current.analysisJobId);
     window.Store.set({ analysisJobStatus: job.status, analysisJobStage: job.stage });
@@ -420,6 +423,7 @@ function mockPayment(btn) {
         problemTags: premiumReport.problemTags || null,
         detailedSuggestions: premiumReport.detailedSuggestions || null,
         mentorLogoPool: premiumReport.mentorLogoPool || s.mentorLogoPool || null,
+        companyInsiderTips: premiumReport.companyInsiderTips || [],
       });
       completeLoader("解锁完成！", "完整报告已生成，正在进入报告页…");
       setTimeout(() => { window.location.href = "/report"; }, 350);

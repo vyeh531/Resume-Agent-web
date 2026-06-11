@@ -15,6 +15,7 @@ import {
   buildLockedAdvicePreview,
   formatPublicFreeMentorAdvice,
   formatPremiumMentorReport,
+  retrieveInsiderTips,
 } from '../../services/mentorAdviceRetrieval';
 import { parsePDF, parseDocx } from '../../file-parser';
 import db from '../../database';
@@ -106,6 +107,7 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
   const freeAdvice = formatPublicFreeMentorAdvice(freeMentorPlan, internalAtsResult);
   const paidAdvice = premiumMentorPlan.slice(1);
   const premiumMentorReport = formatPremiumMentorReport(premiumMentorPlan, internalAtsResult);
+  const companyInsiderTips = await retrieveInsiderTips({ internalAtsResult, limit: 4 });
   mark('format_reports');
   logRetrievalDebug({
     reportContext: input?.jobTitle || rawScoreResult.jobTitle || 'unknown',
@@ -122,7 +124,10 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
   });
   const lockedPreview = buildLockedAdvicePreview(premiumMentorPlan, internalAtsResult);
   const publicReport = formatPublicFreeReport(internalAtsResult, freeAdvice, lockedPreview);
-  const premiumReport = formatPremiumUnlockedReport(internalAtsResult, premiumMentorReport);
+  const premiumReport = {
+    ...formatPremiumUnlockedReport(internalAtsResult, premiumMentorReport),
+    companyInsiderTips,
+  };
   mark('format_public_premium');
   logAdvicePlan(freeMentorPlan, premiumMentorPlan, premiumReport.coverageSummary);
   const reportId = createReportId();

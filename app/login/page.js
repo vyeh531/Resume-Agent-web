@@ -67,7 +67,7 @@ export default function LoginPage() {
             <div className="login-analysis-bar">
               <div className="login-analysis-fill" id="loginProgressFill"></div>
             </div>
-            <div className="login-analysis-status" id="loginProgressStatus">正在后台分析简历，登录时会继续处理。</div>
+            <div className="login-analysis-status" id="loginProgressStatus">正在扫描你的履历亮点，登录时会继续处理。</div>
           </div>
 
           <button className="btn btn-jade btn-block" id="wechatLoginButton" type="button">
@@ -216,10 +216,10 @@ export default function LoginPage() {
               return;
             }
             const stageText = job.stage === "scoring"
-              ? "正在评估 ATS 兼容性。"
+              ? "正在对照目标岗位 JD。"
               : job.stage === "retrieving_advice"
-                ? "正在匹配导师建议。"
-                : "正在后台分析简历。";
+                ? "正在匹配大厂导师经验。"
+                : "正在扫描你的履历亮点。";
             setLoginProgress(Math.min(94, job.progress || 12), stageText);
             setTimeout(pollLoginAnalysis, 1200);
           } catch {
@@ -246,7 +246,7 @@ export default function LoginPage() {
           loginButton = btn;
           loginClicked = true;
           btn.disabled = true;
-          showLoginLoader("正在调用 ATS 评分…", "检测技能覆盖、岗位相关度与格式风险", true);
+          showLoginLoader("正在扫描你的履历亮点…", "先找出最能打动 HR 的经历、技能和项目证据", true);
           setStorePatch({ userId: "mock_" + Date.now(), loginAt: Date.now() });
           const snapshot = readStoreSnapshot();
           if (loginAnalysisReady || (snapshot.reportId && snapshot.atsResult)) {

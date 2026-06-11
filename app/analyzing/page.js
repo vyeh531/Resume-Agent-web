@@ -15,8 +15,8 @@ export default function AnalyzingPage() {
         <header className="analyzing-head fade-in">
           <div className="analyzing-icon"></div>
           <div>
-            <h1>AI 智能分析中</h1>
-            <p>正在结合导师经验深度分析简历</p>
+            <h1>正在定位你的简历机会点</h1>
+            <p>结合目标 JD、大厂导师经验与 HR 初筛视角分析</p>
           </div>
         </header>
 
@@ -34,7 +34,7 @@ export default function AnalyzingPage() {
           <div className="progress-bar">
             <div className="progress-fill-anim" id="progressFill"></div>
           </div>
-          <div className="progress-substatus" id="subStatus">正在解析简历内容…</div>
+          <div className="progress-substatus" id="subStatus">正在扫描你的履历亮点…</div>
         </div>
 
         <div className="steps-card fade-in">
@@ -42,22 +42,22 @@ export default function AnalyzingPage() {
           <ul className="steps-list" id="stepsList">
             <li data-state="pending">
               <span className="step-icon"></span>
-              <div className="step-body"><strong>解析简历</strong><p>提取简历内容、结构与关键信息</p></div>
+              <div className="step-body"><strong>扫描亮点</strong><p>识别最能打动 HR 的经历、技能和项目证据</p></div>
               <span className="step-status">等待</span>
             </li>
             <li data-state="pending">
               <span className="step-icon"></span>
-              <div className="step-body"><strong>匹配导师</strong><p>从 1,300+ 导师经验中筛选最相关背景</p></div>
+              <div className="step-body"><strong>匹配导师</strong><p>从真实辅导经验中筛选最相关的大厂视角</p></div>
               <span className="step-status">等待</span>
             </li>
             <li data-state="pending">
               <span className="step-icon"></span>
-              <div className="step-body"><strong>ATS 评分</strong><p>评估简历在目标岗位的竞争力与通过率</p></div>
+              <div className="step-body"><strong>对照 JD</strong><p>比对关键词、职责语言和岗位匹配信号</p></div>
               <span className="step-status">等待</span>
             </li>
             <li data-state="pending">
               <span className="step-icon"></span>
-              <div className="step-body"><strong>生成建议</strong><p>结合导师视角输出个性化优化建议</p></div>
+              <div className="step-body"><strong>生成诊断</strong><p>输出最关键的简历风险和提升机会</p></div>
               <span className="step-status">等待</span>
             </li>
           </ul>
@@ -86,11 +86,11 @@ export default function AnalyzingPage() {
         const elapsedEl = document.getElementById("elapsed");
         const stepEls = document.querySelectorAll("#stepsList li");
         const subStatuses = [
-          { from: 0,  text: "正在解析简历内容…" },
-          { from: 25, text: "正在评估 ATS 兼容性…" },
-          { from: 50, text: "正在匹配导师经验…" },
-          { from: 75, text: "正在生成个性化建议…" },
-          { from: 92, text: "即将完成…" }
+          { from: 0,  text: "正在扫描你的履历亮点…" },
+          { from: 25, text: "正在对照目标岗位 JD…" },
+          { from: 50, text: "正在匹配大厂导师经验…" },
+          { from: 75, text: "正在定位高优先级问题…" },
+          { from: 92, text: "正在生成你的初步诊断…" }
         ];
         const stepBoundaries = [25, 55, 80, 100];
         let visualPct = 8;

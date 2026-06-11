@@ -11,7 +11,7 @@ if (typeof guardSubmitted === 'function') {
 
 const s = window.Store.get();
 const atsResult = s.atsResult || {};
-if (s.reportId && s.reportAccessToken && (!s.premiumKeywordBreakdown || !s.premiumAdviceItems)) {
+if (s.reportId && s.reportAccessToken && (!s.premiumKeywordBreakdown || !s.premiumAdviceItems || !Array.isArray(s.companyInsiderTips))) {
   fetch(`/api/v1/reports/${encodeURIComponent(s.reportId)}/unlock`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -30,6 +30,7 @@ if (s.reportId && s.reportAccessToken && (!s.premiumKeywordBreakdown || !s.premi
         problemTags: premiumReport.problemTags || null,
         detailedSuggestions: premiumReport.detailedSuggestions || null,
         mentorLogoPool: premiumReport.mentorLogoPool || s.mentorLogoPool || null,
+        companyInsiderTips: premiumReport.companyInsiderTips || [],
       });
       window.location.reload();
     })
@@ -133,12 +134,16 @@ const STATIC_MENTOR_COMPANY_LOGOS = [
   { company: "Amtrak", companyLogo: "/logos/Amtrak.png" },
   // Finance – variants & additions
   { company: "Barclays", companyLogo: "/logos/Barclays.png" },
-  { company: "Wells Fargo", companyLogo: "https://logo.clearbit.com/wellsfargo.com" },
-  { company: "Visa", companyLogo: "https://logo.clearbit.com/visa.com" },
-  { company: "UBS", companyLogo: "https://logo.clearbit.com/ubs.com" },
-  { company: "Pimco", companyLogo: "https://logo.clearbit.com/pimco.com" },
-  { company: "PIMCO", companyLogo: "https://logo.clearbit.com/pimco.com" },
-  { company: "Credit Suisse", companyLogo: "https://logo.clearbit.com/credit-suisse.com" },
+  { company: "RBC", companyLogo: "/logos/RBC Royal Bank.png" },
+  { company: "RBC Royal Bank", companyLogo: "/logos/RBC Royal Bank.png" },
+  { company: "Royal Bank of Canada", companyLogo: "/logos/RBC Royal Bank.png" },
+  { company: "Scotiabank", companyLogo: "/logos/Scotiabank.png" },
+  { company: "Wells Fargo", companyLogo: "/logos/Wells_Fargo.png" },
+  { company: "Visa", companyLogo: "/logos/Visa.png" },
+  { company: "UBS", companyLogo: "/logos/UBS.png" },
+  { company: "Pimco", companyLogo: "/logos/PIMCO.png" },
+  { company: "PIMCO", companyLogo: "/logos/PIMCO.png" },
+  { company: "Credit Suisse", companyLogo: "/logos/Credit_Suisse.png" },
   { company: "JP Morgan Chase", companyLogo: "/logos/JPMorganChase.png" },
   { company: "J.P. Morgan", companyLogo: "/logos/JPMorganChase.png" },
   { company: "Bank of America Merrill Lynch", companyLogo: "/logos/Bank of America.png" },
@@ -152,14 +157,14 @@ const STATIC_MENTOR_COMPANY_LOGOS = [
   { company: "McKinsey & Company", companyLogo: "/logos/McKinsey & Company.png" },
   // Tech – missing popular companies
   { company: "Facebook", companyLogo: "/logos/Meta.png" },
-  { company: "LinkedIn", companyLogo: "https://logo.clearbit.com/linkedin.com" },
-  { company: "Broadcom", companyLogo: "https://logo.clearbit.com/broadcom.com" },
-  { company: "Roblox", companyLogo: "https://logo.clearbit.com/roblox.com" },
-  { company: "eBay", companyLogo: "https://logo.clearbit.com/ebay.com" },
-  { company: "Yelp", companyLogo: "https://logo.clearbit.com/yelp.com" },
-  { company: "Western Digital", companyLogo: "https://logo.clearbit.com/westerndigital.com" },
-  { company: "Compass", companyLogo: "https://logo.clearbit.com/compass.com" },
-  { company: "IQVIA", companyLogo: "https://logo.clearbit.com/iqvia.com" },
+  { company: "LinkedIn", companyLogo: "/logos/LinkedIn.png" },
+  { company: "Broadcom", companyLogo: "/logos/Broadcom.png" },
+  { company: "Roblox", companyLogo: "/logos/Roblox.png" },
+  { company: "eBay", companyLogo: "/logos/eBay.png" },
+  { company: "Yelp", companyLogo: "/logos/Yelp.png" },
+  { company: "Western Digital", companyLogo: "/logos/Western_Digital.png" },
+  { company: "Compass", companyLogo: "/logos/Compass.png" },
+  { company: "IQVIA", companyLogo: "/logos/IQVIA.png" },
   { company: "Verizon", companyLogo: "/logos/Verizon.png" },
   { company: "T-Mobile", companyLogo: "/logos/T-Mobile.png" },
   { company: "Hewlett Packard Enterprise", companyLogo: "/logos/Hewlett Packard Enterprise.png" },
@@ -167,6 +172,44 @@ const STATIC_MENTOR_COMPANY_LOGOS = [
   { company: "AWS", companyLogo: "/logos/Amazon Web Services, Inc.png" },
   { company: "GM", companyLogo: "/logos/General Motors.png" },
   { company: "GE", companyLogo: "/logos/General Electric.png" },
+  // Additional tech & other
+  { company: "Netflix", companyLogo: "/logos/Netflix.png" },
+  { company: "Stripe", companyLogo: "/logos/Stripe.png" },
+  { company: "Lyft", companyLogo: "/logos/Lyft.png" },
+  { company: "Airbnb", companyLogo: "/logos/Airbnb.png" },
+  { company: "Palantir", companyLogo: "/logos/Palantir.png" },
+  { company: "Databricks", companyLogo: "/logos/Databricks.png" },
+  { company: "Workday", companyLogo: "/logos/Workday.png" },
+  { company: "ServiceNow", companyLogo: "/logos/ServiceNow.png" },
+  { company: "Atlassian", companyLogo: "/logos/Atlassian.png" },
+  { company: "Zoom", companyLogo: "/logos/Zoom.png" },
+  { company: "Slack", companyLogo: "/logos/Slack.png" },
+  { company: "Twitter", companyLogo: "/logos/Twitter.png" },
+  { company: "Pinterest", companyLogo: "/logos/Pinterest.png" },
+  { company: "Coinbase", companyLogo: "/logos/Coinbase.png" },
+  { company: "DoorDash", companyLogo: "/logos/DoorDash.png" },
+  { company: "Instacart", companyLogo: "/logos/Instacart.png" },
+  { company: "Square", companyLogo: "/logos/Square.png" },
+  { company: "Rivian", companyLogo: "/logos/Rivian.png" },
+  { company: "Waymo", companyLogo: "/logos/Waymo.png" },
+  { company: "Lockheed Martin", companyLogo: "/logos/Lockheed_Martin.png" },
+  { company: "Raytheon", companyLogo: "/logos/Raytheon.png" },
+  { company: "Boeing", companyLogo: "/logos/Boeing.png" },
+  { company: "Northrop Grumman", companyLogo: "/logos/Northrop_Grumman.png" },
+  { company: "Medtronic", companyLogo: "/logos/Medtronic.png" },
+  { company: "Abbott", companyLogo: "/logos/Abbott.png" },
+  { company: "Pfizer", companyLogo: "/logos/Pfizer.png" },
+  { company: "Eli Lilly", companyLogo: "/logos/Eli_Lilly.png" },
+  { company: "Genentech", companyLogo: "/logos/Genentech.png" },
+  { company: "Gilead", companyLogo: "/logos/Gilead.png" },
+  { company: "23andMe", companyLogo: "/logos/23andMe.svg" },
+  { company: "Bill.com", companyLogo: "/logos/Bill.com.png" },
+  { company: "BILL", companyLogo: "/logos/Bill.com.png" },
+  { company: "BILL Holdings", companyLogo: "/logos/Bill.com.png" },
+  { company: "Polarr", companyLogo: "/logos/Polarr.png" },
+  { company: "Polarr/Facebook", companyLogo: "/logos/Polarr.png" },
+  { company: "Structuretx", companyLogo: "/logos/Structure Therapeutics.png" },
+  { company: "Structure Therapeutics", companyLogo: "/logos/Structure Therapeutics.png" },
 ];
 function getJdMatchRatio(ats) {
   const value = ats?.jdMatchRatio ?? ats?.raw?.jdMatchRatio ?? ats?.raw?.metrics?.jdMatchRatio ?? ats?.metrics?.jdMatchRatio;
@@ -623,6 +666,38 @@ function normalizeProblemList() {
 function renderAtsProblemItem(text) {
   return `<li style="margin-bottom:10px;padding-left:20px;position:relative;line-height:1.5;"><span style="position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--rose);"></span>${escapeHtml(text)}</li>`;
 }
+function renderExpandableAtsProblems(sectionEl, problems, visibleCount = 5) {
+  if (!sectionEl) return;
+  if (!problems.length) {
+    sectionEl.innerHTML = "";
+    return;
+  }
+  const hiddenCount = Math.max(0, problems.length - visibleCount);
+  const items = problems.map((problem, index) => {
+    const item = renderAtsProblemItem(problem);
+    if (index < visibleCount) return item;
+    return item.replace("<li ", '<li class="ats-problem-extra" hidden ');
+  }).join("");
+  const toggle = hiddenCount
+    ? `<button type="button" class="skill-expand-toggle ats-problem-toggle" style="margin-top:2px;">&#26597;&#30475;&#20840;&#37096;</button>`
+    : "";
+  sectionEl.innerHTML = `
+    <div style="font-size:13px;font-weight:600;color:var(--rose);margin-bottom:8px;">&#128269; &#20851;&#38190;&#38382;&#39064;</div>
+    <ul style="list-style:none;padding:0;margin:0;font-size:13px;">${items}</ul>
+    ${toggle}`;
+  const toggleBtn = sectionEl.querySelector(".ats-problem-toggle");
+  if (!toggleBtn) return;
+  let open = false;
+  toggleBtn.onclick = () => {
+    open = !open;
+    sectionEl.querySelectorAll(".ats-problem-extra").forEach((el) => {
+      el.hidden = !open;
+    });
+    toggleBtn.innerHTML = open
+      ? "&#25910;&#36215; &#8593;"
+      : "&#26597;&#30475;&#20840;&#37096;";
+  };
+}
 function renderAtsSuggestionItem(text) {
   return `<li style="margin-bottom:10px;padding-left:20px;position:relative;line-height:1.5;"><span style="position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--jade);"></span>${escapeHtml(text)}</li>`;
 }
@@ -797,11 +872,187 @@ function highlightFake(text){
     '<mark style="background:rgba(232,160,107,.22);color:var(--apricot,#e8a06b);border-radius:3px;padding:0 2px;font-weight:600;" title="AI 估算数据，仅供参考">$1</mark>'
   );
 }
+function plainTextFromHtml(text) {
+  return String(text || "")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/p>|<\/div>|<\/li>/gi, "\n")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+function firstTextValue(values) {
+  for (const value of values) {
+    const text = plainTextFromHtml(value).trim();
+    if (text) return text;
+  }
+  return "";
+}
+function reportResumeText() {
+  return firstTextValue([
+    s.resumeText,
+    atsResult.resumeText,
+    atsResult.raw?.resumeText,
+    atsResult.rawResumeText,
+  ]);
+}
+function rewriteExampleKeywords(item = {}) {
+  const rawValues = [
+    item.targetSection,
+    item.title,
+    item.problemSummary,
+    item.currentDiagnosis,
+    item.actionSummary,
+    item.action,
+    item.topicCluster,
+    item.displayAdviceType,
+    item.canonicalActionFamily,
+    ...(item.relatedProblemTags || []),
+    ...(item.evidence || []),
+    ...(Array.isArray(item.keywords) ? item.keywords : String(item.keywords || "").split(/[,\s]+/)),
+  ];
+  const combined = rawValues.filter(Boolean).join(" ").toLowerCase();
+  const words = new Set();
+  combined.replace(/[a-z][a-z0-9+#.-]{2,}/g, (word) => {
+    if (!/^(the|and|for|with|from|this|that|into|your|resume|advice|summary|experience|skills|overall)$/.test(word)) {
+      words.add(word);
+    }
+    return word;
+  });
+  const conceptTerms = [
+    [/keyword|jd|skill|skills|hard_skill|tools?/, ["skill", "skills", "tool", "tools", "sql", "python", "excel", "tableau", "dashboard", "report"]],
+    [/summary|position|role|title|alignment/, ["summary", "objective", "candidate", "role", "position"]],
+    [/experience|evidence|bullet|project|result|impact/, ["project", "built", "led", "managed", "created", "analyzed", "developed", "improved", "supported"]],
+    [/measurable|quant|metric|result|impact/, ["increased", "reduced", "improved", "optimized", "metrics", "kpi", "%"]],
+    [/github|portfolio|linkedin|contact/, ["github", "portfolio", "linkedin", "email", "phone"]],
+    [/education|coursework|gpa/, ["education", "coursework", "gpa", "degree"]],
+  ];
+  conceptTerms.forEach(([pattern, terms]) => {
+    if (pattern.test(combined)) terms.forEach((term) => words.add(term));
+  });
+  return [...words].slice(0, 30);
+}
+function resumeRewriteCandidates(text) {
+  const normalized = plainTextFromHtml(text)
+    .replace(/\r/g, "\n")
+    .replace(/[•●▪◆]/g, "\n- ")
+    .replace(/\t/g, " ");
+  const lines = normalized
+    .split(/\n+/)
+    .map((line) => line.replace(/\s+/g, " ").replace(/^[-–—*]\s*/, "").trim())
+    .filter(Boolean);
+  const candidates = [];
+  lines.forEach((line) => {
+    if (line.length <= 220) {
+      candidates.push(line);
+      return;
+    }
+    line.split(/(?<=[.!?。；;])\s+/).forEach((part) => {
+      const clean = part.trim();
+      if (clean) candidates.push(clean);
+    });
+  });
+  return candidates
+    .map((line) => line.trim())
+    .filter((line) => line.length >= 12 && line.length <= 260)
+    .slice(0, 160);
+}
+function inferRewriteBefore(item = {}) {
+  const text = reportResumeText();
+  if (!text) return "";
+  const keywords = rewriteExampleKeywords(item);
+  const candidates = resumeRewriteCandidates(text);
+  if (!candidates.length) return "";
+  let best = { score: 0, value: "" };
+  candidates.forEach((candidate) => {
+    const lower = candidate.toLowerCase();
+    let score = 0;
+    keywords.forEach((kw) => {
+      if (kw === "%") {
+        if (/%|\d/.test(candidate)) score += 0.5;
+      } else if (lower.includes(kw)) {
+        score += kw.length > 5 ? 2 : 1;
+      }
+    });
+    if (/^(experience|project|work|internship|skills|summary|education)$/i.test(candidate)) score -= 3;
+    if (/^[A-Z][A-Za-z\s/&+-]{2,40}$/.test(candidate) && !/[.,;:]|\d/.test(candidate)) score -= 2;
+    if (/^(led|built|created|managed|analyzed|developed|designed|implemented|supported|coordinated|conducted|prepared|improved|optimized)\b/i.test(candidate)) score += 0.75;
+    if (candidate.length > 180) score -= 0.5;
+    if (score > best.score) best = { score, value: candidate };
+  });
+  return best.score >= 1.5 ? best.value : "";
+}
+function isMissingSummaryRewriteItem(item = {}) {
+  const tags = item.relatedProblemTags || [];
+  const text = [
+    item.adviceId,
+    item.title,
+    item.targetSection,
+    item.problemSummary,
+    item.currentDiagnosis,
+    item.actionSummary,
+    item.action,
+    item.canonicalActionFamily,
+  ].filter(Boolean).join(" ");
+  return tags.includes("missing_summary") ||
+    item.canonicalActionFamily === "summary_creation" ||
+    /missing_summary|先补上\s*Summary|缺少\s*Summary|没有\s*Summary|新增\s*2-3\s*行\s*Summary|add\s+(?:a\s+)?summary/i.test(text);
+}
+function buildRewriteExample(item = {}) {
+  const explicitBefore = firstTextValue([
+    item.rewriteExample?.before,
+    item.beforeAfter?.before,
+    item.before,
+  ]);
+  const explicitAfter = firstTextValue([
+    item.rewriteExample?.after,
+    item.beforeAfter?.after,
+    item.after,
+  ]);
+  const example = /^[（(]?\s*无具体示例\s*[）)]?$/i.test(String(item.example || "").trim()) ? "" : item.example;
+  const inferredBefore = isMissingSummaryRewriteItem(item)
+    ? "\u7121Summary"
+    : inferRewriteBefore(item);
+  return {
+    before: explicitBefore || inferredBefore || "待 AI 生成原句定位",
+    after: explicitAfter || firstTextValue([example]) || "待 AI 生成改写句",
+  };
+}
+function renderRewriteExampleCard(item = {}) {
+  return "";
+  const rewrite = buildRewriteExample(item);
+  return `<div class="advice-example" style="margin-top:10px;">
+    <div class="advice-example-head">
+      <div class="title"><span class="check">&#10003;</span><span>&#25913;&#20889;&#31034;&#20363;</span></div>
+      <button class="copy-btn" onclick="copyMentorExample(this)" data-content='${escapeAttr(rewrite.after)}'>&#128203; &#22797;&#21046;&#25913;&#21518;</button>
+    </div>
+    <div class="advice-example-body">
+      <div class="advice-example-row advice-example-row--before">
+        <span class="label">改前</span>
+        <p>${escapeHtml(rewrite.before)}</p>
+      </div>
+      <div class="advice-example-row advice-example-row--after">
+        <span class="label">改后</span>
+        <p>${escapeHtml(rewrite.after)}</p>
+      </div>
+    </div>
+  </div>`;
+}
 function copyMentorExample(btn){
   const raw = btn.getAttribute("data-content").replace(/&apos;/g,"'").replace(/&quot;/g,'"');
   const text = raw.replace(/\[\[([^\]]+)\]\]/g,"$1");
   if (navigator.clipboard) navigator.clipboard.writeText(text).then(
-    () => { btn.innerHTML = "✓ 已复制"; setTimeout(() => btn.innerHTML = "📋 复制", 2000); }
+    () => {
+      const original = btn.getAttribute("data-label") || btn.innerHTML;
+      btn.setAttribute("data-label", original);
+      btn.innerHTML = "&#10003; &#24050;&#22797;&#21046;";
+      setTimeout(() => btn.innerHTML = original, 2000);
+    }
   );
 }
 window.copyMentorExample = copyMentorExample;
@@ -1059,9 +1310,11 @@ if (headlineEl) headlineEl.textContent = atsScore || "--";
   const problems = normalizeProblemList();
   const suggestions = normalizeSuggestionList();
   const probSection = document.getElementById("atsProblemsSection");
+  renderExpandableAtsProblems(probSection, problems);
+  return;
   if (probSection) {
     probSection.innerHTML = `
-      ${problems.length ? `<div style="font-size:13px;font-weight:600;color:var(--rose);margin-bottom:8px;">🔍 关键问题</div>
+      ${problems.length ? `<div style="font-size:13px;font-weight:600;color:var(--rose);margin-bottom:8px;">&#128269; &#20851;&#38190;&#38382;&#39064;</div>
       <ul style="list-style:none;padding:0;margin:0;font-size:13px;">
         ${problems.map(renderAtsProblemItem).join("")}
       </ul>` : ""}`;
@@ -1210,8 +1463,10 @@ function renderKeywordCategories(items) {
   if (probSection) {
     const problems = normalizeProblemList();
     const suggestions = normalizeSuggestionList();
+    renderExpandableAtsProblems(probSection, problems);
+    return;
     probSection.innerHTML = `
-      ${problems.length ? `<div style="font-size:13px;font-weight:600;color:var(--rose);margin-bottom:8px;">🔍 关键问题</div>
+      ${problems.length ? `<div style="font-size:13px;font-weight:600;color:var(--rose);margin-bottom:8px;">&#128269; &#20851;&#38190;&#38382;&#39064;</div>
       <ul style="list-style:none;padding:0;margin:0;font-size:13px;">${problems.map(renderAtsProblemItem).join("")}</ul>` : ""}`;
   }
 })();
@@ -1241,7 +1496,6 @@ function priorityBadge(p){
 
 function renderAdviceItem(item, idx) {
   const insight = item.mentorInsight || "";
-  const example = /^[（(]?\s*无具体示例\s*[）)]?$/i.test(String(item.example || "").trim()) ? "" : (item.example || "");
   const hrPerspective = item.hrPerspective || item.HR_os || item.hrPov || item.recruiterPerspective || HR_PERSPECTIVE_LOOKUP.get(String(item.adviceId || "")) || HR_PERSPECTIVE_LOOKUP.get(adviceIdentity(item)) || fallbackHrPerspective(item);
   const divider = idx > 0
     ? `<div style="height:1px;background:linear-gradient(to right,transparent,#DDD6CA,transparent);margin:24px 0;"></div>`
@@ -1260,7 +1514,7 @@ function renderAdviceItem(item, idx) {
       ${problemSummary ? `<div style="display:flex;gap:10px;background:#F8F7F4;border-left:3px solid #D1C9B8;border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:10px;"><span style="font-size:15px;flex-shrink:0;margin-top:1px;">💡</span><div><div style="font-size:11px;font-weight:700;color:#78350F;margin-bottom:4px;">你的现状</div><p style="margin:0;font-size:13px;line-height:1.65;color:#44403C;">${escapeHtml(problemSummary)}</p></div></div>` : ""}
       ${actionSummary ? `<div style="display:flex;gap:10px;background:#F0FDF4;border-left:3px solid #4ADE80;border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:10px;"><span style="font-size:15px;flex-shrink:0;margin-top:1px;">⚡</span><div><div style="font-size:11px;font-weight:700;color:#15803D;margin-bottom:4px;">建议你先做</div><p style="margin:0;font-size:13px;line-height:1.65;color:#166534;">${escapeHtml(actionSummary)}</p></div></div>` : ""}
       ${insight ? `<div style="background:#F5F3FF;border-left:3px solid #C4B5FD;border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:10px;"><div style="font-size:11px;font-weight:700;color:#6D28D9;margin-bottom:4px;">导师视角</div><p style="margin:0;font-size:13px;line-height:1.65;color:#4C1D95;">${escapeHtml(insight)}</p></div>` : ""}
-      ${example ? `<div class="advice-example"><div class="advice-example-head"><div class="title"><span class="check">✓</span><span>改写示例</span></div><button class="copy-btn" onclick="copyMentorExample(this)" data-content='${escapeAttr(example)}'>📋 复制</button></div><div class="advice-example-body"><span style="font-size:13px;font-weight:500;line-height:1.6;font-family:var(--mono,monospace);">${escapeHtml(example)}</span></div></div>` : ""}
+      ${renderRewriteExampleCard(item)}
       ${hrPerspective ? `<div style="background:#F5F3FF;border-left:3px solid #C4B5FD;border-radius:0 10px 10px 0;padding:12px 14px;margin-top:8px;"><div style="font-size:11px;font-weight:700;color:#6D28D9;margin-bottom:4px;">HR</div><p style="margin:0;font-size:13px;line-height:1.65;color:#4C1D95;">${escapeHtml(hrPerspective)}</p></div>` : ""}
     </div>
   `;
@@ -1315,10 +1569,9 @@ function getCompanyLogo(company) {
 function renderMentorGroupHeader(mentor, groupIdx, totalGroups) {
   const logoUrl = mentor.companyLogo || getCompanyLogo(mentor.company);
   const mentorDisplayName = mentor.mentorName || "X导师";
-  const avatarFallback = avatarCircle(mentor.company || mentorDisplayName, 44);
   const logoHtml = logoUrl
-    ? `<div id="logo-wrap-${groupIdx}" style="width:44px;height:44px;border-radius:10px;background:#fff;border:1px solid #EDE9DC;display:flex;align-items:center;justify-content:center;padding:6px;flex-shrink:0;"><img src="${escapeAttr(logoUrl)}" alt="${escapeAttr(mentor.company||"")}" style="max-width:100%;max-height:100%;object-fit:contain;" onerror="var w=this.closest('[id^=logo-wrap-]');if(w){w.style.padding='0';w.style.background='transparent';w.style.border='none';w.innerHTML='${avatarFallback.replace(/'/g,"&#39;").replace(/\n/g,"")}'}"></div>`
-    : avatarFallback;
+    ? `<div style="width:56px;height:56px;border-radius:10px;background:#fff;border:1px solid #EDE9DC;display:flex;align-items:center;justify-content:center;padding:7px;flex-shrink:0;"><img src="${escapeAttr(logoUrl)}" alt="${escapeAttr(mentor.company||"")}" style="max-width:100%;max-height:100%;object-fit:contain;"></div>`
+    : avatarCircle(mentor.company || mentorDisplayName, 56);
   return `
     <div style="display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid #EDE9DC;margin-bottom:20px;">
       ${logoHtml}
@@ -1530,7 +1783,6 @@ function renderAdviceItem(item, i) {
   const fitType = item.mentorFitType || "";
   const rawTopicCluster = item.displayAdviceType || item.topicCluster || sectionLabel(item.targetSection);
   const topicCluster = /ATS\s*通用建议/i.test(String(rawTopicCluster)) ? "" : rawTopicCluster;
-  const example = /^[（(]?\s*无具体示例\s*[）)]?$/i.test(String(item.example || "").trim()) ? "" : (item.example || "");
   const fitCfg = FIT_TYPE_CONFIG[fitType];
   const fitChip = fitCfg
     ? `<span style="display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:${fitCfg.bg};color:${fitCfg.color};border:1px solid ${fitCfg.border};">${fitCfg.label}</span>`
@@ -1570,7 +1822,7 @@ function renderAdviceItem(item, i) {
         ${insight ? `<div style="${hrPov ? "margin-bottom:8px;" : ""}"><span style="font-size:11px;font-weight:600;color:#6D28D9;background:#F5F3FF;padding:2px 7px;border-radius:99px;margin-right:6px;">导师</span><span style="font-size:12.5px;line-height:1.6;color:#374151;">${escapeHtml(insight)}</span></div>` : ""}
         ${hrPov ? `<div><span style="font-size:11px;font-weight:600;color:#B45309;background:#FFFBEB;padding:2px 7px;border-radius:99px;margin-right:6px;">HR</span><span style="font-size:12.5px;line-height:1.6;color:#374151;">${escapeHtml(hrPov)}</span></div>` : ""}
       </div>` : ""}
-      ${example ? `<div class="advice-example" style="margin-top:10px;"><div class="advice-example-head"><div class="title"><span class="check">✓</span><span>改写示例</span></div><button class="copy-btn" onclick="copyMentorExample(this)" data-content='${escapeAttr(example)}'>📋 复制</button></div><div class="advice-example-body"><span style="font-size:13px;font-weight:500;line-height:1.6;font-family:var(--mono,monospace);">${escapeHtml(example)}</span></div></div>` : ""}
+      ${renderRewriteExampleCard(item)}
     </div>`;
 }
 
@@ -1603,8 +1855,261 @@ if (mentorsListEl) {
   }
 }
 
-// ── 5. PDF Export ──
-function exportPDF(){
+// ── 5. Company Insider Tips ──
+function renderInsiderTipsSection(tips) {
+  if (!tips || tips.length === 0) return '';
+  return tips.map((tip) => {
+    const logo = tip.companyLogo
+      ? `<img src="${tip.companyLogo}" alt="${tip.company}" style="width:48px;height:48px;object-fit:contain;border-radius:8px;background:#fff;padding:4px;box-shadow:0 1px 4px rgba(0,0,0,0.08);" />`
+      : `<div style="width:48px;height:48px;border-radius:8px;background:var(--amber-light,#f5e9c8);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:var(--amber-dark,#a0620a);">${(tip.company||'?')[0]}</div>`;
+    const chipColor = tip.insightType === 'hr'
+      ? 'background:rgba(99,102,241,0.10);color:#4338ca;'
+      : 'background:rgba(234,88,12,0.10);color:#c2410c;';
+    const chipLabel = tip.insightType === 'hr' ? 'HR 视角' : '导师视角';
+    const topicLabel = tip.topic ? `<span style="font-size:11px;color:var(--ink-soft);margin-left:6px;">· ${tip.topic}</span>` : '';
+    return `
+<div style="background:var(--surface,#fff);border-radius:12px;padding:16px 18px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,0,0,0.06);">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+    ${logo}
+    <div style="flex:1;min-width:0;">
+      <div style="font-weight:700;font-size:15px;line-height:1.2;">${tip.company}</div>
+      <div style="font-size:12px;color:var(--ink-soft);margin-top:2px;">${tip.mentorName}${tip.mentorTitle ? ' · ' + tip.mentorTitle : ''}</div>
+    </div>
+    <span style="font-size:11px;padding:3px 8px;border-radius:6px;${chipColor}white-space:nowrap;">${chipLabel}</span>
+  </div>
+  <p style="font-size:14px;line-height:1.65;color:var(--ink);margin:0 0 6px;">${tip.insight}</p>
+  ${topicLabel ? `<div style="margin-top:4px;">${topicLabel}</div>` : ''}
+</div>`;
+  }).join('');
+}
+
+// Override legacy insider renderer: these cards are market knowledge, not HR or mentor POV.
+function renderInsiderTipsSection(tips) {
+  if (!tips || tips.length === 0) return '';
+  return tips.map((tip) => {
+    const company = tip.company || tip.industryLabel || '公司/行业';
+    const title = tip.knowledgeTitle || `${company} 的候选人偏好`;
+    const sourceMentor = tip.sourceMentorName || tip.mentorName || '';
+    const sourceTitle = tip.sourceMentorTitle || tip.mentorTitle || '';
+    const sourceTopic = tip.sourceTopic || tip.topic || '';
+    const sourceParts = [company, sourceMentor, sourceTitle].filter(Boolean).join(' · ');
+    const sourceLine = [sourceParts, sourceTopic ? `对应主题：${sourceTopic}` : ''].filter(Boolean).join(' · ');
+    const logo = tip.companyLogo
+      ? `<img src="${escapeAttr(tip.companyLogo)}" alt="${escapeAttr(company)}" style="width:46px;height:46px;object-fit:contain;border-radius:8px;background:#fff;padding:5px;border:1px solid #ede9dc;" />`
+      : `<div style="width:46px;height:46px;border-radius:8px;background:var(--paper-warm,#f6f3ec);border:1px solid #ede9dc;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;color:var(--jade,#2f6b4f);">${escapeHtml(company[0] || '?')}</div>`;
+    const typeLabel = {
+      company_preference: '公司偏好',
+      industry_pattern: '行业规律',
+      talent_profile: '人才画像',
+      interview_standard: '面试标准',
+      credential_expectation: '背景门槛',
+    }[tip.knowledgeType] || '小知识';
+    return `
+<div style="background:#fffdf7;border:1px solid #ede9dc;border-radius:12px;padding:16px 18px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,0,0,0.04);">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+    ${logo}
+    <div style="flex:1;min-width:0;">
+      <div style="font-weight:800;font-size:15px;line-height:1.25;color:var(--ink);">${escapeHtml(title)}</div>
+      <div style="font-size:12px;color:var(--ink-soft);margin-top:3px;">${escapeHtml(company)}${tip.industryLabel ? ' · ' + escapeHtml(tip.industryLabel) : ''}</div>
+    </div>
+    <span style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(47,107,79,0.10);color:var(--jade,#2f6b4f);white-space:nowrap;">${escapeHtml(typeLabel)}</span>
+  </div>
+  <p style="font-size:14px;line-height:1.65;color:var(--ink);margin:0 0 10px;">${escapeHtml(tip.insight)}</p>
+  ${sourceLine ? `<div style="font-size:11.5px;color:var(--ink-soft);line-height:1.45;">来源：${escapeHtml(sourceLine)}</div>` : ''}
+</div>`;
+  }).join('');
+}
+
+const insiderTips = s.companyInsiderTips || [];
+const insiderEl = document.getElementById('insiderTipsList');
+const insiderSection = document.getElementById('insider-tips');
+const insiderDivider = document.getElementById('insider-tips-divider');
+const serviceNum = document.getElementById('serviceNum');
+if (insiderEl && insiderTips.length >= 1) {
+  insiderEl.innerHTML = renderInsiderTipsSection(insiderTips);
+  if (insiderSection) {
+    const num = insiderSection.querySelector('.section-num');
+    const title = insiderSection.querySelector('.section-title');
+    if (num) num.textContent = '05 · 公司内幕小知识';
+    if (title) {
+      title.textContent = '帮你看懂大公司真正重视什么样的人才';
+      const sectionReason = insiderTips.find((tip) => tip && tip.relevanceReason)?.relevanceReason || '';
+      let reasonEl = insiderSection.querySelector('#insiderTipsReason');
+      if (sectionReason && !reasonEl) {
+        reasonEl = document.createElement('p');
+        reasonEl.id = 'insiderTipsReason';
+        reasonEl.style.cssText = 'font-size:12.5px;line-height:1.55;color:var(--jade,#2f6b4f);background:var(--jade-soft,#eaf4ec);border-radius:8px;padding:8px 10px;margin:-4px 0 14px;';
+        title.insertAdjacentElement('afterend', reasonEl);
+      }
+      if (reasonEl) {
+        if (sectionReason) {
+          reasonEl.textContent = sectionReason;
+          reasonEl.style.display = '';
+        } else {
+          reasonEl.style.display = 'none';
+        }
+      }
+    }
+    insiderSection.style.display = '';
+  }
+  if (insiderDivider) insiderDivider.style.display = '';
+  if (serviceNum) serviceNum.textContent = '06 · 升级服务';
+} else {
+  if (serviceNum) serviceNum.textContent = '05 · 升级服务';
+}
+
+// ── 6. PDF Export ──
+function aiPdfPlacementLabel(item = {}) {
+  const raw = item.placement?.label || item.whereToAdd || "";
+  if (/summary/i.test(raw)) return "Summary";
+  if (/skills?/i.test(raw)) return "Skills";
+  if (/experience|ç»åŽ†|经历/.test(raw)) return "Experience";
+  if (/reference|å‚è€ƒ|参考/.test(raw)) return "Reference only";
+  return raw || "Reference only";
+}
+function aiPdfPriorityRank(item = {}) {
+  const p = String(item.priority || item.priorityLabel || "").toLowerCase();
+  if (p === "high" || p === "p0" || /å¿…æ”¹|必改|critical/.test(p)) return 0;
+  if (p === "medium" || p === "p1" || /å»ºè®®|建议/.test(p)) return 1;
+  return 2;
+}
+function collectAiPdfKeywords() {
+  const items = buildKeywordItems().map((item) => ({
+    name: item.name,
+    status: item.status === "have" ? "have" : "weak",
+    placement: aiPdfPlacementLabel(item),
+    group: item.group || "",
+  }));
+  if (items.length) return items;
+  return uniqueList([
+    ...(atsResult.topMissingKw || []),
+    ...(atsResult.topMissingKeywords || []),
+    ...(atsResult.raw?.topMissingKw || []),
+    ...(atsResult.raw?.topMissingKeywords || []),
+  ]).map((name) => ({
+    name,
+    status: "weak",
+    placement: aiPdfPlacementLabel({ placement: placementForKeyword(name, categoryGroupForTerm(name)) }),
+    group: categoryGroupForTerm(name),
+  }));
+}
+function collectAiPdfAdviceItems() {
+  const items = collectReportAdviceItems();
+  if (items.length) return items.slice().sort((a, b) => aiPdfPriorityRank(a) - aiPdfPriorityRank(b));
+  return normalizeSuggestionList().map((text, index) => ({
+    title: `修改建议 ${index + 1}`,
+    currentDiagnosis: "",
+    action: text,
+    mentorInsight: "",
+    hrPerspective: "",
+    priority: index === 0 ? "high" : "medium",
+  }));
+}
+function renderAiPdfKeywordChips(items, status) {
+  const filtered = items.filter((item) => item.status === status);
+  if (!filtered.length) return `<p>暂无稳定关键词数据。请 AI 优先根据用户上传的原始简历和目标岗位 JD 自行补齐关键词。</p>`;
+  return `<div class="ai-pdf-chip-list">${filtered.map((item) => `
+    <span class="ai-pdf-chip ${status}">
+      <strong>${escapeHtml(item.name)}</strong>
+      <span>${escapeHtml(item.placement)}</span>
+    </span>`).join("")}</div>`;
+}
+function renderAiPdfProblems(problems) {
+  if (!problems.length) return `<p>暂无明确关键问题。请 AI 按 ATS 可读性、JD 匹配、Summary、Skills、Experience bullet 质量进行整体优化。</p>`;
+  return `<ol>${problems.map((problem) => `<li>${escapeHtml(problem)}</li>`).join("")}</ol>`;
+}
+function renderAiPdfAdvice(adviceItems) {
+  if (!adviceItems.length) {
+    return `<p>暂无导师建议。请 AI 使用关键词和关键问题，按“动作 + 方法/工具 + 结果/影响”的结构改写简历。</p>`;
+  }
+  return adviceItems.map((item, index) => {
+    const rewrite = buildRewriteExample(item);
+    const diagnosis = item.currentDiagnosis || item.problemSummary || "";
+    const action = item.action || item.actionSummary || "";
+    const insight = item.mentorInsight || item.mentorLens || item.reason || item.I_insight || item.P_mentor || "";
+    const hrPov = item.hrPerspective || item.HR_os || item.hrPov || item.recruiterPerspective || HR_PERSPECTIVE_LOOKUP.get(String(item.adviceId || "")) || HR_PERSPECTIVE_LOOKUP.get(adviceIdentity(item)) || "";
+    const priority = aiPdfPriorityRank(item) === 0 ? "高优先级" : aiPdfPriorityRank(item) === 1 ? "中优先级" : "补充优化";
+    return `<div class="ai-pdf-advice">
+      <div><span class="ai-pdf-label">${escapeHtml(priority)}</span><span class="ai-pdf-meta">建议 ${index + 1}</span></div>
+      <h3>${escapeHtml(item.title || `修改建议 ${index + 1}`)}</h3>
+      ${diagnosis ? `<p><strong>现状诊断：</strong>${escapeHtml(diagnosis)}</p>` : ""}
+      ${action ? `<p><strong>建议动作：</strong>${escapeHtml(action)}</p>` : ""}
+      ${insight ? `<p><strong>导师视角：</strong>${escapeHtml(insight)}</p>` : ""}
+      ${hrPov ? `<p><strong>HR/招聘视角：</strong>${escapeHtml(hrPov)}</p>` : ""}
+      ${(rewrite.before || rewrite.after) ? `<p><strong>改写示例：</strong>${escapeHtml(rewrite.before)} → ${escapeHtml(rewrite.after)}</p>` : ""}
+    </div>`;
+  }).join("");
+}
+function buildAiRewritePdfElement() {
+  const keywords = collectAiPdfKeywords();
+  const weakCount = keywords.filter((item) => item.status === "weak").length;
+  const haveCount = keywords.filter((item) => item.status === "have").length;
+  const problems = normalizeProblemList();
+  const adviceItems = collectAiPdfAdviceItems();
+  const targetRole = getTargetJobTitle() || s.jobTitle || atsResult.jobTitle || atsResult.profile?.targetRole || atsResult.raw?.jobTitle || "目标岗位";
+  const el = document.createElement("div");
+  el.className = "ai-rewrite-pdf";
+  el.innerHTML = `
+    <div class="ai-pdf-brand">
+      <img src="/logo/MentorX.png" alt="MentorX">
+      <div class="ai-pdf-kicker">AI RESUME REWRITE PROMPT PACK</div>
+    </div>
+    <h1>MentorX AI 简历改写指令包</h1>
+    <p>请把这份 PDF 和用户的原始简历一起上传给 ChatGPT / Claude / 豆包等 AI 工具。目标岗位：<strong>${escapeHtml(targetRole)}</strong>。</p>
+
+    <section class="ai-pdf-card ai-pdf-prompt">
+      <h2>给 AI 的固定任务</h2>
+      <p>你是一位资深简历修改顾问。请读取用户上传的原始简历和本指令包，直接输出一份完整、可投递的新简历。必须保留真实经历，不得编造公司、学校、时间、奖项、项目或指标；没有真实数据时，只优化表达，不虚构数字。请优先自然补入待补强关键词，不要硬塞关键词。</p>
+    </section>
+
+    <section class="ai-pdf-card">
+      <h2>输出格式要求</h2>
+      <ol>
+        <li>第一部分：完整新版简历。</li>
+        <li>第二部分：关键词覆盖说明，列出哪些关键词已被自然补入。</li>
+        <li>第三部分：修改摘要，说明改了哪些段落。</li>
+        <li>第四部分：仍需用户补充的信息，只列真实缺失项。</li>
+      </ol>
+    </section>
+
+    <section class="ai-pdf-card">
+      <h2>JD 关键词清单</h2>
+      <div class="ai-pdf-grid">
+        <div>
+          <h3>待补强关键词 (${weakCount})</h3>
+          ${renderAiPdfKeywordChips(keywords, "weak")}
+        </div>
+        <div>
+          <h3>已具备关键词 (${haveCount})</h3>
+          ${renderAiPdfKeywordChips(keywords, "have")}
+        </div>
+      </div>
+      <p class="ai-pdf-meta">每个关键词后方标注建议放置位置：Summary、Skills、Experience 或 Reference only。</p>
+    </section>
+
+    <section class="ai-pdf-card">
+      <h2>关键问题</h2>
+      ${renderAiPdfProblems(problems)}
+    </section>
+
+    <section class="ai-pdf-card">
+      <h2>修改建议</h2>
+      ${renderAiPdfAdvice(adviceItems)}
+    </section>
+
+    <section class="ai-pdf-card">
+      <h2>改写规则</h2>
+      <ul>
+        <li>优先修 Summary、Skills 和 Experience bullets。</li>
+        <li>每条经历尽量写成“动作 + 方法/工具 + 结果/影响”。</li>
+        <li>补齐 JD keyword，但不能为了关键词牺牲真实度和可读性。</li>
+        <li>语言要专业、简洁、ATS 可读，避免空泛形容词。</li>
+      </ul>
+    </section>`;
+  return el;
+}
+
+function exportPDFLegacy(){
   if (!window.html2pdf) { alert("PDF 库未加载，请刷新重试"); return; }
   const btn = document.querySelector('.export-card .btn');
   const orig = btn ? btn.innerHTML : "";
@@ -1622,4 +2127,127 @@ function exportPDF(){
     .then(() => { document.body.classList.remove('exporting'); if(btn){btn.disabled=false;btn.innerHTML=orig;} })
     .catch(err => { console.error(err); document.body.classList.remove('exporting'); if(btn){btn.disabled=false;btn.innerHTML=orig;} });
 }
+function waitForReportImages(root) {
+  const images = Array.from(root.querySelectorAll("img"));
+  return Promise.all(images.map((img) => {
+    if (img.complete) return Promise.resolve();
+    return new Promise((resolve) => {
+      img.addEventListener("load", resolve, { once: true });
+      img.addEventListener("error", resolve, { once: true });
+    });
+  }));
+}
+function createPdfStage(contentEl) {
+  const stage = document.createElement("div");
+  stage.setAttribute("data-pdf-stage", "true");
+  stage.style.cssText = [
+    "position:absolute",
+    `top:${Math.max(0, window.scrollY || 0)}px`,
+    "left:0",
+    "width:794px",
+    "min-height:1123px",
+    "background:#f6f3ec",
+    "z-index:2147483647",
+    "pointer-events:none",
+    "overflow:visible"
+  ].join(";");
+  contentEl.style.width = "794px";
+  contentEl.style.maxWidth = "794px";
+  contentEl.style.margin = "0";
+  contentEl.style.transform = "none";
+  stage.appendChild(contentEl);
+  document.body.appendChild(stage);
+  return stage;
+}
+function buildFullReportPdfElement() {
+  const pageEl = document.querySelector(".page");
+  if (!pageEl) return null;
+  const clone = pageEl.cloneNode(true);
+  clone.querySelectorAll(".banner,.export-card,.footnote").forEach((el) => el.remove());
+  clone.style.width = "794px";
+  clone.style.maxWidth = "794px";
+  clone.style.margin = "0";
+  clone.style.padding = "32px 48px 44px";
+  clone.style.boxShadow = "none";
+  clone.style.border = "none";
+  clone.style.background = "#f6f3ec";
+  clone.style.transform = "none";
+  return clone;
+}
+async function exportPDF(){
+  if (!window.html2pdf) { alert("PDF library is still loading. Please refresh and try again."); return; }
+  const btn = document.querySelector('.export-card .btn');
+  const orig = btn ? btn.innerHTML : "";
+  if (btn) { btn.disabled = true; btn.innerHTML = '&#9203; Generating PDF...'; }
+  const pageEl = buildFullReportPdfElement();
+  if (!pageEl) { if(btn){btn.disabled=false;btn.innerHTML=orig;} return; }
+  const stage = createPdfStage(pageEl);
+  try {
+    if (document.fonts?.ready) await document.fonts.ready;
+    await waitForReportImages(pageEl);
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    const exportWidth = 794;
+    const opt = {
+      margin: [0, 0, 0, 0],
+      filename: "MentorX-report-" + new Date().toISOString().slice(0,10) + ".pdf",
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#f6f3ec',
+        windowWidth: exportWidth,
+        width: exportWidth,
+        scrollX: 0,
+        scrollY: 0
+      },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['css', 'legacy'], avoid: '.section, .mentor-card-v2, .advice-example, .service-card' }
+    };
+    await html2pdf().set(opt).from(pageEl).save();
+  } catch (err) {
+    console.error(err);
+  } finally {
+    stage.remove();
+    if(btn){btn.disabled=false;btn.innerHTML=orig;}
+  }
+}
+async function exportAiRewritePDF(){
+  if (!window.html2pdf) { alert("PDF library is still loading. Please refresh and try again."); return; }
+  const btn = document.querySelector('.btn-ai-prompt');
+  const orig = btn ? btn.innerHTML : "";
+  if (btn) { btn.disabled = true; btn.innerHTML = '&#9203; Generating prompt PDF...'; }
+  const exportEl = buildAiRewritePdfElement();
+  const stage = createPdfStage(exportEl);
+  try {
+    if (document.fonts?.ready) await document.fonts.ready;
+    await waitForReportImages(exportEl);
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    const exportWidth = 794;
+    const opt = {
+      margin: [0, 0, 0, 0],
+      filename: "MentorX-AI-resume-rewrite-prompt-" + new Date().toISOString().slice(0,10) + ".pdf",
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#f6f3ec',
+        windowWidth: exportWidth,
+        width: exportWidth,
+        scrollX: 0,
+        scrollY: 0
+      },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['css', 'legacy'], avoid: '.ai-pdf-card, .ai-pdf-advice' }
+    };
+    await html2pdf().set(opt).from(exportEl).save();
+  } catch (err) {
+    console.error(err);
+  } finally {
+    stage.remove();
+    if(btn){btn.disabled=false;btn.innerHTML=orig;}
+  }
+}
 window.exportPDF = exportPDF;
+window.exportAiRewritePDF = exportAiRewritePDF;

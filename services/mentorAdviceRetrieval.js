@@ -1,5 +1,7 @@
 ﻿"use strict";
 
+const fs = require("fs");
+const path = require("path");
 const db = require("../database");
 const actionGovernance = require("./actionGovernance");
 const titleGovernance = require("./titleGovernance");
@@ -136,12 +138,16 @@ const COMPANY_LOGO_MAP = {
   "Amtrak":                    "/logos/Amtrak.png",
   // Finance – additional variants & missing
   "Barclays":                  "/logos/Barclays.png",
-  "Wells Fargo":               "https://logo.clearbit.com/wellsfargo.com",
-  "Visa":                      "https://logo.clearbit.com/visa.com",
-  "UBS":                       "https://logo.clearbit.com/ubs.com",
-  "Pimco":                     "https://logo.clearbit.com/pimco.com",
-  "PIMCO":                     "https://logo.clearbit.com/pimco.com",
-  "Credit Suisse":             "https://logo.clearbit.com/credit-suisse.com",
+  "RBC":                       "/logos/RBC Royal Bank.png",
+  "RBC Royal Bank":            "/logos/RBC Royal Bank.png",
+  "Royal Bank of Canada":      "/logos/RBC Royal Bank.png",
+  "Scotiabank":                "/logos/Scotiabank.png",
+  "Wells Fargo":               "/logos/Wells_Fargo.png",
+  "Visa":                      "/logos/Visa.png",
+  "UBS":                       "/logos/UBS.png",
+  "Pimco":                     "/logos/PIMCO.png",
+  "PIMCO":                     "/logos/PIMCO.png",
+  "Credit Suisse":             "/logos/Credit_Suisse.png",
   "JP Morgan Chase":           "/logos/JPMorganChase.png",
   "J.P. Morgan":               "/logos/JPMorganChase.png",
   "Bank of America Merrill Lynch": "/logos/Bank of America.png",
@@ -150,20 +156,157 @@ const COMPANY_LOGO_MAP = {
   "Ernst & Young":             "/logos/EY.png",
   // Tech – missing popular companies
   "Facebook":                  "/logos/Meta.png",
-  "LinkedIn":                  "https://logo.clearbit.com/linkedin.com",
-  "Broadcom":                  "https://logo.clearbit.com/broadcom.com",
-  "Roblox":                    "https://logo.clearbit.com/roblox.com",
-  "eBay":                      "https://logo.clearbit.com/ebay.com",
-  "Yelp":                      "https://logo.clearbit.com/yelp.com",
-  "Western Digital":           "https://logo.clearbit.com/westerndigital.com",
-  "Compass":                   "https://logo.clearbit.com/compass.com",
-  "IQVIA":                     "https://logo.clearbit.com/iqvia.com",
+  "LinkedIn":                  "/logos/LinkedIn.png",
+  "Broadcom":                  "/logos/Broadcom.png",
+  "Roblox":                    "/logos/Roblox.png",
+  "eBay":                      "/logos/eBay.png",
+  "Yelp":                      "/logos/Yelp.png",
+  "Western Digital":           "/logos/Western_Digital.png",
+  "Compass":                   "/logos/Compass.png",
+  "IQVIA":                     "/logos/IQVIA.png",
   "Verizon":                   "/logos/Verizon.png",
   "T-Mobile":                  "/logos/T-Mobile.png",
   "Hewlett Packard Enterprise": "/logos/Hewlett Packard Enterprise.png",
   "HPE":                       "/logos/Hewlett Packard Enterprise.png",
   "salesforce":                "/logos/Salesforce.png",
+  // Additional tech & other
+  "Netflix":                   "/logos/Netflix.png",
+  "Stripe":                    "/logos/Stripe.png",
+  "Lyft":                      "/logos/Lyft.png",
+  "Airbnb":                    "/logos/Airbnb.png",
+  "Palantir":                  "/logos/Palantir.png",
+  "Databricks":                "/logos/Databricks.png",
+  "Workday":                   "/logos/Workday.png",
+  "ServiceNow":                "/logos/ServiceNow.png",
+  "Atlassian":                 "/logos/Atlassian.png",
+  "Zoom":                      "/logos/Zoom.png",
+  "Slack":                     "/logos/Slack.png",
+  "Twitter":                   "/logos/Twitter.png",
+  "Pinterest":                 "/logos/Pinterest.png",
+  "Coinbase":                  "/logos/Coinbase.png",
+  "DoorDash":                  "/logos/DoorDash.png",
+  "Instacart":                 "/logos/Instacart.png",
+  "Square":                    "/logos/Square.png",
+  "Rivian":                    "/logos/Rivian.png",
+  "Waymo":                     "/logos/Waymo.png",
+  "Lockheed Martin":           "/logos/Lockheed_Martin.png",
+  "Raytheon":                  "/logos/Raytheon.png",
+  "Boeing":                    "/logos/Boeing.png",
+  "Northrop Grumman":          "/logos/Northrop_Grumman.png",
+  "Medtronic":                 "/logos/Medtronic.png",
+  "Abbott":                    "/logos/Abbott.png",
+  "Pfizer":                    "/logos/Pfizer.png",
+  "Eli Lilly":                 "/logos/Eli_Lilly.png",
+  "Genentech":                 "/logos/Genentech.png",
+  "Gilead":                    "/logos/Gilead.png",
+  "23andMe":                   "/logos/23andMe.svg",
+  "23andMe Research Institute": "/logos/23andMe.svg",
+  "Bill.com":                  "/logos/Bill.com.png",
+  "BILL":                      "/logos/Bill.com.png",
+  "BILL Holdings":             "/logos/Bill.com.png",
+  "Polarr":                    "/logos/Polarr.png",
+  "Polarr/Facebook":           "/logos/Polarr.png",
+  "Structuretx":               "/logos/Structure Therapeutics.png",
+  "Structure Therapeutics":    "/logos/Structure Therapeutics.png",
+  // DB company name variants that won't substring-match short keys (≤3 chars)
+  "BCG Digital Ventures":      "/logos/Boston Consulting Group.png",
+  "EY-Parthenon":              "/logos/EY.png",
+  "EY-Partheno":               "/logos/EY.png",
+  "UBS AG":                    "/logos/UBS.png",
+  "BOA Merril Lynch":          "/logos/Bank of America.png",
+  "BOA Merrill Lynch":         "/logos/Bank of America.png",
+  "KLA-TENCOR":                "/logos/KLA.png",
+  // "Ernst and" won't match map key "Ernst & Young" (& vs and)
+  "Ernst and Young":           "/logos/EY.png",
+  // "PwC" is 3 chars so "PwC UK" skips substring match
+  "PwC UK":                    "/logos/PRICE WATERHOUSE COOPERS.png",
+  // Logo files exist but no map entry
+  "UnitedHealthcare":          "/logos/UnitedHealthcare.png",
+  "United Health":             "/logos/UnitedHealth Group.png",
+  "United Healthcare":         "/logos/United Healthcare.png",
+  "UnitedHealth Group":        "/logos/UnitedHealth Group.png",
+  "MetLife":                   "/logos/MetLife.png",
+  "Activision Blizzard":       "/logos/Activision Blizzard.png",
+  // Additional companies with mentors (add logo files to public/logos/ with matching filenames)
+  "Anyscale":                  "/logos/Anyscale.png",
+  "Generac Power Systems":     "/logos/Generac_Power_Systems.png",
+  // DB typos
+  "Googl":                     "/logos/google.png",
 };
+
+const LOGO_FILE_EXTENSIONS = new Set([".png", ".jpg", ".jpeg", ".svg"]);
+let logoFileIndex = null;
+
+function normalizeLogoLookupKey(value) {
+  return String(value || "")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/&/g, " and ")
+    .replace(/[_+]/g, " ")
+    .replace(/\b(the|inc|incorporated|llc|ltd|co|company|corp|corporation|group|holdings|services|service|usa|u\.s\.|us)\b/gi, " ")
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLowerCase();
+}
+
+function compactLogoLookupKey(value) {
+  return normalizeLogoLookupKey(value).replace(/[^\p{L}\p{N}]/gu, "");
+}
+
+function addLogoFileIndexValue(index, key, file) {
+  if (!key || key.length < 2) return;
+  if (index.has(key)) {
+    const existing = index.get(key);
+    const existingExt = path.extname(existing).toLowerCase();
+    const nextExt = path.extname(file).toLowerCase();
+    if (existingExt === ".svg" && nextExt !== ".svg") {
+      index.set(key, `/logos/${file}`);
+    }
+    return;
+  }
+  index.set(key, `/logos/${file}`);
+}
+
+function buildLogoFileIndex(force = false) {
+  if (logoFileIndex && !force) return logoFileIndex;
+  const index = new Map();
+  const logosDir = path.join(process.cwd(), "public", "logos");
+  try {
+    for (const file of fs.readdirSync(logosDir)) {
+      const ext = path.extname(file);
+      if (!LOGO_FILE_EXTENSIONS.has(ext.toLowerCase())) continue;
+      const stem = path.basename(file, ext);
+      addLogoFileIndexValue(index, normalizeLogoLookupKey(stem), file);
+      addLogoFileIndexValue(index, compactLogoLookupKey(stem), file);
+      addLogoFileIndexValue(index, normalizeLogoLookupKey(stem.replace(/_/g, " ")), file);
+      addLogoFileIndexValue(index, compactLogoLookupKey(stem.replace(/_/g, " ")), file);
+    }
+  } catch (err) {
+    console.warn("[mentorAdviceRetrieval] Unable to read public/logos for company logo index:", err.message);
+  }
+  logoFileIndex = index;
+  return logoFileIndex;
+}
+
+function resolveLogoFromFileIndex(company) {
+  let index = buildLogoFileIndex();
+  const normalized = normalizeLogoLookupKey(company);
+  const compact = compactLogoLookupKey(company);
+  if (index.has(normalized)) return index.get(normalized);
+  if (index.has(compact)) return index.get(compact);
+  if (!normalized || compact.length <= 3) return null;
+  for (const [key, value] of index.entries()) {
+    if (key.length <= 3) continue;
+    if (normalized.includes(key) || key.includes(normalized) || compact.includes(key) || key.includes(compact)) {
+      return value;
+    }
+  }
+  index = buildLogoFileIndex(true);
+  if (index.has(normalized)) return index.get(normalized);
+  if (index.has(compact)) return index.get(compact);
+  return null;
+}
 
 /**
  * Resolves a company name to its logo URL path.
@@ -179,7 +322,7 @@ function resolveCompanyLogo(company) {
     if (key.toLowerCase() === lower) return val || null;
     if (lower.includes(key.toLowerCase()) && key.length > 3) return val || null;
   }
-  return null;
+  return resolveLogoFromFileIndex(company);
 }
 
 const DEFAULT_FREE_MENTOR_PROFILE = {
@@ -1474,6 +1617,11 @@ function isDataToneContext(context = {}) {
   return toneTargetMatches(context, /\b(da|ds|data analyst|data analytics|analytics analyst|bi analyst|business intelligence|business analyst|product analyst|marketing analytics|data scientist|machine learning|ml engineer|mle)\b|数据分析|商业分析|业务分析|数据科学|机器学习|分析师|数据岗/i);
 }
 
+function isMlToneContext(context = {}) {
+  return hasRuntimeTargetContext(context) &&
+    /\b(machine learning|ml engineer|mle|applied ml|ai engineer|llm|large language model|data scientist|deep learning)\b|机器学习|人工智能|大模型|数据科学/i.test(toneTargetContextText(context));
+}
+
 function isApprovedPerspectiveSafeForContext(text = "", item = {}, context = {}) {
   if (!hasRuntimeTargetContext(context)) return true;
   const value = String(text || "");
@@ -1800,6 +1948,9 @@ function detailAwareMentorTemplate(family, rawSource = "", item = {}, context = 
     return "应届生这里要认真处理 Education。target school 和高 GPA 是少数能快速被读懂的硬信号，低 GPA 不写通常比硬放更稳。";
   }
   if (/线性回归|基础ML|ML技能|ATS机筛|模型逻辑|口头解释模型/i.test(text)) {
+    if (isMlToneContext(context)) {
+      return "MLE 简历这里要把模型证据写实。模型名称、任务、评估指标和你能解释的基本逻辑要对上，不然 ATS 过了也容易在面试被追问卡住。";
+    }
     return "数据分析岗位这里要补基础 ML 信号。线性回归这类模型、项目证据和口头解释能力都要对上，不然 ATS 和面试都会吃亏。";
   }
   if (/BA简历|每一条bullet point|紧扣岗位JD|稀释简历焦点|定位不清晰/i.test(text)) {
@@ -1818,6 +1969,9 @@ function detailAwareMentorTemplate(family, rawSource = "", item = {}, context = 
     return "你这条 AI 项目不要只说模型。LoRA、Stable Diffusion v2 inpainting 这种完整模型名要写出来，读起来才像真的动手做过。";
   }
   if (/跨方向投递|数据分析类岗位ATS|直接被系统过滤/i.test(text)) {
+    if (isMlToneContext(context)) {
+      return "MLE 版本要优先让 Python、Machine Learning、模型评估和项目证据有真实落点；关键词只放在 Skills 里，还不够像能进组做事。";
+    }
     return "你跨方向投递时，关键词要按岗位版本调整。数据分析版至少要让 Python、SQL、Machine Learning 这些 ATS 高频词有真实落点。";
   }
   if (/金融数据类岗位JD|所需工具|ATS会匹配关键词|面试前针对性复习/i.test(text)) {
@@ -1907,7 +2061,7 @@ function detailAwareMentorTemplate(family, rawSource = "", item = {}, context = 
   if (/咨询公司|不区分行业|竞争激烈|不宜过度筛选|Niche/i.test(text)) {
     return "咨询投递这里别过度筛公司。多数非 niche 咨询公司不先分行业，能拿到面试本身就不容易，简历先保持通用咨询能力清楚。";
   }
-  if (/RTL设计|Physical Design|Synthesis|芯片公司|Skyworks|方向不聚焦/i.test(text)) {
+  if (/RTL设计|Physical Design|Synthesis|芯片公司|Skyworks/i.test(text)) {
     return "芯片岗位这里要先聚焦方向。RTL、Physical Design、Synthesis 是不同准备路径，简历和面试重点别在几条线之间来回跳。";
   }
   if (/产品说明书|个人贡献|功能列表|描述语气模糊|个人成就/i.test(text)) {
@@ -2289,6 +2443,9 @@ function detailAwareHrTemplate(family, rawSource = "", item = {}, context = {}) 
   if (/技术关键词会传递求职方向信号|技术栈判断候选人定位|与目标岗位不符的高级工程技术|认知混乱/i.test(text)) {
     return "我会用技术关键词判断候选人定位；高级工程技术如果偏离目标岗位，会让我怀疑投递方向不清。";
   }
+  if (isMlToneContext(context) && /方向不聚焦|not focused|weakly aligned|目标岗位|target role|岗位定位|Summary|定位|core field|核心领域专长|专项简历版本|dedicated.*resume|相关项目|relevant projects|unrelated.*full stack|不相关.*full stack|full stack|安卓|Android/i.test(text)) {
+    return "我会先看候选人是不是明确投 MLE、Applied ML 或 LLM 工程方向；如果简历同时强调 full stack、Android 和 AI 项目，但没有突出模型、数据、评估或部署证据，前 10 秒会很难判断匹配度。";
+  }
   if (isDaToneContext(context) && /DA简历的bullet point|岗位JD中要求的技能点|按技能维度分拆|时间顺序叙事|关键词覆盖密度/i.test(text)) {
     return "我会按 JD 技能点扫 DA bullet；如果只按时间线叙事，匹配信号会变慢，关键词覆盖也不够集中。";
   }
@@ -2455,6 +2612,9 @@ function detailAwareHrTemplate(family, rawSource = "", item = {}, context = {}) 
     return "应届生我会很快扫 Education、target school 和 GPA；高 GPA 是加分信号，低 GPA 硬放反而会拖第一印象。";
   }
   if (/线性回归|基础ML|ML技能|ATS机筛|模型逻辑|口头解释模型/i.test(text)) {
+    if (isMlToneContext(context)) {
+      return "MLE 初筛我会看模型、任务、评估指标和项目证据是否成链；只出现基础 ML 词，但讲不清模型逻辑，匹配感会比较弱。";
+    }
     return "数据分析岗我会找基础 ML 和模型逻辑证据；线性回归这类词缺失，ATS 和人工初筛都会比较保守。";
   }
   if (/BA简历|每一条bullet point|紧扣岗位JD|稀释简历焦点|定位不清晰/i.test(text)) {
@@ -2467,6 +2627,9 @@ function detailAwareHrTemplate(family, rawSource = "", item = {}, context = {}) 
     return "游戏岗位我会先看 title 是否是行业听得懂的词；environment artist 这类标准名称能减少误判。";
   }
   if (/跨方向投递|数据分析类岗位ATS|直接被系统过滤/i.test(text)) {
+    if (isMlToneContext(context)) {
+      return "MLE 版本我会先扫 Python、Machine Learning、模型评估和项目证据；这些信号缺失时，很容易不像直接匹配的候选人。";
+    }
     return "数据分析版我会先扫 Python、SQL、Machine Learning；这些 ATS 高频词缺失时，很容易在第一轮就被过滤。";
   }
   if (/金融数据类岗位JD|所需工具|ATS会匹配关键词|面试前针对性复习/i.test(text)) {
@@ -2538,7 +2701,7 @@ function detailAwareHrTemplate(family, rawSource = "", item = {}, context = {}) 
   if (/业务决策支持|分析结果转化为业务决策|跨团队协作经历|soft skill与业务影响力/i.test(text)) {
     return "数据岗我会看分析有没有支持业务决策；跨团队协作如果没有接到影响力，只会像普通软技能。";
   }
-  if (/RTL设计|Physical Design|Synthesis|芯片公司|Skyworks|方向不聚焦/i.test(text)) {
+  if (/RTL设计|Physical Design|Synthesis|芯片公司|Skyworks/i.test(text)) {
     return "芯片岗位我会先判断候选人投 RTL、Physical Design 还是 Synthesis；方向散了，简历和面试准备都会变弱。";
   }
   if (/实习经历.*可验证|易回答的技能点|2个核心技能维度|展开作答/i.test(text)) {
@@ -7392,6 +7555,206 @@ function formatPremiumMentorReport(premiumMentorPlan, internalAtsResult) {
   };
 }
 
+const KNOWLEDGE_COMPANY_PATTERN = /(amazon|aws|google|meta|facebook|microsoft|apple|netflix|tiktok|bytedance|adobe|salesforce|oracle|nvidia|tesla|goldman|jpmorgan|morgan stanley|blackrock|capital one|deloitte|kpmg|ey|pwc|mckinsey|bcg|四大|大厂|大廠|big tech|faang|药厂|藥廠|pharma|cro|hedge fund|对冲基金|對沖基金|buy side|sell side|consumer electronics|消费电子|消費電子)/i;
+const KNOWLEDGE_INDUSTRY_PATTERN = /(多家公司|不同公司|同类公司|同類公司|岗位JD|崗位JD|JD分析|岗位通常|崗位通常|行业|行業|赛道|賽道|普遍|常见|常見|核心required|核心技能|required技能|preferred技能|加分项|加分項)/i;
+const KNOWLEDGE_PREFERENCE_PATTERN = /(偏好|看重|重视|重視|倾向|傾向|喜欢|喜歡|要求|门槛|門檻|筛选|篩選|录用|錄用|招募|招聘|面试|面試|考察|评估|評估|人才|候选人|候選人|画像|标准|標準|prefer|preferred|qualification|look for|value|hire|hiring|interview|screening|candidate|talent|bar)/i;
+const KNOWLEDGE_ACTION_PATTERN = /(建议你|建議你|你需要|你应该|你應該|你的简历|你的簡歷|简历中|簡歷中|在\s*(summary|skills|experience)|写进|寫進|放进|放進|补充到|補充到|添加|删除|刪除|改成|改写|改寫|重写|重寫|bullet|resume bullet|copy|复制|複製)/i;
+
+function getInsiderRetrievalQuery(options = {}) {
+  const internal = options.internalAtsResult || {};
+  const fromInternal = internal.retrievalQuery || {};
+  const explicit = options.retrievalQuery || {};
+  const profile = internal.profile || {};
+  const targetRole = explicit.targetRole || fromInternal.targetRole || profile.targetRole || internal.jobTitle || "";
+  const roleFamily = explicit.roleFamily || fromInternal.roleFamily || profile.roleFamily || inferRoleFamilyFromJobTitle(targetRole);
+  return {
+    ...fromInternal,
+    ...explicit,
+    targetRole,
+    roleFamily,
+    priorityKeywords: [
+      ...splitCsv(explicit.priorityKeywords),
+      ...splitCsv(fromInternal.priorityKeywords),
+      ...(internal.topMissingKeywords || []),
+      ...(internal.topMissingKw || []),
+      ...(internal.priorityMissingKeywords || []).map((item) => item.term || item),
+    ].filter(Boolean),
+    filters: {
+      ...(fromInternal.filters || {}),
+      ...(explicit.filters || {}),
+      roleFamily: [
+        ...splitCsv(fromInternal.filters?.roleFamily),
+        ...splitCsv(explicit.filters?.roleFamily),
+        roleFamily,
+      ].filter(Boolean),
+      targetRoles: [
+        ...splitCsv(fromInternal.filters?.targetRoles),
+        ...splitCsv(explicit.filters?.targetRoles),
+        targetRole,
+      ].filter(Boolean),
+    },
+    queryText: [
+      explicit.queryText,
+      fromInternal.queryText,
+      targetRole,
+      roleFamily,
+      internal.jdText,
+    ].filter(Boolean).join(" "),
+  };
+}
+
+function companyOrIndustryReferenced(row = {}, text = "") {
+  const company = String(row.mentor_company || "").trim();
+  if (company && text.toLowerCase().includes(company.toLowerCase())) return true;
+  return KNOWLEDGE_COMPANY_PATTERN.test(text) || KNOWLEDGE_INDUSTRY_PATTERN.test(text);
+}
+
+function insiderKnowledgeType(text = "") {
+  if (/面试|面試|interview|算法|algorithm|system design|case/i.test(text)) return "interview_standard";
+  if (/phd|博士|cpa|gpa|证书|證書|certification|学历|學歷|degree/i.test(text)) return "credential_expectation";
+  if (/人才|候选人|候選人|画像|candidate|talent|background/i.test(text)) return "talent_profile";
+  if (/四大|药厂|藥廠|pharma|cro|hedge fund|对冲基金|對沖基金|buy side|sell side|大厂|大廠|big tech/i.test(text)) return "industry_pattern";
+  return "company_preference";
+}
+
+function knowledgeTitleForTip(row = {}, text = "") {
+  const label = row.mentor_company || "目标公司";
+  const type = insiderKnowledgeType(text);
+  if (type === "interview_standard") return `${label} 的面试考察重点`;
+  if (type === "credential_expectation") return `${label} 相关岗位的背景门槛`;
+  if (type === "talent_profile") return `${label} 偏好的人才画像`;
+  if (type === "industry_pattern") return `${label} 所在赛道的招聘规律`;
+  return `${label} 的候选人偏好`;
+}
+
+function insiderKnowledgeRelevance(row = {}, retrievalQuery = {}) {
+  const text = rowText(row);
+  const roleFamilies = queryRoleFamilies(retrievalQuery);
+  const roleScore = Math.max(
+    overlapScore(roleFamilies, row.role_family),
+    overlapScore(retrievalQuery.filters?.targetRoles || [], row.target_roles),
+    overlapScore([retrievalQuery.targetRole, retrievalQuery.roleFamily].filter(Boolean), text)
+  );
+  const keywordScore = Math.max(
+    overlapScore(retrievalQuery.priorityKeywords || [], row.keywords),
+    textTermOverlapScore(retrievalQuery.priorityKeywords || [], text)
+  );
+  const targetText = [retrievalQuery.targetRole, retrievalQuery.roleFamily, retrievalQuery.queryText].filter(Boolean).join(" ");
+  const inferredScore = overlapScore([inferRoleFamilyFromJobTitle(targetText)].filter(Boolean), row.role_family);
+  return Math.min(1, 0.55 * roleScore + 0.35 * keywordScore + 0.25 * inferredScore);
+}
+
+function hasInsiderRoleFocusMismatch(row = {}, retrievalQuery = {}) {
+  const insight = String(row.I_insight || "").toLowerCase();
+  const target = `${retrievalQuery.targetRole || ""} ${retrievalQuery.roleFamily || ""}`.toLowerCase();
+  const targetIsData = /\b(data|business|bi|analytics|analyst)\b|数据|分析/.test(target);
+  const targetIsTech = /\b(software|swe|sde|backend|frontend|machine learning|ml|mle|ai engineer)\b|软件|后端|前端|机器学习/.test(target);
+  const targetIsFinance = /\b(account|audit|tax|finance|financial|fp&a)\b|会计|审计|财务|金融/.test(target);
+
+  if (targetIsData && /\b(solution engineer|software engineer|backend engineer|frontend engineer|full stack|sde|mle|machine learning engineer|hardware engineer)\b|后端工程师|前端工程师|硬件工程师|解决方案工程师|全栈|轉碼|转码|技术选型|技術選型/.test(insight)) return true;
+  if (targetIsTech && /\b(cpa|audit|tax|accounting|financial analyst|marketing analyst|statistician)\b|审计|税务|会计|统计师/.test(insight)) return true;
+  if (targetIsFinance && /\b(software engineer|backend|frontend|mle|machine learning engineer|ux designer|portfolio)\b|后端|前端|机器学习|作品集/.test(insight)) return true;
+  return false;
+}
+
+function isDisplayableInsiderKnowledge(row = {}, retrievalQuery = {}) {
+  const insight = String(row.I_insight || "").trim();
+  if (insight.length < 35) return false;
+  if (!companyOrIndustryReferenced(row, insight)) return false;
+  if (!KNOWLEDGE_PREFERENCE_PATTERN.test(insight)) return false;
+  if (KNOWLEDGE_ACTION_PATTERN.test(insight)) return false;
+  if (/\bhr\b|招聘方/i.test(insight) && !KNOWLEDGE_COMPANY_PATTERN.test(insight)) return false;
+  if (hasInsiderRoleFocusMismatch(row, retrievalQuery)) return false;
+  if (hasCrossRoleUnsafeAdvice(row, retrievalQuery.roleFamily, retrievalQuery.targetRole)) return false;
+  if (hasConflictingRoleExamples(row, retrievalQuery)) return false;
+  if ((retrievalQuery.targetRole || retrievalQuery.roleFamily) && insiderKnowledgeRelevance(row, retrievalQuery) < 0.12) return false;
+  return true;
+}
+
+function buildInsiderKnowledgeTip(row = {}, retrievalQuery = {}) {
+  const insight = cleanAndTruncate(row.I_insight || "", 280);
+  const relevance = insiderKnowledgeRelevance(row, retrievalQuery);
+  const targetRole = retrievalQuery.targetRole || retrievalQuery.roleFamily || "你的目标岗位";
+  const matchedKeywords = [...new Set(splitCsv(retrievalQuery.priorityKeywords))]
+    .filter((term) => term && insight.toLowerCase().includes(String(term).toLowerCase()))
+    .slice(0, 3);
+  const relevanceReason = matchedKeywords.length
+    ? `与你申请的 ${targetRole} 方向相关，尤其对应 ${matchedKeywords.join(" / ")}。`
+    : `与你申请的 ${targetRole} 方向相关，可作为理解目标公司筛选逻辑的补充。`;
+  return {
+    company: row.mentor_company,
+    companyLogo: resolveCompanyLogo(row.mentor_company),
+    industryLabel: row.L1 || row.topic || "",
+    knowledgeTitle: knowledgeTitleForTip(row, insight),
+    insight,
+    relevanceReason,
+    sourceMentorName: row.mentor_name || "",
+    sourceMentorTitle: row.mentor_title || "",
+    sourceTopic: row.topic || row.L1 || "",
+    sourceAdviceId: row.chunk_id || (row.id ? `seg_${row.id}` : ""),
+    knowledgeType: insiderKnowledgeType(insight),
+    score: Number(Math.min(1, relevance + Number(row.mentor_quality_score || 0) * 0.25).toFixed(3)),
+  };
+}
+
+// ── Company / Industry Knowledge Tips ─────────────────────────────────────────
+// Surfaces knowledge-style company or industry hiring patterns. These are not
+// mentor advice items and should not be rendered as HR/mentor perspectives.
+async function retrieveInsiderTips(options = {}) {
+  const { limit = 4 } = options;
+  const retrievalQuery = getInsiderRetrievalQuery(options);
+  const pool = db.getPool();
+  const knowledgeKeywords = [
+    "偏好", "看重", "重视", "倾向", "喜欢", "要求", "门槛", "筛选",
+    "录用", "招募", "招聘", "面试", "考察", "评估", "人才", "候选人",
+    "画像", "标准", "prefer", "preferred", "qualification", "look for",
+    "value", "hiring", "interview", "screening", "candidate", "talent",
+  ];
+
+  const sql = `
+    SELECT
+      id, chunk_id, mentor_name, mentor_title, mentor_company, topic, "L1", "L2",
+      "P_mentor", "A_action", "I_insight", "H_hook", "E_example",
+      role_family, target_roles, keywords, retrieval_text, advice_card_title,
+      user_problem_summary, action_summary, mentor_quality_score
+    FROM segments
+    WHERE
+      mentor_company IS NOT NULL AND mentor_company != ''
+      AND mentor_quality_score >= 0.6
+      AND "I_insight" IS NOT NULL
+      AND LENGTH("I_insight") > 34
+      AND LOWER("I_insight") LIKE ANY($1::text[])
+    ORDER BY mentor_quality_score DESC
+    LIMIT 160
+  `;
+
+  let rows;
+  try {
+    const result = await pool.query(sql, [knowledgeKeywords.map((kw) => `%${kw.toLowerCase()}%`)]);
+    rows = result.rows;
+  } catch (err) {
+    console.error("[insider-tips] query error:", err.message);
+    return [];
+  }
+
+  const tips = rows
+    .filter((row) => isDisplayableInsiderKnowledge(row, retrievalQuery))
+    .map((row) => buildInsiderKnowledgeTip(row, retrievalQuery))
+    .filter((tip) => tip.insight.length > 30 && tip.score >= 0.18)
+    .sort((a, b) => b.score - a.score);
+
+  const seenCompanies = new Set();
+  const selected = [];
+  for (const tip of tips) {
+    const companyKey = normalizeTerm(tip.company || tip.industryLabel || "");
+    if (companyKey && seenCompanies.has(companyKey)) continue;
+    if (companyKey) seenCompanies.add(companyKey);
+    selected.push(tip);
+    if (selected.length >= limit) break;
+  }
+  return selected;
+}
+
 module.exports = {
   FALLBACK_FREE_ADVICE,
   ACCOUNTING_FALLBACK_FREE_ADVICE,
@@ -7433,6 +7796,9 @@ module.exports = {
   retrieveStrictCandidates,
   retrieveFallbackCandidates,
   retrieveMentorAdvice,
+  retrieveInsiderTips,
+  isDisplayableInsiderKnowledge,
+  buildInsiderKnowledgeTip,
   selectFreeAdvice,
   selectPaidAdvice,
   cleanAndTruncate,
@@ -7460,4 +7826,5 @@ module.exports = {
   formatAdviceCard,
   formatAdviceCardForPublic,
   truncateAtSentence,
+  _resolveCompanyLogo: resolveCompanyLogo,
 };

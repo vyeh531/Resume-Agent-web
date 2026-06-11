@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="240" viewBox="0 0 640 240" role="img" aria-label="CA Solutions LLC logo">
+  <rect width="640" height="240" rx="32" fill="#f7f2e8"/>
+  <rect x="28" y="28" width="584" height="184" rx="24" fill="#ffffff" opacity="0.72"/>
+  <circle cx="104" cy="120" r="48" fill="#d9a15f"/>
+  <text x="104" y="134" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="800" fill="#1f3d36">CSL</text>
+  <text x="176" y="132" font-family="Arial, Helvetica, sans-serif" font-size="40" font-weight="800" fill="#1f3d36">CA Solutions LLC</text>
+</svg>

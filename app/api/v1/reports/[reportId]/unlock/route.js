@@ -1,5 +1,6 @@
 import db from '../../../../../../database';
 import { formatPremiumUnlockedReport } from '../../../../../../src/ats/report-formatter';
+import { retrieveInsiderTips } from '../../../../../../services/mentorAdviceRetrieval';
 
 function reportTokenFromRequest(request) {
   return (
@@ -9,8 +10,9 @@ function reportTokenFromRequest(request) {
   );
 }
 
-export async function POST(request, { params }) {
+export async function POST(request, { params: paramsPromise }) {
   try {
+    const params = await paramsPromise;
     // Also support token from request body
     let bodyToken = null;
     try {
@@ -47,6 +49,12 @@ export async function POST(request, { params }) {
           detailedSuggestions: premiumReport?.detailedSuggestions || fallbackPremiumReport.detailedSuggestions || null,
         }
       : premiumReport;
+    if (!Array.isArray(hydratedPremiumReport.companyInsiderTips)) {
+      hydratedPremiumReport.companyInsiderTips = await retrieveInsiderTips({
+        internalAtsResult: unlock.report.internalAtsResult,
+        limit: 4,
+      });
+    }
     return Response.json({
       success: true,
       reportId: params.reportId,
