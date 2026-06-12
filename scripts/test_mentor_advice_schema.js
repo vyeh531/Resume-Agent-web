@@ -386,6 +386,138 @@ test("HR perspective uses approved DB display field before runtime fallback", ()
   assert.strictEqual(text, "我会先看这条经历有没有结果；如果只有协助和参与，筛选时会被当成弱信号。");
 });
 
+test("game designer HR perspective rejects hardware and medical-device drift", () => {
+  const context = {
+    internalAtsResult: {
+      jobTitle: "Game Designer",
+      profile: { targetRole: "Game Designer", roleFamily: "design_creative" },
+    },
+  };
+  const hr = humanizeHrPerspective({
+    title: "Keep the latest relevant projects",
+    canonicalActionFamily: "experience_evidence",
+    currentDiagnosis: "The resume lacks game mechanics, level design, and player experience evidence.",
+    actionSummary: "Delete weakly relevant entries and keep the projects most aligned to game design.",
+    HR_os: "硬件或医疗器械岗位我会找 test、debug、prototype 证据；只有理论分析时，匹配判断会保守。",
+  }, context);
+  assert.ok(!/硬件|医疗器械|test|debug|prototype|模拟电路|analog|circuit/i.test(hr), hr);
+  assert.ok(/作品|Demo|链接|产出|入口/i.test(hr), hr);
+});
+
+test("approved HR perspective is still sanitized when it conflicts with game designer target", () => {
+  const context = {
+    internalAtsResult: {
+      jobTitle: "Game Designer",
+      profile: { targetRole: "Game Designer", roleFamily: "design_creative" },
+    },
+  };
+  const hr = humanizeHrPerspective({
+    humanized_hr_perspective: "硬件或医疗器械岗位我会找 test、debug、prototype 证据；只有理论分析时，匹配判断会保守。",
+    perspective_review_status: "approved",
+    HR_os: "old HR copy",
+  }, context);
+  assert.ok(!/硬件|医疗器械|test|debug|prototype|模拟电路|analog|circuit/i.test(hr), hr);
+  assert.ok(/作品|Demo|链接|产出|入口/i.test(hr), hr);
+});
+
+test("hardware and medical-device perspectives are role-locked for mentor and HR text", () => {
+  const nonHardwareContext = {
+    internalAtsResult: {
+      jobTitle: "Software Engineer",
+      profile: { targetRole: "Software Engineer", roleFamily: "software_engineer" },
+    },
+  };
+  const hardwareContext = {
+    internalAtsResult: {
+      jobTitle: "Hardware Engineer",
+      profile: { targetRole: "Hardware Engineer", roleFamily: "hardware_electrical" },
+    },
+  };
+  const medicalDeviceContext = {
+    internalAtsResult: {
+      jobTitle: "Medical Device Engineer",
+      profile: { targetRole: "Medical Device Engineer", roleFamily: "hardware_electrical" },
+    },
+  };
+  const item = {
+    canonicalActionFamily: "experience_evidence",
+    I_insight: "硬件或医疗器械岗位很看实操。test、debug、prototype 这些动手证据要写进经历里，别让它看起来只有理论分析。",
+    HR_os: "硬件或医疗器械岗位我会找 test、debug、prototype 证据；只有理论分析时，匹配判断会保守。",
+  };
+  const nonHardwareMentor = humanizeMentorInsight(item, nonHardwareContext);
+  const nonHardwareHr = humanizeHrPerspective(item, nonHardwareContext);
+  assert.ok(!/硬件|医疗器械|test|debug|prototype|模拟电路|analog circuit|medical device/i.test(nonHardwareMentor), nonHardwareMentor);
+  assert.ok(!/硬件|医疗器械|test|debug|prototype|模拟电路|analog circuit|medical device/i.test(nonHardwareHr), nonHardwareHr);
+
+  const hardwareMentor = humanizeMentorInsight(item, hardwareContext);
+  const hardwareHr = humanizeHrPerspective(item, hardwareContext);
+  assert.ok(/硬件|test|debug|prototype/i.test(hardwareMentor), hardwareMentor);
+  assert.ok(/硬件|test|debug|prototype/i.test(hardwareHr), hardwareHr);
+
+  const medicalDeviceMentor = humanizeMentorInsight(item, medicalDeviceContext);
+  const medicalDeviceHr = humanizeHrPerspective(item, medicalDeviceContext);
+  assert.ok(/医疗器械|test|debug|prototype|硬件/i.test(medicalDeviceMentor), medicalDeviceMentor);
+  assert.ok(/医疗器械|test|debug|prototype|硬件/i.test(medicalDeviceHr), medicalDeviceHr);
+});
+
+test("humanized perspectives select raw or generalized fields by display mode", () => {
+  const item = {
+    canonicalActionFamily: "experience_evidence",
+    perspective_review_status: "approved",
+    humanized_mentor_insight_raw: "Hardware roles can keep test, debug, and prototype evidence when the target role matches.",
+    humanized_hr_perspective_raw: "For hardware roles I look for test, debug, and prototype evidence.",
+    humanized_mentor_insight_generalized: "Write the experience around task, method, result, and verifiable evidence.",
+    humanized_hr_perspective_generalized: "I look for a clear task, method, and result before deciding whether to continue.",
+    humanized_mentor_insight: "Legacy raw text should not be used in generalized mode.",
+    humanized_hr_perspective: "Legacy HR raw text should not be used in generalized mode.",
+  };
+  const rawContext = {
+    internalAtsResult: {
+      jobTitle: "Hardware Engineer",
+      profile: { targetRole: "Hardware Engineer", roleFamily: "hardware_electrical" },
+    },
+  };
+  const generalizedContext = {
+    ...rawContext,
+    useGeneralizedPerspective: true,
+  };
+
+  const rawMentor = humanizeMentorInsight(item, rawContext);
+  const rawHr = humanizeHrPerspective(item, rawContext);
+  const generalizedMentor = humanizeMentorInsight(item, generalizedContext);
+  const generalizedHr = humanizeHrPerspective(item, generalizedContext);
+
+  assert.ok(/Hardware roles|test, debug, and prototype/.test(rawMentor), rawMentor);
+  assert.ok(/hardware roles|test, debug, and prototype/i.test(rawHr), rawHr);
+  assert.ok(/task, method, result/.test(generalizedMentor), generalizedMentor);
+  assert.ok(/task, method, and result/.test(generalizedHr), generalizedHr);
+  assert.ok(!/Legacy raw|Hardware roles|prototype/.test(generalizedMentor), generalizedMentor);
+  assert.ok(!/Legacy HR raw|hardware roles|prototype/i.test(generalizedHr), generalizedHr);
+});
+
+test("split fields prevent fallback to legacy case-specific humanized text", () => {
+  const item = {
+    canonicalActionFamily: "experience_evidence",
+    perspective_review_status: "approved",
+    humanized_mentor_insight_raw: "",
+    humanized_hr_perspective_raw: "",
+    humanized_mentor_insight_generalized: "Write the experience around task, method, result, and verifiable evidence.",
+    humanized_hr_perspective_generalized: "I look for a clear task, method, and result before deciding whether to continue.",
+    humanized_mentor_insight: "Alpha Research and VADER should never leak after split fields are active.",
+    humanized_hr_perspective: "I will ask about Alpha Research, VADER, and MACD.",
+  };
+  const context = {
+    internalAtsResult: {
+      jobTitle: "Data Analyst",
+      profile: { targetRole: "Data Analyst", roleFamily: "data_analyst" },
+    },
+  };
+  const mentor = humanizeMentorInsight(item, context);
+  const hr = humanizeHrPerspective(item, context);
+  assert.ok(!/Alpha Research|VADER|MACD/i.test(mentor), mentor);
+  assert.ok(!/Alpha Research|VADER|MACD/i.test(hr), hr);
+});
+
 test("unapproved DB display field falls back to runtime tone", () => {
   const text = humanizeMentorInsight({
     humanized_mentor_insight: "待审核文案不该直接展示",

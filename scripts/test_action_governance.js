@@ -244,6 +244,40 @@ test("role-specific generalized fallback also suppresses raw mentor and HR persp
   assert.ok(!/Risk Consulting|Quantitative Risk|RCSA|internal control|control framework|governance|regulatory compliance/i.test(rendered), rendered);
 });
 
+test("generalized fallback ignores approved raw mentor and HR perspectives", () => {
+  const bucket = {
+    cards: [{
+      adviceId: "seg_hardware_approved_generalized",
+      adviceScope: "resume_edit",
+      adviceIntent: "experience_evidence",
+      action_specificity: "role_specific",
+      display_action_mode: "grounded_raw",
+      activation_role_family: "hardware_electrical",
+      generalized_action: "Pick the most relevant experience and rewrite it around task, method, and result evidence for the target role.",
+      canonical_action_family: "experience_evidence",
+      action_depth: "evidence",
+      relatedProblemTags: ["weak_experience_keyword_evidence"],
+      A_action: "For hardware roles, add PCB, circuit design, and debug experience.",
+      I_insight: "Hardware or medical-device roles care about hands-on proof. Add test, debug, and prototype evidence.",
+      HR_os: "For hardware or medical-device roles I look for test, debug, and prototype evidence.",
+      humanized_mentor_insight: "Hardware or medical-device roles care about hands-on proof. Add test, debug, and prototype evidence.",
+      humanized_hr_perspective: "For hardware or medical-device roles I look for test, debug, and prototype evidence.",
+      perspective_review_status: "approved",
+    }],
+  };
+  const [item] = selectTopAdviceForMentor(
+    bucket,
+    [{ tag: "weak_experience_keyword_evidence", severity: "high" }],
+    1,
+    new Set(),
+    { resumeText: "Software Engineer resume.", jdText: "Backend services and APIs.", targetRole: "Software Engineer" }
+  );
+  const rendered = [item.action, item.mentorLens, item.reason, item.hrPerspective].join(" ");
+  assert.strictEqual(item.actionDisplayModeUsed, "generalized");
+  assert.ok(!/hardware|medical-device|medical device|PCB|circuit|test|debug|prototype/i.test(rendered), rendered);
+  assert.ok(/target role|JD|keyword|ä»»åŠ¡|æ–¹æ³•|ç»“æžœ|ç›®æ ‡å²—ä½|å…³é”®è¯/i.test(rendered), rendered);
+});
+
 test("family and depth inference are stable for common actions", () => {
   const card = { actionSummary: "Rewrite Summary to include the exact target job title and strongest role fit evidence." };
   assert.strictEqual(canonicalActionFamilyOf(card), "summary_positioning");

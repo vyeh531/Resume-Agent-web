@@ -126,7 +126,7 @@ export default function ReportPage() {
       <div className="page">
         <div className="brandbar">
           <div className="brand">
-            <img src="/logo/MentorX.png" alt="MentorX 蔓藤教育" className="brand-img" />
+            <img src="/logo/logo%20banner_no_bg.png" alt="MentorX 蔓藤教育" className="brand-img" />
           </div>
           <div className="brand-meta" style={{fontSize:'10px',letterSpacing:'.08em'}}>完整报告</div>
         </div>

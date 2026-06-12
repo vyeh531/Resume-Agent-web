@@ -2058,7 +2058,7 @@ function buildAiRewritePdfElement() {
   el.className = "ai-rewrite-pdf";
   el.innerHTML = `
     <div class="ai-pdf-brand">
-      <img src="/logo/MentorX.png" alt="MentorX">
+      <img src="/logo/logo%20banner_no_bg.png" alt="MentorX">
       <div class="ai-pdf-kicker">AI RESUME REWRITE PROMPT PACK</div>
     </div>
     <h1>MentorX AI 简历改写指令包</h1>

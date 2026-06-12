@@ -10,6 +10,10 @@ const APPLY = process.argv.includes("--apply");
 const COLUMNS = [
   ["humanized_mentor_insight", "text"],
   ["humanized_hr_perspective", "text"],
+  ["humanized_mentor_insight_raw", "text"],
+  ["humanized_hr_perspective_raw", "text"],
+  ["humanized_mentor_insight_generalized", "text"],
+  ["humanized_hr_perspective_generalized", "text"],
   ["perspective_review_status", "text"],
   ["perspective_source", "text"],
   ["perspective_confidence", "numeric"],

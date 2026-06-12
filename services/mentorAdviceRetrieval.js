@@ -448,7 +448,8 @@ const CROSS_ROLE_UNSAFE_PATTERNS_BY_GROUP = {
   design_creative: [
     /\b(accounting|accountant|audit|gaap|financial modeling|valuation)\b/i,
     /\b(machine learning engineer|ml engineer|mle|pytorch|tensorflow|neural network|deep learning)\b/i,
-    /\b(hardware engineer|fpga|pcb|rtl|verilog)\b/i,
+    /\b(hardware|hardware engineer|electrical|circuit|analog|simulation circuit|medical device|medical devices|debug|prototype|fpga|pcb|rtl|verilog)\b/i,
+    /硬件|硬體|医疗器械|醫療器械|模拟电路|類比電路|电路|電路|原型测试|调试|調試/i,
   ],
   engineering_hardware: [
     /\b(accounting|accountant|audit|gaap|financial analyst|valuation)\b/i,
@@ -479,6 +480,32 @@ const CROSS_ROLE_UNSAFE_PATTERNS_BY_GROUP = {
     /\b(accounting|gaap|pytorch|tensorflow|hardware engineer|fpga|clinical trial)\b/i,
   ],
 };
+
+const ROLE_LOCKED_UNSAFE_RULES = [
+  {
+    allowedCareerGroups: ["engineering_hardware"],
+    patterns: [
+      /\b(hardware engineer|electrical engineer|circuit design|logic design|analog circuit|simulation circuit|pcb|fpga|rtl|verilog|vlsi|semiconductor|tape out|adc comparator|board-level|bring up)\b/i,
+      /硬件|硬體|硬件工程|硬體工程|模拟电路|類比電路|电路设计|電路設計|板级测试|板級測試|芯片|晶片|嵌入式|软硬件调试|軟硬體調試/i,
+    ],
+  },
+  {
+    allowedCareerGroups: ["engineering_hardware", "healthcare_life_sciences"],
+    patterns: [
+      /\b(medical device|medical devices|medical equipment|biomedical device|test\/debug\/prototype)\b/i,
+      /\b(hardware|medical device|medical devices).{0,50}\b(test|debug|prototype)\b/i,
+      /\b(test|debug|prototype).{0,50}\b(hardware|medical device|medical devices)\b/i,
+      /医疗器械|醫療器械|医疗设备|醫療設備|医工|醫工|硬件或医疗器械|硬體或醫療器械/i,
+    ],
+  },
+  {
+    allowedCareerGroups: ["healthcare_life_sciences"],
+    patterns: [
+      /\b(clinical trial|patient|medical chart|medical record|healthcare provider|pharma|biotech)\b/i,
+      /临床|臨床|病患|患者|病历|病歷|医疗记录|醫療紀錄|药企|藥企|生物医药|生物醫藥/i,
+    ],
+  },
+];
 const ML_DA_DIRECTION_PATTERNS = [
   /\b(da|ba)\s*(方向|岗位|职位|role|jd|version|版本)\b/i,
   /\b(data analyst|business analyst|analytics analyst|bi analyst)\b/i,
@@ -681,6 +708,9 @@ function inferRoleFamilyFromJobTitle(jobTitle) {
   if (/\b(supply chain|logistics|demand planning|inventory|vendor|erp)\b/.test(text)) return "supply_chain_logistics";
   if (/\b(procurement|purchasing|sourcing|supplier|purchase order)\b/.test(text)) return "procurement";
   if (/\b(hr|human resources|recruiter|talent acquisition|people operations|hrbp)\b/.test(text)) return "hr_recruiting";
+  if (/\b(game designer|game design|level designer|level design|ux designer|ui designer|product designer|graphic designer|visual designer|designer|animation|animator|illustrator)\b/.test(text)) {
+    return "design_creative";
+  }
   if (/\b(business|operations|strategy)\b/.test(text)) return "business";
   if (/\b(software|swe|sde|backend|frontend|full stack|developer|engineer)\b/.test(text)) {
     return "software_engineer";
@@ -757,6 +787,13 @@ function rowText(row) {
     row.generalized_action, row.activation_keywords, row.grounding_terms, row.canonical_action_family,
     row.title, row.problemSummary, row.actionSummary, row.currentDiagnosis, row.action,
     row.mentorInsight, row.example, row.hrPerspective, row.roleFamily, row.targetRoles,
+    row.humanized_hr_perspective, row.humanizedHrPerspective, row.recruiterPerspective,
+    row.recruiter_perspective, row.hrPov, row.humanized_mentor_insight,
+    row.humanized_mentor_insight_raw, row.humanizedMentorInsightRaw,
+    row.humanized_hr_perspective_raw, row.humanizedHrPerspectiveRaw,
+    row.humanized_mentor_insight_generalized, row.humanizedMentorInsightGeneralized,
+    row.humanized_hr_perspective_generalized, row.humanizedHrPerspectiveGeneralized,
+    row.humanizedMentorInsight, row.reason, row.mentorLens,
     row.mentorName, row.mentor_name, row.company, row.mentor_company, row.mentorTitle,
     row.mentor_title
   ].filter(Boolean).join(" ").toLowerCase();
@@ -1112,6 +1149,14 @@ function hasMlDaDirectionalAdvice(row) {
   return ML_DA_DIRECTION_PATTERNS.some((pattern) => pattern.test(text));
 }
 
+function hasRoleLockedUnsafeAdvice(text = "", userCareerGroup = "") {
+  if (!userCareerGroup) return false;
+  return ROLE_LOCKED_UNSAFE_RULES.some((rule) => {
+    if (rule.allowedCareerGroups.includes(userCareerGroup)) return false;
+    return rule.patterns.some((pattern) => pattern.test(text));
+  });
+}
+
 function hasCrossRoleUnsafeAdvice(row, userRoleFamily = "", userTargetRole = "") {
   const userFamily = normalizeTerm(userRoleFamily || inferRoleFamilyFromJobTitle(userTargetRole));
   const userCareerGroup = careerGroupOf(userFamily) || careerGroupOf(userTargetRole);
@@ -1125,6 +1170,7 @@ function hasCrossRoleUnsafeAdvice(row, userRoleFamily = "", userTargetRole = "")
   const rowCareerGroups = careerGroupsForRow(row);
   const roleSpecific = hasRoleSpecificSignal(row);
   if (rowCareerGroups.length && !rowCareerGroups.includes(userCareerGroup) && roleSpecific) return true;
+  if (hasRoleLockedUnsafeAdvice(text, userCareerGroup)) return true;
 
   const unsafePatterns = CROSS_ROLE_UNSAFE_PATTERNS_BY_GROUP[userCareerGroup] || [];
   return unsafePatterns.some((pattern) => pattern.test(text));
@@ -1675,6 +1721,15 @@ function isMlToneContext(context = {}) {
 function isApprovedPerspectiveSafeForContext(text = "", item = {}, context = {}) {
   if (!hasRuntimeTargetContext(context)) return true;
   const value = String(text || "");
+  const { roleFamily, targetRole } = contextRoleForPerspective(context);
+  if (hasCrossRoleUnsafeAdvice({
+    ...item,
+    HR_os: value,
+    hrPerspective: value,
+    humanized_hr_perspective: value,
+  }, roleFamily, targetRole)) {
+    return false;
+  }
   if (/\b(da|data analyst|data analytics|bi analyst|business intelligence|business analyst)\b|DA 简历|DA 经历|DA 实习|DA bullet|DA工作|数据分析岗位|数据岗/i.test(value) && !isDataToneContext(context)) {
     return false;
   }
@@ -2967,12 +3022,50 @@ function detailAwareHrTemplate(family, rawSource = "", item = {}, context = {}) 
   return "";
 }
 
+function hasPerspectiveSplitFields(item = {}, role = "mentor") {
+  if (role === "mentor") {
+    return Boolean(item.humanizedMentorInsightRaw ||
+      item.humanized_mentor_insight_raw ||
+      item.humanizedMentorInsightGeneralized ||
+      item.humanized_mentor_insight_generalized);
+  }
+  return Boolean(item.humanizedHrPerspectiveRaw ||
+    item.humanized_hr_perspective_raw ||
+    item.humanizedHrPerspectiveGeneralized ||
+    item.humanized_hr_perspective_generalized);
+}
+
+function dbHumanizedPerspectiveForMode(item = {}, context = {}, role = "mentor") {
+  const generalized = Boolean(context.useGeneralizedPerspective);
+  const status = item.perspectiveReviewStatus || item.perspective_review_status;
+  const splitFieldsPresent = hasPerspectiveSplitFields(item, role);
+  if (role === "mentor") {
+    const modeText = generalized
+      ? (item.humanizedMentorInsightGeneralized || item.humanized_mentor_insight_generalized)
+      : (item.humanizedMentorInsightRaw || item.humanized_mentor_insight_raw ||
+          (splitFieldsPresent ? "" :
+          item.humanizedMentorInsight || item.humanized_mentor_insight));
+    return approvedHumanized(modeText, status);
+  }
+  const modeText = generalized
+    ? (item.humanizedHrPerspectiveGeneralized || item.humanized_hr_perspective_generalized)
+    : (item.humanizedHrPerspectiveRaw || item.humanized_hr_perspective_raw ||
+        (splitFieldsPresent ? "" :
+        item.humanizedHrPerspective || item.humanized_hr_perspective));
+  return approvedHumanized(modeText, status);
+}
+
 function humanizeMentorInsight(item = {}, context = {}) {
-  const dbText = approvedHumanized(
-    item.humanizedMentorInsight || item.humanized_mentor_insight,
-    item.perspectiveReviewStatus || item.perspective_review_status
-  );
-  if (dbText && isApprovedPerspectiveSafeForContext(dbText, item, context)) return dbText;
+  const dbText = dbHumanizedPerspectiveForMode(item, context, "mentor");
+  if (dbText && isApprovedPerspectiveSafeForContext(dbText, item, context)) {
+    return finalizePerspectiveForContext(dbText, item, context, "mentor");
+  }
+  if (dbText) {
+    return finalizePerspectiveForContext("", item, context, "mentor");
+  }
+  if (hasPerspectiveSplitFields(item, "mentor")) {
+    return finalizePerspectiveForContext("", item, context, "mentor");
+  }
 
   const rawSource = item.mentorInsight || item.I_insight || item.reason || item.mentorLens || item.P_mentor || "";
   const source = decontextualizeAdviceText(
@@ -2984,22 +3077,27 @@ function humanizeMentorInsight(item = {}, context = {}) {
   const template = detailAwareMentorTemplate(family, rawSource, item, context) ||
     templates[templateIndexForItem(item, templates.length)];
   const concrete = firstMeaningfulSentence(source, 72);
-  if (!concrete) return template;
+  if (!concrete) return finalizePerspectiveForContext(template, item, context, "mentor");
   if ((isReportLikePerspective(rawSource) || isReportLikePerspective(source)) && !isConversationalMentorText(concrete)) {
-    return template;
+    return finalizePerspectiveForContext(template, item, context, "mentor");
   }
   if (isConversationalMentorText(concrete)) {
-    return cleanAndTruncate(concrete, 120, template);
+    return finalizePerspectiveForContext(cleanAndTruncate(concrete, 120, template), item, context, "mentor");
   }
-  return template;
+  return finalizePerspectiveForContext(template, item, context, "mentor");
 }
 
 function humanizeHrPerspective(item = {}, context = {}) {
-  const dbText = approvedHumanized(
-    item.humanizedHrPerspective || item.humanized_hr_perspective,
-    item.perspectiveReviewStatus || item.perspective_review_status
-  );
-  if (dbText && isApprovedPerspectiveSafeForContext(dbText, item, context)) return dbText;
+  const dbText = dbHumanizedPerspectiveForMode(item, context, "hr");
+  if (dbText && isApprovedPerspectiveSafeForContext(dbText, item, context)) {
+    return finalizeHrPerspectiveForContext(dbText, item, context);
+  }
+  if (dbText) {
+    return finalizeHrPerspectiveForContext("", item, context);
+  }
+  if (hasPerspectiveSplitFields(item, "hr")) {
+    return finalizeHrPerspectiveForContext("", item, context);
+  }
 
   const rawSource = [
     item.hrPerspective || item.HR_os || item.hrPov || item.recruiterPerspective || item.recruiter_perspective || "",
@@ -3014,13 +3112,68 @@ function humanizeHrPerspective(item = {}, context = {}) {
   const detailTemplate = detailAwareHrTemplate(family, rawSource, item, context);
   const template = detailTemplate ||
     templates[templateIndexForItem(item, templates.length)];
-  if (detailTemplate) return detailTemplate;
-  if (!source) return template;
+  if (detailTemplate) return finalizeHrPerspectiveForContext(detailTemplate, item, context);
+  if (!source) return finalizeHrPerspectiveForContext(template, item, context);
   const concise = firstMeaningfulSentence(source, 82);
   if (/^(我|这|如果|一条|关键词|排版|可验证|经验)/.test(concise) && concise.length <= 100) {
-    return cleanAndTruncate(concise, 110, template);
+    return finalizeHrPerspectiveForContext(cleanAndTruncate(concise, 110, template), item, context);
   }
-  return template;
+  return finalizeHrPerspectiveForContext(template, item, context);
+}
+
+function contextRoleForPerspective(context = {}) {
+  const internal = context.internalAtsResult || context || {};
+  const profile = internal.profile || {};
+  return {
+    roleFamily: profile.roleFamily || internal.roleFamily || "",
+    targetRole: profile.targetRole || internal.jobTitle || internal.targetRole || "",
+  };
+}
+
+function fallbackHrPerspectiveForContext(item = {}, context = {}) {
+  return fallbackPerspectiveForContext(item, context, "hr");
+}
+
+function fallbackPerspectiveForContext(item = {}, context = {}, role = "hr") {
+  const { roleFamily, targetRole } = contextRoleForPerspective(context);
+  const careerGroup = careerGroupOf(roleFamily) || careerGroupOf(targetRole);
+  const family = perspectiveFamilyOf(item);
+  const toneTemplates = role === "mentor" ? MENTOR_TONE_TEMPLATES : HR_TONE_TEMPLATES;
+  const pool = careerGroup === "design_creative"
+    ? toneTemplates.portfolio
+    : (toneTemplates[family] || toneTemplates.general);
+  return pool[templateIndexForItem(item, pool.length)];
+}
+
+function isHrPerspectiveUnsafeForContext(text = "", item = {}, context = {}) {
+  return isPerspectiveUnsafeForContext(text, item, context);
+}
+
+function isPerspectiveUnsafeForContext(text = "", item = {}, context = {}) {
+  const { roleFamily, targetRole } = contextRoleForPerspective(context);
+  if (!roleFamily && !targetRole) return false;
+  return hasCrossRoleUnsafeAdvice({
+    ...item,
+    HR_os: text,
+    hrPerspective: text,
+    humanized_hr_perspective: text,
+  }, roleFamily, targetRole);
+}
+
+function finalizeHrPerspectiveForContext(text = "", item = {}, context = {}) {
+  return finalizePerspectiveForContext(text, item, context, "hr");
+}
+
+function finalizePerspectiveForContext(text = "", item = {}, context = {}, role = "hr") {
+  const cleaned = cleanAndTruncate(text, 120, "");
+  if (!cleaned) return fallbackPerspectiveForContext(item, context, role);
+  if (!isPerspectiveUnsafeForContext(cleaned, item, context)) return cleaned;
+  const toneTemplates = role === "mentor" ? MENTOR_TONE_TEMPLATES : HR_TONE_TEMPLATES;
+  return cleanAndTruncate(
+    fallbackPerspectiveForContext(item, context, role),
+    120,
+    toneTemplates.general[0]
+  );
 }
 
 function normalizedPerspectiveKey(value = "") {
@@ -3274,6 +3427,10 @@ function formatAdviceCardForPublic(row, retrievalQuery = {}) {
     titleConfidence: row.title_confidence || null,
     humanizedMentorInsight: row.humanized_mentor_insight || "",
     humanizedHrPerspective: row.humanized_hr_perspective || "",
+    humanizedMentorInsightRaw: row.humanized_mentor_insight_raw || "",
+    humanizedHrPerspectiveRaw: row.humanized_hr_perspective_raw || "",
+    humanizedMentorInsightGeneralized: row.humanized_mentor_insight_generalized || "",
+    humanizedHrPerspectiveGeneralized: row.humanized_hr_perspective_generalized || "",
     perspectiveReviewStatus: row.perspective_review_status || "",
     perspectiveSource: row.perspective_source || "",
     perspectiveConfidence: row.perspective_confidence || null,
@@ -3300,6 +3457,10 @@ function baseSelectSql(where, limit = 500) {
       canonical_title, title_review_status, title_source, title_confidence,
       to_jsonb(segments)->>'humanized_mentor_insight' AS humanized_mentor_insight,
       to_jsonb(segments)->>'humanized_hr_perspective' AS humanized_hr_perspective,
+      to_jsonb(segments)->>'humanized_mentor_insight_raw' AS humanized_mentor_insight_raw,
+      to_jsonb(segments)->>'humanized_hr_perspective_raw' AS humanized_hr_perspective_raw,
+      to_jsonb(segments)->>'humanized_mentor_insight_generalized' AS humanized_mentor_insight_generalized,
+      to_jsonb(segments)->>'humanized_hr_perspective_generalized' AS humanized_hr_perspective_generalized,
       to_jsonb(segments)->>'perspective_review_status' AS perspective_review_status,
       to_jsonb(segments)->>'perspective_source' AS perspective_source,
       NULLIF(to_jsonb(segments)->>'perspective_confidence', '')::numeric AS perspective_confidence
@@ -5345,6 +5506,10 @@ function toAdviceItem(card = {}, targetProblemTags = [], index = 0, includePremi
     titleConfidence: card.titleConfidence || card.title_confidence || null,
     humanizedMentorInsight: card.humanizedMentorInsight || card.humanized_mentor_insight || "",
     humanizedHrPerspective: card.humanizedHrPerspective || card.humanized_hr_perspective || "",
+    humanizedMentorInsightRaw: card.humanizedMentorInsightRaw || card.humanized_mentor_insight_raw || "",
+    humanizedHrPerspectiveRaw: card.humanizedHrPerspectiveRaw || card.humanized_hr_perspective_raw || "",
+    humanizedMentorInsightGeneralized: card.humanizedMentorInsightGeneralized || card.humanized_mentor_insight_generalized || "",
+    humanizedHrPerspectiveGeneralized: card.humanizedHrPerspectiveGeneralized || card.humanized_hr_perspective_generalized || "",
     perspectiveReviewStatus: card.perspectiveReviewStatus || card.perspective_review_status || "",
     perspectiveSource: card.perspectiveSource || card.perspective_source || "",
     perspectiveConfidence: card.perspectiveConfidence || card.perspective_confidence || null,
@@ -6972,23 +7137,13 @@ function perspectiveMatchesFamily(text = "", item = {}) {
 }
 
 /**
- * Return the approved humanized_mentor_insight from the DB if present,
- * bypassing tone templates and family-match checks entirely.
+ * Return the approved humanized mentor insight for the current display mode.
+ * Raw mode may use legacy fields for migration compatibility; generalized mode
+ * must use the explicit generalized field only.
  * Returns "" when absent or not approved.
  */
-function resolvedApprovedDbMentorInsight(item = {}) {
-  const text = cleanAndTruncate(
-    item.humanizedMentorInsight || item.humanized_mentor_insight, 180, ""
-  );
-  if (!text) return "";
-  const status = normalizeTerm(
-    item.perspectiveReviewStatus || item.perspective_review_status || ""
-  );
-  // Empty status = legacy approved rows; explicit "approved" and similar are also trusted.
-  if (!status || ["approved", "auto_classified", "llm_generated", "runtime"].includes(status)) {
-    return text;
-  }
-  return "";
+function resolvedApprovedDbMentorInsight(item = {}, context = {}) {
+  return cleanAndTruncate(dbHumanizedPerspectiveForMode(item, context, "mentor"), 180, "");
 }
 
 function sanitizePerspectiveForDisplay(text = "", item = {}, role = "mentor") {
