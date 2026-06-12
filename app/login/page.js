@@ -30,7 +30,7 @@ export default function LoginPage() {
         .login-tip{background:var(--jade-soft);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 14px;font-size:13px;color:var(--jade);margin-top:22px;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
       `}</style>
 
-      <div className="page">
+      <div className="page login-page">
         <div className="brandbar">
           <div className="brand">
             <img src="/logo/logo%20banner_no_bg.png" alt="MentorX 蔓藤教育" className="brand-img" />
@@ -46,8 +46,13 @@ export default function LoginPage() {
             <span></span>
             <span></span>
           </div>
-          <div className="wechat-icon">微</div>
-          <h1 className="login-title">最后一步，登录领取报告</h1>
+          <div className="wechat-icon" aria-hidden="true">
+            <svg className="wechat-mark" viewBox="0 0 64 56" focusable="false">
+              <path d="M27.3 6C14.8 6 4.7 14.1 4.7 24.1c0 5.7 3.3 10.8 8.4 14.1L10.9 45l7.7-4c2.6.8 5.5 1.2 8.6 1.2 12.5 0 22.6-8.1 22.6-18.1C49.9 14.1 39.8 6 27.3 6Zm-7.8 12.9c-1.5 0-2.7-1.1-2.7-2.4s1.2-2.4 2.7-2.4 2.7 1.1 2.7 2.4-1.2 2.4-2.7 2.4Zm15.7 0c-1.5 0-2.7-1.1-2.7-2.4s1.2-2.4 2.7-2.4 2.7 1.1 2.7 2.4-1.2 2.4-2.7 2.4Z" fill="currentColor"/>
+              <path d="M60 34.1c0-8.6-8.7-15.6-19.5-15.6S21 25.5 21 34.1s8.7 15.6 19.5 15.6c2.6 0 5.1-.4 7.4-1.1l6.6 3.4-1.9-5.8c4.5-2.8 7.4-7.2 7.4-12.1Zm-26.1-4.6c-1.2 0-2.2-.9-2.2-2s1-2 2.2-2 2.2.9 2.2 2-1 2-2.2 2Zm13.4 0c-1.2 0-2.2-.9-2.2-2s1-2 2.2-2 2.2.9 2.2 2-1 2-2.2 2Z" fill="currentColor" opacity=".92"/>
+            </svg>
+          </div>
+          <h1 className="login-title">登录领取报告</h1>
           <p className="login-sub">分析已在后台开始，登录后即可查看结果</p>
 
           <div className="login-resume-mini" id="resumeMini">
@@ -71,7 +76,13 @@ export default function LoginPage() {
           </div>
 
           <button className="btn btn-jade btn-block" id="wechatLoginButton" type="button">
-            <span style={{fontSize:'18px'}}>微</span> 微信一键登录
+            <span className="wechat-button-icon" aria-hidden="true">
+              <svg viewBox="0 0 64 56" focusable="false">
+                <path d="M27.3 6C14.8 6 4.7 14.1 4.7 24.1c0 5.7 3.3 10.8 8.4 14.1L10.9 45l7.7-4c2.6.8 5.5 1.2 8.6 1.2 12.5 0 22.6-8.1 22.6-18.1C49.9 14.1 39.8 6 27.3 6Zm-7.8 12.9c-1.5 0-2.7-1.1-2.7-2.4s1.2-2.4 2.7-2.4 2.7 1.1 2.7 2.4-1.2 2.4-2.7 2.4Zm15.7 0c-1.5 0-2.7-1.1-2.7-2.4s1.2-2.4 2.7-2.4 2.7 1.1 2.7 2.4-1.2 2.4-2.7 2.4Z" fill="currentColor"/>
+                <path d="M60 34.1c0-8.6-8.7-15.6-19.5-15.6S21 25.5 21 34.1s8.7 15.6 19.5 15.6c2.6 0 5.1-.4 7.4-1.1l6.6 3.4-1.9-5.8c4.5-2.8 7.4-7.2 7.4-12.1Zm-26.1-4.6c-1.2 0-2.2-.9-2.2-2s1-2 2.2-2 2.2.9 2.2 2-1 2-2.2 2Zm13.4 0c-1.2 0-2.2-.9-2.2-2s1-2 2.2-2 2.2.9 2.2 2-1 2-2.2 2Z" fill="currentColor" opacity=".92"/>
+              </svg>
+            </span>
+            微信一键登录
           </button>
 
           <div className="login-tip">

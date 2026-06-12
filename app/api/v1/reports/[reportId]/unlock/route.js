@@ -49,7 +49,7 @@ export async function POST(request, { params: paramsPromise }) {
           detailedSuggestions: premiumReport?.detailedSuggestions || fallbackPremiumReport.detailedSuggestions || null,
         }
       : premiumReport;
-    if (!Array.isArray(hydratedPremiumReport.companyInsiderTips)) {
+    if (!Array.isArray(hydratedPremiumReport.companyInsiderTips) || hydratedPremiumReport.companyInsiderTips.length === 0) {
       hydratedPremiumReport.companyInsiderTips = await retrieveInsiderTips({
         internalAtsResult: unlock.report.internalAtsResult,
         limit: 4,

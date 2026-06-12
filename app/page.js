@@ -4,7 +4,7 @@ import Script from 'next/script';
 export default function HomePage() {
   return (
     <>
-      <div className="page">
+      <div className="page home-page">
         <div className="brandbar">
           <div className="brand">
             <img src="/logo/logo%20banner_no_bg.png" alt="MentorX 蔓藤教育" className="brand-img" />
@@ -17,9 +17,15 @@ export default function HomePage() {
           <div className="hero-kicker"><span className="dot"></span> 留学求职专属 · 30 秒诊断</div>
           <h1>简历石沉大海?<br/><em>大厂导师 × 智慧核心</em><br/>联合帮你<span className="underline">升级</span>简历。</h1>
           <p className="lede">1,300+ 大厂导师实战经验 × AI 精准分析,30 秒拿到可落地的优化方案。</p>
+          <div className="hero-proof">
+            <div><strong>1,300+</strong><span>大厂导师</span></div>
+            <div><strong>30,000+</strong><span>真实辅导样本</span></div>
+            <div><strong>30s</strong><span>初步诊断</span></div>
+          </div>
         </section>
 
-        <section className="section">
+        <section className="section upload-section">
+          <div className="panel-kicker">START DIAGNOSIS</div>
           <h2 className="section-title">把简历交给大厂导师</h2>
           <form className="card" onSubmit={(e) => { e.preventDefault(); if (window.submitResume) window.submitResume(e.currentTarget); }} noValidate>
             <div className="input-group">
@@ -68,7 +74,7 @@ export default function HomePage() {
 
         <hr className="divider" />
 
-        <section className="section">
+        <section className="section credibility-section">
           <h2 className="section-title" style={{whiteSpace:'nowrap',fontSize:'clamp(20px,5.6vw,28px)'}}>10 年真实辅导数据,全球独家。</h2>
           <p className="section-desc">蔓藤教育(MentorX)自 2015 年深耕留学求职——<b style={{color:'var(--ink)',fontWeight:700}}>1,300+</b> 大厂导师、<b style={{color:'var(--ink)',fontWeight:700}}>30,000+</b> 场真实辅导。每条建议都从实战中提炼,不是通用模板。</p>
           <div className="philo">

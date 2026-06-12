@@ -22,6 +22,7 @@ scripts/fix_*.js
 scripts/fix_*.py
 
 # Local
+.claude/
 .env
 .env.local
 .cleanup-backups/

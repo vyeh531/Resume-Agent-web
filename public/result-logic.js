@@ -1536,8 +1536,10 @@ if (admitRateEl)  admitRateEl.textContent  = aiTrend.caption;
 // Detail rows
 function renderRows(arr) {
   return (arr || []).map(r => `
-    <div class="detail-row"><span class="k">${escapeHtml(r.k)}</span><span class="v">${escapeHtml(r.v)}</span></div>
-    <div class="detail-note">${escapeHtml(r.note)}</div>
+    <div class="detail-card">
+      <div class="detail-row"><span class="k">${escapeHtml(r.k)}</span><span class="v">${escapeHtml(r.v)}</span></div>
+      <div class="detail-note">${escapeHtml(r.note)}</div>
+    </div>
   `).join("");
 }
 function renderStackedRows(arr) {
@@ -2139,13 +2141,13 @@ function renderApiAdviceItem(item, i) {
       </div>` : ""}
       ${(insight || hrPov) ? `<div style="background:#FAFAF9;border:1px solid rgba(0,0,0,0.05);border-radius:10px;padding:11px 13px;margin-top:8px;">
         <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase;">补充视角</div>
-        ${insight ? `<div style="${hrPov ? "margin-bottom:8px;" : ""}">
-          <span style="font-size:11px;font-weight:600;color:#6D28D9;background:#F5F3FF;padding:2px 7px;border-radius:99px;margin-right:6px;">导师</span>
-          <span style="font-size:12.5px;line-height:1.6;color:#374151;">${escapeHtml(insight)}</span>
+        ${insight ? `<div style="display:flex;align-items:flex-start;gap:8px;${hrPov ? "margin-bottom:8px;" : ""}">
+          <span style="display:inline-flex;align-items:center;justify-content:center;min-width:42px;font-size:11px;font-weight:600;color:#6D28D9;background:#F5F3FF;padding:2px 7px;border-radius:99px;flex-shrink:0;">导师</span>
+          <span style="flex:1;min-width:0;font-size:12.5px;line-height:1.6;color:#374151;">${escapeHtml(insight)}</span>
         </div>` : ""}
-        ${hrPov ? `<div>
-          <span style="font-size:11px;font-weight:600;color:#B45309;background:#FFFBEB;padding:2px 7px;border-radius:99px;margin-right:6px;">HR</span>
-          <span style="font-size:12.5px;line-height:1.6;color:#374151;">${escapeHtml(hrPov)}</span>
+        ${hrPov ? `<div style="display:flex;align-items:flex-start;gap:8px;">
+          <span style="display:inline-flex;align-items:center;justify-content:center;min-width:42px;font-size:11px;font-weight:600;color:#B45309;background:#FFFBEB;padding:2px 7px;border-radius:99px;flex-shrink:0;">HR</span>
+          <span style="flex:1;min-width:0;font-size:12.5px;line-height:1.6;color:#374151;">${escapeHtml(hrPov)}</span>
         </div>` : ""}
       </div>` : ""}
     </div>`;
@@ -2179,6 +2181,63 @@ function prepareDisplayAdviceItems(items = []) {
   });
 }
 
+function fallbackFreeAdviceItems() {
+  return [
+    {
+      adviceId: "free_fallback_jd_keyword",
+      priority: "high",
+      displayAdviceType: "JD Keyword",
+      title: "先把目标岗位关键词放进经历证据里",
+      currentDiagnosis: "现在的经历描述容易停留在职责层，和目标岗位 JD 的关键词连接不够明确。",
+      action: "挑 2 到 3 段最相关经历，把 JD 里的核心技能词改写成项目动作、工具和结果，而不是只放在技能列表。",
+      mentorLens: "导师会先看关键词有没有被真实项目承接；只有出现在经历证据里，才像是你真的做过。",
+      hrPerspective: "HR 快速扫简历时，会优先匹配岗位关键词和最近经历；关键词只堆在技能栏，可信度会比较弱。",
+      relatedProblemTags: ["jd_keyword_gap"],
+      canonicalActionFamily: "keyword_evidence",
+      targetSection: "experience",
+    },
+    {
+      adviceId: "free_fallback_impact",
+      priority: "mid",
+      displayAdviceType: "Impact",
+      title: "把成果写成可判断的业务影响",
+      currentDiagnosis: "部分 bullet 目前能看出你做了什么，但还不够容易判断影响范围、质量或结果。",
+      action: "每段重点经历至少补一个结果指标：规模、转化、效率、准确率、成本、用户量或上线影响都可以。",
+      mentorLens: "大厂导师会用结果判断候选人的 ownership；没有量化结果时，很难判断你只是参与还是主导。",
+      hrPerspective: "HR 会把结果数字当作筛选信号，它能让你的经历从普通执行描述里跳出来。",
+      relatedProblemTags: ["impact_missing"],
+      canonicalActionFamily: "impact_quantification",
+      targetSection: "experience",
+    },
+    {
+      adviceId: "free_fallback_structure",
+      priority: "mid",
+      displayAdviceType: "Structure",
+      title: "重排首屏信息，让岗位定位更快被读到",
+      currentDiagnosis: "简历开头需要更快说明你是谁、投什么岗位、最强的匹配证据是什么。",
+      action: "把 Summary、核心技能和最近一段最相关经历放在前半页，并删除和目标岗位弱相关的低信号内容。",
+      mentorLens: "导师通常会先帮你整理叙事顺序；顺序对了，后面的经历才不会被误读成散点。",
+      hrPerspective: "HR 的初筛时间很短，首屏没有清楚定位时，后面再好的项目也可能来不及被看到。",
+      relatedProblemTags: ["structure"],
+      canonicalActionFamily: "resume_structure",
+      targetSection: "summary",
+    },
+  ];
+}
+
+function ensureThreeFreeAdviceItems(items = []) {
+  const prepared = prepareDisplayAdviceItems(items || []);
+  const seen = new Set(prepared.map((item) => resultAdviceIdentity(item)));
+  fallbackFreeAdviceItems().forEach((item) => {
+    if (prepared.length >= 3) return;
+    const key = resultAdviceIdentity(item);
+    if (seen.has(key)) return;
+    seen.add(key);
+    prepared.push(item);
+  });
+  return prepared.slice(0, 3);
+}
+
 function mentorInitials(name) {
   const clean = String(name || "").replace(/[导师]/g, "").trim();
   return clean.slice(0, 2) || (name || "M").slice(0, 1);
@@ -2194,7 +2253,7 @@ function renderFreeMentor(m) {
   const title = m.mentorTitle || "";
   const careerPath = m.careerPathDisplay || "";
   const companyMeta = [company, title].filter(Boolean).join(" · ");
-  const adviceHtml = prepareDisplayAdviceItems(m.adviceItems || []).slice(0, 3).map(renderApiAdviceItem).join("");
+  const adviceHtml = ensureThreeFreeAdviceItems(m.adviceItems || []).map(renderApiAdviceItem).join("");
 
   mentorFreeEl.innerHTML = `
     <div style="background:#FFFFFF;border:1px solid rgba(69,42,147,.10);border-radius:20px;padding:20px 20px 18px;box-shadow:0 1px 6px rgba(69,42,147,.08);">
@@ -2313,7 +2372,10 @@ if (atsResult && atsResult.atsScore) {
   (function renderRadar() {
     const svgEl = document.getElementById("atsRadarChart");
     if (!svgEl) return;
-    const cx = 120, cy = 110, R = 80;
+    svgEl.setAttribute("viewBox", "0 0 360 320");
+    svgEl.setAttribute("width", "360");
+    svgEl.setAttribute("height", "320");
+    const cx = 180, cy = 150, R = 88;
     const dimKeys = ["A","B","C","D","E","F"];
     const dimLabels = { A:"格式规范", B:"基本资料", C:"内容质量", D:"技能匹配", E:"市场适配", F:"经验匹配" };
     const raw = atsResult.raw?.dimensions || atsResult.dimensions || {};
@@ -2335,7 +2397,7 @@ if (atsResult && atsResult.atsScore) {
     svg += `<polygon points="${dataPts}" fill="rgba(83,51,166,.16)" stroke="var(--jade,#5333A6)" stroke-width="2"/>`;
     dims.forEach((d, i) => {
       const [dx, dy] = pt(i, R * d.pct / 100);
-      const [lx, ly] = pt(i, R + 22);
+      const [lx, ly] = pt(i, R + 26);
       const anchor = lx < cx - 4 ? "end" : lx > cx + 4 ? "start" : "middle";
       const color = d.pct >= 70 ? "var(--good,#1F7A4D)" : d.pct >= 45 ? "var(--warn,#B25E00)" : "var(--bad,#B3261E)";
       svg += `<circle cx="${dx}" cy="${dy}" r="4" fill="${color}"/>`;

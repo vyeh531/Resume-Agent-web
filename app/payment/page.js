@@ -29,7 +29,7 @@ export default function PaymentPage() {
         .qr{width:140px;height:140px;border:2px solid var(--line);border-radius:var(--r-md);margin:0 auto;background:var(--paper-deep);display:grid;place-items:center;font-size:40px}
       `}</style>
 
-      <div className="page">
+      <div className="page payment-page">
         <div className="brandbar">
           <div className="brand">
             <img src="/logo/logo%20banner_no_bg.png" alt="MentorX 蔓藤教育" className="brand-img" />

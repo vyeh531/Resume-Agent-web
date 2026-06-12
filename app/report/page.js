@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import Script from 'next/script';
 
 export default function ReportPage() {
@@ -123,34 +123,34 @@ export default function ReportPage() {
         body.exporting .advice-example{break-inside:avoid;page-break-inside:avoid;}
       `}</style>
 
-      <div className="page">
+      <div className="page report-page">
         <div className="brandbar">
           <div className="brand">
-            <img src="/logo/logo%20banner_no_bg.png" alt="MentorX 蔓藤教育" className="brand-img" />
+            <img src="/logo/logo%20banner_no_bg.png" alt="MentorX è”“è—¤æ•™è‚²" className="brand-img" />
           </div>
-          <div className="brand-meta" style={{fontSize:'10px',letterSpacing:'.08em'}}>完整报告</div>
+          <div className="brand-meta" style={{fontSize:'10px',letterSpacing:'.08em'}}>å®Œæ•´æŠ¥å‘Š</div>
         </div>
 
         <div className="banner fade-in">
-          <div className="banner-check">✓</div>
-          <div>完整报告已为你生成</div>
+          <div className="banner-check">âœ“</div>
+          <div>å®Œæ•´æŠ¥å‘Šå·²ä¸ºä½ ç”Ÿæˆ</div>
         </div>
 
         <div className="export-card">
           <div className="export-card-head">
-            <div className="export-card-icon">📄</div>
+            <div className="export-card-icon">ðŸ“„</div>
             <div>
-              <div className="export-card-title">完整诊断报告<span className="export-card-format-tag">PDF</span></div>
+              <div className="export-card-title">å®Œæ•´è¯Šæ–­æŠ¥å‘Š<span className="export-card-format-tag">PDF</span></div>
             </div>
           </div>
-          <p className="export-card-desc">把这份 PDF 整段喂给 <b>ChatGPT / Claude / 豆包</b> 等任意 LLM，基于 4 位大厂导师建议<b>自动重写你的简历</b>——不用一句句改，一键产出可投递的新版本。</p>
+          <p className="export-card-desc">æŠŠè¿™ä»½ PDF æ•´æ®µå–‚ç»™ <b>ChatGPT / Claude / è±†åŒ…</b> ç­‰ä»»æ„ LLMï¼ŒåŸºäºŽ 4 ä½å¤§åŽ‚å¯¼å¸ˆå»ºè®®<b>è‡ªåŠ¨é‡å†™ä½ çš„ç®€åŽ†</b>â€”â€”ä¸ç”¨ä¸€å¥å¥æ”¹ï¼Œä¸€é”®äº§å‡ºå¯æŠ•é€’çš„æ–°ç‰ˆæœ¬ã€‚</p>
           <ul className="export-card-perks">
-            <li><span className="check">✓</span><span>ATS 通过率 <b>+30%</b>，自动匹配 JD 技能</span></li>
-            <li><span className="check">✓</span><span>面试邀约率 <b>翻倍</b>，简历讲对 PM 的语言</span></li>
-            <li><span className="check">✓</span><span>1 份报告反复用，投每个公司都能精准对齐</span></li>
+            <li><span className="check">âœ“</span><span>ATS é€šè¿‡çŽ‡ <b>+30%</b>ï¼Œè‡ªåŠ¨åŒ¹é… JD æŠ€èƒ½</span></li>
+            <li><span className="check">âœ“</span><span>é¢è¯•é‚€çº¦çŽ‡ <b>ç¿»å€</b>ï¼Œç®€åŽ†è®²å¯¹ PM çš„è¯­è¨€</span></li>
+            <li><span className="check">âœ“</span><span>1 ä»½æŠ¥å‘Šåå¤ç”¨ï¼ŒæŠ•æ¯ä¸ªå…¬å¸éƒ½èƒ½ç²¾å‡†å¯¹é½</span></li>
           </ul>
           <button className="btn btn-jade btn-block" onClick={() => window.exportPDF && window.exportPDF()}>
-            ⬇ 下载 PDF 报告
+            â¬‡ ä¸‹è½½ PDF æŠ¥å‘Š
           </button>
           <button className="btn btn-block btn-ai-prompt" onClick={() => window.exportAiRewritePDF && window.exportAiRewritePDF()} style={{marginTop:'10px'}}>
             &#19979;&#36733; AI &#25913;&#31616;&#21382;&#25351;&#20196;&#21253;
@@ -158,129 +158,180 @@ export default function ReportPage() {
           <p className="export-card-hint">&#19978;&#20256;&#36825;&#20221;&#25351;&#20196;&#21253; + &#20320;&#30340;&#21407;&#31616;&#21382;&#65292;&#35753; AI &#25353;&#20851;&#38190;&#35789;&#21644;&#23548;&#24072;&#24314;&#35758;&#30452;&#25509;&#37325;&#20889;&#12290;</p>
         </div>
 
-        <section className="section" id="summary">
-          <div className="section-num">01 · 整体诊断</div>
-          <h2 className="section-title" style={{fontSize:'22px'}}>先看大盘</h2>
-          <div className="card card-tight">
-            <h3 className="report-headline">
-              你的当前简历综合评分 <span className="num" id="reportHeadlineScore">--</span> 分，<br/>
-              离顶级 Offer 线 <span className="gap" id="reportHeadlineSalaryTop">待校准</span> 仍有差距。
-            </h3>
-            <p className="report-issue" id="coreIssue"></p>
+        <section className="section report-summary-panel" id="summary">
+          <div className="report-score-block">
+            <div className="result-eyebrow">Resume Score</div>
+            <div className="report-score-line"><span id="reportHeadlineScore">--</span><small>/100</small></div>
+            <div className="report-score-badges">
+              <span className="report-risk-badge">Full Report</span>
+              <span className="report-risk-badge report-risk-badge-warn">Mentor Review</span>
+            </div>
+            <p className="report-score-caption">ç¦»é¡¶çº§ Offer çº¿ <b id="reportHeadlineSalaryTop">å¾…æ ¡å‡†</b> ä»æœ‰å·®è·ã€‚</p>
           </div>
-          <div className="card card-tight mt-16">
-            <div className="section-num" id="reportSkillSectionTitle" style={{marginBottom:6}}>JD Keyword 清单</div>
-            <p className="skill-section-desc" id="reportSkillSectionDesc">这些是系统从 JD 中识别出的关键词。优先把待补强项写进 Summary、Skills 或 Experience。</p>
-            <div className="ai-insight">
-              <p className="ai-insight-diagnosis">
-                <span className="ico">💡</span>正在加载技能匹配数据…
-              </p>
+
+          <div className="report-summary-copy">
+            <div>
+              <div className="section-num">01 Â· æ•´ä½“è¯Šæ–­</div>
+              <h2 className="section-title">å®Œæ•´æŠ¥å‘Šæ¦‚è§ˆ</h2>
+            </div>
+            <h3 className="report-summary-headline">å…ˆä¿®æœ€å½±å“æŠ•é€’è½¬åŒ–çš„ 3 ä¸ªé—®é¢˜</h3>
+            <p className="report-issue" id="coreIssue"></p>
+            <div className="report-issue-list" aria-label="Full report coverage">
+              <span>Report includes</span>
+              <ol>
+                <li>ATS åˆ†é¡¹è¯Šæ–­ä¸Žé£Žé™©è§£é‡Š</li>
+                <li>JD Keyword è¦†ç›–ã€ç¼ºå£å’Œæ”¾ç½®å»ºè®®</li>
+                <li>4 ä½å¯¼å¸ˆçš„ç®€åŽ†ä¼˜åŒ–å»ºè®®</li>
+              </ol>
+            </div>
+            <div className="report-hero-actions">
+              <a className="btn btn-jade" href="#mentors">æŸ¥çœ‹å¯¼å¸ˆå»ºè®®</a>
+              <a className="btn report-secondary-btn" href="#reportDataMetrics">æŸ¥çœ‹è¯„åˆ†ç»†èŠ‚</a>
+            </div>
+          </div>
+
+          <div className="report-summary-card report-summary-keyword-card">
+            <div className="report-keyword-head">
+              <div>
+                <div className="section-num" id="reportSkillSectionTitle">JD Keyword æ¸…å•</div>
+                <p className="skill-section-desc" id="reportSkillSectionDesc">è¿™äº›æ˜¯ç³»ç»Ÿä»Ž JD ä¸­è¯†åˆ«å‡ºçš„å…³é”®è¯ã€‚ä¼˜å…ˆæŠŠå¾…è¡¥å¼ºé¡¹å†™è¿› Summaryã€Skills æˆ– Experienceã€‚</p>
+              </div>
+              <div className="ai-insight">
+                <p className="ai-insight-diagnosis">
+                  <span className="ico">Â·</span>æ­£åœ¨åŠ è½½æŠ€èƒ½åŒ¹é…æ•°æ®...
+                </p>
+              </div>
             </div>
             <ul className="skill-list" id="skillList"></ul>
-            <button className="skill-expand-toggle" id="reportSkillExpandToggle" type="button" hidden>查看更多 ↓</button>
+            <button className="skill-expand-toggle" id="reportSkillExpandToggle" type="button" hidden>æŸ¥çœ‹æ›´å¤š â†“</button>
           </div>
         </section>
 
         <hr className="divider" />
 
         <section className="section report-metrics" id="reportDataMetrics">
-          <div className="section-num">02 · 数据维度</div>
-          <h2 className="section-title" style={{fontSize:'22px'}}>四个判断维度</h2>
-          <p className="section-desc">这里对应结果页的四张预览卡片，点击展开查看完整说明。</p>
-          <div className="tiles" id="reportDataTiles">
-            <details className="tile">
-              <summary className="tile-summary">
-                <div className="tile-label"><span>JD 匹配度</span><span className="chev">▼</span></div>
-                <div className="tile-value"><span id="reportRankPct">--</span></div>
-                <div className="tile-caption">基于 JD 关键词覆盖</div>
-              </summary>
+          <div className="section-num">02 Â· æ•°æ®ç»´åº¦</div>
+          <h2 className="section-title">å››ä¸ªåˆ¤æ–­ç»´åº¦</h2>
+          <p className="section-desc">å®Œæ•´æŠ¥å‘Šä¿ç•™æ‰€æœ‰è¯„åˆ†ä¾æ®ï¼Œå’Œç»“æžœé¡µä½¿ç”¨åŒä¸€å¥—å››å¡ç»“æž„ã€‚</p>
+          <div className="report-dimension-grid" id="reportDataTiles">
+            <article className="report-dimension-card report-dimension-card--purple tile">
+              <header className="report-dimension-card-head">
+                <div>
+                  <div className="tile-label">JD åŒ¹é…åº¦</div>
+                  <div className="tile-value"><span id="reportRankPct">--</span></div>
+                </div>
+                <div className="report-dimension-marker" aria-hidden="true"></div>
+              </header>
+              <div className="tile-caption">åŸºäºŽ JD å…³é”®è¯è¦†ç›–</div>
+              <div className="report-dimension-divider"></div>
+              <div className="report-dimension-detail-head">è¯„åˆ†ä¾æ®</div>
               <div className="tile-detail" id="reportRankDetail"></div>
-            </details>
-            <details className="tile">
-              <summary className="tile-summary">
-                <div className="tile-label"><span>ATS 可读性</span><span className="chev">▼</span></div>
-                <div className="tile-value tile-value-split tile-value-ats"><span><span id="reportAtsScore">--</span><span className="tile-percent">%</span></span><span className="tile-risk-value" id="reportAtsRiskCaption">主流系统识别</span></div>
-              </summary>
+            </article>
+            <article className="report-dimension-card report-dimension-card--red tile">
+              <header className="report-dimension-card-head">
+                <div>
+                  <div className="tile-label">ATS å¯è¯»æ€§</div>
+                  <div className="tile-value tile-value-ats"><span id="reportAtsScore">--</span><span className="tile-percent">%</span></div>
+                </div>
+                <div className="report-dimension-marker" aria-hidden="true"></div>
+              </header>
+              <div className="tile-caption" id="reportAtsRiskCaption">ä¸»æµç³»ç»Ÿè¯†åˆ«</div>
+              <div className="report-dimension-divider"></div>
+              <div className="report-dimension-detail-head">è¯„åˆ†ä¾æ®</div>
               <div className="tile-detail" id="reportAtsDetail"></div>
-            </details>
-            <details className="tile">
-              <summary className="tile-summary">
-                <div className="tile-label"><span>SALARY · 薪资成长</span><span className="chev">▼</span></div>
-                <div className="tile-value" style={{fontSize:'22px'}} id="reportSalaryRange">成长潜力</div>
-                <div className="tile-caption">5年上限 <b id="reportSalaryTop">待校准</b></div>
-              </summary>
+            </article>
+            <article className="report-dimension-card report-dimension-card--blue tile">
+              <header className="report-dimension-card-head">
+                <div>
+                  <div className="tile-label">Salary Â· è–ªèµ„æˆé•¿</div>
+                  <div className="tile-value" id="reportSalaryRange">æˆé•¿æ½œåŠ›</div>
+                </div>
+                <div className="report-dimension-marker" aria-hidden="true"></div>
+              </header>
+              <div className="tile-caption">5å¹´ä¸Šé™ <b id="reportSalaryTop">å¾…æ ¡å‡†</b></div>
+              <div className="report-dimension-divider"></div>
+              <div className="report-dimension-detail-head">è¯„åˆ†ä¾æ®</div>
               <div className="tile-detail" id="reportSalaryDetail"></div>
-            </details>
-            <details className="tile">
-              <summary className="tile-summary">
-                <div className="tile-label"><span>AI 影响趋势</span><span className="chev">▼</span></div>
-                <div className="tile-value" style={{fontSize:'22px'}}><span id="reportAiImpactLevel">--</span></div>
-                <div className="tile-caption"><span id="reportAiImpactCaption">待校准</span></div>
-              </summary>
+            </article>
+            <article className="report-dimension-card report-dimension-card--orange tile">
+              <header className="report-dimension-card-head">
+                <div>
+                  <div className="tile-label">AI å½±å“è¶‹åŠ¿</div>
+                  <div className="tile-value"><span id="reportAiImpactLevel">--</span></div>
+                </div>
+                <div className="report-dimension-marker" aria-hidden="true"></div>
+              </header>
+              <div className="tile-caption"><span id="reportAiImpactCaption">å¾…æ ¡å‡†</span></div>
+              <div className="report-dimension-divider"></div>
+              <div className="report-dimension-detail-head">è¯„åˆ†ä¾æ®</div>
               <div className="tile-detail" id="reportAiImpactDetail"></div>
-            </details>
+            </article>
           </div>
         </section>
 
         <hr className="divider" />
 
-        <section className="section" id="atsDetailSection">
-          <div className="section-num">03 · ATS 诊断</div>
-          <h2 className="section-title" style={{fontSize:'22px'}}>系统评分详情</h2>
-          <div className="card card-tight" style={{background:'linear-gradient(135deg,rgba(247,243,252,.92) 0%,rgba(255,255,255,.96) 100%)',border:'1px solid var(--line)'}}>
-            <div style={{display:'flex',flexDirection:'column',alignItems:'center',marginBottom:'16px',position:'relative'}}>
-              <div id="atsRiskBadge" style={{position:'absolute',top:0,right:0,padding:'4px 10px',borderRadius:'99px',fontSize:'12px',fontWeight:700,fontFamily:'var(--mono)',letterSpacing:'.04em'}}></div>
-              <div id="atsTotalScore" style={{position:'absolute',top:0,left:0,fontSize:'22px',fontWeight:800,fontFamily:'var(--mono)',lineHeight:1}}></div>
-              <svg id="atsRadarChart" width="240" height="220" viewBox="0 0 240 220" style={{overflow:'visible',marginTop:'28px'}}></svg>
+        <section className="section report-ats-panel" id="atsDetailSection">
+          <div className="section-num">03 Â· ATS è¯Šæ–­</div>
+          <h2 className="section-title">ç³»ç»Ÿè¯„åˆ†è¯¦æƒ…</h2>
+          <div className="card report-ats-card">
+            <div className="report-ats-visual">
+              <div id="atsRiskBadge"></div>
+              <div id="atsTotalScore"></div>
+              <svg id="atsRadarChart" width="360" height="320" viewBox="0 0 360 320"></svg>
             </div>
-            <div id="atsSystemSummary" style={{fontSize:'13px',color:'var(--ink-soft)',lineHeight:1.6,marginBottom:'14px'}}></div>
-            <div id="atsDimensionProblems" style={{marginTop:'12px'}}></div>
-            <div id="atsProblemsSection"></div>
+            <div className="report-ats-copy">
+              <div id="atsSystemSummary"></div>
+              <div id="atsDimensionProblems"></div>
+              <div id="atsProblemsSection"></div>
+            </div>
           </div>
         </section>
 
         <hr className="divider" />
 
         <section className="section" id="mentors">
-          <div className="section-num">04 · 完整导师建议</div>
-          <h2 className="section-title" style={{fontSize:'22px'}}>每个角度都有人帮你看过了</h2>
+          <div className="section-num">04 Â· å®Œæ•´å¯¼å¸ˆå»ºè®®</div>
+          <h2 className="section-title" style={{fontSize:'22px'}}>æ¯ä¸ªè§’åº¦éƒ½æœ‰äººå¸®ä½ çœ‹è¿‡äº†</h2>
           <div id="mentorLogoIntroSlot"></div>
           <div id="mentorsList"></div>
         </section>
 
         <hr className="divider" />
 
+        <section className="section" id="service">
+          <div className="section-num" id="serviceNum">05 Â· å‡çº§æœåŠ¡</div>
+          <h2 className="section-title" style={{fontSize:'22px'}}>æƒ³èµ°å¾—æ›´è¿œ?</h2>
+          <div className="service-card">
+            <h3 className="service-card-title">å‡çº§<em>ä¸“å±žæ±‚èŒé¡¾é—®æœåŠ¡</em>ï¼Œ<br/>ç”±å¤§åŽ‚å¯¼å¸ˆå›¢é˜Ÿä¸ºä½ å®šåˆ¶æ–¹æ¡ˆ</h3>
+            <p className="service-card-sub">ä»Žç®€åŽ†ç²¾ä¿®ã€æŠ•é€’ç­–ç•¥åˆ°é¢è¯•å†²åˆºï¼Œäº«å—é«˜åŒ¹é…åº¦ä¸ªäººåŒ–é™ªè·‘ã€‚<br/>ä¸“ä¸šå¤§åŽ‚åœ¨èŒå¯¼å¸ˆå›¢é˜Ÿï¼ŒæŒ‰ç›®æ ‡å…¬å¸ / å²—ä½ / å­¦æ ¡èƒŒæ™¯ä¸ºä½ ç”„é€‰åŒ¹é…ã€‚</p>
+            <ul className="service-list">
+              <li><span className="num-badge">1</span><strong>æ±‚èŒç­–ç•¥ 1v1</strong><span>å®šä½ + æŠ•é€’æ—¶é—´çº¿ + å…¬å¸æ¸…å• + é£Žé™©è¯„ä¼°</span></li>
+              <li><span className="num-badge">2</span><strong>ç®€åŽ†ç²¾ä¿®</strong><span>é¡¹ç›®çº§æ·±åº¦æ”¹å†™ï¼Œé€å¥å¯¹ç…§ JD ä¼˜åŒ–</span></li>
+              <li><span className="num-badge">3</span><strong>æ¨¡æ‹Ÿé¢è¯•</strong><span>è¯­éŸ³ / è§†é¢‘å®žæˆ˜ï¼Œé«˜é¢‘é—®é¢˜ç©¿é€ï¼Œå³æ—¶ç‚¹è¯„</span></li>
+              <li><span className="num-badge">4</span><strong>Offer è°ˆè–ª</strong><span>å¤š Offer å–èˆ + HR æŠ¥ä»· counter è¯æœ¯</span></li>
+            </ul>
+            <div className="service-cta-block">
+              <div className="service-cta-text">æ‰«ç æ·»åŠ ä¸“å±žæ±‚èŒå¯¼å¸ˆ</div>
+              <img className="service-qr" src="/qr.jpg" alt="æ‰«ç æ·»åŠ ä¸“å±žæ±‚èŒå¯¼å¸ˆ" />
+            </div>
+            <div className="service-foot">è€å­¦å‘˜ 9 æŠ˜ä¼˜æƒ  Â· ä¸æ»¡æ„ 7 å¤©å†…å…¨é¢é€€æ¬¾ Â· æ”¯æŒæœˆåº¦é™ªè·‘å¥—é¤</div>
+          </div>
+        </section>
+
+        <hr className="divider" />
+
         <section className="section" id="insider-tips" style={{display:'none'}}>
-          <div className="section-num">05 · 公司内幕</div>
-          <h2 className="section-title" style={{fontSize:'22px'}}>导师亲述：这些公司到底看什么</h2>
+          <div className="section-num">06 Â· å…¬å¸å†…å¹•</div>
+          <h2 className="section-title" style={{fontSize:'22px'}}>å¯¼å¸ˆäº²è¿°ï¼šè¿™äº›å…¬å¸åˆ°åº•çœ‹ä»€ä¹ˆ</h2>
           <div id="insiderTipsList"></div>
         </section>
 
         <hr className="divider" id="insider-tips-divider" style={{display:'none'}} />
 
-        <section className="section" id="service">
-          <div className="section-num" id="serviceNum">05 · 升级服务</div>
-          <h2 className="section-title" style={{fontSize:'22px'}}>想走得更远?</h2>
-          <div className="service-card">
-            <h3 className="service-card-title">升级<em>专属求职顾问服务</em>，<br/>由大厂导师团队为你定制方案</h3>
-            <p className="service-card-sub">从简历精修、投递策略到面试冲刺，享受高匹配度个人化陪跑。<br/>专业大厂在职导师团队，按目标公司 / 岗位 / 学校背景为你甄选匹配。</p>
-            <ul className="service-list">
-              <li><span className="num-badge">1</span><strong>求职策略 1v1</strong><span>定位 + 投递时间线 + 公司清单 + 风险评估</span></li>
-              <li><span className="num-badge">2</span><strong>简历精修</strong><span>项目级深度改写，逐句对照 JD 优化</span></li>
-              <li><span className="num-badge">3</span><strong>模拟面试</strong><span>语音 / 视频实战，高频问题穿透，即时点评</span></li>
-              <li><span className="num-badge">4</span><strong>Offer 谈薪</strong><span>多 Offer 取舍 + HR 报价 counter 话术</span></li>
-            </ul>
-            <div className="service-cta-block">
-              <div className="service-cta-text">扫码添加专属求职导师</div>
-              <img className="service-qr" src="/qr.jpg" alt="扫码添加专属求职导师" />
-            </div>
-            <div className="service-foot">老学员 9 折优惠 · 不满意 7 天内全额退款 · 支持月度陪跑套餐</div>
-          </div>
-        </section>
-
         <div className="footnote">
-          报告由 MentorX × AI 联合生成 · 内容仅供参考，不构成 Offer 承诺<br/>
-          Powered by <span>Vibe ID</span> · 蔓藤教育 · 2015 至今 · 1,300+ 大厂导师
+          æŠ¥å‘Šç”± MentorX Ã— AI è”åˆç”Ÿæˆ Â· å†…å®¹ä»…ä¾›å‚è€ƒï¼Œä¸æž„æˆ Offer æ‰¿è¯º<br/>
+          Powered by <span>Vibe ID</span> Â· è”“è—¤æ•™è‚² Â· 2015 è‡³ä»Š Â· 1,300+ å¤§åŽ‚å¯¼å¸ˆ
         </div>
       </div>
 

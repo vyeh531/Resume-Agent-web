@@ -4,7 +4,7 @@ import Script from 'next/script';
 export default function AnalyzingPage() {
   return (
     <>
-      <div className="page">
+      <div className="page analyzing-page">
         <div className="brandbar">
           <div className="brand">
             <img src="/logo/logo%20banner_no_bg.png" alt="MentorX 蔓藤教育" className="brand-img" />

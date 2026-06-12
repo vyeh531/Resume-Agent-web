@@ -11,7 +11,7 @@ if (typeof guardSubmitted === 'function') {
 
 const s = window.Store.get();
 const atsResult = s.atsResult || {};
-if (s.reportId && s.reportAccessToken && (!s.premiumKeywordBreakdown || !s.premiumAdviceItems || !Array.isArray(s.companyInsiderTips))) {
+if (s.reportId && s.reportAccessToken && (!s.premiumKeywordBreakdown || !s.premiumAdviceItems || !Array.isArray(s.companyInsiderTips) || s.companyInsiderTips.length === 0)) {
   fetch(`/api/v1/reports/${encodeURIComponent(s.reportId)}/unlock`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -341,8 +341,10 @@ function riskToneClass(risk) {
 }
 function renderRows(arr) {
   return (arr || []).map(r => `
-    <div class="detail-row"><span class="k">${escapeHtml(r.k)}</span><span class="v">${escapeHtml(r.v)}</span></div>
-    <div class="detail-note">${escapeHtml(r.note)}</div>
+    <div class="detail-card">
+      <div class="detail-row"><span class="k">${escapeHtml(r.k)}</span><span class="v">${escapeHtml(r.v)}</span></div>
+      <div class="detail-note">${escapeHtml(r.note)}</div>
+    </div>
   `).join("");
 }
 function renderStackedRows(arr) {
@@ -1265,7 +1267,10 @@ if (headlineEl) headlineEl.textContent = atsScore || "--";
 
   const svgEl = document.getElementById("atsRadarChart");
   if (svgEl) {
-    const cx = 120, cy = 110, R = 80;
+    svgEl.setAttribute("viewBox", "0 0 360 320");
+    svgEl.setAttribute("width", "360");
+    svgEl.setAttribute("height", "320");
+    const cx = 180, cy = 150, R = 88;
     const dims = dimKeys.map(k => {
       const d = raw[k];
       return d ? { score:d.score, max:d.max, pct:Math.round((d.score / d.max) * 100) } : { score:0, max:1, pct:0 };
@@ -1280,7 +1285,7 @@ if (headlineEl) headlineEl.textContent = atsScore || "--";
     svg += `<polygon points="${dataPts}" fill="rgba(83,51,166,.16)" stroke="var(--jade,#5333A6)" stroke-width="2" stroke-linejoin="round"/>`;
     dims.forEach((d, i) => {
       const [dx, dy] = pt(i, R * d.pct / 100);
-      const [lx, ly] = pt(i, R + 22);
+      const [lx, ly] = pt(i, R + 26);
       const anchor = lx < cx - 4 ? "end" : lx > cx + 4 ? "start" : "middle";
       const color = d.pct >= 70 ? "var(--good,#1F7A4D)" : d.pct >= 45 ? "var(--warn,#B25E00)" : "var(--bad,#B3261E)";
       svg += `<circle cx="${dx}" cy="${dy}" r="4" fill="${color}"/>`;
@@ -1929,7 +1934,56 @@ function renderInsiderTipsSection(tips) {
   }).join('');
 }
 
-const insiderTips = s.companyInsiderTips || [];
+function buildDefaultInsiderTips(limit = 4) {
+  const targetRole = s.targetJob || atsResult.targetJob || atsResult.jobTitle || "目标岗位";
+  return [
+    {
+      company: "通用招聘规律",
+      companyLogo: "",
+      industryLabel: "跨行业筛选",
+      knowledgeTitle: "ATS 往往先读结构，再读内容",
+      insight: "很多筛选系统会先用 section 标题、日期、职位名和关键词位置判断简历结构；如果 Skills、Experience、Projects 的边界不清楚，后面的关键词即使出现，也可能被归到错误语境里。",
+      knowledgeType: "industry_pattern",
+    },
+    {
+      company: "通用招聘规律",
+      companyLogo: "",
+      industryLabel: "跨行业筛选",
+      knowledgeTitle: "招聘方会看关键词出现的位置",
+      insight: "同一个关键词出现在 Skills 和出现在 Experience 里的权重感不一样；只在技能栏出现，容易被当作会用工具，放在经历结果里，才更像真实做过相关任务。",
+      knowledgeType: "talent_profile",
+    },
+    {
+      company: "通用招聘规律",
+      companyLogo: "",
+      industryLabel: "跨行业筛选",
+      knowledgeTitle: "JD 的前几条职责通常不是随机排序",
+      insight: "很多岗位描述会把最常筛选的职责和 required skills 放在前半段；如果简历最上方没有回应这些高优先级信号，即使后面内容不错，也可能在快速扫描时被低估。",
+      knowledgeType: "credential_expectation",
+    },
+    {
+      company: "通用招聘规律",
+      companyLogo: "",
+      industryLabel: "跨行业筛选",
+      knowledgeTitle: "过度贴合单一 JD 也可能扣分",
+      insight: "简历如果把某一份 JD 的词逐条硬塞进去，反而会显得像关键词堆砌；更稳的做法是覆盖同类岗位都会反复出现的核心信号，让简历对一组相似岗位都有解释力。",
+      knowledgeType: "company_preference",
+    },
+  ].slice(0, Math.max(1, limit)).map((tip, index) => ({
+    ...tip,
+    relevanceReason: `与你申请的 ${targetRole} 方向相关。`,
+    sourceMentorName: "",
+    sourceMentorTitle: "",
+    sourceTopic: "通用招聘筛选",
+    sourceAdviceId: `general_insider_${index + 1}`,
+    score: Number((0.35 - index * 0.01).toFixed(3)),
+    source: "fallback",
+  }));
+}
+
+const insiderTips = Array.isArray(s.companyInsiderTips) && s.companyInsiderTips.length
+  ? s.companyInsiderTips
+  : buildDefaultInsiderTips(4);
 const insiderEl = document.getElementById('insiderTipsList');
 const insiderSection = document.getElementById('insider-tips');
 const insiderDivider = document.getElementById('insider-tips-divider');
@@ -1939,7 +1993,7 @@ if (insiderEl && insiderTips.length >= 1) {
   if (insiderSection) {
     const num = insiderSection.querySelector('.section-num');
     const title = insiderSection.querySelector('.section-title');
-    if (num) num.textContent = '05 · 公司内幕小知识';
+    if (num) num.textContent = '06 · 公司内幕小知识';
     if (title) {
       title.textContent = '帮你看懂大公司真正重视什么样的人才';
       const sectionReason = insiderTips.find((tip) => tip && tip.relevanceReason)?.relevanceReason || '';
@@ -1962,7 +2016,7 @@ if (insiderEl && insiderTips.length >= 1) {
     insiderSection.style.display = '';
   }
   if (insiderDivider) insiderDivider.style.display = '';
-  if (serviceNum) serviceNum.textContent = '06 · 升级服务';
+  if (serviceNum) serviceNum.textContent = '05 · 升级服务';
 } else {
   if (serviceNum) serviceNum.textContent = '05 · 升级服务';
 }
