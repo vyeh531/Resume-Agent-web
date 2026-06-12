@@ -347,19 +347,48 @@ function buildRoleAwareSuggestions() {
     "把最相关的项目或经历改写成 MLE 证据链：数据规模、模型/特征方法、评估指标、上线或业务影响。"
   ];
 }
+function hasConfirmedMissingSummary() {
+  const sources = [
+    ...(atsResult.problemTags || []),
+    ...(atsResult.raw?.problemTags || []),
+    ...(atsResult.diagnosticObligations || []),
+    ...(atsResult.raw?.diagnosticObligations || []),
+  ];
+  return sources.some((item) => {
+    const tag = typeof item === "string" ? item : item?.tag || item?.id || item?.problemTag || "";
+    return tag === "missing_summary";
+  }) || atsResult.diagnostics?.searchability?.hasSummary === false || atsResult.raw?.diagnostics?.searchability?.hasSummary === false;
+}
+function isMostlyEnglishProblem(text = "") {
+  const value = String(text || "").trim();
+  if (!value) return false;
+  const latin = (value.match(/[A-Za-z]/g) || []).length;
+  const cjk = (value.match(/[\u4e00-\u9fff]/g) || []).length;
+  return latin > 20 && cjk === 0;
+}
+function resultSummarySuggestionFallback() {
+  return "添加个人简介段落：用 2-3 句话说明你的背景、核心技能和目标岗位，这是系统和招聘方第一眼读到的内容，也有助于提升关键词覆盖。";
+}
+function resultKeywordSuggestionFallback() {
+  return "优先补齐岗位描述匹配缺口：只补真实经历能支撑的工具、领域词和动作词，分别放进技能栏和最相关的经历要点。";
+}
+function resultBulletSuggestionFallback() {
+  return "将每段核心经历改成「动作 + 方法/工具 + 量化结果」结构，让系统和招聘方都能看到岗位证据。";
+}
 function resultSuggestionFallbacks() {
   return [
-    "添加个人简介段落：用 2-3 句话说明你的背景、核心技能和目标岗位，这是系统和招聘方第一眼读到的内容，也有助于提升关键词覆盖。",
-    "优先补齐岗位描述匹配缺口：只补真实经历能支撑的工具、领域词和动作词，分别放进个人简介、技能栏和最相关的经历要点。",
-    "将每段核心经历改成「动作 + 方法/工具 + 量化结果」结构，让系统和招聘方都能看到岗位证据。",
+    ...(hasConfirmedMissingSummary() ? [resultSummarySuggestionFallback()] : []),
+    resultKeywordSuggestionFallback(),
+    resultBulletSuggestionFallback(),
+    "调整开头定位和经历顺序，让目标岗位的主线更容易被读到。",
   ];
 }
 function simplifySuggestionText(text) {
   const value = String(text || "").trim();
   if (!value) return "";
-  if (/Add a 2-3 line Summary section first/i.test(value)) return resultSuggestionFallbacks()[0];
-  if (/Prioritize missing role keywords/i.test(value)) return resultSuggestionFallbacks()[1];
-  if (/Rewrite top bullets/i.test(value)) return resultSuggestionFallbacks()[2];
+  if (/Add a 2-3 line Summary section first/i.test(value)) return hasConfirmedMissingSummary() ? resultSummarySuggestionFallback() : "";
+  if (/Prioritize missing role keywords/i.test(value)) return resultKeywordSuggestionFallback();
+  if (/Rewrite top bullets/i.test(value)) return resultBulletSuggestionFallback();
   return value
     .replace(/exact phrase/gi, "精确岗位原词")
     .replace(/Summary section/gi, "个人简介段落")
@@ -408,7 +437,7 @@ function normalizeSuggestionList() {
     .filter(Boolean);
   const items = [];
   for (const item of raw) {
-    if (/[A-Za-z]/.test(item)) continue;
+    if (isMostlyEnglishProblem(item)) continue;
     const nextItems = dedupeAtsList([...items, item], { max: 3 });
     if (nextItems.length > items.length) items.push(item);
     if (items.length === 3) break;
@@ -427,9 +456,10 @@ function normalizeSuggestionList() {
 }
 function resultProblemFallbacks() {
   return [
-    "简历缺少个人简介段落，岗位定位线索不够清晰。",       // write-summary
-    "经历中的量化结果偏少，建议补充百分比或规模数据。",   // impact
-    "简历整体结构还没有围绕目标岗位重新组织。",           // structure-reorganize
+    ...(hasConfirmedMissingSummary() ? ["简历缺少个人简介段落，岗位定位线索不够清晰。"] : []),
+    "岗位描述关键词匹配仍有提升空间。",
+    "经历中的量化结果偏少，建议补充百分比或规模数据。",
+    "简历整体结构可以进一步围绕目标岗位强化。",
   ];
 }
 function normalizeProblemList() {
@@ -445,7 +475,7 @@ function normalizeProblemList() {
     .filter(Boolean);
   const items = [];
   for (const item of raw) {
-    if (/[A-Za-z]/.test(item)) continue;
+    if (isMostlyEnglishProblem(item)) continue;
     const nextItems = dedupeAtsList([...items, item], { max: 3 });
     if (nextItems.length > items.length) items.push(item);
     if (items.length === 3) break;
@@ -1962,14 +1992,14 @@ function priorityBadge(p) {
   const cfg = {
     high:   { dot:"#DC2626", bg:"#FFF1F1", color:"#991B1B", border:"#FCA5A5", label:"必改" },
     medium: { dot:"#EA580C", bg:"#FFF7ED", color:"#9A3412", border:"#FDBA74", label:"建议改" },
-    low:    { dot:"#2563EB", bg:"#EFF6FF", color:"#1D4ED8", border:"#BFDBFE", label:"补充" },
+    low:    { dot:"#8B82A8", bg:"#F7F3FC", color:"#5F567A", border:"#E6DEF2", label:"补充" },
   };
   const c = cfg[lv] || cfg.medium;
   return `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:${c.bg};color:${c.color};border:1px solid ${c.border};letter-spacing:.01em;"><span style="width:5px;height:5px;border-radius:50%;background:${c.dot};flex-shrink:0;"></span>${c.label}</span>`;
 }
 
 const FIT_TYPE_CONFIG = {
-  same_role:                { label:"同职位导师",  bg:"#EFF6FF", color:"#1D4ED8", border:"#BFDBFE" },
+  same_role:                { label:"同职位导师",  bg:"#F0E8FA", color:"#5333A6", border:"#E6DEF2" },
   same_industry:            { label:"同产业导师",  bg:"#F0FDF4", color:"#15803D", border:"#BBF7D0" },
   same_function:            { label:"同职能导师",  bg:"#F0FDF4", color:"#166534", border:"#BBF7D0" },
   cross_domain_high_relevance: { label:"跨领域高相关", bg:"#FFF7ED", color:"#92400E", border:"#FDE68A" },
@@ -2082,13 +2112,13 @@ function renderApiAdviceItem(item, i) {
     ? `<span style="display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:${fitCfg.bg};color:${fitCfg.color};border:1px solid ${fitCfg.border};">${fitCfg.label}</span>` : "";
 
   const divider = i > 0
-    ? `<div style="height:1px;background:linear-gradient(to right,transparent,rgba(0,0,0,0.07),transparent);margin:22px 0;"></div>` : "";
+    ? `<div style="height:1px;background:linear-gradient(to right,transparent,rgba(69,42,147,.10),transparent);margin:22px 0;"></div>` : "";
 
   return `${divider}
     <div style="margin-top:${i > 0 ? "0" : "4px"};">
       <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap;">
         ${priorityBadge(item.priority)}
-        ${topicCluster ? `<span style="font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE;">${escapeHtml(topicCluster)}</span>` : ""}
+        ${topicCluster ? `<span style="font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:#F0E8FA;color:#5333A6;border:1px solid #E6DEF2;">${escapeHtml(topicCluster)}</span>` : ""}
         ${fitChip}
       </div>
       ${matchReason ? `<div style="display:flex;align-items:flex-start;gap:7px;background:#FAFAF8;border-radius:8px;padding:7px 10px;margin-bottom:12px;border:1px solid rgba(0,0,0,0.05);"><span style="font-size:11px;flex-shrink:0;opacity:.5;margin-top:1px;">💬</span><p style="margin:0;font-size:11.5px;line-height:1.55;color:#78716C;font-style:italic;">${escapeHtml(matchReason)}</p></div>` : ""}
@@ -2167,7 +2197,7 @@ function renderFreeMentor(m) {
   const adviceHtml = prepareDisplayAdviceItems(m.adviceItems || []).slice(0, 3).map(renderApiAdviceItem).join("");
 
   mentorFreeEl.innerHTML = `
-    <div style="background:#FFFDF7;border:1px solid rgba(0,0,0,0.07);border-radius:20px;padding:20px 20px 18px;box-shadow:0 1px 6px rgba(0,0,0,0.04);">
+    <div style="background:#FFFFFF;border:1px solid rgba(69,42,147,.10);border-radius:20px;padding:20px 20px 18px;box-shadow:0 1px 6px rgba(69,42,147,.08);">
       <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;">
         <div style="width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#E8D5B7,#C8A46E);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;font-weight:700;color:#78350F;letter-spacing:.03em;">${escapeHtml(initials)}</div>
         <div style="flex:1;min-width:0;">
@@ -2275,7 +2305,7 @@ if (atsResult && atsResult.atsScore) {
     sysSummaryEl.innerHTML = [
       jdKeywordCount !== "--" ? `<div><b>JD 关键词覆盖：</b>${jdKeywordCount}</div>` : "",
       jdKeywordCount !== "--" ? `<div>${coverageNote}</div>` : "",
-      atsResult.formatPenaltyTriggered ? `<div style="color:var(--rose);"><b>格式处罚：</b>${(atsResult.formatPenaltyReason || []).join("；")}</div>` : "",
+      atsResult.formatPenaltyTriggered ? `<div style="color:var(--bad);"><b>格式处罚：</b>${(atsResult.formatPenaltyReason || []).join("；")}</div>` : "",
     ].filter(Boolean).join("");
   }
 
@@ -2302,12 +2332,12 @@ if (atsResult && atsResult.atsScore) {
       svg += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(0,0,0,.1)" stroke-width="1"/>`;
     });
     const dataPts = dims.map((d, i) => pt(i, R * d.pct / 100).join(",")).join(" ");
-    svg += `<polygon points="${dataPts}" fill="rgba(106,191,123,.25)" stroke="var(--jade,#6abf7b)" stroke-width="2"/>`;
+    svg += `<polygon points="${dataPts}" fill="rgba(83,51,166,.16)" stroke="var(--jade,#5333A6)" stroke-width="2"/>`;
     dims.forEach((d, i) => {
       const [dx, dy] = pt(i, R * d.pct / 100);
       const [lx, ly] = pt(i, R + 22);
       const anchor = lx < cx - 4 ? "end" : lx > cx + 4 ? "start" : "middle";
-      const color = d.pct >= 70 ? "var(--good,#6abf7b)" : d.pct >= 45 ? "#e9a84c" : "var(--rose,#e07070)";
+      const color = d.pct >= 70 ? "var(--good,#1F7A4D)" : d.pct >= 45 ? "var(--warn,#B25E00)" : "var(--bad,#B3261E)";
       svg += `<circle cx="${dx}" cy="${dy}" r="4" fill="${color}"/>`;
       svg += `<text x="${lx}" y="${ly}" text-anchor="${anchor}" font-size="11" font-weight="600" fill="var(--ink-soft)" font-family="var(--sans)">${dimLabels[dimKeys[i]]}</text>`;
       svg += `<text x="${lx}" y="${ly + 13}" text-anchor="${anchor}" font-size="12" font-weight="800" fill="${color}" font-family="var(--sans)">${d.score}/${d.max}</text>`;
@@ -2317,7 +2347,7 @@ if (atsResult && atsResult.atsScore) {
     const totalEl = document.getElementById("atsTotalScore");
     if (totalEl) {
       const sc = atsResult.atsScore;
-      const scoreColor = sc >= 75 ? "var(--jade,#6abf7b)" : sc >= 55 ? "#e9a84c" : "var(--rose,#e07070)";
+      const scoreColor = sc >= 75 ? "var(--good,#1F7A4D)" : sc >= 55 ? "var(--warn,#B25E00)" : "var(--bad,#B3261E)";
       totalEl.innerHTML = `<span style="color:${scoreColor};">${sc}</span><span style="font-size:13px;color:var(--ink-soft);font-weight:500;">/100</span>`;
     }
     const riskMap = {
@@ -2335,7 +2365,7 @@ if (atsResult && atsResult.atsScore) {
   if (problemsEl) {
     const problems = normalizeProblemList();
     problemsEl.innerHTML = problems.map((p) =>
-      `<li style="margin-bottom:10px;padding-left:20px;position:relative;line-height:1.5;"><span style="position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--rose);"></span>${escapeHtml(p)}</li>`
+      `<li style="margin-bottom:10px;padding-left:20px;position:relative;line-height:1.5;"><span style="position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--bad);"></span>${escapeHtml(p)}</li>`
     ).join("") + renderAtsPreviewMoreButton("problems") + renderPaywallMoreBlock("problems");
   }
 

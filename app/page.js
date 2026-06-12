@@ -32,7 +32,7 @@ export default function HomePage() {
                   <div className="fu-sub">PDF · Word (.docx/.doc) · 纯文本 (.txt)</div>
                 </div>
                 <div className="fu-success" id="fuSuccess" style={{display:'none'}}>
-                  <div className="fu-icon-done" style={{width:36,height:36,borderRadius:10,background:'rgba(168,213,186,.25)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,fontSize:18}}>📄</div>
+                  <div className="fu-icon-done" style={{width:36,height:36,borderRadius:10,background:'rgba(180,126,219,.18)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,fontSize:18}}>📄</div>
                   <div className="fu-info" style={{flex:1,minWidth:0}}>
                     <div className="fu-filename" id="fuFilename" style={{fontWeight:600,fontSize:13,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}></div>
                     <div className="fu-meta" id="fuMeta" style={{fontSize:12,color:'var(--ink-soft)',marginTop:2}}></div>

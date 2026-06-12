@@ -1082,6 +1082,13 @@ function baseFacts(overrides = {}) {
       hasProfessionalExperienceTitle: true,
       hasEducation: true,
       hasProjects: false,
+      hasSummary: true,
+      hasSkills: true,
+      hasExperience: true,
+      sectionOrder: ["summary", "skills", "experience", "projects", "education"],
+      sectionPositions: { summary: 0, skills: 1, experience: 2, projects: 3, education: 4 },
+      hasInterests: false,
+      hasLanguages: false,
       educationBeforeExperience: false,
       ...(overrides.sections || {}),
     },
@@ -1116,6 +1123,8 @@ function baseFacts(overrides = {}) {
     },
     education: {
       hasCoursework: false,
+      hasGPA: false,
+      gpaValue: null,
       ...(overrides.education || {}),
     },
   };
@@ -1133,6 +1142,112 @@ test("allows Internship rename when Internship exists and Professional Experienc
   const result = actionPreconditionGate({
     actionSummary: 'Rename Internship section to Professional Experience.',
   }, { resumeFacts: baseFacts({ sections: { hasInternshipTitle: true, hasProfessionalExperienceTitle: false } }) });
+  assert.strictEqual(result.allowed, true);
+});
+
+test("rejects section reorder advice when resume order already matches the recommended flow", () => {
+  const result = actionPreconditionGate({
+    canonicalActionFamily: "section_structure",
+    relatedProblemTags: ["section_structure_weak", "skills_section_ordering"],
+    actionSummary: "Reorder resume sections: first Summary, second Technical Skills, third Work Experience, then Projects and Education.",
+  }, {
+    profile: { seniority: "experienced", roleFamily: "software_engineer" },
+    resumeFacts: baseFacts({
+      sections: {
+        hasProjects: true,
+        sectionOrder: ["summary", "skills", "experience", "projects", "education"],
+        sectionPositions: { summary: 0, skills: 1, experience: 2, projects: 3, education: 4 },
+        educationBeforeExperience: false,
+      },
+    }),
+  });
+  assert.strictEqual(result.allowed, false);
+  assert.strictEqual(result.reason, "section_order_condition_not_present");
+});
+
+test("allows section reorder advice when Education is ahead of Skills and Experience for an experienced candidate", () => {
+  const result = actionPreconditionGate({
+    canonicalActionFamily: "section_structure",
+    relatedProblemTags: ["section_structure_weak", "skills_section_ordering"],
+    actionSummary: "Reorder resume sections: first Summary, second Technical Skills, third Work Experience, then Projects and Education.",
+  }, {
+    profile: { seniority: "experienced", roleFamily: "software_engineer" },
+    resumeFacts: baseFacts({
+      sections: {
+        hasProjects: true,
+        sectionOrder: ["summary", "education", "skills", "experience", "projects"],
+        sectionPositions: { summary: 0, education: 1, skills: 2, experience: 3, projects: 4 },
+        educationBeforeExperience: true,
+      },
+    }),
+  });
+  assert.strictEqual(result.allowed, true);
+});
+
+test("rejects deleting Interests section when the resume has no Interests section", () => {
+  const result = actionPreconditionGate({
+    actionSummary: "Delete the Interests section to make the resume more professional.",
+  }, { resumeFacts: baseFacts({ sections: { hasInterests: false } }) });
+  assert.strictEqual(result.allowed, false);
+  assert.strictEqual(result.reason, "deletion_target_not_present");
+});
+
+test("allows deleting Interests section only when the section exists", () => {
+  const result = actionPreconditionGate({
+    actionSummary: "Delete the Interests section to make the resume more professional.",
+  }, { resumeFacts: baseFacts({ sections: { hasInterests: true } }) });
+  assert.strictEqual(result.allowed, true);
+});
+
+test("rejects misleading advice to remove internship end date", () => {
+  const result = actionPreconditionGate({
+    actionSummary: "Remove the internship end date so recruiters assume the internship is still ongoing and ignore the employment gap.",
+  }, { resumeFacts: baseFacts({ sections: { hasExperience: true } }) });
+  assert.strictEqual(result.allowed, false);
+  assert.strictEqual(result.reason, "misleading_deletion_risk");
+});
+
+test("rejects skill pruning when named tools are absent from the resume", () => {
+  const result = actionPreconditionGate({
+    actionSummary: "Delete Kafka and Docker from the Skills section for this Data Analyst resume.",
+  }, {
+    resumeText: "Summary\nData analyst\nSkills\nSQL, Tableau, Excel\nExperience\nBuilt dashboards.",
+    resumeFacts: baseFacts(),
+  });
+  assert.strictEqual(result.allowed, false);
+  assert.strictEqual(result.reason, "skill_pruning_target_not_present");
+});
+
+test("allows skill pruning when the named tool exists in the resume", () => {
+  const result = actionPreconditionGate({
+    actionSummary: "Delete Kafka from the Skills section if it is not relevant to this Data Analyst version.",
+  }, {
+    resumeText: "Summary\nData analyst\nSkills\nSQL, Tableau, Kafka\nExperience\nBuilt dashboards.",
+    resumeFacts: baseFacts(),
+  });
+  assert.strictEqual(result.allowed, true);
+});
+
+test("rejects GPA removal when GPA is not present", () => {
+  const result = actionPreconditionGate({
+    actionSummary: "Remove GPA from the Education section.",
+  }, { resumeFacts: baseFacts({ education: { hasGPA: false, gpaValue: null } }) });
+  assert.strictEqual(result.allowed, false);
+  assert.strictEqual(result.reason, "gpa_not_present");
+});
+
+test("rejects GPA removal when GPA is strong", () => {
+  const result = actionPreconditionGate({
+    actionSummary: "Remove GPA from the Education section.",
+  }, { resumeFacts: baseFacts({ education: { hasGPA: true, gpaValue: 3.8 } }) });
+  assert.strictEqual(result.allowed, false);
+  assert.strictEqual(result.reason, "gpa_not_low_enough_to_remove");
+});
+
+test("allows GPA removal when a low GPA is present", () => {
+  const result = actionPreconditionGate({
+    actionSummary: "Remove GPA from the Education section.",
+  }, { resumeFacts: baseFacts({ education: { hasGPA: true, gpaValue: 3.2 } }) });
   assert.strictEqual(result.allowed, true);
 });
 
@@ -2045,7 +2160,8 @@ test("company insider knowledge keeps market insight separate from advice POV", 
   assert.strictEqual(tip.sourceMentorName, "Y导师");
   assert.strictEqual(tip.sourceTopic, "技术技能补强");
   assert.ok(tip.knowledgeTitle.includes("Amazon"));
-  assert.ok(/sql/i.test(tip.relevanceReason));
+  assert.ok(/data analyst/i.test(tip.relevanceReason));
+  assert.ok(/sql/i.test(tip.insight));
   assert.equal(Object.prototype.hasOwnProperty.call(tip, "insightType"), false);
   assert.equal(Object.prototype.hasOwnProperty.call(tip, "hrPerspective"), false);
 });

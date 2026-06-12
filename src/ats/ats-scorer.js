@@ -2228,6 +2228,21 @@ function checkGPA(educationText) {
   return /\b(GPA|G\.P\.A\.)\s*[:;]?\s*\d\.\d|\b\d\.\d+\s*[\/]\s*4(\.\d+)?\b/i.test(educationText);
 }
 
+function extractGpaValue(educationText) {
+  const text = String(educationText || "");
+  const patterns = [
+    /\b(?:GPA|G\.P\.A\.)\s*[:;]?\s*([0-4](?:\.\d{1,2})?)\s*(?:\/\s*4(?:\.0)?)?/i,
+    /\b([0-4](?:\.\d{1,2})?)\s*\/\s*4(?:\.0)?\b/i,
+  ];
+  for (const pattern of patterns) {
+    const match = text.match(pattern);
+    if (!match) continue;
+    const value = Number(match[1]);
+    if (Number.isFinite(value) && value >= 0 && value <= 4.33) return value;
+  }
+  return null;
+}
+
 function checkSectionHasDates(text) {
   return /\b(19|20)\d{2}\b/.test(text);
 }
@@ -2835,6 +2850,8 @@ function detectResumeSectionTitles(text) {
     { title: "Education", key: "education", re: /^(education|academic background)\b/i },
     { title: "Activities", key: "activities", re: /^(activities|leadership activities|extracurriculars?)\b/i },
     { title: "Awards", key: "awards", re: /^(awards?|honors?)\b/i },
+    { title: "Interests", key: "interests", re: /^(interests?|hobbies)\b/i },
+    { title: "Languages", key: "languages", re: /^(languages?)\b/i },
     { title: "Publications", key: "publications", re: /^(publications?|papers?|research publications?)\b/i },
     { title: "Certifications", key: "certifications", re: /^(certifications?|licenses?)\b/i }
   ];
@@ -2898,6 +2915,8 @@ function buildResumeFacts({
   const educationIndex = detectSectionOrder(sectionTitles, "education");
   const experienceIndex = detectSectionOrder(sectionTitles, "experience");
   const projectsIndex = detectSectionOrder(sectionTitles, "projects");
+  const sectionOrder = unique(sectionTitles.map((item) => item.key));
+  const sectionPositions = Object.fromEntries(sectionOrder.map((key, index) => [key, index]));
   const allTerms = unique(keywordMatch?.allTerms || []);
   const presentInResume = unique(keywordMatch?.allMatched || termsPresentInText(allTerms, normalized));
   const presentInSkills = termsPresentInText(allTerms, skillsText);
@@ -2909,6 +2928,7 @@ function buildResumeFacts({
   const missingDatesSections = [];
   if (educationText.trim() && !educationHasDates) missingDatesSections.push("education");
   if (projectsText.trim() && !projectsHasDates) missingDatesSections.push("projects");
+  const gpaValue = extractGpaValue(educationText);
 
   const hasProfessionalExperienceTitle = detectedTitles.includes("Professional Experience");
   const hasInternshipTitle = detectedTitles.includes("Internship");
@@ -2921,6 +2941,8 @@ function buildResumeFacts({
     sections: {
       detectedTitles,
       normalizedSections,
+      sectionOrder,
+      sectionPositions,
       hasSummary: Boolean((summaryText || "").trim()),
       hasObjective: detectedTitles.includes("Objective"),
       hasExperience: Boolean((sections?.experience || "").trim()),
@@ -2931,6 +2953,8 @@ function buildResumeFacts({
       hasSkills: Boolean((skillsText || "").trim()),
       hasActivities: normalizedSections.includes("activities"),
       hasAwards: normalizedSections.includes("awards"),
+      hasInterests: normalizedSections.includes("interests"),
+      hasLanguages: normalizedSections.includes("languages"),
       hasPublications: normalizedSections.includes("publications"),
       hasCertifications: normalizedSections.includes("certifications"),
       educationBeforeExperience: educationIndex >= 0 && experienceIndex >= 0 && educationIndex < experienceIndex,
@@ -2993,7 +3017,8 @@ function buildResumeFacts({
     },
     education: {
       hasCoursework: Boolean(hasCoursework),
-      hasGPA: Boolean(hasGPA)
+      hasGPA: Boolean(hasGPA),
+      gpaValue
     }
   };
 }

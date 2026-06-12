@@ -526,19 +526,29 @@ function normalizeProblemListLegacy() {
     ...((atsResult.raw?.topProblems || []).map(item => item.message || item.title).filter(Boolean)),
   ].map(repairTargetRoleProblem));
 }
+function reportSummarySuggestionFallback() {
+  return "添加个人简介段落：用 2-3 句话说明你的背景、核心技能和目标岗位，这是系统和招聘方第一眼读到的内容，也有助于提升关键词覆盖。";
+}
+function reportKeywordSuggestionFallback() {
+  return "优先补齐岗位描述匹配缺口：只补真实经历能支撑的工具、领域词和动作词，分别放进技能栏和最相关的经历要点。";
+}
+function reportBulletSuggestionFallback() {
+  return "将每段核心经历改成「动作 + 方法/工具 + 量化结果」结构，让系统和招聘方都能看到岗位证据。";
+}
 function reportSuggestionFallbacks() {
   return [
-    "添加个人简介段落：用 2-3 句话说明你的背景、核心技能和目标岗位，这是系统和招聘方第一眼读到的内容，也有助于提升关键词覆盖。",
-    "优先补齐岗位描述匹配缺口：只补真实经历能支撑的工具、领域词和动作词，分别放进个人简介、技能栏和最相关的经历要点。",
-    "将每段核心经历改成「动作 + 方法/工具 + 量化结果」结构，让系统和招聘方都能看到岗位证据。",
+    ...(hasMissingSummarySignal() ? [reportSummarySuggestionFallback()] : []),
+    reportKeywordSuggestionFallback(),
+    reportBulletSuggestionFallback(),
+    "调整开头定位和经历顺序，让目标岗位的主线更容易被读到。",
   ];
 }
 function simplifySuggestionText(text) {
   const value = String(text || "").trim();
   if (!value) return "";
-  if (/Add a 2-3 line Summary section first/i.test(value)) return reportSuggestionFallbacks()[0];
-  if (/Prioritize missing role keywords/i.test(value)) return reportSuggestionFallbacks()[1];
-  if (/Rewrite top bullets/i.test(value)) return reportSuggestionFallbacks()[2];
+  if (/Add a 2-3 line Summary section first/i.test(value)) return hasMissingSummarySignal() ? reportSummarySuggestionFallback() : "";
+  if (/Prioritize missing role keywords/i.test(value)) return reportKeywordSuggestionFallback();
+  if (/Rewrite top bullets/i.test(value)) return reportBulletSuggestionFallback();
   return value
     .replace(/exact phrase/gi, "精确岗位原词")
     .replace(/Summary section/gi, "个人简介段落")
@@ -664,7 +674,7 @@ function normalizeProblemList() {
   return dedupeAtsList(items, { topicDedupe: true });
 }
 function renderAtsProblemItem(text) {
-  return `<li style="margin-bottom:10px;padding-left:20px;position:relative;line-height:1.5;"><span style="position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--rose);"></span>${escapeHtml(text)}</li>`;
+  return `<li style="margin-bottom:10px;padding-left:20px;position:relative;line-height:1.5;"><span style="position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--bad);"></span>${escapeHtml(text)}</li>`;
 }
 function renderExpandableAtsProblems(sectionEl, problems, visibleCount = 5) {
   if (!sectionEl) return;
@@ -682,7 +692,7 @@ function renderExpandableAtsProblems(sectionEl, problems, visibleCount = 5) {
     ? `<button type="button" class="skill-expand-toggle ats-problem-toggle" style="margin-top:2px;">&#26597;&#30475;&#20840;&#37096;</button>`
     : "";
   sectionEl.innerHTML = `
-    <div style="font-size:13px;font-weight:600;color:var(--rose);margin-bottom:8px;">&#128269; &#20851;&#38190;&#38382;&#39064;</div>
+    <div style="font-size:13px;font-weight:600;color:var(--bad);margin-bottom:8px;">&#128269; &#20851;&#38190;&#38382;&#39064;</div>
     <ul style="list-style:none;padding:0;margin:0;font-size:13px;">${items}</ul>
     ${toggle}`;
   const toggleBtn = sectionEl.querySelector(".ats-problem-toggle");
@@ -869,7 +879,7 @@ function formatAdvice(text){
 function highlightFake(text){
   if (!text) return "";
   return String(text).replace(/\[\[([^\]]+)\]\]/g,
-    '<mark style="background:rgba(232,160,107,.22);color:var(--apricot,#e8a06b);border-radius:3px;padding:0 2px;font-weight:600;" title="AI 估算数据，仅供参考">$1</mark>'
+    '<mark style="background:rgba(180,126,219,.22);color:var(--apricot,#B47EDB);border-radius:3px;padding:0 2px;font-weight:600;" title="AI 估算数据，仅供参考">$1</mark>'
   );
 }
 function plainTextFromHtml(text) {
@@ -1266,17 +1276,13 @@ if (headlineEl) headlineEl.textContent = atsScore || "--";
     [0.25, 0.5, 0.75, 1].forEach(frac => {
       svg += `<polygon points="${dimKeys.map((_,i) => pt(i, R * frac).join(",")).join(" ")}" fill="none" stroke="rgba(0,0,0,.08)" stroke-width="1"/>`;
     });
-    dimKeys.forEach((_, i) => {
-      const [x, y] = pt(i, R);
-      svg += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(0,0,0,.1)" stroke-width="1"/>`;
-    });
     const dataPts = dims.map((d, i) => pt(i, R * d.pct / 100).join(",")).join(" ");
-    svg += `<polygon points="${dataPts}" fill="rgba(106,191,123,.25)" stroke="var(--jade,#6abf7b)" stroke-width="2"/>`;
+    svg += `<polygon points="${dataPts}" fill="rgba(83,51,166,.16)" stroke="var(--jade,#5333A6)" stroke-width="2" stroke-linejoin="round"/>`;
     dims.forEach((d, i) => {
       const [dx, dy] = pt(i, R * d.pct / 100);
       const [lx, ly] = pt(i, R + 22);
       const anchor = lx < cx - 4 ? "end" : lx > cx + 4 ? "start" : "middle";
-      const color = d.pct >= 70 ? "var(--good,#6abf7b)" : d.pct >= 45 ? "#e9a84c" : "var(--rose,#e07070)";
+      const color = d.pct >= 70 ? "var(--good,#1F7A4D)" : d.pct >= 45 ? "var(--warn,#B25E00)" : "var(--bad,#B3261E)";
       svg += `<circle cx="${dx}" cy="${dy}" r="4" fill="${color}"/>`;
       svg += `<text x="${lx}" y="${ly}" text-anchor="${anchor}" font-size="11" font-weight="600" fill="var(--ink-soft)" font-family="var(--sans)">${dimLabels[dimKeys[i]]}</text>`;
       svg += `<text x="${lx}" y="${ly + 13}" text-anchor="${anchor}" font-size="12" font-weight="800" fill="${color}" font-family="var(--sans)">${d.score}/${d.max}</text>`;
@@ -1287,7 +1293,7 @@ if (headlineEl) headlineEl.textContent = atsScore || "--";
   const totalEl = document.getElementById("atsTotalScore");
   if (totalEl && atsResult.atsScore) {
     const sc = atsResult.atsScore;
-    const scoreColor = sc >= 75 ? "var(--jade,#6abf7b)" : sc >= 55 ? "#e9a84c" : "var(--rose,#e07070)";
+    const scoreColor = sc >= 75 ? "var(--good,#1F7A4D)" : sc >= 55 ? "var(--warn,#B25E00)" : "var(--bad,#B3261E)";
     totalEl.innerHTML = `<span style="color:${scoreColor};">${sc}</span><span style="font-size:13px;color:var(--ink-soft);font-weight:500;">/100</span>`;
   }
   const riskMap = {
@@ -1303,7 +1309,7 @@ if (headlineEl) headlineEl.textContent = atsScore || "--";
   if (sysSummaryEl) {
     sysSummaryEl.innerHTML = [
       jdKeywordCount !== "--" ? `<div><b>JD 关键词覆盖：</b>${jdKeywordCount}</div>` : "",
-      atsResult.formatPenaltyTriggered ? `<div style="color:var(--rose);"><b>格式处罚：</b>${(atsResult.formatPenaltyReason || []).join("；")}</div>` : "",
+      atsResult.formatPenaltyTriggered ? `<div style="color:var(--bad);"><b>格式处罚：</b>${(atsResult.formatPenaltyReason || []).join("；")}</div>` : "",
     ].filter(Boolean).join("");
   }
 
@@ -1314,7 +1320,7 @@ if (headlineEl) headlineEl.textContent = atsScore || "--";
   return;
   if (probSection) {
     probSection.innerHTML = `
-      ${problems.length ? `<div style="font-size:13px;font-weight:600;color:var(--rose);margin-bottom:8px;">&#128269; &#20851;&#38190;&#38382;&#39064;</div>
+      ${problems.length ? `<div style="font-size:13px;font-weight:600;color:var(--bad);margin-bottom:8px;">&#128269; &#20851;&#38190;&#38382;&#39064;</div>
       <ul style="list-style:none;padding:0;margin:0;font-size:13px;">
         ${problems.map(renderAtsProblemItem).join("")}
       </ul>` : ""}`;
@@ -1434,7 +1440,7 @@ function renderKeywordCategories(items) {
         const missing = normalizeTerms(cat.missing || []);
         const total = cat.total || matched.length + missing.length;
         const pct = total ? Math.round((matched.length / total) * 100) : 0;
-        const pctColor = pct>=70 ? "var(--good)" : pct>=40 ? "#e9a84c" : "var(--rose)";
+        const pctColor = pct>=70 ? "var(--good)" : pct>=40 ? "var(--warn)" : "var(--bad)";
         const matchedPills = matched.map(k => `<span style="display:inline-block;padding:3px 8px;border-radius:99px;background:rgba(106,191,123,.15);color:#2d7a4a;font-size:12px;font-weight:500;margin:2px;">${escapeHtml(k)}</span>`).join("");
         const missingPills = missing.map(k => `<span style="display:inline-block;padding:3px 8px;border-radius:99px;background:rgba(224,112,112,.12);color:#b02020;font-size:12px;font-weight:500;margin:2px;">${escapeHtml(k)}</span>`).join("");
         return `<div style="margin-bottom:14px;">
@@ -1466,7 +1472,7 @@ function renderKeywordCategories(items) {
     renderExpandableAtsProblems(probSection, problems);
     return;
     probSection.innerHTML = `
-      ${problems.length ? `<div style="font-size:13px;font-weight:600;color:var(--rose);margin-bottom:8px;">&#128269; &#20851;&#38190;&#38382;&#39064;</div>
+      ${problems.length ? `<div style="font-size:13px;font-weight:600;color:var(--bad);margin-bottom:8px;">&#128269; &#20851;&#38190;&#38382;&#39064;</div>
       <ul style="list-style:none;padding:0;margin:0;font-size:13px;">${problems.map(renderAtsProblemItem).join("")}</ul>` : ""}`;
   }
 })();
@@ -1488,7 +1494,7 @@ function priorityBadge(p){
   const cfg = {
     high:   { dot:"#EF4444", bg:"#FEF2F2", color:"#B91C1C", border:"#FECACA", label:"必改" },
     medium: { dot:"#F97316", bg:"#FFF7ED", color:"#C2410C", border:"#FED7AA", label:"建议改" },
-    low:    { dot:"#3B82F6", bg:"#EFF6FF", color:"#1D4ED8", border:"#BFDBFE", label:"补充" },
+    low:    { dot:"#8B82A8", bg:"#F7F3FC", color:"#5F567A", border:"#E6DEF2", label:"补充" },
   };
   const c = cfg[lv] || cfg.medium;
   return `<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:${c.bg};color:${c.color};border:1px solid ${c.border};"><span style="width:6px;height:6px;border-radius:50%;background:${c.dot};flex-shrink:0;"></span>${c.label}</span>`;
@@ -1508,7 +1514,7 @@ function renderAdviceItem(item, idx) {
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
         ${priorityBadge(item.priority)}
         <span style="font-size:11px;color:#9CA3AF;font-weight:500;">导师建议 ${idx+1}</span>
-        <span style="margin-left:auto;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE;flex-shrink:0;">${escapeHtml(item.displayAdviceType || item.topicCluster || sectionLabel(item.targetSection))}</span>
+        <span style="margin-left:auto;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:#F0E8FA;color:#5333A6;border:1px solid #E6DEF2;flex-shrink:0;">${escapeHtml(item.displayAdviceType || item.topicCluster || sectionLabel(item.targetSection))}</span>
       </div>
       <h4 style="margin:0 0 14px;font-size:16px;font-weight:700;color:#111827;line-height:1.4;">${escapeHtml(item.title)}</h4>
       ${problemSummary ? `<div style="display:flex;gap:10px;background:#F8F7F4;border-left:3px solid #D1C9B8;border-radius:0 10px 10px 0;padding:12px 14px;margin-bottom:10px;"><span style="font-size:15px;flex-shrink:0;margin-top:1px;">💡</span><div><div style="font-size:11px;font-weight:700;color:#78350F;margin-bottom:4px;">你的现状</div><p style="margin:0;font-size:13px;line-height:1.65;color:#44403C;">${escapeHtml(problemSummary)}</p></div></div>` : ""}
@@ -1532,18 +1538,18 @@ function renderPremiumMentorCard(m, idx) {
   const advice = (m.adviceItems||[]).slice(0,3).map((item,i)=>renderAdviceItem(item,i)).join("");
   const companyMeta = [m.company, m.mentorTitle].filter(Boolean).join(" · ");
   return `
-    <article style="background:#FFFDF6;border:1px solid #EDE9DC;border-radius:22px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:16px;">
+    <article style="background:#FFFFFF;border:1px solid #E6DEF2;border-radius:22px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:16px;">
       <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:18px;">
-        <div class="mentor-avatar-placeholder" style="width:48px;height:48px;border-radius:50%;background:#F3F4F6;border:1px solid #EDE9DC;flex-shrink:0;"></div>
+        <div class="mentor-avatar-placeholder" style="width:48px;height:48px;border-radius:50%;background:#F3F4F6;border:1px solid #E6DEF2;flex-shrink:0;"></div>
         <div style="flex:1;min-width:0;">
         <div style="font-weight:700;font-size:18px;color:#111827;line-height:1.2;">${escapeHtml(m.mentorName||"导师")}</div>
         ${companyMeta ? `<div style="font-size:12px;color:#9CA3AF;margin-top:4px;">${escapeHtml(companyMeta)}</div>` : ""}
         ${m.careerPathDisplay ? `<div style="font-size:12px;color:#9CA3AF;margin-top:2px;">${escapeHtml(m.careerPathDisplay)}</div>` : ""}
         </div>
       </div>
-      <div style="height:1px;background:#EDE9DC;margin:0 0 20px;"></div>
+      <div style="height:1px;background:#E6DEF2;margin:0 0 20px;"></div>
       <div>${advice}</div>
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-top:1px solid #EDE9DC;margin-top:20px;padding-top:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-top:1px solid #E6DEF2;margin-top:20px;padding-top:14px;">
         <span style="font-size:12px;color:#9CA3AF;font-weight:500;">导师 ${idx+1} / 4</span>
       </div>
     </article>
@@ -1553,7 +1559,7 @@ function renderPremiumMentorCard(m, idx) {
 function renderAdviceBundle(items, logoPool) {
   const advice = (items || []).slice(0, 12).map((item, i) => renderAdviceItem(item, i)).join("");
   return `
-    <article style="background:#FFFDF6;border:1px solid #EDE9DC;border-radius:22px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:16px;">
+    <article style="background:#FFFFFF;border:1px solid #E6DEF2;border-radius:22px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:16px;">
       <div>${advice}</div>
     </article>
   `;
@@ -1570,10 +1576,10 @@ function renderMentorGroupHeader(mentor, groupIdx, totalGroups) {
   const logoUrl = mentor.companyLogo || getCompanyLogo(mentor.company);
   const mentorDisplayName = mentor.mentorName || "X导师";
   const logoHtml = logoUrl
-    ? `<div style="width:56px;height:56px;border-radius:10px;background:#fff;border:1px solid #EDE9DC;display:flex;align-items:center;justify-content:center;padding:7px;flex-shrink:0;"><img src="${escapeAttr(logoUrl)}" alt="${escapeAttr(mentor.company||"")}" style="max-width:100%;max-height:100%;object-fit:contain;"></div>`
+    ? `<div style="width:56px;height:56px;border-radius:10px;background:#fff;border:1px solid #E6DEF2;display:flex;align-items:center;justify-content:center;padding:7px;flex-shrink:0;"><img src="${escapeAttr(logoUrl)}" alt="${escapeAttr(mentor.company||"")}" style="max-width:100%;max-height:100%;object-fit:contain;"></div>`
     : avatarCircle(mentor.company || mentorDisplayName, 56);
   return `
-    <div style="display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid #EDE9DC;margin-bottom:20px;">
+    <div style="display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid #E6DEF2;margin-bottom:20px;">
       ${logoHtml}
       <div style="flex:1;min-width:0;">
         <div style="font-weight:700;font-size:17px;color:#111827;line-height:1.2;">${escapeHtml(mentorDisplayName)}</div>
@@ -1589,7 +1595,7 @@ function renderMentorGroup(mentor, groupIdx, totalGroups) {
   if (!adviceItems.length) return "";
   const advice = adviceItems.map((item, i) => renderAdviceItem(item, i)).join("");
   return `
-    <article style="background:#FFFDF6;border:1px solid #EDE9DC;border-radius:22px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:16px;">
+    <article style="background:#FFFFFF;border:1px solid #E6DEF2;border-radius:22px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:16px;">
       ${renderMentorGroupHeader(mentor, groupIdx, totalGroups)}
       <div>${advice}</div>
     </article>`;
@@ -1768,7 +1774,7 @@ function collectReportAdviceItems() {
 }
 
 const FIT_TYPE_CONFIG = {
-  same_role: { label:"同职位导师", bg:"#EFF6FF", color:"#1D4ED8", border:"#BFDBFE" },
+  same_role: { label:"同职位导师", bg:"#F0E8FA", color:"#5333A6", border:"#E6DEF2" },
   same_industry: { label:"同产业导师", bg:"#F0FDF4", color:"#15803D", border:"#BBF7D0" },
   same_function: { label:"同职能导师", bg:"#F0FDF4", color:"#166534", border:"#BBF7D0" },
   cross_domain_high_relevance: { label:"跨领域高相关", bg:"#FFF7ED", color:"#92400E", border:"#FDE68A" },
@@ -1798,7 +1804,7 @@ function renderAdviceItem(item, i) {
     <div style="margin-top:${i > 0 ? "0" : "4px"};">
       <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap;">
         ${priorityBadge(item.priority)}
-        ${topicCluster ? `<span style="font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE;">${escapeHtml(topicCluster)}</span>` : ""}
+        ${topicCluster ? `<span style="font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:#F0E8FA;color:#5333A6;border:1px solid #E6DEF2;">${escapeHtml(topicCluster)}</span>` : ""}
         ${fitChip}
       </div>
       <h4 style="margin:0 0 13px;font-size:15px;font-weight:700;color:#111827;line-height:1.4;"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#111827;color:#fff;font-size:11px;margin-right:8px;vertical-align:1px;">${i + 1}</span>${escapeHtml(item.title)}</h4>
@@ -1893,10 +1899,13 @@ function renderInsiderTipsSection(tips) {
     const sourceTitle = tip.sourceMentorTitle || tip.mentorTitle || '';
     const sourceTopic = tip.sourceTopic || tip.topic || '';
     const sourceParts = [company, sourceMentor, sourceTitle].filter(Boolean).join(' · ');
-    const sourceLine = [sourceParts, sourceTopic ? `对应主题：${sourceTopic}` : ''].filter(Boolean).join(' · ');
+    const isGeneralFallback = tip.source === 'fallback' && /^general_insider_/.test(String(tip.sourceAdviceId || ''));
+    const sourceLine = isGeneralFallback
+      ? '來自各大公司導師根据通用招聘筛选规律整理'
+      : [sourceParts, sourceTopic ? `对应主题：${sourceTopic}` : ''].filter(Boolean).join(' · ');
     const logo = tip.companyLogo
-      ? `<img src="${escapeAttr(tip.companyLogo)}" alt="${escapeAttr(company)}" style="width:46px;height:46px;object-fit:contain;border-radius:8px;background:#fff;padding:5px;border:1px solid #ede9dc;" />`
-      : `<div style="width:46px;height:46px;border-radius:8px;background:var(--paper-warm,#f6f3ec);border:1px solid #ede9dc;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;color:var(--jade,#2f6b4f);">${escapeHtml(company[0] || '?')}</div>`;
+      ? `<img src="${escapeAttr(tip.companyLogo)}" alt="${escapeAttr(company)}" style="width:46px;height:46px;object-fit:contain;border-radius:8px;background:#fff;padding:5px;border:1px solid #E6DEF2;" />`
+      : `<div style="width:46px;height:46px;border-radius:8px;background:var(--paper-warm,#FFFFFF);border:1px solid #E6DEF2;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;color:var(--jade,#5333A6);">${escapeHtml(company[0] || '?')}</div>`;
     const typeLabel = {
       company_preference: '公司偏好',
       industry_pattern: '行业规律',
@@ -1905,14 +1914,14 @@ function renderInsiderTipsSection(tips) {
       credential_expectation: '背景门槛',
     }[tip.knowledgeType] || '小知识';
     return `
-<div style="background:#fffdf7;border:1px solid #ede9dc;border-radius:12px;padding:16px 18px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,0,0,0.04);">
+<div style="background:#FFFFFF;border:1px solid #E6DEF2;border-radius:12px;padding:16px 18px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,0,0,0.04);">
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
     ${logo}
     <div style="flex:1;min-width:0;">
       <div style="font-weight:800;font-size:15px;line-height:1.25;color:var(--ink);">${escapeHtml(title)}</div>
       <div style="font-size:12px;color:var(--ink-soft);margin-top:3px;">${escapeHtml(company)}${tip.industryLabel ? ' · ' + escapeHtml(tip.industryLabel) : ''}</div>
     </div>
-    <span style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(47,107,79,0.10);color:var(--jade,#2f6b4f);white-space:nowrap;">${escapeHtml(typeLabel)}</span>
+    <span style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(83,51,166,0.10);color:var(--jade,#5333A6);white-space:nowrap;">${escapeHtml(typeLabel)}</span>
   </div>
   <p style="font-size:14px;line-height:1.65;color:var(--ink);margin:0 0 10px;">${escapeHtml(tip.insight)}</p>
   ${sourceLine ? `<div style="font-size:11.5px;color:var(--ink-soft);line-height:1.45;">来源：${escapeHtml(sourceLine)}</div>` : ''}
@@ -1938,7 +1947,7 @@ if (insiderEl && insiderTips.length >= 1) {
       if (sectionReason && !reasonEl) {
         reasonEl = document.createElement('p');
         reasonEl.id = 'insiderTipsReason';
-        reasonEl.style.cssText = 'font-size:12.5px;line-height:1.55;color:var(--jade,#2f6b4f);background:var(--jade-soft,#eaf4ec);border-radius:8px;padding:8px 10px;margin:-4px 0 14px;';
+        reasonEl.style.cssText = 'font-size:12.5px;line-height:1.55;color:var(--jade,#5333A6);background:var(--jade-soft,#F0E8FA);border-radius:8px;padding:8px 10px;margin:-4px 0 14px;';
         title.insertAdjacentElement('afterend', reasonEl);
       }
       if (reasonEl) {
@@ -2115,9 +2124,9 @@ function exportPDFLegacy(){
   document.body.classList.add('exporting');
   const opt = {
     margin: [10, 8, 10, 8],
-    filename: "MentorX-诊断报告-" + new Date().toISOString().slice(0,10) + ".pdf",
+    filename: "MentorX-Resume-Diagnostic-Report.pdf",
     image: { type: 'jpeg', quality: 0.95 },
-    html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#f6f3ec', windowWidth: 480 },
+    html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#FFFFFF', windowWidth: 480 },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
     pagebreak: { mode: ['css', 'legacy'], avoid: '.section, .mentor-card-v2, .advice-example, .service-card' }
   };
@@ -2144,7 +2153,7 @@ function createPdfStage(contentEl) {
     "left:0",
     "width:794px",
     "min-height:1123px",
-    "background:#f6f3ec",
+    "background:#FFFFFF",
     "z-index:2147483647",
     "pointer-events:none",
     "overflow:visible"
@@ -2162,15 +2171,35 @@ function buildFullReportPdfElement() {
   if (!pageEl) return null;
   const clone = pageEl.cloneNode(true);
   clone.querySelectorAll(".banner,.export-card,.footnote").forEach((el) => el.remove());
+  expandReportCloneForPrint(clone);
   clone.style.width = "794px";
   clone.style.maxWidth = "794px";
   clone.style.margin = "0";
   clone.style.padding = "32px 48px 44px";
   clone.style.boxShadow = "none";
   clone.style.border = "none";
-  clone.style.background = "#f6f3ec";
+  clone.style.background = "#FFFFFF";
   clone.style.transform = "none";
   return clone;
+}
+function expandReportCloneForPrint(root) {
+  if (!root) return;
+  root.querySelectorAll("details").forEach((details) => {
+    details.setAttribute("open", "");
+  });
+  root.querySelectorAll(".report-skill-extra,.ats-problem-extra,.jd-keyword-chip[hidden]").forEach((el) => {
+    el.hidden = false;
+    el.removeAttribute("hidden");
+  });
+  root.querySelectorAll(".skill-expand-toggle,.ats-problem-toggle,.jd-keyword-expand").forEach((el) => {
+    el.remove();
+  });
+  root.querySelectorAll(".ats-preview-details").forEach((el) => {
+    el.classList.add("is-expanded");
+  });
+  root.querySelectorAll(".paywall-more").forEach((el) => {
+    el.style.display = "block";
+  });
 }
 async function exportPDF(){
   if (!window.html2pdf) { alert("PDF library is still loading. Please refresh and try again."); return; }
@@ -2187,13 +2216,13 @@ async function exportPDF(){
     const exportWidth = 794;
     const opt = {
       margin: [0, 0, 0, 0],
-      filename: "MentorX-report-" + new Date().toISOString().slice(0,10) + ".pdf",
+      filename: "MentorX-Resume-Diagnostic-Report.pdf",
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: {
         scale: 2,
         useCORS: true,
         logging: false,
-        backgroundColor: '#f6f3ec',
+        backgroundColor: '#FFFFFF',
         windowWidth: exportWidth,
         scrollX: 0,
         scrollY: 0
@@ -2223,13 +2252,13 @@ async function exportAiRewritePDF(){
     const exportWidth = 794;
     const opt = {
       margin: [0, 0, 0, 0],
-      filename: "MentorX-AI-resume-rewrite-prompt-" + new Date().toISOString().slice(0,10) + ".pdf",
+      filename: "MentorX-AI-Resume-Rewrite-Prompt-Pack.pdf",
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: {
         scale: 2,
         useCORS: true,
         logging: false,
-        backgroundColor: '#f6f3ec',
+        backgroundColor: '#FFFFFF',
         windowWidth: exportWidth,
         scrollX: 0,
         scrollY: 0
@@ -2277,9 +2306,9 @@ function printDocumentFromHtml(html, title = "MentorX PDF") {
         ${collectPrintStyles()}
         <style>
           @page { size: A4 portrait; margin: 12mm; }
-          html, body { margin: 0 !important; padding: 0 !important; background: #f6f3ec !important; }
+          html, body { margin: 0 !important; padding: 0 !important; background: #FFFFFF !important; }
           body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-          .page { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; border: 0 !important; background: #f6f3ec !important; }
+          .page { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; border: 0 !important; background: #FFFFFF !important; }
           .banner, .export-card, .footnote { display: none !important; }
           .brandbar { padding: 0 0 14px !important; }
           .brand-img { height: 42px !important; }
@@ -2290,7 +2319,7 @@ function printDocumentFromHtml(html, title = "MentorX PDF") {
           .tiles { gap: 10px !important; }
           .section, .card, .tile, .service-card, .advice-example, .ai-pdf-card, .ai-pdf-advice { break-inside: auto !important; page-break-inside: auto !important; }
           h1, h2, h3, .section-title, .ai-pdf-label { break-after: avoid; page-break-after: avoid; }
-          .ai-rewrite-pdf { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; background: #f6f3ec !important; }
+          .ai-rewrite-pdf { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; background: #FFFFFF !important; }
           .ai-rewrite-pdf h1 { font-size: 24px !important; margin: 8px 0 6px !important; }
           .ai-rewrite-pdf h2 { font-size: 16px !important; }
           .ai-rewrite-pdf h3 { font-size: 12.5px !important; }
@@ -2328,11 +2357,12 @@ function exportPDFPrint(){
   if (!pageEl) return;
   const clone = pageEl.cloneNode(true);
   clone.querySelectorAll(".banner,.export-card,.footnote").forEach((el) => el.remove());
-  printDocumentFromHtml(clone.outerHTML, "MentorX-report");
+  expandReportCloneForPrint(clone);
+  printDocumentFromHtml(clone.outerHTML, "MentorX-Resume-Diagnostic-Report");
 }
 function exportAiRewritePDFPrint(){
   const el = buildAiRewritePdfElement();
-  printDocumentFromHtml(el.outerHTML, "MentorX-AI-resume-rewrite-prompt");
+  printDocumentFromHtml(el.outerHTML, "MentorX-AI-Resume-Rewrite-Prompt-Pack");
 }
 window.exportPDF = exportPDFPrint;
 window.exportAiRewritePDF = exportAiRewritePDFPrint;

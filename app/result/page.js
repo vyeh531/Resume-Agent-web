@@ -24,53 +24,53 @@ export default function ResultPage() {
         .skill-legend span{display:inline-flex;align-items:center;gap:5px}
         .skill-legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
         .skill-section-desc{font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin:-4px 0 12px}
-        .keyword-use{font-size:10.5px;font-weight:700;border-radius:999px;padding:3px 7px;border:1px solid var(--line);white-space:nowrap;background:#fffdf7;color:var(--ink-soft)}
-        .keyword-use--skills{background:var(--jade-soft);color:var(--jade);border-color:#c2dcc6}
+        .keyword-use{font-size:10.5px;font-weight:700;border-radius:999px;padding:3px 7px;border:1px solid var(--line);white-space:nowrap;background:#fff;color:var(--ink-soft)}
+        .keyword-use--skills{background:var(--jade-soft);color:var(--jade);border-color:var(--line)}
         .keyword-use--experience{background:#fff7ed;color:#9a3412;border-color:#fed7aa}
         .keyword-use--summary{background:#eef2ff;color:#4338ca;border-color:#c7d2fe}
-        .keyword-use--reference{background:#f5f5f4;color:#78716c;border-color:#e7e2d6}
+        .keyword-use--reference{background:#F7F3FC;color:#5F567A;border-color:#E6DEF2}
         .skill-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
         .jd-keyword-details{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
         .jd-keyword-details summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:center;gap:6px;color:var(--ink-soft);font-size:13px;font-weight:700;padding:6px 0}
         .jd-keyword-details summary::-webkit-details-marker{display:none}
         .jd-keyword-groups{display:grid;gap:10px;margin-top:8px}
         .jd-keyword-groups.is-locked{filter:blur(4px);user-select:none;pointer-events:none}
-        .jd-keyword-group{border:1px solid #ede9dc;background:#fffdf7;border-radius:10px;padding:10px 11px}
+        .jd-keyword-group{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 11px}
         .jd-keyword-group-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
         .jd-keyword-group-title{font-size:12px;font-weight:800;color:var(--ink);letter-spacing:.01em}
         .jd-keyword-group-count{font-family:var(--mono);font-size:10px;color:var(--ink-mute)}
         .jd-keyword-chips{display:flex;flex-wrap:wrap;gap:6px}
-        .jd-keyword-chip{display:inline-flex;align-items:center;gap:5px;border:1px solid #e7e2d6;background:#fff;border-radius:999px;padding:4px 8px;font-size:11.5px;color:var(--ink-soft);max-width:100%}
+        .jd-keyword-chip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 8px;font-size:11.5px;color:var(--ink-soft);max-width:100%}
         .jd-keyword-chip b{font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
         .jd-keyword-chip .state{width:6px;height:6px;border-radius:50%;flex-shrink:0;background:var(--warn)}
         .jd-keyword-chip.is-have .state{background:var(--good)}
-        .jd-keyword-paywall{position:relative;min-height:142px;margin-top:10px;border:1px dashed var(--line);border-radius:10px;overflow:hidden;background:#fffdf8}
+        .jd-keyword-paywall{position:relative;min-height:142px;margin-top:10px;border:1px dashed var(--line);border-radius:10px;overflow:hidden;background:#F7F3FC}
         .jd-keyword-paywall .paywall-more-list{filter:blur(4px);user-select:none;pointer-events:none;padding:12px}
-        .unlock-cta{background:linear-gradient(135deg,var(--ink) 0%,var(--indigo-deep) 100%);color:#fff;border-radius:var(--r-lg);padding:22px;text-align:center;margin-top:16px;position:relative;overflow:hidden}
-        .unlock-cta::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,rgba(232,160,107,.25) 0%,transparent 50%);pointer-events:none}
+        .unlock-cta{background:linear-gradient(135deg,#452A93 0%,#5333A6 45%,#7A52C5 100%);color:#fff;border-radius:var(--r-lg);padding:22px;text-align:center;margin-top:16px;position:relative;overflow:hidden;box-shadow:var(--shadow-pop)}
+        .unlock-cta::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,rgba(180,126,219,.32) 0%,transparent 50%);pointer-events:none}
         .unlock-cta > *{position:relative}
         .unlock-cta-title{font-family:var(--serif);font-weight:700;font-size:18px;margin:0 0 8px}
         .unlock-cta-price{margin:12px 0 18px;display:flex;align-items:baseline;justify-content:center;gap:10px}
-        .unlock-cta-price .now{font-family:var(--serif);font-style:italic;font-weight:700;font-size:40px;color:var(--apricot)}
+        .unlock-cta-price .now{font-family:var(--serif);font-style:italic;font-weight:700;font-size:40px;color:#FFFFFF}
         .unlock-cta-price .now b{font-size:22px}
         .unlock-cta-price .was{color:rgba(255,255,255,.5);font-size:14px;text-decoration:line-through}
         .unlock-cta-perks{list-style:none;padding:0;margin:0 0 16px;font-size:13px;color:rgba(255,255,255,.85);text-align:left;display:inline-flex;flex-direction:column;gap:6px}
         .unlock-cta-perks li{display:flex;gap:8px;align-items:flex-start}
-        .unlock-cta-perks li::before{content:"✓";color:var(--apricot);font-weight:700;flex-shrink:0}
+        .unlock-cta-perks li::before{content:"✓";color:#B47EDB;font-weight:700;flex-shrink:0}
         .unlock-cta-foot{font-size:11px;color:rgba(255,255,255,.5);margin-top:12px;font-family:var(--mono);letter-spacing:.04em}
-        .unlock-cta .btn-jade{background:var(--apricot);color:var(--ink);box-shadow:0 12px 28px -10px rgba(232,160,107,.55);font-weight:700}
-        .unlock-cta .btn-jade:hover{background:#db8e57}
-        .logo-marquee{overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#fffdf7;margin:0 0 16px;padding:10px 0}
+        .unlock-cta .btn-jade{background:#FFFFFF;color:var(--indigo);box-shadow:0 12px 28px rgba(31,23,68,.22);font-weight:700}
+        .unlock-cta .btn-jade:hover{background:#F4EDFB}
+        .logo-marquee{overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#fff;margin:0 0 16px;padding:10px 0}
         .logo-marquee-track{display:flex;gap:14px;width:max-content;animation:logo-scroll 72s linear infinite}
         .logo-marquee:hover .logo-marquee-track{animation-play-state:paused}
-        .mentor-logo-chip{width:72px;height:42px;border:1px solid #ede9dc;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;padding:7px;flex:0 0 auto}
+        .mentor-logo-chip{width:72px;height:42px;border:1px solid var(--line);border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;padding:7px;flex:0 0 auto}
         .mentor-logo-chip img{max-width:100%;max-height:100%;object-fit:contain}
         .mentor-logo-intro{margin:4px 0 14px}
         .mentor-logo-copy{font-size:12.5px;line-height:1.55;color:var(--ink-soft);margin:0 0 8px}
-        .paywall-more{position:relative;margin-top:8px;min-height:170px;border-radius:10px;overflow:hidden;border:1px dashed var(--line);background:#fffdf8}
+        .paywall-more{position:relative;margin-top:8px;min-height:170px;border-radius:10px;overflow:hidden;border:1px dashed var(--line);background:#F7F3FC}
         .paywall-more-list{filter:blur(4px);user-select:none;pointer-events:none;padding:10px 12px}
         .paywall-more-list div{font-size:13px;line-height:1.5;margin:0 0 8px;padding-left:18px;position:relative;color:var(--ink-soft)}
-        .paywall-more-overlay,.locked-preview-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-start;flex-direction:column;background:linear-gradient(180deg,rgba(251,250,243,.54) 0%,rgba(251,250,243,.96) 56%);backdrop-filter:blur(1px);padding:14px 18px 18px;text-align:center;box-sizing:border-box}
+        .paywall-more-overlay,.locked-preview-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-start;flex-direction:column;background:linear-gradient(180deg,rgba(247,243,252,.54) 0%,rgba(247,243,252,.96) 56%);backdrop-filter:blur(1px);padding:14px 18px 18px;text-align:center;box-sizing:border-box}
         .result-lock-cta{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;color:var(--ink);width:fit-content;max-width:100%;margin:0 auto;box-sizing:border-box}
         .result-lock-cta .lock{width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--paper-warm);display:grid;place-items:center;font-size:15px;box-shadow:0 8px 20px -8px rgba(24,24,22,.4)}
         .result-lock-cta .text{font-size:12.5px;font-weight:600;line-height:1.45;color:var(--ink)}
@@ -149,7 +149,7 @@ export default function ResultPage() {
         <section className="section" id="atsDetailSection" hidden>
           <div className="section-num">ATS 诊断</div>
           <h3 className="section-title" style={{fontSize:'18px'}}>ATS System 评分</h3>
-          <div className="card" style={{background:'linear-gradient(135deg,rgba(168,213,186,.08) 0%,rgba(232,160,107,.06) 100%)',border:'1px solid rgba(168,213,186,.2)'}}>
+          <div className="card" style={{background:'linear-gradient(135deg,rgba(247,243,252,.92) 0%,rgba(255,255,255,.96) 100%)',border:'1px solid var(--line)'}}>
             <div style={{display:'flex',flexDirection:'column',alignItems:'center',marginBottom:'16px',position:'relative'}}>
               <div id="atsRiskBadge" style={{position:'absolute',top:0,right:0,padding:'4px 10px',borderRadius:'99px',fontSize:'12px',fontWeight:700,fontFamily:'var(--mono)',letterSpacing:'.04em'}}></div>
               <div id="atsTotalScore" style={{position:'absolute',top:0,left:0,fontSize:'22px',fontWeight:800,fontFamily:'var(--mono)',lineHeight:1}}></div>
@@ -232,7 +232,7 @@ export default function ResultPage() {
         </div>
       </div>
 
-      <Script src="/result-logic.js?v=ats-display-zh-20260609-4" strategy="afterInteractive" />
+      <Script src="/result-logic.js?v=edaix-purple-20260612-1" strategy="afterInteractive" />
     </>
   );
 }

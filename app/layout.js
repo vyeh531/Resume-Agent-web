@@ -10,7 +10,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="zh-CN">
       <head>
-        <meta name="theme-color" content="#f6f3ec" />
+        <meta name="theme-color" content="#F7F3FC" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link

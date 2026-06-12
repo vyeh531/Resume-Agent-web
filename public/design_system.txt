@@ -1,0 +1,354 @@
+
+> **AI Career Tech × 年輕專業 × 低多邊形紫色光感 × 成長感**
+
+---
+
+## 1. 核心視覺風格
+
+### 風格關鍵字
+
+**Low-poly / 低多邊形**
+**Light Purple Gradient / 輕盈紫色漸層**
+**Career Growth / 職涯成長感**
+**AI Spark / AI 星芒感**
+**Soft Tech / 柔和科技感**
+**Youthful Professional / 年輕但可信任**
+
+這個 Logo 裡的重點不是「很多科技元素」，而是用 **紫色多邊形切面 + 星芒 + 上升箭頭** 傳達：
+
+AI 智能、職涯成長、技能升級、未來感。
+
+---
+
+## 2. 品牌主色 Palette
+
+以下色號是根據你這張圖抓出來的近似色，可以直接拿去做網頁。
+
+### Primary Colors
+
+| 用途                |        色號 | 說明                      |
+| ----------------- | --------: | ----------------------- |
+| Brand Deep Purple | `#452A93` | Logo 最深紫，適合標題、重要文字、深色按鈕 |
+| Brand Purple      | `#5333A6` | 主品牌紫，可用於 CTA、icon、重點區塊  |
+| Electric Violet   | `#6843BB` | 偏亮的科技紫，適合 hover、link、強調 |
+| Soft Violet       | `#7A52C5` | 中階紫，適合卡片裝飾、圖表色          |
+| Lavender Purple   | `#9E6CD3` | 輕盈紫，適合漸層、標籤、次級按鈕        |
+| Pink Lavender     | `#B47EDB` | 年輕、可愛感，適合高光、背景光暈        |
+
+### Background Colors
+
+| 用途                   |        色號 |
+| -------------------- | --------: |
+| Main Background      | `#FFFFFF` |
+| Soft Lavender BG     | `#F7F3FC` |
+| Light Purple Surface | `#F0E8FA` |
+| Border / Divider     | `#E6DEF2` |
+| Hover Background     | `#F4EDFB` |
+
+### Text Colors
+
+| 用途             |        色號 |
+| -------------- | --------: |
+| Main Text      | `#1F1744` |
+| Secondary Text | `#5F567A` |
+| Muted Text     | `#8B82A8` |
+| Purple Text    | `#5333A6` |
+| White Text     | `#FFFFFF` |
+
+---
+
+## 3. 推薦漸層
+
+你的 Logo 很依賴紫色漸層，所以網頁裡也要延續這種感覺。
+
+### 主按鈕 Gradient
+
+```css
+linear-gradient(135deg, #5333A6 0%, #7A52C5 55%, #B47EDB 100%)
+```
+
+### Hero 背景光暈
+
+```css
+radial-gradient(circle at 20% 20%, #D8B6F2 0%, transparent 35%),
+radial-gradient(circle at 80% 10%, #B47EDB 0%, transparent 30%),
+linear-gradient(180deg, #FFFFFF 0%, #F7F3FC 100%)
+```
+
+### 卡片低多邊形背景
+
+```css
+linear-gradient(135deg, #F7F3FC 0%, #EFE5FA 45%, #FFFFFF 100%)
+```
+
+### 深紫科技區塊
+
+```css
+linear-gradient(135deg, #452A93 0%, #5333A6 45%, #7A52C5 100%)
+```
+
+---
+
+## 4. 字體建議
+
+Logo 本身是 **幾何感、乾淨、偏科技的粗體 sans-serif**。網頁不要用太花的字體，不然會跟 Logo 打架。
+
+### 英文推薦
+
+| 用途             | 字體                                     |
+| -------------- | -------------------------------------- |
+| Logo / 大標題     | `Poppins`, `Plus Jakarta Sans`, `Sora` |
+| 內文             | `Inter`, `Manrope`                     |
+| 數字 / Dashboard | `Inter`, `IBM Plex Sans`               |
+
+### 中文推薦
+
+| 用途     | 字體                           |
+| ------ | ---------------------------- |
+| 簡體中文網頁 | `Noto Sans SC`               |
+| 繁體中文網頁 | `Noto Sans TC`               |
+| 更現代一點  | `PingFang SC`, `PingFang TC` |
+
+### 字體感覺
+
+大標題可以用：
+
+```css
+font-weight: 700;
+letter-spacing: -0.02em;
+```
+
+小標籤可以用 Logo 底下那種感覺：
+
+```css
+font-size: 12px;
+font-weight: 700;
+letter-spacing: 0.14em;
+text-transform: uppercase;
+color: #6843BB;
+```
+
+---
+
+## 5. UI 形狀語言
+
+這個 Logo 是圓角方形 icon，所以網頁也要大量使用 **圓角卡片**。
+
+### Border Radius
+
+| 元件                      |            建議 |
+| ----------------------- | ------------: |
+| Button                  | `14px - 18px` |
+| Card                    | `20px - 28px` |
+| App Icon / Feature Icon | `24px - 32px` |
+| Large Section Card      |        `32px` |
+
+### Shadow
+
+不要用很重的黑色陰影，用紫色陰影。
+
+```css
+box-shadow: 0 16px 40px rgba(83, 51, 166, 0.14);
+```
+
+更輕盈一點：
+
+```css
+box-shadow: 0 8px 24px rgba(69, 42, 147, 0.10);
+```
+
+---
+
+## 6. Button System
+
+### Primary CTA
+
+適合：Start Now、Get Career Report、Try AI Advisor
+
+```css
+background: linear-gradient(135deg, #5333A6, #7A52C5, #B47EDB);
+color: #FFFFFF;
+border-radius: 16px;
+padding: 14px 24px;
+font-weight: 700;
+box-shadow: 0 12px 28px rgba(83, 51, 166, 0.22);
+```
+
+### Secondary Button
+
+```css
+background: #F0E8FA;
+color: #5333A6;
+border: 1px solid #E6DEF2;
+border-radius: 16px;
+```
+
+### Ghost Button
+
+```css
+background: transparent;
+color: #5333A6;
+```
+
+---
+
+## 7. Card Design
+
+你網頁裡的卡片可以走這種方向：
+
+### 基礎卡片
+
+```css
+background: rgba(255, 255, 255, 0.86);
+border: 1px solid #E6DEF2;
+border-radius: 24px;
+box-shadow: 0 12px 32px rgba(69, 42, 147, 0.08);
+backdrop-filter: blur(16px);
+```
+
+### 卡片裝飾方式
+
+每張 card 右上角可以有一點點低多邊形紫色裝飾，不要整張都鋪滿，不然會太吵。
+
+可以用：
+
+```css
+background:
+  radial-gradient(circle at top right, rgba(180,126,219,0.22), transparent 35%),
+  #FFFFFF;
+```
+
+---
+
+## 8. Icon Style
+
+你的 icon 風格應該統一成：
+
+**圓角方形底 + 紫色低多邊形漸層 + 白色簡化 symbol**
+
+適合的 icon 元素：
+
+* 星芒：AI / 靈感 / 智能分析
+* 上升箭頭：職涯成長 / 薪資提升
+* 路徑線：Career path / learning journey
+* 小菱形：skills / AI modules
+* 圓點連線：AI intelligence / knowledge graph
+
+不建議再放太多：
+
+* 學士帽
+* 獎章
+* 對話泡泡
+* 太像傳統教育平台的元素
+
+因為你之前也提到想要更年輕、更職業感，這張 Logo 已經比較接近正確方向。
+
+---
+
+## 9. Web Page 美學方向
+
+我會建議你的網站整體長這樣：
+
+### Hero Section
+
+白底或淡紫底，左邊文案，右邊放低多邊形 icon / AI 職涯人物插畫。
+
+標題感覺：
+
+> Your AI Career Growth Platform
+> Find your path. Build your skills. Get certified.
+
+中文可以是：
+
+> 用 AI 找到你的職涯方向
+> 從職涯建議、專業課程到技能認證，一站式升級你的未來競爭力。
+
+### Section 背景
+
+不要整頁都紫色。建議：
+
+* 70% 白色
+* 20% 淡紫色卡片
+* 10% 深紫色重點 CTA 區塊
+
+這樣會比較高級，不會像廉價補習班網站。
+
+---
+
+## 10. Component 規則
+
+### Tag / Badge
+
+```css
+background: #F0E8FA;
+color: #6843BB;
+border-radius: 999px;
+font-size: 12px;
+font-weight: 700;
+padding: 6px 12px;
+```
+
+適合放：
+
+* AI Career Match
+* Skill Gap
+* Course Ready
+* Certification Track
+
+### Progress Bar
+
+用紫色漸層：
+
+```css
+background: linear-gradient(90deg, #5333A6, #B47EDB);
+```
+
+### Feature Card
+
+每個 feature 可以長這樣：
+
+1. Career Advising
+2. AI Courses
+3. Skill Certification
+4. Resume Intelligence
+5. Interview Prep
+6. Career Path Report
+
+每張卡片 icon 用紫色低多邊形風格，內文保持乾淨。
+
+---
+
+## 11. Design System 一句話定位
+
+你可以把這套 Design System 定義成：
+
+> **EdAIX 是一套以輕盈紫色低多邊形為核心的 AI 職涯科技視覺系統，融合 AI 智能感、職涯成長感與年輕專業感，適合用於 AI career advising、AI courses、skills certification 與個人職涯報告產品。**
+
+---
+
+## 12. 最推薦的網頁主視覺組合
+
+我會幫你定這一套：
+
+```css
+--color-primary: #5333A6;
+--color-primary-dark: #452A93;
+--color-primary-light: #7A52C5;
+--color-accent: #B47EDB;
+--color-bg: #FFFFFF;
+--color-bg-soft: #F7F3FC;
+--color-surface: #FFFFFF;
+--color-surface-purple: #F0E8FA;
+--color-border: #E6DEF2;
+--color-text-main: #1F1744;
+--color-text-secondary: #5F567A;
+--color-text-muted: #8B82A8;
+
+--gradient-primary: linear-gradient(135deg, #5333A6 0%, #7A52C5 55%, #B47EDB 100%);
+--gradient-soft: linear-gradient(135deg, #F7F3FC 0%, #EFE5FA 45%, #FFFFFF 100%);
+--shadow-purple: 0 16px 40px rgba(83, 51, 166, 0.14);
+--radius-card: 24px;
+--radius-button: 16px;
+```
+
+這套直接拿去做 landing page、career report、course cards、dashboard 都會很一致。

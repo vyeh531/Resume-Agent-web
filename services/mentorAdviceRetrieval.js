@@ -572,6 +572,56 @@ function splitCsv(value) {
     .filter(Boolean);
 }
 
+const TARGET_ROLE_DISPLAY_LABELS = {
+  software_development_engineer: "Software Development Engineer",
+  software_engineer: "Software Engineer",
+  backend_engineer: "Backend Engineer",
+  frontend_engineer: "Frontend Engineer",
+  full_stack_engineer: "Full Stack Engineer",
+  machine_learning_engineer: "Machine Learning Engineer",
+  machine_learning: "Machine Learning",
+  ai_engineer: "AI Engineer",
+  data_scientist: "Data Scientist",
+  data_analyst: "Data Analyst",
+  business_analyst: "Business Analyst",
+  product_manager: "Product Manager",
+  management_trainee: "Management Trainee",
+  accounting: "Accounting",
+  finance: "Finance",
+};
+
+function displayLabelForRoleTerm(term, fallback = "你的目标岗位") {
+  const normalized = normalizeTerm(term);
+  if (!normalized || normalized === "unknown" || normalized === "universal") return fallback;
+  return TARGET_ROLE_DISPLAY_LABELS[normalized] ||
+    String(term || normalized)
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function keywordDisplayLabel(term) {
+  const raw = String(term || "").trim();
+  if (!raw) return "";
+  const normalized = normalizeTerm(raw);
+  if (!normalized || normalized.length < 2) return "";
+  return raw.includes("_")
+    ? displayLabelForRoleTerm(raw, raw.replace(/_/g, " "))
+    : raw;
+}
+
+function keywordMatchesInsight(term, insight) {
+  const label = keywordDisplayLabel(term);
+  if (!label) return false;
+  const needle = String(term || "").trim().toLowerCase().replace(/_/g, " ");
+  const haystack = String(insight || "").toLowerCase();
+  if (!needle || !haystack) return false;
+  if (/^[a-z0-9][a-z0-9+#.\s-]*$/i.test(needle)) {
+    const escaped = needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\s+/g, "\\s+");
+    return new RegExp(`(^|[^a-z0-9])${escaped}([^a-z0-9]|$)`, "i").test(haystack);
+  }
+  return haystack.includes(needle);
+}
+
 function normalizeProblemTagForRetrieval(tag) {
   const normalized = normalizeTerm(tag);
   return PROBLEM_TAG_ALIASES[normalized] || normalized;
@@ -4762,7 +4812,8 @@ function isResumeGroundedAdvice(card = {}, internalAtsResult = {}) {
 
 function isGovernedAdviceDisplayable(card = {}, internalAtsResult = {}) {
   const resolved = actionGovernance.resolveDisplayAction(card, governanceContextFromInternal(internalAtsResult));
-  return Boolean(resolved.allowed && resolved.action);
+  if (!resolved.allowed || !resolved.action) return false;
+  return actionPreconditionGate(card, internalAtsResult).allowed;
 }
 
 function actionPreconditionText(card = {}, internalAtsResult = {}) {
@@ -4838,6 +4889,128 @@ function containsAnyPattern(text, patterns = []) {
 
 function jdRequiredTextFromFacts(facts = {}) {
   return arrayOf(facts.keywords?.jdRequired).join(" ").toLowerCase();
+}
+
+function sectionPosition(sections = {}, key) {
+  const positions = sections.sectionPositions || {};
+  if (Number.isFinite(Number(positions[key]))) return Number(positions[key]);
+  const order = Array.isArray(sections.sectionOrder) ? sections.sectionOrder : [];
+  const index = order.indexOf(key);
+  return index >= 0 ? index : null;
+}
+
+function sectionBefore(sections = {}, left, right) {
+  const leftPos = sectionPosition(sections, left);
+  const rightPos = sectionPosition(sections, right);
+  return leftPos != null && rightPos != null && leftPos < rightPos;
+}
+
+function isLikelyExperiencedCandidate(internalAtsResult = {}) {
+  const profile = internalAtsResult.profile || {};
+  const text = [
+    profile.seniority,
+    profile.candidateType,
+    internalAtsResult.jobTitle,
+    profile.targetRole,
+  ].filter(Boolean).join(" ").toLowerCase();
+  if (/student|intern|new[_\s-]?grad|recent graduate|entry[_\s-]?level|junior/.test(text)) return false;
+  return true;
+}
+
+function sectionOrderProblemPresent(sections = {}, internalAtsResult = {}) {
+  const experienced = isLikelyExperiencedCandidate(internalAtsResult);
+  if (sections.hasEducation === true && sections.hasExperience === true && experienced && sections.educationBeforeExperience === true) return true;
+  if (sections.hasEducation === true && sections.hasExperience === true && experienced && sectionBefore(sections, "education", "experience")) return true;
+  if (sections.hasEducation === true && sections.hasSkills === true && experienced && sectionBefore(sections, "education", "skills")) return true;
+  if (sections.hasSkills === true && sections.hasExperience === true && sectionBefore(sections, "experience", "skills")) return true;
+  if (sections.hasExperience === true && sections.hasProjects === true && sectionBefore(sections, "projects", "experience")) return true;
+  return false;
+}
+
+function isSectionOrderAdvice(text = "", card = {}) {
+  const family = normalizeTerm(card.canonicalActionFamily || card.canonical_action_family || "");
+  const tagText = [
+    ...(card.relatedProblemTags || []),
+    card.problem_tags,
+    card.topic_slug,
+  ].filter(Boolean).join(" ");
+  const mentionsOrder = /reorder|order|sequence|first|second|third|front|before|after|move|prioriti[sz]e|section\s*order|section\s*structure|sorting|ranking|排序|顺序|前置|靠前|提前|后移|往后|移到后面|退居|第一|第二|第三/.test(text);
+  const sectionMentions = [
+    /summary|objective|简介|开头/i,
+    /skills?|technical\s+skills?|技能/i,
+    /experience|work\s+experience|professional\s+experience|经历|工作/i,
+    /projects?|项目/i,
+    /education|学历|教育/i,
+  ].filter((pattern) => pattern.test(text)).length;
+  return /section_structure|section_relevance_order/.test(family) ||
+    /section_structure|section_order|section_relevance_order|skills_section_ordering/.test(tagText) ||
+    (mentionsOrder && sectionMentions >= 2);
+}
+
+function isDeleteOrPruneAdvice(text = "") {
+  return /delete|remove|drop|cut|omit|hide|weaken|de[-\s]?emphasize|删掉|删除|删去|移除|去掉|不写|弱化|后移/.test(text);
+}
+
+function hasMisleadingDeletionRisk(text = "") {
+  return /(?:去掉|删除|remove|omit).{0,30}(?:结束时间|end date|毕业时间|graduation date|date).{0,80}(?:仍在进行|still ongoing|ongoing|present|默认|assume|gap|空白)|(?:仍在进行|still ongoing|ongoing|present).{0,80}(?:去掉|删除|remove|omit)|(?:国内|中国).{0,20}(?:经历|学校|本科).{0,30}(?:删除|删掉|remove|omit)|(?:delete|remove|omit).{0,30}(?:china|chinese|domestic).{0,30}(?:experience|school|education)/i.test(text);
+}
+
+function deletionTargetPresent(text = "", facts = {}, internalAtsResult = {}) {
+  const sections = facts.sections || {};
+  const education = facts.education || {};
+  if (/interests?|hobbies|兴趣|爱好/i.test(text)) return sections.hasInterests === true;
+  if (/languages?|english|mandarin|语言|英语|中文|普通话/i.test(text)) return sections.hasLanguages === true;
+  if (/activities?|extracurricular|leadership|活动|课外/i.test(text)) return sections.hasActivities === true;
+  if (/awards?|honou?rs?|奖项|获奖|荣誉/i.test(text)) return sections.hasAwards === true;
+  if (/publications?|papers?|论文|发表/i.test(text)) return sections.hasPublications === true;
+  if (/certifications?|licenses?|证书|认证/i.test(text)) return sections.hasCertifications === true;
+  if (/coursework|courses?|课程/i.test(text)) return education.hasCoursework === true;
+  if (/\bgpa\b|g\.p\.a|绩点|评分/i.test(text)) return education.hasGPA === true;
+  if (/projects?|项目/i.test(text)) return sections.hasProjects === true;
+  if (/internship|experience|经历|实习|工作/i.test(text)) return sections.hasExperience === true;
+  if (/education|school|university|college|学历|教育|学校|本科|硕士/i.test(text)) return sections.hasEducation === true;
+  const resumeText = internalAtsResult.resumeText || internalAtsResult.rawResumeText || "";
+  const namedTerms = extractNamedTermsForPruning(text);
+  if (namedTerms.length) return namedTerms.some((term) => termAppearsInResume(term, resumeText));
+  return false;
+}
+
+function extractNamedTermsForPruning(text = "") {
+  const terms = new Set();
+  for (const tool of extractToolTermsForPruning(text)) terms.add(tool);
+  for (const match of text.matchAll(/\b[A-Z][A-Za-z0-9+/#.-]{1,}(?:\s+[A-Z][A-Za-z0-9+/#.-]{1,}){0,2}\b/g)) {
+    const term = match[0].trim();
+    if (!/^(HR|ATS|JD|PDF|GPA|US|USA|OPT|CPT|Summary|Skills|Experience|Projects|Education|Data Analyst|Business Analyst)$/.test(term)) terms.add(term);
+  }
+  return [...terms].filter((term) => term.length >= 2 && term.length <= 40);
+}
+
+function extractToolTermsForPruning(text = "") {
+  const commonTools = [
+    "Kafka", "Docker", "Kubernetes", "AWS", "GCP", "Azure", "Python", "Java", "JavaScript",
+    "TypeScript", "React", "Node", "SQL", "Tableau", "Power BI", "Excel", "MATLAB",
+    "Figma", "Miro", "JIRA", "GitHub", "R", "SAS", "Spark", "Redis", "MySQL", "PostgreSQL",
+  ];
+  return commonTools.filter((tool) => new RegExp(`\\b${tool.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i").test(text));
+}
+
+function isSkillPruningAdvice(text = "") {
+  return isDeleteOrPruneAdvice(text) && /skills?|tools?|technical|技术|技能|工具|技术栈/.test(text);
+}
+
+function skillPruningTargetPresent(text = "", internalAtsResult = {}) {
+  const resumeText = internalAtsResult.resumeText || internalAtsResult.rawResumeText || "";
+  const terms = extractToolTermsForPruning(text);
+  if (!terms.length) return true;
+  return terms.some((term) => termAppearsInResume(term, resumeText));
+}
+
+function isGpaRemovalAdvice(text = "") {
+  return /\bgpa\b|g\.p\.a|绩点|评分/.test(text) && /delete|remove|omit|hide|不写|删|删除|去掉|移除/.test(text);
+}
+
+function isGpaAddAdvice(text = "") {
+  return /\bgpa\b|g\.p\.a|绩点/.test(text) && /add|include|write|补|加|写|加入|添加|保留/.test(text) && !isGpaRemovalAdvice(text);
 }
 
 function actionPreconditionGate(card = {}, internalAtsResult = {}) {
@@ -4946,6 +5119,32 @@ function actionPreconditionGate(card = {}, internalAtsResult = {}) {
   const isSkillsSectionCreationAdvice = /新增.*技能|加.*skills?\s*section|在.*education.*列.*skills?|technical\s+skills?\s*区|skills?\s*板块|skills?\s*模块/i.test(text);
   if (isSkillsSectionCreationAdvice && sections.hasSkills === true) {
     return { allowed: false, reason: "skills_section_already_present" };
+  }
+
+  if (isSectionOrderAdvice(lower, card) && !sectionOrderProblemPresent(sections, internalAtsResult)) {
+    return { allowed: false, reason: "section_order_condition_not_present" };
+  }
+
+  if (hasMisleadingDeletionRisk(lower)) {
+    return { allowed: false, reason: "misleading_deletion_risk" };
+  }
+
+  if (isGpaRemovalAdvice(lower)) {
+    const gpaValue = Number(education.gpaValue);
+    if (education.hasGPA !== true) return { allowed: false, reason: "gpa_not_present" };
+    if (Number.isFinite(gpaValue) && gpaValue >= 3.5) return { allowed: false, reason: "gpa_not_low_enough_to_remove" };
+  }
+
+  if (isGpaAddAdvice(lower) && education.hasGPA === true) {
+    return { allowed: false, reason: "gpa_already_present" };
+  }
+
+  if (isSkillPruningAdvice(lower) && !skillPruningTargetPresent(text, internalAtsResult)) {
+    return { allowed: false, reason: "skill_pruning_target_not_present" };
+  }
+
+  if (isDeleteOrPruneAdvice(lower) && !deletionTargetPresent(text, facts, internalAtsResult)) {
+    return { allowed: false, reason: "deletion_target_not_present" };
   }
 
   const isEducationAdvice = /coursework|course work|education|certificate|certification|training|课程|教育|证书|lab\/project|lab project|课程项目/i.test(text);
@@ -7674,13 +7873,20 @@ function isDisplayableInsiderKnowledge(row = {}, retrievalQuery = {}) {
 function buildInsiderKnowledgeTip(row = {}, retrievalQuery = {}) {
   const insight = cleanAndTruncate(row.I_insight || "", 280);
   const relevance = insiderKnowledgeRelevance(row, retrievalQuery);
+  retrievalQuery = {
+    ...retrievalQuery,
+    targetRole: displayLabelForRoleTerm(retrievalQuery.targetRole || retrievalQuery.roleFamily),
+    roleFamily: "",
+    priorityKeywords: [...new Set(splitCsv(retrievalQuery.priorityKeywords))]
+      .filter((term) => keywordMatchesInsight(term, insight))
+      .map(keywordDisplayLabel)
+      .filter(Boolean),
+  };
   const targetRole = retrievalQuery.targetRole || retrievalQuery.roleFamily || "你的目标岗位";
   const matchedKeywords = [...new Set(splitCsv(retrievalQuery.priorityKeywords))]
     .filter((term) => term && insight.toLowerCase().includes(String(term).toLowerCase()))
     .slice(0, 3);
-  const relevanceReason = matchedKeywords.length
-    ? `与你申请的 ${targetRole} 方向相关，尤其对应 ${matchedKeywords.join(" / ")}。`
-    : `与你申请的 ${targetRole} 方向相关，可作为理解目标公司筛选逻辑的补充。`;
+  const relevanceReason = `与你申请的 ${targetRole} 方向相关。`;
   return {
     company: row.mentor_company,
     companyLogo: resolveCompanyLogo(row.mentor_company),
@@ -7700,6 +7906,45 @@ function buildInsiderKnowledgeTip(row = {}, retrievalQuery = {}) {
 // ── Company / Industry Knowledge Tips ─────────────────────────────────────────
 // Surfaces knowledge-style company or industry hiring patterns. These are not
 // mentor advice items and should not be rendered as HR/mentor perspectives.
+function buildGeneralInsiderTips(retrievalQuery = {}, limit = 4) {
+  const targetRole = displayLabelForRoleTerm(retrievalQuery.targetRole || retrievalQuery.roleFamily);
+  const base = [
+    {
+      knowledgeTitle: "ATS 往往先读结构，再读内容",
+      insight: "很多筛选系统会先用 section 标题、日期、职位名和关键词位置判断简历结构；如果 Skills、Experience、Projects 的边界不清楚，后面的关键词即使出现，也可能被归到错误语境里。",
+      knowledgeType: "industry_pattern",
+    },
+    {
+      knowledgeTitle: "招聘方会看关键词出现的位置",
+      insight: "同一个关键词出现在 Skills 和出现在 Experience 里的权重感不一样；只在技能栏出现，容易被当作会用工具，放在经历结果里，才更像真实做过相关任务。",
+      knowledgeType: "talent_profile",
+    },
+    {
+      knowledgeTitle: "JD 的前几条职责通常不是随机排序",
+      insight: "很多岗位描述会把最常筛选的职责和 required skills 放在前半段；如果简历最上方没有回应这些高优先级信号，即使后面内容不错，也可能在快速扫描时被低估。",
+      knowledgeType: "credential_expectation",
+    },
+    {
+      knowledgeTitle: "过度贴合单一 JD 也可能扣分",
+      insight: "简历如果把某一份 JD 的词逐条硬塞进去，反而会显得像关键词堆砌；更稳的做法是覆盖同类岗位都会反复出现的核心信号，让简历对一组相似岗位都有解释力。",
+      knowledgeType: "company_preference",
+    },
+  ];
+  return base.slice(0, Math.max(1, limit)).map((tip, index) => ({
+    company: "通用招聘规律",
+    companyLogo: "",
+    industryLabel: "跨行业筛选",
+    ...tip,
+    relevanceReason: `与你申请的 ${targetRole} 方向相关。`,
+    sourceMentorName: "",
+    sourceMentorTitle: "",
+    sourceTopic: "通用招聘筛选",
+    sourceAdviceId: `general_insider_${index + 1}`,
+    score: Number((0.35 - index * 0.01).toFixed(3)),
+    source: "fallback",
+  }));
+}
+
 async function retrieveInsiderTips(options = {}) {
   const { limit = 4 } = options;
   const retrievalQuery = getInsiderRetrievalQuery(options);
@@ -7752,7 +7997,7 @@ async function retrieveInsiderTips(options = {}) {
     selected.push(tip);
     if (selected.length >= limit) break;
   }
-  return selected;
+  return selected.length ? selected : buildGeneralInsiderTips(retrievalQuery, limit);
 }
 
 module.exports = {
@@ -7799,6 +8044,7 @@ module.exports = {
   retrieveInsiderTips,
   isDisplayableInsiderKnowledge,
   buildInsiderKnowledgeTip,
+  buildGeneralInsiderTips,
   selectFreeAdvice,
   selectPaidAdvice,
   cleanAndTruncate,

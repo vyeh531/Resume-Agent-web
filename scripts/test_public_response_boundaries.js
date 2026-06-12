@@ -5,6 +5,10 @@ const {
   formatPublicFreeReport,
   formatPremiumUnlockedReport,
 } = require("../src/ats/report-formatter");
+const {
+  buildInsiderKnowledgeTip,
+  buildGeneralInsiderTips,
+} = require("../services/mentorAdviceRetrieval");
 
 function makeAdvice(id) {
   return {
@@ -192,6 +196,26 @@ function main() {
     "paid unlock must include the same first 3 advice items shown for free"
   );
   assert.ok(premiumReport.mentors.every((mentor) => mentor.adviceItems.length <= 3));
+
+  const insiderTip = buildInsiderKnowledgeTip(
+    {
+      I_insight: "Recruiters for this team screen for React API ownership and production delivery evidence.",
+      mentor_company: "Example",
+      mentor_quality_score: 0.8,
+    },
+    {
+      targetRole: "software_development_engineer",
+      priorityKeywords: ["r", "React", "API"],
+    }
+  );
+  assert.ok(!insiderTip.relevanceReason.includes("software_development_engineer"));
+  assert.equal(insiderTip.relevanceReason, "与你申请的 Software Development Engineer 方向相关。");
+
+  const generalInsiderTips = buildGeneralInsiderTips({ targetRole: "financial_analyst" }, 2);
+  assert.equal(generalInsiderTips.length, 2);
+  assert.equal(generalInsiderTips[0].source, "fallback");
+  assert.ok(generalInsiderTips[0].relevanceReason.includes("Financial Analyst"));
+  assert.equal(generalInsiderTips[0].sourceMentorName, "");
 
   console.log("public response boundary tests passed");
 }
