@@ -1834,8 +1834,8 @@ function renderAdviceItem(item, i) {
       </div>` : ""}
       ${(insight || hrPov) ? `<div style="background:#FAFAF9;border:1px solid rgba(0,0,0,0.05);border-radius:10px;padding:11px 13px;margin-top:8px;">
         <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase;">补充视角</div>
-        ${insight ? `<div style="${hrPov ? "margin-bottom:8px;" : ""}"><span style="font-size:11px;font-weight:600;color:#6D28D9;background:#F5F3FF;padding:2px 7px;border-radius:99px;margin-right:6px;">导师</span><span style="font-size:12.5px;line-height:1.6;color:#374151;">${escapeHtml(insight)}</span></div>` : ""}
-        ${hrPov ? `<div><span style="font-size:11px;font-weight:600;color:#B45309;background:#FFFBEB;padding:2px 7px;border-radius:99px;margin-right:6px;">HR</span><span style="font-size:12.5px;line-height:1.6;color:#374151;">${escapeHtml(hrPov)}</span></div>` : ""}
+        ${insight ? `<div style="${hrPov ? "margin-bottom:8px;" : ""}"><span style="display:inline-flex;align-items:center;justify-content:center;min-width:34px;font-size:11px;font-weight:600;color:#6D28D9;background:#F5F3FF;padding:2px 7px;border-radius:99px;margin-right:6px;box-sizing:border-box;">导师</span><span style="font-size:12.5px;line-height:1.6;color:#374151;">${escapeHtml(insight)}</span></div>` : ""}
+        ${hrPov ? `<div><span style="display:inline-flex;align-items:center;justify-content:center;min-width:34px;font-size:11px;font-weight:600;color:#B45309;background:#FFFBEB;padding:2px 7px;border-radius:99px;margin-right:6px;box-sizing:border-box;">HR</span><span style="font-size:12.5px;line-height:1.6;color:#374151;">${escapeHtml(hrPov)}</span></div>` : ""}
       </div>` : ""}
       ${renderRewriteExampleCard(item)}
     </div>`;
