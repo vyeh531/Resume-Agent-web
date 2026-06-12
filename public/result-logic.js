@@ -42,11 +42,13 @@ function escapeHtml(str) {
   );
 }
 function escapeAttr(str) { return String(str).replace(/'/g,"&apos;").replace(/"/g,"&quot;"); }
-function renderUnlockMiniCta() {
+function renderUnlockMiniCta(options = {}) {
+  const showButton = options.showButton !== false;
   return `
     <div class="result-lock-cta">
       <div class="lock">🔒</div>
       <div class="text">解锁<b>全部 4 位导师</b> + <b>完整改写报告</b><br><span>含完整 JD Keyword 清单</span></div>
+      ${showButton ? `<a class="result-lock-cta-button" href="/payment">解锁更多内容</a>` : ""}
     </div>`;
 }
 const STATIC_MENTOR_COMPANY_LOGOS = [
@@ -2290,7 +2292,7 @@ function renderLockedAdvicePreview(preview) {
     <article class="locked-mentor-v2" style="position:relative;overflow:hidden;min-height:190px;">
       <div style="font-size:12px;font-weight:600;color:var(--ink-soft);font-family:var(--mono);margin:0 0 8px;">${preview.lockedAdviceCount || 9} 条付费深度建议</div>
       <div class="cred-pills" style="margin-bottom:10px;">${topics}</div>
-      <div class="locked-preview-overlay">${renderUnlockMiniCta()}</div>
+      <div class="locked-preview-overlay">${renderUnlockMiniCta({ showButton: false })}</div>
     </article>`;
   return;
   const lockedMentors = preview.lockedMentors || [];
@@ -2306,7 +2308,7 @@ function renderLockedAdvicePreview(preview) {
         </div>
         <div style="font-size:12px;font-weight:600;color:var(--ink-soft);font-family:var(--mono);margin:6px 0 6px;">${m.lockedAdviceCount || 3} 条建议</div>
         <div class="cred-pills" style="margin-bottom:10px;">${topics}</div>
-        <div class="locked-preview-overlay">${renderUnlockMiniCta()}</div>
+        <div class="locked-preview-overlay">${renderUnlockMiniCta({ showButton: false })}</div>
       </article>`;
     }).join("");
   }
@@ -2321,7 +2323,7 @@ function renderLockedAdvicePreviewClean(preview) {
     <article class="locked-mentor-v2" style="position:relative;overflow:hidden;min-height:190px;">
       <div style="font-size:12px;font-weight:600;color:var(--ink-soft);font-family:var(--mono);margin:0 0 8px;">${preview.lockedAdviceCount || 9} 条付费深度建议</div>
       <div class="cred-pills" style="margin-bottom:10px;">${topics}</div>
-      <div class="locked-preview-overlay">${renderUnlockMiniCta()}</div>
+      <div class="locked-preview-overlay">${renderUnlockMiniCta({ showButton: false })}</div>
     </article>`;
 }
 

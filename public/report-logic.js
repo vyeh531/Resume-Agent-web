@@ -2172,6 +2172,165 @@ function buildAiRewritePdfElement() {
   return el;
 }
 
+function getReportDomText(selector, fallback = "") {
+  const el = document.querySelector(selector);
+  const text = el ? String(el.textContent || "").replace(/\s+/g, " ").trim() : "";
+  return text || fallback;
+}
+function renderDiagnosticMetricCards(rows) {
+  return `<div class="diagnostic-pdf-metrics">${rows.map((row) => `
+    <div class="diagnostic-pdf-metric">
+      <div class="diagnostic-pdf-metric-label">${escapeHtml(row.label)}</div>
+      <div class="diagnostic-pdf-metric-value">${escapeHtml(row.value)}</div>
+      <p>${escapeHtml(row.note || "")}</p>
+    </div>`).join("")}</div>`;
+}
+function renderDiagnosticKeywordTable(items) {
+  if (!items.length) return `<p>暂无稳定关键词数据。请回到报告页确认 JD Keyword 清单是否已加载。</p>`;
+  const sorted = items.slice().sort((a, b) => {
+    const statusRank = (a.status === "weak" ? 0 : 1) - (b.status === "weak" ? 0 : 1);
+    if (statusRank) return statusRank;
+    return String(a.name || "").localeCompare(String(b.name || ""));
+  });
+  return `<table class="diagnostic-pdf-table">
+    <thead><tr><th>关键词</th><th>状态</th><th>建议放置位置</th></tr></thead>
+    <tbody>${sorted.map((item) => `
+      <tr>
+        <td>${escapeHtml(item.name)}</td>
+        <td><span class="diagnostic-pdf-status ${item.status === "have" ? "have" : "weak"}">${item.status === "have" ? "已具备" : "待补强"}</span></td>
+        <td>${escapeHtml(item.placement)}</td>
+      </tr>`).join("")}</tbody>
+  </table>`;
+}
+function renderDiagnosticAdviceItems(adviceItems) {
+  if (!adviceItems.length) return `<p>暂无导师建议。请回到结果页重新生成完整报告。</p>`;
+  return adviceItems.map((item, index) => {
+    const diagnosis = item.currentDiagnosis || item.problemSummary || "";
+    const action = item.action || item.actionSummary || "";
+    const insight = item.mentorInsight || item.mentorLens || item.reason || item.I_insight || item.P_mentor || "";
+    const hrPov = item.hrPerspective || item.HR_os || item.hrPov || item.recruiterPerspective || HR_PERSPECTIVE_LOOKUP.get(String(item.adviceId || "")) || HR_PERSPECTIVE_LOOKUP.get(adviceIdentity(item)) || "";
+    const priority = aiPdfPriorityRank(item) === 0 ? "高优先级" : aiPdfPriorityRank(item) === 1 ? "中优先级" : "补充优化";
+    return `<div class="diagnostic-pdf-advice">
+      <div class="diagnostic-pdf-advice-top">
+        <span class="ai-pdf-label">${escapeHtml(priority)}</span>
+        <span class="ai-pdf-meta">建议 ${index + 1} · ${escapeHtml(sectionLabel(item.targetSection || "overall"))}</span>
+      </div>
+      <h3>${escapeHtml(item.title || `修改建议 ${index + 1}`)}</h3>
+      ${diagnosis ? `<p><strong>当前问题：</strong>${escapeHtml(diagnosis)}</p>` : ""}
+      ${action ? `<p><strong>建议动作：</strong>${escapeHtml(action)}</p>` : ""}
+      ${insight ? `<p><strong>导师视角：</strong>${escapeHtml(insight)}</p>` : ""}
+      ${hrPov ? `<p><strong>招聘信号：</strong>${escapeHtml(hrPov)}</p>` : ""}
+    </div>`;
+  }).join("");
+}
+function renderDiagnosticInsiderTips(tips) {
+  if (!tips || !tips.length) return `<p>暂无公司内幕小知识。</p>`;
+  return tips.map((tip, index) => {
+    const company = tip.company || tip.industryLabel || "公司/行业";
+    const title = tip.knowledgeTitle || `${company} 的候选人偏好`;
+    const typeLabel = {
+      company_preference: "公司偏好",
+      industry_pattern: "行业规律",
+      talent_profile: "人才画像",
+      interview_standard: "面试标准",
+      credential_expectation: "背景门槛",
+    }[tip.knowledgeType] || "小知识";
+    return `<div class="diagnostic-pdf-tip">
+      <div class="diagnostic-pdf-tip-head">
+        <span>${String(index + 1).padStart(2, "0")}</span>
+        <div>
+          <h3>${escapeHtml(title)}</h3>
+          <p>${escapeHtml(company)} · ${escapeHtml(typeLabel)}</p>
+        </div>
+      </div>
+      <p>${escapeHtml(tip.insight || "")}</p>
+    </div>`;
+  }).join("");
+}
+function buildDiagnosticReportPdfElement() {
+  const keywords = collectAiPdfKeywords();
+  const weakCount = keywords.filter((item) => item.status === "weak").length;
+  const haveCount = keywords.filter((item) => item.status === "have").length;
+  const problems = normalizeProblemList();
+  const adviceItems = collectAiPdfAdviceItems();
+  const targetRole = getTargetJobTitle() || s.jobTitle || atsResult.jobTitle || atsResult.profile?.targetRole || atsResult.raw?.jobTitle || "目标岗位";
+  const resumeName = s.resumeName || atsResult.resumeName || atsResult.raw?.resumeName || "你的简历";
+  const coreIssue = getReportDomText("#coreIssue", issueText);
+  const salaryTop = getReportDomText("#reportSalaryTop", getReportDomText("#reportHeadlineSalaryTop", "待校准"));
+  const aiImpact = getReportDomText("#reportAiImpactLevel", "待校准");
+  const aiCaption = getReportDomText("#reportAiImpactCaption", "需结合目标岗位判断");
+  const metrics = [
+    { label: "Resume Score", value: atsScore ? `${atsScore}/100` : "--", note: atsRiskText(atsResult.riskLevel) },
+    { label: "JD Keyword", value: formatJdKeywordCount(atsResult), note: `${formatJdKeywordMatchPercent(atsResult)} 覆盖率` },
+    { label: "待补强关键词", value: String(weakCount), note: `已具备 ${haveCount} 项` },
+    { label: "薪资成长", value: salaryTop, note: "5 年上限预估" },
+    { label: "AI 影响趋势", value: aiImpact, note: aiCaption },
+  ];
+  const el = document.createElement("div");
+  el.className = "ai-rewrite-pdf diagnostic-pdf";
+  el.innerHTML = `
+    <div class="ai-pdf-brand">
+      <img src="/logo/logo%20banner_no_bg.png" alt="MentorX">
+      <div class="ai-pdf-kicker">RESUME DIAGNOSTIC REPORT</div>
+    </div>
+    <section class="diagnostic-pdf-cover">
+      <p class="diagnostic-pdf-eyebrow">完整诊断报告</p>
+      <h1>${escapeHtml(resumeName)}</h1>
+      <p>目标岗位：<strong>${escapeHtml(targetRole)}</strong></p>
+      ${coreIssue ? `<div class="diagnostic-pdf-callout">${escapeHtml(coreIssue)}</div>` : ""}
+      ${renderDiagnosticMetricCards(metrics)}
+    </section>
+
+    <section class="ai-pdf-card">
+      <h2>01 · JD Keyword 清单</h2>
+      <p>以下关键词按「待补强」优先排序，并标出更适合放进 Summary、Skills 或 Experience 的位置。</p>
+      ${renderDiagnosticKeywordTable(keywords)}
+    </section>
+
+    <section class="ai-pdf-card">
+      <h2>02 · ATS 诊断</h2>
+      <div class="ai-pdf-grid">
+        <div>
+          <h3>关键问题</h3>
+          ${renderAiPdfProblems(problems)}
+        </div>
+        <div>
+          <h3>优先修改方向</h3>
+          ${renderAiPdfProblems(normalizeSuggestionList())}
+        </div>
+      </div>
+    </section>
+
+    <section class="ai-pdf-card">
+      <h2>03 · 完整导师建议</h2>
+      ${renderDiagnosticAdviceItems(adviceItems)}
+    </section>
+
+    <section class="ai-pdf-card">
+      <h2>04 · 公司内幕小知识</h2>
+      ${renderDiagnosticInsiderTips(insiderTips)}
+    </section>
+
+    <section class="ai-pdf-card">
+      <h2>05 · 升级服务</h2>
+      <p>如需进一步推进，可预约专属求职顾问服务：简历精修、投递策略、模拟面试和 Offer 谈薪。报告内容可直接作为后续 1v1 修改的基础材料。</p>
+      <ul>
+        <li>求职策略 1v1：定位、投递时间线、公司清单与风险评估。</li>
+        <li>简历精修：逐句对照 JD 优化 Summary、Skills 和 Experience。</li>
+        <li>模拟面试：围绕目标岗位高频问题进行即时点评。</li>
+        <li>Offer 谈薪：多 Offer 取舍与 HR counter 话术。</li>
+      </ul>
+      <div class="diagnostic-pdf-qr">
+        <div>
+          <h3>扫码添加专属求职导师</h3>
+          <p>带着这份报告咨询，导师可以直接基于你的关键词、ATS 问题和修改建议继续精修。</p>
+        </div>
+        <img src="/qr.jpg" alt="扫码添加专属求职导师">
+      </div>
+    </section>`;
+  return el;
+}
+
 function exportPDFLegacy(){
   if (!window.html2pdf) { alert("PDF 库未加载，请刷新重试"); return; }
   const btn = document.querySelector('.export-card .btn');
@@ -2255,6 +2414,14 @@ function expandReportCloneForPrint(root) {
   });
   root.querySelectorAll(".paywall-more").forEach((el) => {
     el.style.display = "block";
+  });
+  root.querySelectorAll(".skill-list,.report-keyword-table-card,.report-ats-card,.report-ats-copy,#atsProblemsSection,#atsDimensionProblems,#mentorsList,#insiderTipsList").forEach((el) => {
+    el.style.maxHeight = "none";
+    el.style.height = "auto";
+    el.style.overflow = "visible";
+  });
+  root.querySelectorAll(".report-hero-actions,.copy-btn,.skill-expand-toggle,.ats-preview-more,.jd-keyword-expand").forEach((el) => {
+    el.remove();
   });
 }
 async function exportPDF(){
@@ -2373,6 +2540,46 @@ function printDocumentFromHtml(html, title = "MentorX PDF") {
           .card, .tile, .service-card { border-radius: 12px !important; box-shadow: none !important; }
           .card { padding: 16px !important; }
           .tiles { gap: 10px !important; }
+          .report-page > #summary.report-summary-panel,
+          .report-page > .report-keywords-panel,
+          .report-page > .export-card .export-card-main { grid-template-columns: 1fr !important; }
+          .report-page > .report-keywords-panel,
+          .report-keywords-panel,
+          .report-keyword-table-card,
+          .report-ats-card,
+          .report-ats-copy,
+          #atsProblemsSection,
+          #atsDimensionProblems,
+          #mentorsList,
+          #insiderTipsList {
+            max-height: none !important;
+            height: auto !important;
+            overflow: visible !important;
+          }
+          .report-keyword-table-card .skill-list,
+          .skill-list {
+            display: block !important;
+            max-height: none !important;
+            height: auto !important;
+            overflow: visible !important;
+            padding-right: 0 !important;
+          }
+          .report-skill-extra,
+          .ats-problem-extra {
+            display: list-item !important;
+            visibility: visible !important;
+          }
+          .jd-keyword-chip {
+            display: inline-flex !important;
+            visibility: visible !important;
+          }
+          .skill-expand-toggle,
+          .ats-preview-more,
+          .jd-keyword-expand,
+          .report-hero-actions,
+          .copy-btn {
+            display: none !important;
+          }
           .section, .card, .tile, .service-card, .advice-example, .ai-pdf-card, .ai-pdf-advice { break-inside: auto !important; page-break-inside: auto !important; }
           h1, h2, h3, .section-title, .ai-pdf-label { break-after: avoid; page-break-after: avoid; }
           .ai-rewrite-pdf { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; background: #FFFFFF !important; }
@@ -2384,6 +2591,31 @@ function printDocumentFromHtml(html, title = "MentorX PDF") {
           .ai-pdf-advice { margin-top: 7px !important; padding-top: 7px !important; }
           .ai-pdf-grid { grid-template-columns: 1fr 1fr !important; }
           .ai-pdf-chip { font-size: 10.5px !important; }
+          .diagnostic-pdf { color: #24194A !important; }
+          .diagnostic-pdf-cover { margin: 4px 0 12px !important; }
+          .diagnostic-pdf-eyebrow { font-family: ui-monospace, SFMono-Regular, Menlo, monospace !important; font-size: 10px !important; letter-spacing: .12em !important; color: #5333A6 !important; font-weight: 800 !important; text-transform: uppercase !important; }
+          .diagnostic-pdf-callout { margin: 10px 0 !important; padding: 10px 12px !important; border-left: 3px solid #D97706 !important; background: #FFF7ED !important; border-radius: 8px !important; font-size: 12px !important; line-height: 1.55 !important; color: #4B5563 !important; }
+          .diagnostic-pdf-metrics { display: grid !important; grid-template-columns: repeat(5, 1fr) !important; gap: 7px !important; margin: 12px 0 0 !important; }
+          .diagnostic-pdf-metric { border: 1px solid #E6DEF2 !important; border-radius: 8px !important; padding: 8px !important; background: #FBFAFF !important; }
+          .diagnostic-pdf-metric-label { font-family: ui-monospace, SFMono-Regular, Menlo, monospace !important; font-size: 8.5px !important; letter-spacing: .08em !important; text-transform: uppercase !important; color: #8B82A8 !important; font-weight: 800 !important; }
+          .diagnostic-pdf-metric-value { font-size: 15px !important; line-height: 1.2 !important; color: #5333A6 !important; font-weight: 900 !important; margin-top: 4px !important; }
+          .diagnostic-pdf-metric p { font-size: 10px !important; line-height: 1.35 !important; margin: 3px 0 0 !important; color: #5F567A !important; }
+          .diagnostic-pdf-table { width: 100% !important; border-collapse: collapse !important; margin-top: 8px !important; font-size: 10.5px !important; }
+          .diagnostic-pdf-table th { text-align: left !important; padding: 7px 8px !important; background: #F7F3FC !important; border: 1px solid #E6DEF2 !important; color: #5333A6 !important; font-weight: 900 !important; }
+          .diagnostic-pdf-table td { padding: 6px 8px !important; border: 1px solid #E6DEF2 !important; vertical-align: top !important; line-height: 1.35 !important; }
+          .diagnostic-pdf-status { display: inline-flex !important; border-radius: 999px !important; padding: 2px 7px !important; font-size: 9.5px !important; font-weight: 800 !important; white-space: nowrap !important; }
+          .diagnostic-pdf-status.weak { background: #FFF7ED !important; color: #C2410C !important; }
+          .diagnostic-pdf-status.have { background: #F0F9F2 !important; color: #2F6B4F !important; }
+          .diagnostic-pdf-advice, .diagnostic-pdf-tip { border-top: 1px dashed #E6DEF2 !important; padding-top: 9px !important; margin-top: 9px !important; break-inside: auto !important; page-break-inside: auto !important; }
+          .diagnostic-pdf-advice:first-child, .diagnostic-pdf-tip:first-child { border-top: 0 !important; padding-top: 0 !important; margin-top: 0 !important; }
+          .diagnostic-pdf-advice-top, .diagnostic-pdf-tip-head { display: flex !important; align-items: flex-start !important; gap: 8px !important; margin-bottom: 5px !important; }
+          .diagnostic-pdf-tip-head > span { width: 22px !important; height: 22px !important; border-radius: 50% !important; background: #F0E8FA !important; color: #5333A6 !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; font-size: 9px !important; font-weight: 900 !important; flex-shrink: 0 !important; }
+          .diagnostic-pdf-tip h3 { margin: 0 0 2px !important; font-size: 12px !important; }
+          .diagnostic-pdf-tip-head p { margin: 0 !important; font-size: 10px !important; color: #8B82A8 !important; }
+          .diagnostic-pdf-qr { display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 18px !important; margin-top: 14px !important; padding: 14px 16px !important; border: 1px solid #E6DEF2 !important; border-radius: 12px !important; background: #FBFAFF !important; break-inside: avoid !important; page-break-inside: avoid !important; }
+          .diagnostic-pdf-qr h3 { margin: 0 0 5px !important; font-size: 14px !important; color: #24194A !important; }
+          .diagnostic-pdf-qr p { margin: 0 !important; font-size: 11.5px !important; line-height: 1.55 !important; color: #5F567A !important; }
+          .diagnostic-pdf-qr img { width: 112px !important; height: 112px !important; object-fit: contain !important; border: 1px solid #E6DEF2 !important; border-radius: 10px !important; background: #FFFFFF !important; padding: 6px !important; flex-shrink: 0 !important; }
         </style>
       </head>
       <body>${html}</body>
@@ -2409,12 +2641,8 @@ function printDocumentFromHtml(html, title = "MentorX PDF") {
   });
 }
 function exportPDFPrint(){
-  const pageEl = document.querySelector(".page");
-  if (!pageEl) return;
-  const clone = pageEl.cloneNode(true);
-  clone.querySelectorAll(".banner,.export-card,.footnote").forEach((el) => el.remove());
-  expandReportCloneForPrint(clone);
-  printDocumentFromHtml(clone.outerHTML, "MentorX-Resume-Diagnostic-Report");
+  const el = buildDiagnosticReportPdfElement();
+  printDocumentFromHtml(el.outerHTML, "MentorX-Resume-Diagnostic-Report");
 }
 function exportAiRewritePDFPrint(){
   const el = buildAiRewritePdfElement();

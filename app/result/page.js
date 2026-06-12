@@ -194,6 +194,7 @@ function JdKeywordCard() {
           <div className="skill-paywall-overlay">
             <div className="lock">🔒</div>
             <div className="text">完整 JD Keyword 清单会随下方完整诊断一起解锁<br/><span style={{color:'var(--ink-soft)',fontWeight:500}}>包含关键词放置建议和改写报告</span></div>
+            <a className="result-lock-cta-button" href="/payment">解锁更多内容</a>
           </div>
         </div>
       </div>
@@ -314,8 +315,15 @@ export default function ResultPage() {
         .logo-marquee:hover .logo-marquee-track{animation-play-state:paused}
         .mentor-logo-chip{width:72px;height:42px;border:1px solid var(--line);border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;padding:7px;flex:0 0 auto}
         .mentor-logo-chip img{max-width:100%;max-height:100%;object-fit:contain}
-        .mentor-logo-intro{margin:4px 0 14px}
-        .mentor-logo-copy{font-size:12.5px;line-height:1.55;color:var(--ink-soft);margin:0 0 8px}
+        .result-mentor-free-panel .section-num{margin-bottom:8px}
+        .result-mentor-free-panel .section-title{margin:0 0 14px}
+        .result-mentor-free-panel > .section-desc{margin:0 0 18px;line-height:1.65}
+        .result-mentor-free-panel .mentor-logo-intro{margin:0 0 20px}
+        .result-mentor-free-panel .mentor-logo-copy{font-size:12.5px;line-height:1.6;color:var(--ink-soft);margin:0 0 12px}
+        .result-mentor-free-panel .logo-marquee{margin:0;padding:10px 0}
+        .result-mentor-free-panel .mentor-detail{margin-top:20px}
+        .mentor-logo-intro{margin:0 0 20px}
+        .mentor-logo-copy{font-size:12.5px;line-height:1.6;color:var(--ink-soft);margin:0 0 12px}
         .paywall-more{position:relative;margin-top:8px;min-height:170px;border-radius:10px;overflow:hidden;border:1px dashed var(--line);background:#F7F3FC}
         .paywall-more-list{filter:blur(4px);user-select:none;pointer-events:none;padding:10px 12px}
         .paywall-more-list div{font-size:13px;line-height:1.5;margin:0 0 8px;padding-left:18px;position:relative;color:var(--ink-soft)}
@@ -325,6 +333,8 @@ export default function ResultPage() {
         .result-lock-cta .text{font-size:12.5px;font-weight:600;line-height:1.45;color:var(--ink)}
         .result-lock-cta .text b{color:var(--jade)}
         .result-lock-cta .text span{color:var(--ink-soft);font-weight:500}
+        .result-lock-cta-button{display:inline-flex;align-items:center;justify-content:center;min-height:34px;margin-top:2px;padding:8px 16px;border-radius:999px;background:var(--jade,#5333A6);color:#fff;text-decoration:none;font-size:12.5px;font-weight:800;box-shadow:0 10px 22px rgba(83,51,166,.18)}
+        .result-lock-cta-button:hover{background:#6843BB;color:#fff}
         .ats-preview-details .paywall-more{display:none}
         .ats-preview-details.is-expanded .paywall-more{display:block}
         @keyframes logo-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
