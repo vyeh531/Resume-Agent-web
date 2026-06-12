@@ -89,6 +89,7 @@ const SKILL_VERB_MAP = {
 
 const SEMANTIC_MATCH_MAP = {
   "software development engineer": ["software engineer", "software developer", "sde", "swe"],
+  "software engineer": ["software development engineer", "software developer", "full stack engineer", "full-stack engineer", "full stack product engineer", "full-stack product engineer", "product engineer", "sde", "swe"],
   "data visualization": ["dashboard", "dashboards", "tableau dashboard", "power bi dashboard", "bi reporting", "charting", "visual analytics", "data viz"],
   "dashboarding": ["dashboard", "dashboards", "bi dashboard", "tableau dashboard", "power bi dashboard", "reporting dashboard"],
   "business analysis": ["business reporting", "requirements analysis", "stakeholder reporting", "business insights", "business analytics", "analysis for business stakeholders"],
@@ -1195,6 +1196,7 @@ function getBulletLines(text) {
 }
 
 function parseSectionsLegacy(text) {
+  return parseSections(text);
   const sections = {};
   const lines = normalizeText(text).split("\n");
   let current = "header";
@@ -2817,7 +2819,7 @@ function hasLinkedInSignal(text) {
 function cleanHeadingTitle(line) {
   return String(line || "")
     .trim()
-    .replace(/[:：]\s*$/, "")
+    .replace(/[:ï¼š]\s*$/, "")
     .replace(/\s+/g, " ");
 }
 
