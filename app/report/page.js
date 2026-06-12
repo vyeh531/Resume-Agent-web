@@ -11,20 +11,109 @@ export default function ReportPage() {
         .report-issue{font-size:14px;color:var(--ink-soft);line-height:1.6;border-left:3px solid var(--apricot);padding:4px 0 4px 12px;margin:12px 0 0;}
         .report-metrics .tile-caption b{color:var(--ink);font-weight:700;}
         .tile-value-ats #reportAtsScore{font-size:30px;}
-        .export-card{background:linear-gradient(135deg,#F7F3FC 0%,#EFE5FA 45%,#FFFFFF 100%);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px 18px 16px;margin:0 0 22px;position:relative;overflow:hidden;box-shadow:var(--shadow-card);}
-        .export-card::before{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(180,126,219,.24) 0%,transparent 70%);pointer-events:none;}
-        .export-card-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;position:relative;}
-        .export-card-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#5333A6,#B47EDB);color:#fff;display:grid;place-items:center;font-size:16px;flex-shrink:0;}
-        .export-card-title{font-family:var(--serif);font-weight:700;font-size:17px;line-height:1.2;}
-        .export-card-format-tag{display:inline-block;background:var(--indigo);color:#fff;font-family:var(--mono);font-size:10px;letter-spacing:.06em;padding:2px 8px;border-radius:6px;margin-left:6px;vertical-align:2px;}
-        .export-card-desc{font-size:13px;color:var(--ink);margin:0 0 12px;line-height:1.6;position:relative;font-weight:500;}
-        .export-card-perks{list-style:none;padding:0;margin:0 0 16px;display:flex;flex-direction:column;gap:7px;position:relative;}
-        .export-card-perks li{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink);line-height:1.4;}
-        .export-card-perks .check{width:18px;height:18px;border-radius:50%;background:var(--jade);color:#fff;display:grid;place-items:center;font-size:10px;font-weight:700;flex-shrink:0;}
-        .export-card-actions{display:flex;flex-direction:column;gap:10px;position:relative;}
-        .btn-ai-prompt{background:#F0E8FA;color:var(--jade);border:1.5px solid var(--line);box-shadow:none;}
-        .btn-ai-prompt:hover{background:var(--jade-soft);}
-        .export-card-hint{font-size:12px;color:var(--ink-soft);line-height:1.5;text-align:center;margin:0;font-weight:600;}
+        .report-summary-panel{display:grid;grid-template-columns:280px minmax(0,1fr);gap:28px;align-items:stretch;background:linear-gradient(135deg,#FFFFFF 0%,#FBFAFF 64%,#F7F3FC 100%);border:1px solid #E6DEF2;border-radius:24px;padding:24px;box-shadow:0 18px 48px rgba(69,42,147,.08);}
+        .report-score-block{border:1px solid rgba(83,51,166,.14);background:linear-gradient(180deg,#FFFFFF 0%,#F9F6FF 100%);border-radius:18px;padding:28px 22px;display:flex;flex-direction:column;justify-content:center;min-height:260px;box-shadow:inset 0 1px 0 rgba(255,255,255,.82);}
+        .report-score-block .result-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-mute);font-weight:800;margin-bottom:16px;}
+        .report-score-line{display:flex;align-items:baseline;gap:5px;line-height:1;margin:0 0 12px;}
+        .report-score-line #reportHeadlineScore{font-family:var(--serif);font-style:italic;font-size:72px;font-weight:800;color:var(--indigo);letter-spacing:-.03em;}
+        .report-score-line small{font-size:18px;color:var(--ink-soft);font-weight:800;}
+        .report-score-badges{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px;}
+        .report-risk-badge{display:inline-flex;align-items:center;min-height:28px;border-radius:999px;background:#F0E8FA;color:var(--indigo);padding:5px 10px;font-size:12px;font-weight:800;}
+        .report-risk-badge-warn{background:#FBEAF1;color:#B3261E;}
+        .report-score-caption{font-size:13px;color:var(--ink-soft);line-height:1.65;margin:0;}
+        .report-score-caption b{color:var(--indigo);font-weight:900;}
+        .report-summary-copy{display:flex;flex-direction:column;justify-content:center;min-width:0;}
+        .report-summary-copy .student-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px;}
+        .report-summary-copy .who,.report-summary-copy .pill{display:inline-flex;align-items:center;min-height:28px;border:1px solid #E6DEF2;border-radius:999px;background:#fff;padding:4px 10px;color:#5F567A;font-size:12px;font-weight:700;}
+        .report-summary-headline{font-family:var(--serif);font-size:28px;line-height:1.3;margin:0 0 12px;color:var(--ink);letter-spacing:-.01em;}
+        .report-summary-headline .gap{color:var(--indigo);font-style:italic;font-weight:900;}
+        .report-issue-list{border:1px solid rgba(83,51,166,.12);border-radius:16px;background:rgba(255,255,255,.72);padding:16px 18px;margin:16px 0 16px;}
+        .report-issue-list span{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-mute);font-weight:800;margin-bottom:8px;}
+        .report-issue-list ol{margin:0;padding-left:20px;color:var(--ink);font-size:13.5px;line-height:1.8;font-weight:600;}
+        .report-hero-actions{display:flex;flex-wrap:wrap;gap:10px;}
+        .report-hero-actions .btn{min-height:46px;border-radius:12px;}
+        .report-secondary-btn{background:#fff;color:var(--ink);border:1px solid #E6DEF2;box-shadow:none;}
+        .report-keywords-panel{display:grid;grid-template-columns:minmax(250px,320px) minmax(0,1fr);gap:22px;align-items:stretch;background:#fff;border:1px solid #E6DEF2;border-radius:24px;padding:24px;box-shadow:0 18px 48px rgba(69,42,147,.07);}
+        .report-keyword-aside{background:linear-gradient(180deg,#FBFAFF 0%,#FFFFFF 100%);border:1px solid rgba(83,51,166,.12);border-radius:18px;padding:20px;display:flex;flex-direction:column;justify-content:center;}
+        .report-keyword-aside .row-between{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+        .report-keyword-aside .section-title{font-size:20px;margin:0;}
+        .report-keyword-aside .skill-score{font-size:13px;font-weight:900;color:var(--indigo);white-space:nowrap;}
+        .report-keyword-aside .skill-score small{color:var(--ink-soft);font-weight:700;}
+        .report-keyword-aside .ai-insight{margin:12px 0 0;padding:12px 13px;border-radius:14px;}
+        .report-keyword-table-card{border:1px solid rgba(83,51,166,.12);border-radius:18px;background:#fff;padding:16px 18px;box-shadow:0 12px 28px rgba(69,42,147,.05);}
+        .report-keyword-table-card .skill-list{max-height:420px;overflow:auto;padding-right:4px;}
+        .report-keyword-table-card .skill-row{min-height:48px;}
+        @media (max-width: 860px){
+          .report-summary-panel,.report-keywords-panel{grid-template-columns:1fr;padding:18px;border-radius:20px;}
+          .report-score-block{min-height:auto;padding:22px;}
+          .report-score-line #reportHeadlineScore{font-size:60px;}
+          .report-summary-headline{font-size:23px;}
+          .report-keyword-table-card .skill-list{max-height:none;}
+        }
+        .report-page > #summary.report-summary-panel{display:grid;grid-template-columns:280px minmax(0,1fr);gap:28px;align-items:stretch;background:linear-gradient(135deg,#FFFFFF 0%,#FBFAFF 64%,#F7F3FC 100%);border:1px solid #E6DEF2;border-radius:24px;padding:24px!important;box-shadow:0 18px 48px rgba(69,42,147,.08);}
+        .report-page > #summary .report-score-block{border:1px solid rgba(83,51,166,.14);background:linear-gradient(180deg,#FFFFFF 0%,#F9F6FF 100%);border-radius:18px;padding:28px 22px;display:flex;flex-direction:column;justify-content:center;min-height:260px;}
+        .report-page > #summary .report-score-line{display:flex;align-items:baseline;gap:5px;line-height:1;margin:0 0 12px;color:var(--indigo);font-size:inherit;font-weight:inherit;}
+        .report-page > #summary .report-score-line #reportHeadlineScore{font-family:var(--serif);font-style:italic;font-size:72px;font-weight:800;color:var(--indigo);letter-spacing:-.03em;line-height:1;}
+        .report-page > #summary .report-summary-copy{display:flex;flex-direction:column;justify-content:center;gap:0;min-width:0;}
+        .report-page > #summary .report-summary-headline{font-family:var(--serif);font-size:28px;font-weight:800;line-height:1.3;margin:0 0 12px;color:var(--ink);letter-spacing:-.01em;}
+        .report-page > .report-keywords-panel{grid-column:1 / -1;display:grid;grid-template-columns:minmax(250px,320px) minmax(0,1fr);gap:22px;align-items:stretch;background:#fff;border:1px solid #E6DEF2;border-radius:24px;padding:24px!important;box-shadow:0 18px 48px rgba(69,42,147,.07);}
+        .report-page > .report-keywords-panel .report-keyword-aside{background:linear-gradient(180deg,#FBFAFF 0%,#FFFFFF 100%);border:1px solid rgba(83,51,166,.12);border-radius:18px;padding:20px;}
+        .report-page > .report-keywords-panel .report-keyword-table-card{border:1px solid rgba(83,51,166,.12);border-radius:18px;background:#fff;padding:16px 18px;}
+        .report-page > #insider-tips{grid-column:1 / -1!important;width:100%!important;box-sizing:border-box!important;padding:24px!important;border:1px solid #E6DEF2;border-radius:24px;background:#fff;box-shadow:0 18px 48px rgba(69,42,147,.07);}
+        .report-page > #insider-tips .section-num{margin:0 0 8px!important;}
+        .report-page > #insider-tips .section-title{margin:0 0 14px!important;line-height:1.28!important;}
+        .report-page > #insider-tips #insiderTipsReason{margin:0 0 18px!important;}
+        .report-page > #insider-tips #insiderTipsList{display:grid;gap:14px;margin-top:18px;}
+        .report-page > #insider-tips #insiderTipsList > div{margin-bottom:0!important;}
+        .report-page > #insider-tips-divider{grid-column:1 / -1!important;width:100%!important;}
+        @media (max-width: 860px){
+          .report-page > #summary.report-summary-panel,.report-page > .report-keywords-panel{grid-template-columns:1fr;padding:18px!important;border-radius:20px;}
+          .report-page > #summary .report-score-block{min-height:auto;padding:22px;}
+          .report-page > #summary .report-score-line #reportHeadlineScore{font-size:60px;}
+          .report-page > #summary .report-summary-headline{font-size:23px;}
+          .report-page > #insider-tips{padding:18px!important;border-radius:20px;}
+          .report-page > #insider-tips .section-title{margin-bottom:12px!important;}
+          .report-page > #insider-tips #insiderTipsReason{margin-bottom:14px!important;}
+        }
+        .export-card{display:block;background:linear-gradient(135deg,#FFFFFF 0%,#FBFAFF 58%,#F0E8FA 100%);border:1px solid #E6DEF2;border-radius:24px;padding:22px;margin:0 0 22px;position:relative;overflow:hidden;box-shadow:0 18px 48px rgba(69,42,147,.08);}
+        .export-card::before{content:"";position:absolute;right:-70px;top:-80px;width:220px;height:220px;background:radial-gradient(circle,rgba(122,82,197,.18) 0%,transparent 68%);pointer-events:none;}
+        .export-card::after{content:"";position:absolute;left:26px;bottom:-56px;width:180px;height:120px;background:radial-gradient(circle,rgba(83,51,166,.08) 0%,transparent 72%);pointer-events:none;}
+        .export-card-main{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,360px);gap:22px;align-items:stretch;}
+        .export-card-copy{min-width:0;display:flex;flex-direction:column;gap:14px;justify-content:center;}
+        .export-card-head{display:flex;align-items:center;gap:12px;position:relative;}
+        .export-card-icon{width:44px;height:44px;border-radius:14px;background:#F0E8FA;color:var(--indigo);display:grid;place-items:center;font-size:18px;flex-shrink:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.8);}
+        .export-card-kicker{font-family:var(--mono);font-size:10px;letter-spacing:.10em;text-transform:uppercase;color:var(--ink-mute);font-weight:800;margin:0 0 4px;}
+        .export-card-title{font-family:var(--serif);font-weight:800;font-size:22px;line-height:1.18;letter-spacing:-.01em;color:var(--ink);}
+        .export-card-format-tag{display:inline-flex;align-items:center;background:#F0E8FA;color:var(--indigo);font-family:var(--mono);font-size:10px;letter-spacing:.04em;padding:3px 8px;border-radius:999px;margin-left:8px;vertical-align:3px;}
+        .export-card-desc{max-width:720px;font-size:13.5px;color:var(--ink-soft);margin:0;line-height:1.65;position:relative;font-weight:550;}
+        .export-card-desc b{color:var(--ink);font-weight:800;}
+        .export-card-perks{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;position:relative;}
+        .export-card-perks li{display:grid;grid-template-columns:20px minmax(0,1fr);gap:8px;align-items:start;background:rgba(255,255,255,.72);border:1px solid rgba(83,51,166,.10);border-radius:14px;padding:10px 11px;font-size:12.5px;font-weight:650;color:var(--ink);line-height:1.35;}
+        .export-card-perks .check{width:20px;height:20px;border-radius:50%;background:var(--indigo);color:#fff;display:grid;place-items:center;font-size:10px;font-weight:800;flex-shrink:0;}
+        .export-card-actions{position:relative;background:#fff;border:1px solid rgba(83,51,166,.14);border-radius:20px;padding:18px;display:flex;flex-direction:column;justify-content:center;gap:12px;box-shadow:0 16px 36px rgba(69,42,147,.08);}
+        .export-card-actions-title{font-size:14px;font-weight:800;color:var(--ink);line-height:1.35;margin:0;}
+        .export-card-actions-sub{font-size:12px;color:var(--ink-soft);line-height:1.5;margin:0 0 2px;font-weight:600;}
+        .export-card-actions .btn{width:100%;min-height:48px;justify-content:center;border-radius:14px;box-shadow:none;margin:0!important;}
+        .export-card-actions .btn-jade{background:linear-gradient(135deg,#5333A6 0%,#7A52C5 100%);color:#fff;box-shadow:0 14px 28px rgba(83,51,166,.20);}
+        .btn-ai-prompt{background:#fff;color:var(--ink);border:1px solid #E6DEF2;}
+        .btn-ai-prompt:hover{background:#F7F3FC;border-color:rgba(83,51,166,.24);}
+        .export-card-hint{font-size:11.5px;color:var(--ink-soft);line-height:1.5;text-align:left;margin:2px 0 0;font-weight:600;}
+        @media (max-width: 860px){
+          .export-card{padding:18px;border-radius:20px;}
+          .export-card-main{grid-template-columns:1fr;gap:16px;}
+          .export-card-title{font-size:20px;}
+          .export-card-perks{grid-template-columns:1fr;}
+          .export-card-actions{padding:16px;}
+        }
+        .report-page > .export-card{display:block!important;grid-template-columns:none!important;grid-column:1 / -1!important;max-width:none!important;width:100%!important;box-sizing:border-box!important;}
+        .report-page > .export-card .export-card-main{display:grid!important;width:100%!important;grid-template-columns:minmax(0,1fr) minmax(300px,360px)!important;gap:24px!important;align-items:stretch!important;}
+        .report-page > .export-card .export-card-copy{min-width:0!important;}
+        .report-page > .export-card .export-card-perks{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important;margin:0!important;}
+        .report-page > .export-card .export-card-actions{min-width:0!important;}
+        @media (max-width: 860px){
+          .report-page > .export-card .export-card-main{grid-template-columns:1fr!important;}
+          .report-page > .export-card .export-card-perks{grid-template-columns:1fr!important;}
+        }
         .ai-rewrite-pdf{width:794px;max-width:794px;background:var(--paper);color:var(--ink);font-family:var(--sans);padding:34px 48px 44px;line-height:1.55;letter-spacing:0;}
         .ai-rewrite-pdf *{box-sizing:border-box;}
         .ai-rewrite-pdf h1{font-family:var(--serif);font-size:28px;line-height:1.15;margin:10px 0 8px;letter-spacing:0;font-weight:800;}
@@ -126,36 +215,45 @@ export default function ReportPage() {
       <div className="page report-page">
         <div className="brandbar">
           <div className="brand">
-            <img src="/logo/logo%20banner_no_bg.png" alt="MentorX è”“è—¤æ•™è‚²" className="brand-img" />
+            <img src="/logo/logo%20banner_no_bg.png" alt="MentorX 蔓藤教育" className="brand-img" />
           </div>
-          <div className="brand-meta" style={{fontSize:'10px',letterSpacing:'.08em'}}>å®Œæ•´æŠ¥å‘Š</div>
+          <div className="brand-meta" style={{fontSize:'10px',letterSpacing:'.08em'}}>完整报告</div>
         </div>
 
         <div className="banner fade-in">
-          <div className="banner-check">âœ“</div>
-          <div>å®Œæ•´æŠ¥å‘Šå·²ä¸ºä½ ç”Ÿæˆ</div>
+          <div className="banner-check">✓</div>
+          <div>完整报告已为你生成</div>
         </div>
 
         <div className="export-card">
-          <div className="export-card-head">
-            <div className="export-card-icon">ðŸ“„</div>
-            <div>
-              <div className="export-card-title">å®Œæ•´è¯Šæ–­æŠ¥å‘Š<span className="export-card-format-tag">PDF</span></div>
+          <div className="export-card-main">
+            <div className="export-card-copy">
+              <div className="export-card-head">
+                <div className="export-card-icon">📄</div>
+                <div>
+                  <p className="export-card-kicker">Report Ready</p>
+                  <div className="export-card-title">完整诊断报告<span className="export-card-format-tag">PDF</span></div>
+                </div>
+              </div>
+              <p className="export-card-desc">把这份 PDF 整段喂给 <b>ChatGPT / Claude / 豆包</b> 等任意 LLM，基于 4 位大厂导师建议<b>自动重写你的简历</b>，一键产出可投递的新版本。</p>
+              <ul className="export-card-perks">
+                <li><span className="check">✓</span><span>ATS 通过率 <b>+30%</b>，自动匹配 JD 技能</span></li>
+                <li><span className="check">✓</span><span>面试邀约率 <b>翻倍</b>，简历讲对 PM 的语言</span></li>
+                <li><span className="check">✓</span><span>1 份报告反复用，投每个公司都能精准对齐</span></li>
+              </ul>
+            </div>
+            <div className="export-card-actions">
+              <p className="export-card-actions-title">下载交付文件</p>
+              <p className="export-card-actions-sub">先保存完整报告，再下载 AI 改简历指令包。</p>
+              <button className="btn btn-jade btn-block" onClick={() => window.exportPDF && window.exportPDF()}>
+                ↓ 下载 PDF 报告
+              </button>
+              <button className="btn btn-block btn-ai-prompt" onClick={() => window.exportAiRewritePDF && window.exportAiRewritePDF()}>
+                下载 AI 改简历指令包
+              </button>
+              <p className="export-card-hint">上传指令包 + 原简历，让 AI 按关键词和导师建议直接重写。</p>
             </div>
           </div>
-          <p className="export-card-desc">æŠŠè¿™ä»½ PDF æ•´æ®µå–‚ç»™ <b>ChatGPT / Claude / è±†åŒ…</b> ç­‰ä»»æ„ LLMï¼ŒåŸºäºŽ 4 ä½å¤§åŽ‚å¯¼å¸ˆå»ºè®®<b>è‡ªåŠ¨é‡å†™ä½ çš„ç®€åŽ†</b>â€”â€”ä¸ç”¨ä¸€å¥å¥æ”¹ï¼Œä¸€é”®äº§å‡ºå¯æŠ•é€’çš„æ–°ç‰ˆæœ¬ã€‚</p>
-          <ul className="export-card-perks">
-            <li><span className="check">âœ“</span><span>ATS é€šè¿‡çŽ‡ <b>+30%</b>ï¼Œè‡ªåŠ¨åŒ¹é… JD æŠ€èƒ½</span></li>
-            <li><span className="check">âœ“</span><span>é¢è¯•é‚€çº¦çŽ‡ <b>ç¿»å€</b>ï¼Œç®€åŽ†è®²å¯¹ PM çš„è¯­è¨€</span></li>
-            <li><span className="check">âœ“</span><span>1 ä»½æŠ¥å‘Šåå¤ç”¨ï¼ŒæŠ•æ¯ä¸ªå…¬å¸éƒ½èƒ½ç²¾å‡†å¯¹é½</span></li>
-          </ul>
-          <button className="btn btn-jade btn-block" onClick={() => window.exportPDF && window.exportPDF()}>
-            â¬‡ ä¸‹è½½ PDF æŠ¥å‘Š
-          </button>
-          <button className="btn btn-block btn-ai-prompt" onClick={() => window.exportAiRewritePDF && window.exportAiRewritePDF()} style={{marginTop:'10px'}}>
-            &#19979;&#36733; AI &#25913;&#31616;&#21382;&#25351;&#20196;&#21253;
-          </button>
-          <p className="export-card-hint">&#19978;&#20256;&#36825;&#20221;&#25351;&#20196;&#21253; + &#20320;&#30340;&#21407;&#31616;&#21382;&#65292;&#35753; AI &#25353;&#20851;&#38190;&#35789;&#21644;&#23548;&#24072;&#24314;&#35758;&#30452;&#25509;&#37325;&#20889;&#12290;</p>
         </div>
 
         <section className="section report-summary-panel" id="summary">
@@ -163,107 +261,112 @@ export default function ReportPage() {
             <div className="result-eyebrow">Resume Score</div>
             <div className="report-score-line"><span id="reportHeadlineScore">--</span><small>/100</small></div>
             <div className="report-score-badges">
-              <span className="report-risk-badge">Full Report</span>
-              <span className="report-risk-badge report-risk-badge-warn">Mentor Review</span>
+              <span className="report-risk-badge">Needs Improvement</span>
+              <span className="report-risk-badge report-risk-badge-warn">高风险</span>
             </div>
-            <p className="report-score-caption">ç¦»é¡¶çº§ Offer çº¿ <b id="reportHeadlineSalaryTop">å¾…æ ¡å‡†</b> ä»æœ‰å·®è·ã€‚</p>
+            <p className="report-score-caption">距离目标岗位仍有明显差距，优先补齐岗位关键词、技能证据和量化成果。</p>
           </div>
 
           <div className="report-summary-copy">
-            <div>
-              <div className="section-num">01 Â· æ•´ä½“è¯Šæ–­</div>
-              <h2 className="section-title">å®Œæ•´æŠ¥å‘Šæ¦‚è§ˆ</h2>
+            <div className="student-row">
+              <span className="who">完整报告已生成</span>
+              <span className="pill pill-mute">目标岗位分析完成</span>
             </div>
-            <h3 className="report-summary-headline">å…ˆä¿®æœ€å½±å“æŠ•é€’è½¬åŒ–çš„ 3 ä¸ªé—®é¢˜</h3>
+            <h2 className="report-summary-headline">离顶级 Offer 线 <span className="gap" id="reportHeadlineSalaryTop">待校准</span> 仍有差距。</h2>
             <p className="report-issue" id="coreIssue"></p>
             <div className="report-issue-list" aria-label="Full report coverage">
-              <span>Report includes</span>
+              <span>Top issues</span>
               <ol>
-                <li>ATS åˆ†é¡¹è¯Šæ–­ä¸Žé£Žé™©è§£é‡Š</li>
-                <li>JD Keyword è¦†ç›–ã€ç¼ºå£å’Œæ”¾ç½®å»ºè®®</li>
-                <li>4 ä½å¯¼å¸ˆçš„ç®€åŽ†ä¼˜åŒ–å»ºè®®</li>
+                <li>JD 关键词覆盖不足</li>
+                <li>技能匹配与目标岗位不够直接</li>
+                <li>经历中的量化结果偏少</li>
               </ol>
             </div>
             <div className="report-hero-actions">
-              <a className="btn btn-jade" href="#mentors">æŸ¥çœ‹å¯¼å¸ˆå»ºè®®</a>
-              <a className="btn report-secondary-btn" href="#reportDataMetrics">æŸ¥çœ‹è¯„åˆ†ç»†èŠ‚</a>
+              <a className="btn btn-jade" href="#mentors">查看导师建议</a>
+              <a className="btn report-secondary-btn" href="#reportDataMetrics">查看评分细节</a>
             </div>
           </div>
 
-          <div className="report-summary-card report-summary-keyword-card">
-            <div className="report-keyword-head">
-              <div>
-                <div className="section-num" id="reportSkillSectionTitle">JD Keyword æ¸…å•</div>
-                <p className="skill-section-desc" id="reportSkillSectionDesc">è¿™äº›æ˜¯ç³»ç»Ÿä»Ž JD ä¸­è¯†åˆ«å‡ºçš„å…³é”®è¯ã€‚ä¼˜å…ˆæŠŠå¾…è¡¥å¼ºé¡¹å†™è¿› Summaryã€Skills æˆ– Experienceã€‚</p>
-              </div>
-              <div className="ai-insight">
-                <p className="ai-insight-diagnosis">
-                  <span className="ico">Â·</span>æ­£åœ¨åŠ è½½æŠ€èƒ½åŒ¹é…æ•°æ®...
-                </p>
-              </div>
+        </section>
+
+        <section className="section report-keywords-panel">
+          <div className="report-keyword-aside">
+            <div className="section-num">JD KEYWORDS</div>
+            <div className="row-between mb-12">
+              <h3 className="section-title" id="reportSkillSectionTitle">JD Keyword 清单</h3>
+              <div className="skill-score"><small>已覆盖 </small><span id="reportSkillHave">0</span><small> / <span id="reportSkillTotal">--</span></small></div>
             </div>
+            <p className="skill-section-desc" id="reportSkillSectionDesc">这些是系统从 JD 中识别出的关键词。优先把待补强项写进 Summary、Skills 或 Experience。</p>
+            <div className="ai-insight">
+              <p className="ai-insight-diagnosis">
+                <span className="ico">·</span>正在加载技能匹配数据...
+              </p>
+            </div>
+          </div>
+          <div className="card card-tight report-keyword-table-card">
             <ul className="skill-list" id="skillList"></ul>
-            <button className="skill-expand-toggle" id="reportSkillExpandToggle" type="button" hidden>æŸ¥çœ‹æ›´å¤š â†“</button>
+            <button className="skill-expand-toggle" id="reportSkillExpandToggle" type="button" hidden>查看更多 ↓</button>
           </div>
         </section>
 
         <hr className="divider" />
 
         <section className="section report-metrics" id="reportDataMetrics">
-          <div className="section-num">02 Â· æ•°æ®ç»´åº¦</div>
-          <h2 className="section-title">å››ä¸ªåˆ¤æ–­ç»´åº¦</h2>
-          <p className="section-desc">å®Œæ•´æŠ¥å‘Šä¿ç•™æ‰€æœ‰è¯„åˆ†ä¾æ®ï¼Œå’Œç»“æžœé¡µä½¿ç”¨åŒä¸€å¥—å››å¡ç»“æž„ã€‚</p>
+          <div className="section-num">02 · 数据维度</div>
+          <h2 className="section-title">四个判断维度</h2>
+          <p className="section-desc">完整报告保留所有评分依据，和结果页使用同一套四卡结构。</p>
           <div className="report-dimension-grid" id="reportDataTiles">
             <article className="report-dimension-card report-dimension-card--purple tile">
               <header className="report-dimension-card-head">
                 <div>
-                  <div className="tile-label">JD åŒ¹é…åº¦</div>
+                  <div className="tile-label">JD 匹配度</div>
                   <div className="tile-value"><span id="reportRankPct">--</span></div>
                 </div>
                 <div className="report-dimension-marker" aria-hidden="true"></div>
               </header>
-              <div className="tile-caption">åŸºäºŽ JD å…³é”®è¯è¦†ç›–</div>
+              <div className="tile-caption">基于 JD 关键词覆盖</div>
               <div className="report-dimension-divider"></div>
-              <div className="report-dimension-detail-head">è¯„åˆ†ä¾æ®</div>
+              <div className="report-dimension-detail-head">评分依据</div>
               <div className="tile-detail" id="reportRankDetail"></div>
             </article>
             <article className="report-dimension-card report-dimension-card--red tile">
               <header className="report-dimension-card-head">
                 <div>
-                  <div className="tile-label">ATS å¯è¯»æ€§</div>
+                  <div className="tile-label">ATS 可读性</div>
                   <div className="tile-value tile-value-ats"><span id="reportAtsScore">--</span><span className="tile-percent">%</span></div>
                 </div>
                 <div className="report-dimension-marker" aria-hidden="true"></div>
               </header>
-              <div className="tile-caption" id="reportAtsRiskCaption">ä¸»æµç³»ç»Ÿè¯†åˆ«</div>
+              <div className="tile-caption" id="reportAtsRiskCaption">主流系统识别</div>
               <div className="report-dimension-divider"></div>
-              <div className="report-dimension-detail-head">è¯„åˆ†ä¾æ®</div>
+              <div className="report-dimension-detail-head">评分依据</div>
               <div className="tile-detail" id="reportAtsDetail"></div>
             </article>
             <article className="report-dimension-card report-dimension-card--blue tile">
               <header className="report-dimension-card-head">
                 <div>
-                  <div className="tile-label">Salary Â· è–ªèµ„æˆé•¿</div>
-                  <div className="tile-value" id="reportSalaryRange">æˆé•¿æ½œåŠ›</div>
+                  <div className="tile-label">Salary · 薪资成长</div>
+                  <div className="tile-value" id="reportSalaryRange">成长潜力</div>
                 </div>
                 <div className="report-dimension-marker" aria-hidden="true"></div>
               </header>
-              <div className="tile-caption">5å¹´ä¸Šé™ <b id="reportSalaryTop">å¾…æ ¡å‡†</b></div>
+              <div className="tile-caption">5年上限 <b id="reportSalaryTop">待校准</b></div>
               <div className="report-dimension-divider"></div>
-              <div className="report-dimension-detail-head">è¯„åˆ†ä¾æ®</div>
+              <div className="report-dimension-detail-head">评分依据</div>
               <div className="tile-detail" id="reportSalaryDetail"></div>
             </article>
             <article className="report-dimension-card report-dimension-card--orange tile">
               <header className="report-dimension-card-head">
                 <div>
-                  <div className="tile-label">AI å½±å“è¶‹åŠ¿</div>
+                  <div className="tile-label">AI 影响趋势</div>
                   <div className="tile-value"><span id="reportAiImpactLevel">--</span></div>
                 </div>
                 <div className="report-dimension-marker" aria-hidden="true"></div>
               </header>
-              <div className="tile-caption"><span id="reportAiImpactCaption">å¾…æ ¡å‡†</span></div>
+              <div className="tile-caption"><span id="reportAiImpactCaption">待校准</span></div>
               <div className="report-dimension-divider"></div>
-              <div className="report-dimension-detail-head">è¯„åˆ†ä¾æ®</div>
+              <div className="report-dimension-detail-head">评分依据</div>
               <div className="tile-detail" id="reportAiImpactDetail"></div>
             </article>
           </div>
@@ -272,8 +375,8 @@ export default function ReportPage() {
         <hr className="divider" />
 
         <section className="section report-ats-panel" id="atsDetailSection">
-          <div className="section-num">03 Â· ATS è¯Šæ–­</div>
-          <h2 className="section-title">ç³»ç»Ÿè¯„åˆ†è¯¦æƒ…</h2>
+          <div className="section-num">03 · ATS 诊断</div>
+          <h2 className="section-title">系统评分详情</h2>
           <div className="card report-ats-card">
             <div className="report-ats-visual">
               <div id="atsRiskBadge"></div>
@@ -291,47 +394,47 @@ export default function ReportPage() {
         <hr className="divider" />
 
         <section className="section" id="mentors">
-          <div className="section-num">04 Â· å®Œæ•´å¯¼å¸ˆå»ºè®®</div>
-          <h2 className="section-title" style={{fontSize:'22px'}}>æ¯ä¸ªè§’åº¦éƒ½æœ‰äººå¸®ä½ çœ‹è¿‡äº†</h2>
+          <div className="section-num">04 · 完整导师建议</div>
+          <h2 className="section-title" style={{fontSize:'22px'}}>每个角度都有人帮你看过了</h2>
           <div id="mentorLogoIntroSlot"></div>
           <div id="mentorsList"></div>
         </section>
 
         <hr className="divider" />
 
+        <section className="section" id="insider-tips">
+          <div className="section-num">05 · 公司内幕</div>
+          <h2 className="section-title" style={{fontSize:'22px'}}>导师亲述：这些公司到底看什么</h2>
+          <div id="insiderTipsList"></div>
+        </section>
+
+        <hr className="divider" id="insider-tips-divider" />
+
         <section className="section" id="service">
-          <div className="section-num" id="serviceNum">05 Â· å‡çº§æœåŠ¡</div>
-          <h2 className="section-title" style={{fontSize:'22px'}}>æƒ³èµ°å¾—æ›´è¿œ?</h2>
+          <div className="section-num" id="serviceNum">06 · 升级服务</div>
+          <h2 className="section-title" style={{fontSize:'22px'}}>想走得更远?</h2>
           <div className="service-card">
-            <h3 className="service-card-title">å‡çº§<em>ä¸“å±žæ±‚èŒé¡¾é—®æœåŠ¡</em>ï¼Œ<br/>ç”±å¤§åŽ‚å¯¼å¸ˆå›¢é˜Ÿä¸ºä½ å®šåˆ¶æ–¹æ¡ˆ</h3>
-            <p className="service-card-sub">ä»Žç®€åŽ†ç²¾ä¿®ã€æŠ•é€’ç­–ç•¥åˆ°é¢è¯•å†²åˆºï¼Œäº«å—é«˜åŒ¹é…åº¦ä¸ªäººåŒ–é™ªè·‘ã€‚<br/>ä¸“ä¸šå¤§åŽ‚åœ¨èŒå¯¼å¸ˆå›¢é˜Ÿï¼ŒæŒ‰ç›®æ ‡å…¬å¸ / å²—ä½ / å­¦æ ¡èƒŒæ™¯ä¸ºä½ ç”„é€‰åŒ¹é…ã€‚</p>
+            <h3 className="service-card-title">升级<em>专属求职顾问服务</em>，<br/>由大厂导师团队为你定制方案</h3>
+            <p className="service-card-sub">从简历精修、投递策略到面试冲刺，享受高匹配度个人化陪跑。<br/>专业大厂在职导师团队，按目标公司 / 岗位 / 学校背景为你甄选匹配。</p>
             <ul className="service-list">
-              <li><span className="num-badge">1</span><strong>æ±‚èŒç­–ç•¥ 1v1</strong><span>å®šä½ + æŠ•é€’æ—¶é—´çº¿ + å…¬å¸æ¸…å• + é£Žé™©è¯„ä¼°</span></li>
-              <li><span className="num-badge">2</span><strong>ç®€åŽ†ç²¾ä¿®</strong><span>é¡¹ç›®çº§æ·±åº¦æ”¹å†™ï¼Œé€å¥å¯¹ç…§ JD ä¼˜åŒ–</span></li>
-              <li><span className="num-badge">3</span><strong>æ¨¡æ‹Ÿé¢è¯•</strong><span>è¯­éŸ³ / è§†é¢‘å®žæˆ˜ï¼Œé«˜é¢‘é—®é¢˜ç©¿é€ï¼Œå³æ—¶ç‚¹è¯„</span></li>
-              <li><span className="num-badge">4</span><strong>Offer è°ˆè–ª</strong><span>å¤š Offer å–èˆ + HR æŠ¥ä»· counter è¯æœ¯</span></li>
+              <li><span className="num-badge">1</span><strong>求职策略 1v1</strong><span>定位 + 投递时间线 + 公司清单 + 风险评估</span></li>
+              <li><span className="num-badge">2</span><strong>简历精修</strong><span>项目级深度改写，逐句对照 JD 优化</span></li>
+              <li><span className="num-badge">3</span><strong>模拟面试</strong><span>语音 / 视频实战，高频问题穿透，即时点评</span></li>
+              <li><span className="num-badge">4</span><strong>Offer 谈薪</strong><span>多 Offer 取舍 + HR 报价 counter 话术</span></li>
             </ul>
             <div className="service-cta-block">
-              <div className="service-cta-text">æ‰«ç æ·»åŠ ä¸“å±žæ±‚èŒå¯¼å¸ˆ</div>
-              <img className="service-qr" src="/qr.jpg" alt="æ‰«ç æ·»åŠ ä¸“å±žæ±‚èŒå¯¼å¸ˆ" />
+              <div className="service-cta-text">扫码添加专属求职导师</div>
+              <img className="service-qr" src="/qr.jpg" alt="扫码添加专属求职导师" />
             </div>
-            <div className="service-foot">è€å­¦å‘˜ 9 æŠ˜ä¼˜æƒ  Â· ä¸æ»¡æ„ 7 å¤©å†…å…¨é¢é€€æ¬¾ Â· æ”¯æŒæœˆåº¦é™ªè·‘å¥—é¤</div>
+            <div className="service-foot">老学员 9 折优惠 · 不满意 7 天内全额退款 · 支持月度陪跑套餐</div>
           </div>
         </section>
 
         <hr className="divider" />
 
-        <section className="section" id="insider-tips" style={{display:'none'}}>
-          <div className="section-num">06 Â· å…¬å¸å†…å¹•</div>
-          <h2 className="section-title" style={{fontSize:'22px'}}>å¯¼å¸ˆäº²è¿°ï¼šè¿™äº›å…¬å¸åˆ°åº•çœ‹ä»€ä¹ˆ</h2>
-          <div id="insiderTipsList"></div>
-        </section>
-
-        <hr className="divider" id="insider-tips-divider" style={{display:'none'}} />
-
         <div className="footnote">
-          æŠ¥å‘Šç”± MentorX Ã— AI è”åˆç”Ÿæˆ Â· å†…å®¹ä»…ä¾›å‚è€ƒï¼Œä¸æž„æˆ Offer æ‰¿è¯º<br/>
-          Powered by <span>Vibe ID</span> Â· è”“è—¤æ•™è‚² Â· 2015 è‡³ä»Š Â· 1,300+ å¤§åŽ‚å¯¼å¸ˆ
+          报告由 MentorX × AI 联合生成 · 内容仅供参考，不构成 Offer 承诺<br/>
+          Powered by <span>Vibe ID</span> · 蔓藤教育 · 2015 至今 · 1,300+ 大厂导师
         </div>
       </div>
 

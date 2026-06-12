@@ -171,7 +171,7 @@ test("legacy free selector rejects governance-excluded cards", () => {
       safeToShowFree: true,
       adviceScope: "resume_edit",
       adviceIntent: "experience_evidence",
-      actionSummary: "挑选一段最相关经历，把 bullet æ”¹æˆä»»åŠ¡ã€�方法和结果三部分。",
+      actionSummary: "挑选一段最相关经历，把 bullet 改成任务、方法和结果三部分。",
       display_action_mode: "raw",
       relatedProblemTags: ["weak_experience_keyword_evidence"],
     },
@@ -275,7 +275,7 @@ test("generalized fallback ignores approved raw mentor and HR perspectives", () 
   const rendered = [item.action, item.mentorLens, item.reason, item.hrPerspective].join(" ");
   assert.strictEqual(item.actionDisplayModeUsed, "generalized");
   assert.ok(!/hardware|medical-device|medical device|PCB|circuit|test|debug|prototype/i.test(rendered), rendered);
-  assert.ok(/target role|JD|keyword|ä»»åŠ¡|æ–¹æ³•|ç»“æžœ|ç›®æ ‡å²—ä½|å…³é”®è¯/i.test(rendered), rendered);
+  assert.ok(/target role|JD|keyword|任务|方法|结果|目标岗位|关键词/i.test(rendered), rendered);
 });
 
 test("family and depth inference are stable for common actions", () => {

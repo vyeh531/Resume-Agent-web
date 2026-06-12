@@ -741,7 +741,7 @@
     margin: 0 !important;
     justify-self: start !important;
     align-self: start !important;
-    box-shadow: 0 18px 38px -22px rgba(7,193,96,.52) !important;
+    box-shadow: 0 18px 38px -22px rgba(83,51,166,.28) !important;
   }
 
   .login-page .wechat-icon::before{
@@ -955,10 +955,10 @@
     width: 54px !important;
     height: 54px !important;
     border-radius: 16px !important;
-    background: #07C160 !important;
+    background: #5333A6 !important;
     color: #fff !important;
     margin: 0 0 0 34px !important;
-    box-shadow: 0 16px 34px -18px rgba(7,193,96,.6) !important;
+    box-shadow: 0 16px 34px -18px rgba(83,51,166,.32) !important;
   }
 
   .login-page .wechat-icon::before{
@@ -1475,15 +1475,15 @@
    Result page v3: SaaS diagnosis dashboard
    ===================================================================== */
 .result-page{
-  --result-bg: #F8F7FC;
+  --result-bg: #F7F3FC;
   --result-card: #FFFFFF;
-  --result-ink: #201A3A;
-  --result-muted: #6B7280;
-  --result-line: #E9E5F5;
-  --result-purple: #6D4AFF;
-  --result-warn: #F59E0B;
-  --result-bad: #DC2626;
-  --result-shadow: 0 8px 24px rgba(40, 24, 80, .06);
+  --result-ink: #1F1744;
+  --result-muted: #5F567A;
+  --result-line: #E6DEF2;
+  --result-purple: #5333A6;
+  --result-warn: #B25E00;
+  --result-bad: #B3261E;
+  --result-shadow: 0 8px 24px rgba(69, 42, 147, .08);
   font-family: Inter, "Noto Sans SC", "PingFang SC", var(--sans), sans-serif;
   color: var(--result-ink);
 }
@@ -1539,7 +1539,7 @@
     width: 22px;
     height: 22px;
     border-radius: 8px;
-    background: rgba(109, 74, 255, .1);
+    background: rgba(83, 51, 166, .10);
     color: var(--result-purple);
   }
 
@@ -1616,14 +1616,14 @@
     padding: 5px 9px;
     border-radius: 999px;
     color: var(--result-purple);
-    background: rgba(109, 74, 255, .08);
+    background: rgba(83, 51, 166, .08);
     font-size: 12px;
     font-weight: 700;
   }
 
   .result-risk-badge-warn{
     color: var(--result-bad);
-    background: rgba(220, 38, 38, .08);
+    background: rgba(179, 38, 30, .08);
   }
 
   .result-score-conclusion{
@@ -1659,7 +1659,7 @@
 
   .result-summary-copy #targetJob{
     color: var(--result-purple);
-    background: rgba(109, 74, 255, .07);
+    background: rgba(83, 51, 166, .07);
   }
 
   .result-summary-copy .summary-headline{
@@ -1781,14 +1781,14 @@
   }
 
   .result-page .tile:hover{
-    border-color: rgba(109, 74, 255, .34);
+    border-color: rgba(83, 51, 166, .34);
     box-shadow: var(--result-shadow);
     transform: translateY(-1px);
   }
 
   .result-page .tile[open]{
     grid-column: span 2;
-    border-color: rgba(109, 74, 255, .45);
+    border-color: rgba(83, 51, 166, .45);
   }
 
   .result-page .tile-summary{
@@ -2054,7 +2054,7 @@
   }
 
   .skill-expand-toggle:hover{
-    border-color: rgba(109, 74, 255, .36);
+    border-color: rgba(83, 51, 166, .36);
     background: #FAF9FE;
   }
 
@@ -2174,7 +2174,7 @@
   }
 
   .unlock-cta .btn-jade:hover{
-    background: #5B3CE8;
+    background: #6843BB;
   }
 
   .unlock-cta-foot{
@@ -2236,15 +2236,15 @@
    Report page v3: mature SaaS report workspace
    ===================================================================== */
 .report-page{
-  --report-bg: #F8F7FC;
+  --report-bg: #F7F3FC;
   --report-card: #FFFFFF;
-  --report-ink: #201A3A;
-  --report-muted: #6B7280;
-  --report-line: #E9E5F5;
-  --report-purple: #6D4AFF;
-  --report-warn: #F59E0B;
-  --report-bad: #DC2626;
-  --report-shadow: 0 8px 24px rgba(40, 24, 80, .06);
+  --report-ink: #1F1744;
+  --report-muted: #5F567A;
+  --report-line: #E6DEF2;
+  --report-purple: #5333A6;
+  --report-warn: #B25E00;
+  --report-bad: #B3261E;
+  --report-shadow: 0 8px 24px rgba(69, 42, 147, .08);
   font-family: Inter, "Noto Sans SC", "PingFang SC", var(--sans), sans-serif;
   color: var(--report-ink);
 }
@@ -2304,7 +2304,7 @@
     width: 22px;
     height: 22px;
     border-radius: 8px;
-    background: rgba(109, 74, 255, .1);
+    background: rgba(83, 51, 166, .10);
     color: var(--report-purple);
   }
 
@@ -2372,7 +2372,7 @@
     width: 38px;
     height: 38px;
     border-radius: 12px;
-    background: rgba(109, 74, 255, .1);
+    background: rgba(83, 51, 166, .10);
     color: var(--report-purple);
     font-size: 17px;
   }
@@ -2385,7 +2385,7 @@
   }
 
   .report-page .export-card-format-tag{
-    background: rgba(109, 74, 255, .1);
+    background: rgba(83, 51, 166, .10);
     color: var(--report-purple);
     font-family: inherit;
     letter-spacing: 0;
@@ -2545,7 +2545,7 @@
 
   .report-page .tile[open]{
     grid-column: span 2;
-    border-color: rgba(109, 74, 255, .45);
+    border-color: rgba(83, 51, 166, .45);
   }
 
   .report-page .tile-summary{
@@ -2783,14 +2783,14 @@
    Payment page v3: checkout workspace
    ===================================================================== */
 .payment-page{
-  --pay-bg: #F8F7FC;
+  --pay-bg: #F7F3FC;
   --pay-card: #FFFFFF;
-  --pay-ink: #201A3A;
-  --pay-muted: #6B7280;
-  --pay-line: #E9E5F5;
-  --pay-purple: #6D4AFF;
-  --pay-green: #07C160;
-  --pay-shadow: 0 8px 24px rgba(40, 24, 80, .06);
+  --pay-ink: #1F1744;
+  --pay-muted: #5F567A;
+  --pay-line: #E6DEF2;
+  --pay-purple: #5333A6;
+  --pay-green: #5333A6;
+  --pay-shadow: 0 8px 24px rgba(69, 42, 147, .08);
   font-family: Inter, "Noto Sans SC", "PingFang SC", var(--sans), sans-serif;
   color: var(--pay-ink);
 }
@@ -2948,7 +2948,7 @@
   .payment-page .pay-discount{
     margin-top: 8px;
     color: var(--pay-purple);
-    background: rgba(109, 74, 255, .08);
+    background: rgba(83, 51, 166, .08);
     font-family: inherit;
     letter-spacing: 0;
   }
@@ -3018,7 +3018,7 @@
   }
 
   .payment-page .pay-card .btn-jade:hover{
-    background: #5B3CE8;
+    background: #6843BB;
   }
 
   .payment-page .pay-trust{
@@ -3122,14 +3122,14 @@
 
   .result-page .result-metric-tab:hover{
     transform: translateY(-1px);
-    border-color: rgba(101, 71, 217, .32);
-    box-shadow: 0 16px 36px rgba(45, 35, 89, .08);
+    border-color: rgba(83, 51, 166, .32);
+    box-shadow: 0 16px 36px rgba(69, 42, 147, .08);
   }
 
   .result-page .result-metric-tab.is-active{
-    border-color: rgba(101, 71, 217, .52);
+    border-color: rgba(83, 51, 166, .52);
     background: linear-gradient(180deg, #fff 0%, #FBFAFF 100%);
-    box-shadow: 0 18px 42px rgba(84, 54, 180, .13);
+    box-shadow: 0 18px 42px rgba(83, 51, 166, .13);
   }
 
   .result-page .result-metric-tab.is-active::after{
@@ -3166,7 +3166,7 @@
     display: grid;
     place-items: center;
     color: var(--result-purple);
-    background: #F3EEFF;
+    background: #F0E8FA;
     font-size: 13px;
     transition: transform .18s ease, background .18s ease, color .18s ease;
   }
@@ -3214,7 +3214,7 @@
     border-radius: 22px;
     background: #fff;
     padding: 22px;
-    box-shadow: 0 18px 46px rgba(45, 35, 89, .06);
+    box-shadow: 0 18px 46px rgba(69, 42, 147, .06);
   }
 
   .result-page .result-metric-panel-head{
@@ -3316,7 +3316,7 @@
 
   .result-page .result-metric-tab.is-active{
     border-color: var(--indigo);
-    box-shadow: 0 10px 24px rgba(95, 57, 196, .12);
+    box-shadow: 0 10px 24px rgba(83, 51, 166, .12);
   }
 
   .result-page .result-metric-tab .tile-value{
@@ -3367,7 +3367,7 @@
 
   .result-page .result-metric-workspace .result-metric-tab.is-active{
     background: #FFFFFF;
-    box-shadow: 0 14px 30px rgba(84, 54, 180, .12);
+    box-shadow: 0 14px 30px rgba(83, 51, 166, .12);
   }
 
   .result-page .result-metric-workspace .result-metric-tab.is-active::before{
@@ -3532,7 +3532,7 @@
     padding: 18px;
     min-width: 0;
     min-height: 292px;
-    box-shadow: 0 14px 34px rgba(45, 35, 89, .055);
+    box-shadow: 0 14px 34px rgba(69, 42, 147, .06);
     display: flex;
     flex-direction: column;
   }
@@ -3582,7 +3582,7 @@
     width: 36px;
     height: 36px;
     border-radius: 14px;
-    background: #F3EEFF;
+    background: #F0E8FA;
     position: relative;
     flex: 0 0 auto;
   }
@@ -3611,45 +3611,36 @@
   }
 
   .result-page .result-dimension-card--red .result-dimension-marker{
-    background: #FFF1F2;
+    background: #FBEAF1;
   }
 
   .result-page .result-dimension-card--red .result-dimension-marker::before,
   .result-page .result-dimension-card--red .result-dimension-marker::after{
-    background: #C92A3A;
+    background: #C23863;
   }
 
   .result-page .result-dimension-card--blue .result-dimension-marker{
-    background: #EEF4FF;
+    background: #F0E8FA;
   }
 
   .result-page .result-dimension-card--blue .result-dimension-marker::before,
   .result-page .result-dimension-card--blue .result-dimension-marker::after{
-    background: #3F63D8;
+    background: #6843BB;
   }
 
   .result-page .result-dimension-card--orange .result-dimension-marker{
-    background: #FFF7ED;
+    background: #F7F3FC;
   }
 
   .result-page .result-dimension-card--orange .result-dimension-marker::before,
   .result-page .result-dimension-card--orange .result-dimension-marker::after{
-    background: #C46B13;
+    background: #7A52C5;
   }
 
   .result-page .result-dimension-divider{
     height: 1px;
     margin: 16px 0 12px;
     background: var(--result-line);
-  }
-
-  .result-page .result-dimension-detail-head{
-    color: var(--result-muted);
-    font-size: 11px;
-    font-weight: 780;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
   }
 
   .result-page .result-dimension-card .tile-detail{
@@ -3978,7 +3969,7 @@
     background: #fff;
     padding: 18px;
     min-height: 292px;
-    box-shadow: 0 14px 34px rgba(45, 35, 89, .055);
+    box-shadow: 0 14px 34px rgba(69, 42, 147, .06);
   }
 
   .report-page .report-dimension-card-head{
@@ -4013,7 +4004,7 @@
     width: 36px;
     height: 36px;
     border-radius: 14px;
-    background: #F3EEFF;
+    background: #F0E8FA;
     position: relative;
     flex: 0 0 auto;
   }
@@ -4040,15 +4031,15 @@
     opacity: .55;
   }
 
-  .report-page .report-dimension-card--red .report-dimension-marker{ background:#FFF1F2; }
+  .report-page .report-dimension-card--red .report-dimension-marker{ background:#FBEAF1; }
   .report-page .report-dimension-card--red .report-dimension-marker::before,
-  .report-page .report-dimension-card--red .report-dimension-marker::after{ background:#C92A3A; }
-  .report-page .report-dimension-card--blue .report-dimension-marker{ background:#EEF4FF; }
+  .report-page .report-dimension-card--red .report-dimension-marker::after{ background:#C23863; }
+  .report-page .report-dimension-card--blue .report-dimension-marker{ background:#F0E8FA; }
   .report-page .report-dimension-card--blue .report-dimension-marker::before,
-  .report-page .report-dimension-card--blue .report-dimension-marker::after{ background:#3F63D8; }
-  .report-page .report-dimension-card--orange .report-dimension-marker{ background:#FFF7ED; }
+  .report-page .report-dimension-card--blue .report-dimension-marker::after{ background:#6843BB; }
+  .report-page .report-dimension-card--orange .report-dimension-marker{ background:#F7F3FC; }
   .report-page .report-dimension-card--orange .report-dimension-marker::before,
-  .report-page .report-dimension-card--orange .report-dimension-marker::after{ background:#C46B13; }
+  .report-page .report-dimension-card--orange .report-dimension-marker::after{ background:#7A52C5; }
 
   .report-page .report-dimension-divider{
     height: 1px;

@@ -501,7 +501,7 @@ button{ font-family: inherit; }
   margin-bottom: 14px;
 }
 .ba-side{ padding: 18px; }
-.ba-before{ background: #fdf3f1; border-bottom: 1px solid var(--line); }
+.ba-before{ background: #FBEAF1; border-bottom: 1px solid var(--line); }
 .ba-after{ background: var(--paper-warm); }
 .ba-tag{
   font-family: var(--mono); font-size: 10px;
@@ -709,7 +709,7 @@ button{ font-family: inherit; }
 .locked-overlay{
   position: absolute; inset: 0;
   display: grid; place-items: center;
-  background: rgba(251,250,243,.55);
+  background: rgba(247,243,252,.72);
   z-index: 2;
 }
 .locked-overlay .lock-icon{
@@ -725,7 +725,7 @@ button{ font-family: inherit; }
   position: sticky;
   top: 0;
   z-index: 30;
-  background: rgba(246,243,236,.92);
+  background: rgba(247,243,252,.92);
   backdrop-filter: blur(8px);
   margin: 0 -20px 20px;
   padding: 14px 20px;
@@ -1028,7 +1028,7 @@ button{ font-family: inherit; }
   border-radius: 999px;
   font-size: 11px;
   font-weight: 500;
-  border: 1px solid #c2dcc6;
+  border: 1px solid #E6DEF2;
   white-space: nowrap;
 }
 
@@ -1100,8 +1100,8 @@ button{ font-family: inherit; }
 }
 
 .advice-example{
-  background: #e8f3ea;
-  border: 1px solid #c2dcc6;
+  background: #F7F3FC;
+  border: 1px solid #E6DEF2;
   border-radius: var(--r-md);
   padding: 14px 16px;
   position: relative;
@@ -1126,7 +1126,7 @@ button{ font-family: inherit; }
 }
 .advice-example-head .copy-btn{
   background: #fff;
-  border: 1px solid #c2dcc6;
+  border: 1px solid #E6DEF2;
   color: var(--ink-soft);
   font-size: 11px;
   padding: 4px 9px;
@@ -1163,15 +1163,15 @@ button{ font-family: inherit; }
   color: var(--ink);
 }
 .advice-example-row--before{
-  background: #fff7ed;
-  border: 1px solid #fed7aa;
+  background: #F7F3FC;
+  border: 1px solid #E6DEF2;
 }
 .advice-example-row--before .label{
   color: var(--warn);
 }
 .advice-example-row--after{
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
+  background: #FFFFFF;
+  border: 1px solid #D8B6F2;
 }
 .advice-example-row--after .label{
   color: var(--good);
@@ -1221,7 +1221,7 @@ button{ font-family: inherit; }
 .locked-mentor-v2 .blur-area{
   position: relative;
   min-height: 110px;
-  background: linear-gradient(180deg, transparent 0%, rgba(217,214,197,.18) 50%, rgba(217,214,197,.4) 100%);
+  background: linear-gradient(180deg, transparent 0%, rgba(230,222,242,.28) 50%, rgba(216,182,242,.42) 100%);
   border-radius: var(--r-md);
   margin: 0 -4px;
   display: grid; place-items: center;
@@ -1304,7 +1304,7 @@ button{ font-family: inherit; }
   align-items: center;
   justify-content: flex-start;
   gap: 8px;
-  background: linear-gradient(180deg, rgba(251,250,243,.54) 0%, rgba(251,250,243,.96) 56%);
+  background: linear-gradient(180deg, rgba(247,243,252,.58) 0%, rgba(247,243,252,.96) 56%);
   text-align: center;
   padding: 14px 18px 18px;
   backdrop-filter: blur(1px);

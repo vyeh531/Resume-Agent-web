@@ -47,7 +47,6 @@ function renderUnlockMiniCta() {
     <div class="result-lock-cta">
       <div class="lock">🔒</div>
       <div class="text">解锁<b>全部 4 位导师</b> + <b>完整改写报告</b><br><span>含完整 JD Keyword 清单</span></div>
-      <a class="btn btn-jade" href="/payment">¥ 49 解锁完整诊断</a>
     </div>`;
 }
 const STATIC_MENTOR_COMPANY_LOGOS = [

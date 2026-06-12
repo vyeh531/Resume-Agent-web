@@ -112,7 +112,7 @@ function MetricOverviewCards() {
           <div className="section-num">数据维度</div>
           <h3 className="section-title">从 4 个角度看你的位置</h3>
         </div>
-        <p className="section-desc">四个维度直接展开，看摘要、风险和评分依据，不需要再切换。</p>
+        <p className="section-desc">四个维度直接展开，看摘要和风险，不需要再切换。</p>
       </div>
       <div className="result-dimension-grid" id="tilesArea" aria-label="数据维度">
         {cards.map((card) => (
@@ -126,7 +126,6 @@ function MetricOverviewCards() {
             </header>
             <div className="tile-caption">{card.caption}</div>
             <div className="result-dimension-divider"></div>
-            <div className="result-dimension-detail-head">评分依据</div>
             <div className="tile-detail" id={card.detailId}></div>
           </article>
         ))}
@@ -194,8 +193,7 @@ function JdKeywordCard() {
           <ul className="skill-list skill-paywall-list" id="skillPaywallList"></ul>
           <div className="skill-paywall-overlay">
             <div className="lock">🔒</div>
-            <div className="text">解锁<b style={{color:'var(--jade)'}}>全部 4 位导师</b> + <b style={{color:'var(--jade)'}}>完整改写报告</b><br/><span style={{color:'var(--ink-soft)',fontWeight:500}}>含完整 JD Keyword 清单</span></div>
-            <a className="btn btn-jade" href="/payment">¥ 49 解锁完整诊断</a>
+            <div className="text">完整 JD Keyword 清单会随下方完整诊断一起解锁<br/><span style={{color:'var(--ink-soft)',fontWeight:500}}>包含关键词放置建议和改写报告</span></div>
           </div>
         </div>
       </div>
@@ -216,22 +214,28 @@ function MentorAdvicePreview() {
 
 function UnlockSidebarCard() {
   return (
-    <aside className="section result-mentor-locked-panel">
-      <div className="section-num">导师 2-4 / 4</div>
-      <h3 className="section-title">更多导师建议 <span className="text-mute">(付费解锁)</span></h3>
-      <p className="section-desc">每位导师从不同角度给出必改、建议改、补充建议。</p>
-      <div className="stack-12" id="lockedMentorsArea"></div>
-      <div className="unlock-cta">
-        <p className="unlock-cta-title">解锁完整导师建议</p>
-        <p className="unlock-cta-sub">获得 4 位导师完整建议、JD Keyword 放置建议和可导出的改写报告。</p>
-        <div className="unlock-cta-price"><span className="now"><b>¥</b>49</span><span className="was">原价 ¥199</span></div>
-        <ul className="unlock-cta-perks">
-          <li>4 位大厂导师完整建议</li>
-          <li>完整 JD Keyword 清单 + 放置建议</li>
-          <li>报告导出 .md，可直接给 ChatGPT / Claude 改简历</li>
-        </ul>
-        <a href="/payment" className="btn btn-jade btn-block">¥ 49 立即解锁 →</a>
-        <div className="unlock-cta-foot">4 位真实导师经验 + AI 联合生成，不构成 Offer 承诺</div>
+    <aside className="section result-mentor-locked-panel result-mentor-unlock-card">
+      <div className="result-unlock-copy">
+        <div>
+          <div className="section-num">付费解锁 · 9 条深度建议</div>
+          <h3 className="section-title">更多导师建议 <span className="text-mute">(付费解锁)</span></h3>
+          <p className="section-desc">融合 4 位导师完整建议、JD Keyword 放置建议和可导出的改写报告，不再分散成多个解锁入口。</p>
+        </div>
+        <div className="result-unlock-price" aria-label="解锁价格">
+          <span><b>¥</b>49</span>
+          <small>原价 ¥199</small>
+        </div>
+      </div>
+      <div className="result-unlock-body">
+        <div className="result-unlock-preview">
+          <div className="stack-12" id="lockedMentorsArea"></div>
+          <ul className="result-unlock-perks">
+            <li>4 位大厂导师完整建议</li>
+            <li>完整 JD Keyword 清单 + 放置建议</li>
+            <li>报告导出 .md，可直接给 ChatGPT / Claude 改简历</li>
+          </ul>
+          <a href="/payment" className="btn btn-jade result-unlock-button">¥ 49 立即解锁 →</a>
+        </div>
       </div>
     </aside>
   );
@@ -282,20 +286,29 @@ export default function ResultPage() {
         .jd-keyword-chip.is-have .state{background:var(--good)}
         .jd-keyword-paywall{position:relative;min-height:142px;margin-top:10px;border:1px dashed var(--line);border-radius:10px;overflow:hidden;background:#F7F3FC}
         .jd-keyword-paywall .paywall-more-list{filter:blur(4px);user-select:none;pointer-events:none;padding:12px}
-        .unlock-cta{background:linear-gradient(135deg,#452A93 0%,#5333A6 45%,#7A52C5 100%);color:#fff;border-radius:var(--r-lg);padding:22px;text-align:center;margin-top:16px;position:relative;overflow:hidden;box-shadow:var(--shadow-pop)}
-        .unlock-cta::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,rgba(180,126,219,.32) 0%,transparent 50%);pointer-events:none}
-        .unlock-cta > *{position:relative}
-        .unlock-cta-title{font-family:var(--serif);font-weight:700;font-size:18px;margin:0 0 8px}
-        .unlock-cta-price{margin:12px 0 18px;display:flex;align-items:baseline;justify-content:center;gap:10px}
-        .unlock-cta-price .now{font-family:var(--serif);font-style:italic;font-weight:700;font-size:40px;color:#FFFFFF}
-        .unlock-cta-price .now b{font-size:22px}
-        .unlock-cta-price .was{color:rgba(255,255,255,.5);font-size:14px;text-decoration:line-through}
-        .unlock-cta-perks{list-style:none;padding:0;margin:0 0 16px;font-size:13px;color:rgba(255,255,255,.85);text-align:left;display:inline-flex;flex-direction:column;gap:6px}
-        .unlock-cta-perks li{display:flex;gap:8px;align-items:flex-start}
-        .unlock-cta-perks li::before{content:"✓";color:#B47EDB;font-weight:700;flex-shrink:0}
-        .unlock-cta-foot{font-size:11px;color:rgba(255,255,255,.5);margin-top:12px;font-family:var(--mono);letter-spacing:.04em}
-        .unlock-cta .btn-jade{background:#FFFFFF;color:var(--indigo);box-shadow:0 12px 28px rgba(31,23,68,.22);font-weight:700}
-        .unlock-cta .btn-jade:hover{background:#F4EDFB}
+        .result-mentor-unlock-card{position:relative;overflow:hidden;background:linear-gradient(180deg,#FFFFFF 0%,#FBFAFF 100%);border:1px solid #E6DEF2;box-shadow:0 18px 46px rgba(69,42,147,.07)}
+        .result-mentor-unlock-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 86% 18%,rgba(122,82,197,.13) 0%,transparent 34%);pointer-events:none}
+        .result-mentor-unlock-card > *{position:relative}
+        .result-unlock-copy{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;margin-bottom:18px}
+        .result-unlock-copy .section-desc{max-width:660px}
+        .result-unlock-price{min-width:128px;border:1px solid rgba(83,51,166,.16);background:#fff;border-radius:16px;padding:12px 14px;text-align:center;box-shadow:0 12px 28px rgba(69,42,147,.06)}
+        .result-unlock-price span{display:block;font-family:var(--serif);font-style:italic;font-weight:800;font-size:34px;line-height:1;color:var(--indigo)}
+        .result-unlock-price span b{font-size:18px;margin-right:2px}
+        .result-unlock-price small{display:block;margin-top:5px;color:var(--ink-mute);font-size:12px;text-decoration:line-through}
+        .result-unlock-body{display:block}
+        .result-unlock-preview{min-width:0;border:1px solid rgba(83,51,166,.12);border-radius:18px;background:linear-gradient(180deg,#F9F6FF 0%,#FFFFFF 100%);padding:18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.72)}
+        .result-unlock-preview .locked-mentor-v2{min-height:150px!important;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+        .result-unlock-perks{list-style:none;padding:16px 0 0;margin:16px 0 0;border-top:1px solid rgba(83,51,166,.10);display:grid;gap:10px;color:var(--ink);font-size:13.5px;font-weight:650;line-height:1.45}
+        .result-unlock-perks li{display:grid;grid-template-columns:18px minmax(0,1fr);gap:9px;align-items:start}
+        .result-unlock-perks li::before{content:"✓";color:var(--indigo);font-weight:900;line-height:1.45}
+        .result-unlock-button{width:100%;min-height:48px;justify-content:center;margin-top:16px;box-shadow:0 14px 28px rgba(83,51,166,.20)}
+        @media (max-width: 760px){
+          .result-unlock-copy{display:grid;gap:14px;margin-bottom:16px}
+          .result-unlock-price{width:100%;min-width:0;box-sizing:border-box;display:flex;align-items:baseline;justify-content:center;gap:10px}
+          .result-unlock-price small{margin-top:0}
+          .result-unlock-preview{padding:16px}
+          .result-unlock-preview .locked-mentor-v2{min-height:142px!important}
+        }
         .logo-marquee{overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#fff;margin:0 0 16px;padding:10px 0}
         .logo-marquee-track{display:flex;gap:14px;width:max-content;animation:logo-scroll 72s linear infinite}
         .logo-marquee:hover .logo-marquee-track{animation-play-state:paused}
@@ -307,12 +320,11 @@ export default function ResultPage() {
         .paywall-more-list{filter:blur(4px);user-select:none;pointer-events:none;padding:10px 12px}
         .paywall-more-list div{font-size:13px;line-height:1.5;margin:0 0 8px;padding-left:18px;position:relative;color:var(--ink-soft)}
         .paywall-more-overlay,.locked-preview-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-start;flex-direction:column;background:linear-gradient(180deg,rgba(247,243,252,.54) 0%,rgba(247,243,252,.96) 56%);backdrop-filter:blur(1px);padding:14px 18px 18px;text-align:center;box-sizing:border-box}
-        .result-lock-cta{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;color:var(--ink);width:fit-content;max-width:100%;margin:0 auto;box-sizing:border-box}
+        .result-lock-cta{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;color:var(--ink);width:fit-content;max-width:100%;margin:auto;box-sizing:border-box}
         .result-lock-cta .lock{width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--paper-warm);display:grid;place-items:center;font-size:15px;box-shadow:0 8px 20px -8px rgba(24,24,22,.4)}
         .result-lock-cta .text{font-size:12.5px;font-weight:600;line-height:1.45;color:var(--ink)}
         .result-lock-cta .text b{color:var(--jade)}
         .result-lock-cta .text span{color:var(--ink-soft);font-weight:500}
-        .result-lock-cta .btn{font-size:13px;padding:9px 18px;min-height:auto}
         .ats-preview-details .paywall-more{display:none}
         .ats-preview-details.is-expanded .paywall-more{display:block}
         @keyframes logo-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}

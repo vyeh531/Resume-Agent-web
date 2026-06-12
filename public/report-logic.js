@@ -1374,6 +1374,10 @@ function renderSkillList(skills){
   const have = jdCount ? jdCount.matched : skills.filter(sk => sk.status === "have").length;
   const total = jdCount ? jdCount.total : skills.length;
   const weak = Math.max(0, total - have);
+  const haveEl = document.getElementById("reportSkillHave");
+  const totalEl = document.getElementById("reportSkillTotal");
+  if (haveEl) haveEl.textContent = String(have);
+  if (totalEl) totalEl.textContent = String(total || "--");
   const insightEl = document.querySelector(".ai-insight-diagnosis");
   if (insightEl) insightEl.innerHTML = `<span class="ico">💡</span>你已掌握 <b>${have}/${total}</b> 项岗位描述关键词，还有 <b>${weak} 项</b>待补强。${weak > 0 ? "优先处理可放进技能栏、个人简介和经历要点的技能/工具/能力词，避免把所有关键词平铺硬塞。" : "关键词覆盖率良好，建议进一步量化成果。"}`;
 }
@@ -1988,12 +1992,12 @@ const insiderEl = document.getElementById('insiderTipsList');
 const insiderSection = document.getElementById('insider-tips');
 const insiderDivider = document.getElementById('insider-tips-divider');
 const serviceNum = document.getElementById('serviceNum');
-if (insiderEl && insiderTips.length >= 1) {
+if (insiderEl) {
   insiderEl.innerHTML = renderInsiderTipsSection(insiderTips);
   if (insiderSection) {
     const num = insiderSection.querySelector('.section-num');
     const title = insiderSection.querySelector('.section-title');
-    if (num) num.textContent = '06 · 公司内幕小知识';
+    if (num) num.textContent = '05 · 公司内幕小知识';
     if (title) {
       title.textContent = '帮你看懂大公司真正重视什么样的人才';
       const sectionReason = insiderTips.find((tip) => tip && tip.relevanceReason)?.relevanceReason || '';
@@ -2001,7 +2005,7 @@ if (insiderEl && insiderTips.length >= 1) {
       if (sectionReason && !reasonEl) {
         reasonEl = document.createElement('p');
         reasonEl.id = 'insiderTipsReason';
-        reasonEl.style.cssText = 'font-size:12.5px;line-height:1.55;color:var(--jade,#5333A6);background:var(--jade-soft,#F0E8FA);border-radius:8px;padding:8px 10px;margin:-4px 0 14px;';
+        reasonEl.style.cssText = 'font-size:12.5px;line-height:1.55;color:var(--jade,#5333A6);background:var(--jade-soft,#F0E8FA);border-radius:8px;padding:9px 11px;margin:0 0 18px;';
         title.insertAdjacentElement('afterend', reasonEl);
       }
       if (reasonEl) {
@@ -2013,12 +2017,10 @@ if (insiderEl && insiderTips.length >= 1) {
         }
       }
     }
-    insiderSection.style.display = '';
   }
-  if (insiderDivider) insiderDivider.style.display = '';
-  if (serviceNum) serviceNum.textContent = '05 · 升级服务';
+  if (serviceNum) serviceNum.textContent = '06 · 升级服务';
 } else {
-  if (serviceNum) serviceNum.textContent = '05 · 升级服务';
+  if (serviceNum) serviceNum.textContent = '06 · 升级服务';
 }
 
 // ── 6. PDF Export ──
