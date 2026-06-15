@@ -1,6 +1,7 @@
 "use strict";
 
 const crypto = require("crypto");
+const { buildRoleProfileFromContext } = require("./role-profile");
 
 const SCORING_MODE = "external_ats_like";
 const REPORT_VERSION = "0.2.0";
@@ -52,13 +53,33 @@ function titleCaseRole(value) {
     .trim();
 }
 
+function extractExplicitLabeledTitle(jdText) {
+  const lines = String(jdText || "").split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  const positiveLabels = /^(?:\u3010?[\u5c97\u804c][\u4f4d\u79f0\u52a1]\u3011?|\u3010?\u6295\u9012\u5c97\u4f4d\u3011?|\u3010?\u5e94\u8058\u5c97\u4f4d\u3011?|position|job\s+title|role|title)\s*[\uff1a:]/i;
+  const negativeLabels = /(?:\u516c\u53f8|\u4f01\u4e1a|\u7f51\u7ad9|\u5730\u70b9|\u5730\u5740|location|website|company)/i;
+  const locationOnly = /^(?:\u65e7\u91d1\u5c71|\u5f17\u5409\u5c3c\u4e9a|\u7530\u7eb3\u897f|remote|hybrid|onsite|virginia|tennessee|california|new york|san francisco|bay area)\b|[,，]\s*(?:\u7530\u7eb3\u897f|tennessee|virginia|ca|ny|tx|tn|va)\b/i;
+  for (const line of lines.slice(0, 30)) {
+    if (!positiveLabels.test(line) || negativeLabels.test(line.split(/[\uff1a:]/)[0] || "")) continue;
+    const value = line.replace(/^[^:\uff1a]+[:\uff1a]\s*/, "").replace(/[|;；].*$/, "").trim();
+    if (!value || value.length > 90 || locationOnly.test(value)) continue;
+    return value.replace(/\s+/g, " ").trim();
+  }
+  return null;
+}
+
 /**
  * Try to extract a job title directly from JD text.
  * Looks for explicit markers first, then falls back to first short capitalized line.
  */
 function extractTitleFromJD(jdText) {
   if (!jdText || typeof jdText !== "string") return null;
+  const lineLabeledTitle = extractExplicitLabeledTitle(jdText);
+  if (lineLabeledTitle) return lineLabeledTitle;
   const text = jdText.trim();
+  const explicitTitlePatterns = [
+    /(?:^|\n)\s*(?:\u3010\u5c97\u4f4d\u3011|\u3010\u804c\u4f4d\u3011|\u3010\u804c\u79f0\u3011|\u5c97\u4f4d|\u804c\u4f4d|\u804c\u79f0|\u804c\u52a1|\u62db\u8058\u5c97\u4f4d|\u5e94\u8058\u5c97\u4f4d|\u6295\u9012\u5c97\u4f4d)\s*[\uff1a:]\s*([^\n\u3010]+)/g,
+    /(?:^|\n)\s*(?:position|job\s+title|role|title)\s*[\uff1a:]\s*([^\n]+)/gi,
+  ];
   const normalizeTitle = (value) => String(value || "")
     .replace(/\s*【.*$/, "")
     .replace(/[|;；].*$/, "")
@@ -78,6 +99,14 @@ function extractTitleFromJD(jdText) {
   };
 
   // 1a. Explicit label markers (key: value format) — allowNoRoleNoun because these are definitive
+  for (const re of explicitTitlePatterns) {
+    for (const m of text.matchAll(re)) {
+      const title = normalizeTitle(m[1]).replace(/[.!?\u3002\uff01\uff1f]$/, "").trim();
+      const wordCount = title.split(/\s+/).filter(Boolean).length;
+      if (wordCount <= 9 && title.length <= 80 && !locationWords.test(title)) return title;
+    }
+  }
+
   const strictLabelPatterns = [
     /【(?:岗位|职位|职称|职务|招聘岗位|应聘岗位)】\s*[：:]\s*([^\n【]+)/g,
     /^(?:岗位|职位|职称|职务|招聘职位|应聘职位)\s*[：:\-–]\s*(.+)/gm,
@@ -225,6 +254,8 @@ function inferCanonicalTargetRole(rawScoreResult, input = {}) {
 function buildInternalJobTitle(rawScoreResult, input = {}) {
   const rawTitle = input.jobTitle || rawScoreResult.jobTitle || "";
   if (!isPlaceholderTitle(rawTitle)) return rawTitle || null;
+  const explicitTitle = extractTitleFromJD(input.jdText);
+  if (explicitTitle) return explicitTitle;
   const canonicalRole = inferCanonicalTargetRole(rawScoreResult, input);
   return canonicalRole.role === "unknown" ? "unknown" : canonicalRole.display;
 }
@@ -349,8 +380,22 @@ function buildProfile(rawScoreResult, input = {}) {
   const title = isPlaceholderTitle(input.jobTitle || rawScoreResult.jobTitle)
     ? canonicalRole.display
     : (input.jobTitle || rawScoreResult.jobTitle || "");
-  const targetRole = canonicalRole.role || rawProfile.targetRole || snakeCase(title);
+  const targetRole = canonicalRole.role && canonicalRole.role !== "unknown"
+    ? canonicalRole.role
+    : (canonicalRole.display || rawProfile.targetRole || snakeCase(title));
   const roleText = `${title} ${input.jdText || ""}`.toLowerCase();
+  const roleProfile = buildRoleProfileFromContext({
+    targetRole: canonicalRole.display || title || rawProfile.targetRole || "",
+    internalAtsResult: {
+      jobTitle: canonicalRole.display || title || rawProfile.targetRole || "",
+      jdText: "",
+      profile: rawProfile,
+    },
+    retrievalQuery: {
+      jobTitle: canonicalRole.display || title || rawProfile.targetRole || "",
+      jdText: "",
+    },
+  });
   const roleFamilyByTarget = {
     management_trainee: "management_trainee",
     machine_learning_engineer: "machine_learning",
@@ -363,7 +408,10 @@ function buildProfile(rawScoreResult, input = {}) {
     frontend_engineer: "software_engineer",
     full_stack_engineer: "software_engineer",
   };
-  const roleFamily = roleFamilyByTarget[targetRole]
+  const roleProfileFamily = roleProfile.canonicalRoleFamily && roleProfile.canonicalRoleFamily !== "other"
+    ? roleProfile.canonicalRoleFamily
+    : "";
+  const roleFamily = roleProfileFamily || roleFamilyByTarget[targetRole]
     || (/\b(management trainee|graduate trainee|leadership development program|rotational program)\b/.test(roleText) || /管培/.test(roleText)
       ? "management_trainee"
       : /\b(machine learning engineer|ml engineer|mle|deep learning engineer)\b/.test(roleText)
@@ -1567,7 +1615,7 @@ function formatPremiumUnlockedReport(internalAtsResult, paidAdviceOrMentorReport
         mentorGroupReason: mentor.mentorGroupReason || "",
         adviceItems: asArray(mentor.adviceItems).slice(0, 3).map(stripAdviceItem),
       })),
-      reportPageMentorGroups: asArray(mentorReport.reportPageMentorGroups).slice(0, 5).map((mentor) => ({
+      reportPageMentorGroups: asArray(mentorReport.reportPageMentorGroups).map((mentor) => ({
         mentorId: mentor.mentorId,
         mentorName: mentor.mentorName,
         company: mentor.company,
@@ -1581,13 +1629,13 @@ function formatPremiumUnlockedReport(internalAtsResult, paidAdviceOrMentorReport
         sourceDisclosure: mentor.sourceDisclosure || "",
         mentorGroupLens: mentor.mentorGroupLens || "",
         mentorGroupReason: mentor.mentorGroupReason || "",
-        adviceItems: asArray(mentor.adviceItems).slice(0, 4).map(stripAdviceItem),
+        adviceItems: asArray(mentor.adviceItems).map(stripAdviceItem),
       })),
-      curatedAdviceItems: asArray(mentorReport.curatedAdviceItems).slice(0, 12).map(stripAdviceItem),
+      curatedAdviceItems: asArray(mentorReport.curatedAdviceItems).map(stripAdviceItem),
       resultPageAdviceItems: asArray(mentorReport.resultPageAdviceItems).slice(0, 3).map(stripAdviceItem),
-      allAdviceItems: allAdviceItems.slice(0, 12).map(stripAdviceItem),
+      allAdviceItems: allAdviceItems.map(stripAdviceItem),
       freeAdviceItems: allAdviceItems.slice(0, 3).map(stripAdviceItem),
-      paidAdviceItems: allAdviceItems.slice(3, 12).map(stripAdviceItem),
+      paidAdviceItems: allAdviceItems.slice(3).map(stripAdviceItem),
       mentorLogoPool: asArray(mentorReport.mentorLogoPool).slice(0, 16).map((mentor) => ({
         company: mentor.company,
         companyLogo: mentor.companyLogo || null,

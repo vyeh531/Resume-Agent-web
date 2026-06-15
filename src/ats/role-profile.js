@@ -54,6 +54,11 @@ const FAMILY_CLUSTER_CONFIG = {
     adjacentClusters: ["supply_chain", "procurement", "business", "finance_operations"],
     forbiddenDriftClusters: ["software_deep", "investment_research"],
   },
+  logistics_operations: {
+    functionCluster: "operations",
+    adjacentClusters: ["supply_chain", "dispatch", "delivery_operations", "customer_success", "business", "data"],
+    forbiddenDriftClusters: ["machine_learning", "software_deep", "investment_research", "design"],
+  },
   data_analyst: {
     functionCluster: "data",
     adjacentClusters: ["analytics", "business", "finance", "product", "operations"],
@@ -221,6 +226,10 @@ const FAMILY_ALIAS = {
   "finance accounting": "finance",
   "data & analytics": "data_analyst",
   "data analytics": "data_analyst",
+  "ai machine learning": "ai_engineer",
+  "ai ml": "ai_engineer",
+  "machine learning ai": "ai_engineer",
+  "logistics operations": "logistics_operations",
   engineering: "software_engineer",
   "business / consulting / operations": "business_analysis",
   "business consulting operations": "business_analysis",
@@ -233,7 +242,9 @@ const FAMILY_ALIAS = {
 function buildRoleProfileFromContext(context = {}) {
   const targetRole = context.targetRole || context.internalAtsResult?.jobTitle || context.internalAtsResult?.profile?.targetRole || context.retrievalQuery?.targetRole || "";
   const jdText = context.internalAtsResult?.jdText || context.retrievalQuery?.queryText || "";
-  const roleEntry = context.roleDictionaryEntry || findRoleDictionaryEntry(targetRole, jdText) || null;
+  const contextFamily = normalizeFamily(context.internalAtsResult?.profile?.roleFamily) || normalizeFamily(context.retrievalQuery?.roleFamily);
+  const foundRoleEntry = context.roleDictionaryEntry || findRoleDictionaryEntry(targetRole, jdText) || null;
+  const roleEntry = isCompatibleRoleEntry(foundRoleEntry, contextFamily) ? foundRoleEntry : null;
   const titleForTaxonomy = [
     roleEntry?.canonical_role,
     roleEntry?.position_title_original,
@@ -245,7 +256,7 @@ function buildRoleProfileFromContext(context = {}) {
   const familyFromEntry = normalizeFamily(roleEntry?.role_family);
   const canonicalRoleFamily = classified.canonicalRoleFamily !== "other"
     ? classified.canonicalRoleFamily
-    : familyFromEntry || normalizeFamily(context.internalAtsResult?.profile?.roleFamily) || normalizeFamily(context.retrievalQuery?.roleFamily) || "other";
+    : familyFromEntry || contextFamily || "other";
   const config = FAMILY_CLUSTER_CONFIG[canonicalRoleFamily] || FAMILY_CLUSTER_CONFIG.other;
   const roleSkillClusters = inferSkillClustersFromRoleEntry(roleEntry);
   return {
@@ -271,6 +282,17 @@ function normalizeFamily(value = "") {
   const snake = key.replace(/\s+/g, "_");
   if (FAMILY_CLUSTER_CONFIG[snake]) return snake;
   return "";
+}
+
+function isCompatibleRoleEntry(roleEntry = null, contextFamily = "") {
+  if (!roleEntry || !contextFamily || contextFamily === "other") return true;
+  const entryFamily = normalizeFamily(roleEntry.role_family);
+  if (!entryFamily || entryFamily === contextFamily) return true;
+  const contextConfig = FAMILY_CLUSTER_CONFIG[contextFamily] || {};
+  const entryConfig = FAMILY_CLUSTER_CONFIG[entryFamily] || {};
+  const contextRelated = new Set([contextFamily, ...(contextConfig.adjacentClusters || [])]);
+  const entryRelated = new Set([entryFamily, ...(entryConfig.adjacentClusters || [])]);
+  return contextRelated.has(entryFamily) || entryRelated.has(contextFamily);
 }
 
 function inferSkillClustersFromRoleEntry(role = null) {

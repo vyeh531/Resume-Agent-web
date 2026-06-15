@@ -6,6 +6,15 @@ const {
   inferMentorGroupLens,
 } = require("../services/adviceCurator");
 const { buildRoleProfileFromContext } = require("../src/ats/role-profile");
+const {
+  buildRoleLexicon,
+  buildRoleAwareFallbackAdvice,
+} = require("../src/ats/role-fallback-advice");
+const {
+  retrieveMentorAdviceWithStatus,
+  selectFreeMentorPlan,
+  selectPremiumMentorPlan,
+} = require("../services/mentorAdviceRetrieval");
 
 function makeItem(id, overrides = {}) {
   return {
@@ -212,11 +221,11 @@ function runMentorXGroupingTest() {
   };
   const result = curateMentorAdvicePlan({ ...makeContext(), mentorReport });
   const mentorXGroups = result.reportPageMentorGroups.filter((group) => group.company === "MentorX");
-  assert.equal(mentorXGroups.length, 1, `expected one MentorX group, got ${mentorXGroups.length}`);
-  assert.equal(mentorXGroups[0].companyLogo, "/logo/MentorX.png");
-  assert.ok(mentorXGroups[0].adviceItems.length >= 2);
-  assert.ok(mentorXGroups[0].adviceItems.some((item) => item.adviceId === "risk_group"));
-  assert.ok(mentorXGroups[0].adviceItems.some((item) => item.adviceId === "summary_group"));
+  assert.equal(mentorXGroups.length, 0, `expected no displayed MentorX group, got ${mentorXGroups.length}`);
+  const displayedItems = result.reportPageMentorGroups.flatMap((group) => group.adviceItems || []);
+  assert.ok(displayedItems.some((item) => item.adviceId === "risk_group"));
+  assert.ok(displayedItems.some((item) => item.adviceId === "summary_group"));
+  assert.ok(displayedItems.every((item) => item.sourceDisclosure !== "来源：MentorX 策略建议"));
 }
 
 function runAttributionModeTest() {
@@ -270,9 +279,9 @@ function runAttributionModeTest() {
   const verified = result.curatedAdviceItems.find((item) => item.adviceId === "verified_ubs");
   const stitched = result.curatedAdviceItems.find((item) => item.adviceId === "stitched_to_ubs");
   assert.equal(verified.attributionMode, "verified_original");
-  assert.equal(verified.sourceDisclosure, "æ¥æºï¼šè¯¥å¯¼å¸ˆå»ºè®®");
+  assert.equal(verified.sourceDisclosure, "来源：该导师建议");
   assert.equal(stitched.attributionMode, "stitched_lens");
-  assert.equal(stitched.sourceDisclosure, "æ¥æºï¼šMentorX æŒ‰è¯¥å¯¼å¸ˆèƒŒæ™¯æ•´ç†");
+  assert.equal(stitched.sourceDisclosure, "来源：MentorX 按该导师背景整理");
   assert.equal(stitched.originalMentorSource.company, "Neurotech");
   assert.equal(stitched.displayedMentorSource.company, "UBS");
   assert.equal(stitched.mentorSource.company, "UBS");
@@ -329,7 +338,7 @@ function runAccountantMentorDisplayFitTest() {
   assert.notEqual(item.displayedMentorSource.company, "Neurotech");
   assert.ok(["UBS", "Barclays", "MentorX"].includes(item.displayedMentorSource.company), item.displayedMentorSource.company);
   assert.ok(["stitched_lens", "mentorx_strategy"].includes(item.attributionMode), item.attributionMode);
-  assert.ok(!/Ã¨Â¯Â¥Ã¥Â¯Â¼Ã¥Â¸Ë†Ã¥Â»ÂºÃ¨Â®Â®|è¯¥å¯¼å¸ˆå»ºè®®/.test(item.sourceDisclosure), item.sourceDisclosure);
+  assert.ok(!/该导师建议/.test(item.sourceDisclosure), item.sourceDisclosure);
 }
 
 function runMentorXAttributionTest() {
@@ -358,9 +367,529 @@ function runMentorXAttributionTest() {
     problemTags: [{ tag: "short_tenure_unclear", severity: "high" }],
   }), mentorReport });
   const item = result.curatedAdviceItems.find((entry) => entry.adviceId === "mentorx_strategy");
-  assert.equal(item.attributionMode, "mentorx_strategy");
-  assert.equal(item.sourceDisclosure, "æ¥æºï¼šMentorX ç­–ç•¥å»ºè®®");
-  assert.equal(result.reportPageMentorGroups[0].attributionMode, "mentorx_strategy");
+  assert.equal(item.attributionMode, "stitched_lens");
+  assert.equal(item.sourceDisclosure, "来源：MentorX 按该导师背景整理");
+  assert.ok(result.reportPageMentorGroups.every((group) => group.company !== "MentorX"));
+}
+
+function runMentorXFallbackCanStitchToExplainableMentorTest() {
+  const mentorXSource = {
+    mentorId: "mentorx_strategy",
+    mentorName: "MentorX",
+    company: "MentorX",
+    mentorTitle: "简历策略组",
+  };
+  const ubsSource = {
+    mentorId: "ubs_accounting_lens",
+    mentorName: "F导师",
+    company: "UBS",
+    mentorTitle: "Associate Director",
+  };
+  const mentorReport = {
+    mentors: [
+      { ...ubsSource, adviceItems: [] },
+      {
+        ...mentorXSource,
+        adviceItems: [
+          makeItem("mentorx_impact", {
+            title: "强化 bullet 的结果表达",
+            action: "Add transaction volume, accuracy, and close cycle metrics to the accounting bullet.",
+            coverageFamily: "impact_metrics",
+            actionFamily: "experience_impact_metrics",
+            targetSection: "Experience",
+            source: "fallback",
+            attributionMode: "mentorx_strategy",
+            mentorSource: mentorXSource,
+            originalMentorSource: mentorXSource,
+          }),
+        ],
+      },
+    ],
+  };
+  const result = curateMentorAdvicePlan({ ...makeContext({
+    jobTitle: "Accountant",
+    problemTags: [{ tag: "low_measurable_results", severity: "high" }],
+  }), mentorReport });
+  const item = result.curatedAdviceItems.find((advice) => advice.adviceId === "mentorx_impact");
+  assert.ok(item, "expected MentorX fallback item to be curated");
+  assert.equal(item.displayedMentorSource.company, "UBS");
+  assert.equal(item.attributionMode, "stitched_lens");
+  assert.equal(item.sourceDisclosure, "来源：MentorX 按该导师背景整理");
+  const ubsGroup = result.reportPageMentorGroups.find((group) => group.company === "UBS");
+  assert.ok(ubsGroup?.adviceItems.some((advice) => advice.adviceId === "mentorx_impact"));
+}
+
+function runReportTitleDeduplicationTest() {
+  const mentorXSource = {
+    mentorId: "mentorx_strategy",
+    mentorName: "MentorX",
+    company: "MentorX",
+    mentorTitle: "简历策略组",
+  };
+  const mentorReport = {
+    mentors: [{
+      ...mentorXSource,
+      adviceItems: [
+        makeItem("impact_a", {
+          title: "强化 bullet 的结果表达",
+          action: "Add measurable result numbers to the first bullet.",
+          coverageFamily: "impact_metrics",
+          actionFamily: "experience_impact_metrics",
+          source: "fallback",
+          mentorSource: mentorXSource,
+        }),
+        makeItem("impact_b", {
+          title: "强化 bullet 的结果表达",
+          action: "Add scale and frequency to the second bullet.",
+          coverageFamily: "impact_metrics",
+          actionFamily: "experience_impact_metrics",
+          source: "fallback",
+          mentorSource: mentorXSource,
+        }),
+      ],
+    }],
+  };
+  const result = curateMentorAdvicePlan({ ...makeContext({
+    jobTitle: "Network Operator",
+    problemTags: [{ tag: "low_measurable_results", severity: "high" }],
+  }), mentorReport });
+  const reportTitles = result.reportPageMentorGroups.flatMap((group) => group.adviceItems.map((item) => item.title));
+  assert.equal(reportTitles.length, new Set(reportTitles).size, reportTitles.join(" | "));
+}
+
+function runExternalMentorCoverageLimitTest() {
+  const anyscaleSource = {
+    mentorId: "anyscale_ml",
+    mentorName: "G导师",
+    company: "Anyscale",
+    mentorTitle: "Staff Machine Learning Engineer",
+  };
+  const mentorReport = {
+    mentors: [{
+      ...anyscaleSource,
+      adviceItems: [
+        makeItem("ml_impact_a", {
+          title: "强化 bullet 的结果表达",
+          action: "Add accuracy and model evaluation metrics to the ML project bullet.",
+          coverageFamily: "impact_metrics",
+          actionFamily: "experience_impact_metrics",
+          relatedProblemTags: ["low_measurable_results"],
+          mentorSource: anyscaleSource,
+        }),
+        makeItem("ml_impact_b", {
+          title: "补上成果数字和规模",
+          action: "Add inference latency, throughput, and deployment scale to another ML bullet.",
+          coverageFamily: "impact_metrics",
+          actionFamily: "experience_impact_metrics",
+          relatedProblemTags: ["low_measurable_results"],
+          mentorSource: anyscaleSource,
+        }),
+        makeItem("ml_junior", {
+          title: "把训练背景写成岗位证据",
+          action: "Connect coursework and model evaluation projects to the MLE role.",
+          coverageFamily: "junior_signal",
+          actionFamily: "education_signal",
+          targetSection: "skills",
+          relatedProblemTags: ["education_details_missing"],
+          mentorSource: anyscaleSource,
+        }),
+      ],
+    }],
+  };
+  const result = curateMentorAdvicePlan({ ...makeContext({
+    jobTitle: "Machine Learning Engineer Intern (MLE)",
+    roleFamily: "machine_learning",
+    problemTags: [
+      { tag: "low_measurable_results", severity: "high" },
+      { tag: "education_details_missing", severity: "medium" },
+    ],
+    jdText: "Machine Learning Engineer Intern using Python, model evaluation, deployment, and PyTorch.",
+  }), mentorReport });
+  const anyscaleGroup = result.reportPageMentorGroups.find((group) => group.company === "Anyscale");
+  assert.ok(anyscaleGroup, "expected Anyscale group");
+  const slotKeys = anyscaleGroup.adviceItems.map((item) => item.duplicateGroupKey || `${item.coverageFamily}:${item.targetSection}:${item.actionFamily}`);
+  assert.equal(slotKeys.length, new Set(slotKeys).size, JSON.stringify(anyscaleGroup.adviceItems.map((item) => item.title)));
+  assert.ok(anyscaleGroup.adviceItems.some((item) => item.coverageFamily === "junior_signal"), JSON.stringify(anyscaleGroup.adviceItems.map((item) => item.title)));
+}
+
+function runWeakDataMentorStitchGuardTest() {
+  const mentorXSource = {
+    mentorId: "mentorx_strategy",
+    mentorName: "MentorX",
+    company: "MentorX",
+    mentorTitle: "简历策略组",
+  };
+  const dataMentor = {
+    mentorId: "polarr_data",
+    mentorName: "P导师",
+    company: "Polarr/Facebook",
+    mentorTitle: "Lead Data Scientist",
+  };
+  const baseMentorReport = (action) => ({
+    mentors: [
+      { ...dataMentor, adviceItems: [] },
+      {
+        ...mentorXSource,
+        adviceItems: [
+          makeItem("mentorx_generic_impact", {
+            title: "强化 bullet 的结果表达",
+            action,
+            coverageFamily: "impact_metrics",
+            actionFamily: "experience_impact_metrics",
+            targetSection: "Experience",
+            source: "fallback",
+            attributionMode: "mentorx_strategy",
+            mentorSource: mentorXSource,
+            originalMentorSource: mentorXSource,
+          }),
+        ],
+      },
+    ],
+  });
+
+  const genericResult = curateMentorAdvicePlan({ ...makeContext({
+    jobTitle: "Pickup Support Specialist",
+    problemTags: [{ tag: "low_measurable_results", severity: "high" }],
+  }), mentorReport: baseMentorReport("Add quantity, frequency, and scale to the operations bullet.") });
+  const genericItem = genericResult.curatedAdviceItems.find((item) => item.adviceId === "mentorx_generic_impact");
+  assert.ok(["Amazon", "DHL"].includes(genericItem.displayedMentorSource.company), JSON.stringify(genericItem.displayedMentorSource));
+  assert.equal(genericItem.attributionMode, "stitched_lens");
+
+  const weakOpsToolingResult = curateMentorAdvicePlan({ ...makeContext({
+    jobTitle: "Pickup Support Specialist",
+    problemTags: [{ tag: "weak_experience_keyword_evidence", severity: "high" }],
+  }), mentorReport: baseMentorReport("Rewrite the bullet with pickup coordination, tracking dashboard, CRM, and dispatch plan delivery.") });
+  const weakOpsToolingItem = weakOpsToolingResult.curatedAdviceItems.find((item) => item.adviceId === "mentorx_generic_impact");
+  assert.ok(["Amazon", "DHL"].includes(weakOpsToolingItem.displayedMentorSource.company), JSON.stringify(weakOpsToolingItem.displayedMentorSource));
+  assert.equal(weakOpsToolingItem.attributionMode, "stitched_lens");
+
+  const dataToolingResult = curateMentorAdvicePlan({ ...makeContext({
+    jobTitle: "Marketing Specialist",
+    problemTags: [{ tag: "low_measurable_results", severity: "high" }],
+  }), mentorReport: baseMentorReport("Add Google Analytics dashboard, SQL query, and campaign conversion metrics to the bullet.") });
+  const dataToolingItem = dataToolingResult.curatedAdviceItems.find((item) => item.adviceId === "mentorx_generic_impact");
+  assert.ok(["Google", "Meta", "Polarr/Facebook"].includes(dataToolingItem.displayedMentorSource.company), JSON.stringify(dataToolingItem.displayedMentorSource));
+  assert.equal(dataToolingItem.attributionMode, "stitched_lens");
+}
+
+function runFinanceAndNetworkDataMentorBlockTest() {
+  const mentorXSource = {
+    mentorId: "mentorx_strategy",
+    mentorName: "MentorX",
+    company: "MentorX",
+    mentorTitle: "简历策略组",
+  };
+  const polarrData = {
+    mentorId: "polarr_data",
+    mentorName: "P导师",
+    company: "Polarr/Facebook",
+    mentorTitle: "Lead Data Scientist",
+  };
+  const ubsFinance = {
+    mentorId: "ubs_finance",
+    mentorName: "F导师",
+    company: "UBS",
+    mentorTitle: "Associate Director",
+  };
+  const financeResult = curateMentorAdvicePlan({ ...makeContext({
+    jobTitle: "Investment Banking Analyst",
+    problemTags: [{ tag: "low_jd_keyword_match", severity: "high" }],
+  }), mentorReport: {
+    mentors: [
+      { ...polarrData, adviceItems: [] },
+      { ...ubsFinance, adviceItems: [] },
+      {
+        ...mentorXSource,
+        adviceItems: [makeItem("ib_keyword_sql", {
+          title: "把技能词写成项目证据",
+          action: "Put SQL, Tableau, valuation, and pitch deck keywords into real investment banking project evidence.",
+          coverageFamily: "keyword",
+          actionFamily: "keyword_in_experience",
+          source: "fallback",
+          mentorSource: mentorXSource,
+          originalMentorSource: mentorXSource,
+          relatedProblemTags: ["low_jd_keyword_match"],
+        })],
+      },
+    ],
+  } });
+  const financeItem = financeResult.curatedAdviceItems.find((item) => item.adviceId === "ib_keyword_sql");
+  assert.notEqual(financeItem.displayedMentorSource.company, "Polarr/Facebook", JSON.stringify(financeItem.displayedMentorSource));
+
+  const cbreDataFinance = {
+    mentorId: "cbre_data_finance",
+    mentorName: "W导师",
+    company: "CBRE",
+    mentorTitle: "Data & Financial Analyst",
+  };
+  const broadFinanceResult = curateMentorAdvicePlan({ ...makeContext({
+    jobTitle: "Investment Banking Analyst",
+    problemTags: [{ tag: "low_jd_keyword_match", severity: "high" }, { tag: "repetitive_verbs", severity: "medium" }],
+  }), mentorReport: {
+    mentors: [
+      { ...cbreDataFinance, adviceItems: [] },
+      {
+        ...mentorXSource,
+        adviceItems: [
+          makeItem("ib_generic_keyword", {
+            title: "补齐经历里的关键词证据",
+            action: "对照 Investment Banking Analyst JD，把核心关键词分配到 Summary、Skills 和 Experience bullet 中。",
+            coverageFamily: "keyword",
+            actionFamily: "keyword_in_experience",
+            source: "fallback",
+            mentorSource: mentorXSource,
+            originalMentorSource: mentorXSource,
+            relatedProblemTags: ["low_jd_keyword_match"],
+          }),
+          makeItem("ib_repetitive_verbs", {
+            title: "替换重复动词",
+            action: "把重复的 responsible for / helped with 改成更具体的动作动词。",
+            coverageFamily: "business_data_context",
+            actionFamily: "readability_structure",
+            source: "fallback",
+            mentorSource: mentorXSource,
+            originalMentorSource: mentorXSource,
+            relatedProblemTags: ["repetitive_verbs"],
+          }),
+        ],
+      },
+    ],
+  } });
+  const broadFinanceItems = broadFinanceResult.curatedAdviceItems.filter((item) => ["ib_generic_keyword", "ib_repetitive_verbs"].includes(item.adviceId));
+  assert.ok(broadFinanceItems.length >= 2);
+  for (const item of broadFinanceItems) {
+    assert.notEqual(item.displayedMentorSource.company, "CBRE", JSON.stringify(item.displayedMentorSource));
+  }
+
+  const amazonVp = {
+    mentorId: "amazon_vp",
+    mentorName: "X导师",
+    company: "Amazon",
+    mentorTitle: "Vice President",
+  };
+  const broadNonFinanceResult = curateMentorAdvicePlan({ ...makeContext({
+    jobTitle: "Investment Banking Analyst",
+    problemTags: [{ tag: "low_measurable_results", severity: "high" }],
+  }), mentorReport: {
+    mentors: [
+      { ...amazonVp, adviceItems: [] },
+      {
+        ...mentorXSource,
+        adviceItems: [makeItem("ib_generic_impact", {
+          title: "补上规模、频率和效率",
+          action: "为核心 bullet 补充处理量、频率、规模、效率、准确率、响应时间或节省成本。",
+          coverageFamily: "impact_metrics",
+          actionFamily: "impact_metrics",
+          source: "fallback",
+          mentorSource: mentorXSource,
+          originalMentorSource: mentorXSource,
+          relatedProblemTags: ["low_measurable_results"],
+        })],
+      },
+    ],
+  } });
+  const broadImpactItem = broadNonFinanceResult.curatedAdviceItems.find((item) => item.adviceId === "ib_generic_impact");
+  assert.notEqual(broadImpactItem.displayedMentorSource.company, "Amazon", JSON.stringify(broadImpactItem.displayedMentorSource));
+
+  const networkResult = curateMentorAdvicePlan({ ...makeContext({
+    jobTitle: "网络运营专员 Network Operator (Junior full-time)",
+    problemTags: [{ tag: "weak_experience_keyword_evidence", severity: "high" }],
+  }), mentorReport: {
+    mentors: [
+      { ...polarrData, adviceItems: [] },
+      { ...cbreDataFinance, adviceItems: [] },
+      {
+        ...mentorXSource,
+        adviceItems: [makeItem("network_evidence", {
+          title: "补强经历里的动作和交付",
+          action: "Rewrite the bullet with Zabbix, Nagios, Grafana, Wireshark, incident response, and troubleshooting runbook delivery.",
+          coverageFamily: "experience_evidence",
+          actionFamily: "experience_bullet_evidence",
+          source: "fallback",
+          mentorSource: mentorXSource,
+          originalMentorSource: mentorXSource,
+          relatedProblemTags: ["weak_experience_keyword_evidence"],
+        })],
+      },
+    ],
+  } });
+  const networkItem = networkResult.curatedAdviceItems.find((item) => item.adviceId === "network_evidence");
+  assert.ok(["Cisco", "Microsoft"].includes(networkItem.displayedMentorSource.company), JSON.stringify(networkItem.displayedMentorSource));
+
+  const ambiguousNetworkResult = curateMentorAdvicePlan({ ...makeContext({
+    jobTitle: "网络运营专员 Network Operator (Junior full-time)",
+    roleProfile: {
+      canonicalRole: "Network Operator",
+      canonicalRoleFamily: "logistics_operations",
+      roleFamily: "logistics_operations",
+      functionCluster: "logistics_operations",
+    },
+    problemTags: [{ tag: "low_jd_keyword_match", severity: "high" }],
+  }), mentorReport: {
+    mentors: [{
+      ...mentorXSource,
+      adviceItems: [makeItem("ambiguous_network_keyword", {
+        title: "整理 Skills 关键词",
+        action: "把 Network Operator JD 的 network monitoring、incident response、TCP/IP 和 troubleshooting 放回真实经历。",
+        coverageFamily: "keyword",
+        actionFamily: "skills_keyword_ordering",
+        source: "fallback",
+        mentorSource: mentorXSource,
+        originalMentorSource: mentorXSource,
+        relatedProblemTags: ["low_jd_keyword_match"],
+      })],
+    }],
+  } });
+  const ambiguousNetworkItem = ambiguousNetworkResult.curatedAdviceItems.find((item) => item.adviceId === "ambiguous_network_keyword");
+  assert.ok(["Cisco", "Microsoft"].includes(ambiguousNetworkItem.displayedMentorSource.company), JSON.stringify(ambiguousNetworkItem.displayedMentorSource));
+}
+
+function runRoleAwareMockMentorDisplayTest() {
+  const mentorXSource = {
+    mentorId: "mentorx_strategy",
+    mentorName: "MentorX",
+    company: "MentorX",
+    mentorTitle: "简历策略组",
+  };
+  const result = curateMentorAdvicePlan({ ...makeContext({
+    jobTitle: "揽收支持专员（全职）",
+    problemTags: [{ tag: "weak_experience_keyword_evidence", severity: "high" }],
+  }), mentorReport: {
+    mentors: [{
+      ...mentorXSource,
+      adviceItems: [makeItem("pickup_evidence", {
+        title: "重写核心经历 bullet",
+        action: "Rewrite the bullet with pickup coordination, dispatch scheduling, delivery operations, and exception handling deliverables.",
+        coverageFamily: "experience_evidence",
+        actionFamily: "experience_bullet_evidence",
+        source: "fallback",
+        mentorSource: mentorXSource,
+        originalMentorSource: mentorXSource,
+        relatedProblemTags: ["weak_experience_keyword_evidence"],
+      })],
+    }],
+  } });
+  const item = result.curatedAdviceItems.find((advice) => advice.adviceId === "pickup_evidence");
+  assert.ok(["Amazon", "DHL"].includes(item.displayedMentorSource.company), JSON.stringify(item.displayedMentorSource));
+  assert.equal(item.attributionMode, "stitched_lens");
+  assert.equal(item.sourceDisclosure, "来源：MentorX 按该导师背景整理");
+
+  const networkFamilies = [
+    "impact_metrics",
+    "keyword",
+    "risk_explanation",
+    "junior_signal",
+    "experience_evidence",
+    "positioning",
+    "keyword",
+    "experience_evidence",
+    "experience_evidence",
+  ];
+  const networkResult = curateMentorAdvicePlan({ ...makeContext({
+    jobTitle: "网络运营专员 Network Operator (Junior full-time)",
+    roleProfile: {
+      canonicalRole: "Network Operator",
+      canonicalRoleFamily: "logistics_operations",
+      roleFamily: "logistics_operations",
+      functionCluster: "logistics_operations",
+    },
+    problemTags: [{ tag: "low_jd_keyword_match", severity: "high" }],
+  }), mentorReport: {
+    mentors: [{
+      ...mentorXSource,
+      adviceItems: networkFamilies.map((coverageFamily, index) => makeItem(`network_mock_${index}`, {
+        title: `网络运营建议 ${index + 1}`,
+        action: "把 Network Operator JD 的 network monitoring、incident response、TCP/IP 和 troubleshooting 放回真实经历。",
+        coverageFamily,
+        actionFamily: `network_action_${index}`,
+        source: "fallback",
+        mentorSource: mentorXSource,
+        originalMentorSource: mentorXSource,
+        relatedProblemTags: ["low_jd_keyword_match"],
+      })),
+    }],
+  } });
+  const networkCompanies = new Set(networkResult.reportPageMentorGroups.map((group) => group.company));
+  assert.ok(networkCompanies.has("Cisco"), [...networkCompanies].join(","));
+  assert.ok(networkCompanies.has("Microsoft"), [...networkCompanies].join(","));
+  assert.ok(!networkCompanies.has("Amazon") && !networkCompanies.has("DHL"), [...networkCompanies].join(","));
+}
+
+function runUncoveredProblemFillTest() {
+  const mentorReport = {
+    mentors: [{
+      mentorId: "mx",
+      mentorName: "MentorX",
+      company: "MentorX",
+      mentorTitle: "简历策略组",
+      adviceItems: [
+        makeItem("base_summary", {
+          title: "补上目标岗位原词",
+          action: "Add Software Engineer to Summary.",
+          targetSection: "summary",
+          relatedProblemTags: ["missing_exact_job_title"],
+        }),
+      ],
+    }],
+  };
+  const result = curateMentorAdvicePlan({ ...makeContext({
+    jobTitle: "Software Engineer",
+    problemTags: [
+      { tag: "missing_exact_job_title", severity: "high" },
+      { tag: "missing_github_link", severity: "medium" },
+      { tag: "missing_exp_location", severity: "low" },
+      { tag: "repetitive_verbs", severity: "low" },
+    ],
+  }), mentorReport });
+  const covered = new Set(result.curatedAdviceItems.flatMap((item) => item.relatedProblemTags || []));
+  assert.ok(covered.has("missing_github_link"), [...covered].join(","));
+  assert.ok(covered.has("missing_exp_location"), [...covered].join(","));
+  assert.ok(covered.has("repetitive_verbs"), [...covered].join(","));
+}
+
+function runSameMentorSoftCapRedistributionTest() {
+  const amazon = {
+    mentorId: "amazon_marketing",
+    mentorName: "A导师",
+    company: "Amazon",
+    mentorTitle: "Marketing Manager",
+  };
+  const google = {
+    mentorId: "google_growth",
+    mentorName: "G导师",
+    company: "Google",
+    mentorTitle: "Growth Marketing Manager",
+  };
+  const items = [
+    ["mkt_1", "positioning", "summary_positioning", "summary"],
+    ["mkt_2", "keyword", "skills_keyword_ordering", "skills"],
+    ["mkt_3", "keyword", "keyword_in_experience", "experience"],
+    ["mkt_4", "impact_metrics", "experience_impact_metrics", "experience"],
+    ["mkt_5", "junior_signal", "education_signal", "skills"],
+    ["mkt_6", "risk_explanation", "risk_explanation", "experience"],
+    ["mkt_7", "experience_evidence", "experience_bullet_evidence", "experience"],
+  ].map(([id, coverageFamily, actionFamily, targetSection]) => makeItem(id, {
+    title: `Marketing advice ${id}`,
+    action: `Improve campaign, CRM, content, analytics, or marketing deliverable evidence for ${id}.`,
+    coverageFamily,
+    actionFamily,
+    targetSection,
+    mentorSource: amazon,
+    relatedProblemTags: [id],
+  }));
+  const result = curateMentorAdvicePlan({ ...makeContext({
+    jobTitle: "Marketing Specialist",
+    problemTags: items.map((item) => ({ tag: item.relatedProblemTags[0], severity: "medium" })),
+  }), mentorReport: {
+    mentors: [
+      { ...amazon, adviceItems: items },
+      { ...google, adviceItems: [] },
+    ],
+  } });
+  const marketingGroups = result.reportPageMentorGroups.filter((group) => /marketing/i.test(`${group.mentorTitle || ""} ${group.mentorSubtitle || ""}`));
+  assert.ok(marketingGroups.length >= 2, `expected secondary marketing mentor group, got ${result.reportPageMentorGroups.map((group) => group.company).join(",")}`);
+  assert.ok(marketingGroups.every((group) => group.adviceItems.length <= 5), `expected soft cap redistribution, got ${marketingGroups.map((group) => `${group.company}:${group.adviceItems.length}`).join(",")}`);
+  assert.ok(new Set(marketingGroups.map((group) => group.company)).size >= 2, `expected multiple companies, got ${marketingGroups.map((group) => group.company).join(",")}`);
 }
 
 function runMentorXItemChipsDoNotInheritGroupLensTest() {
@@ -392,11 +921,11 @@ function runMentorXItemChipsDoNotInheritGroupLensTest() {
   }), mentorReport });
   const collaboration = result.curatedAdviceItems.find((item) => item.adviceId === "collaboration_delivery");
   const risk = result.curatedAdviceItems.find((item) => item.adviceId === "short_tenure_boundary");
-  assert.deepEqual(collaboration.evidence, ["ç»åŽ†è¯æ®", "æŽ¨è¿›åŠ¨ä½œ", "äº¤ä»˜ç‰©"]);
-  assert.deepEqual(risk.evidence, ["ç»åŽ†æ€§è´¨", "é¡¹ç›®è¾¹ç•Œ", "ç¨³å®šæ€§é£Žé™©"]);
+  assert.deepEqual(collaboration.evidence, ["经历证据", "推进动作", "交付物"]);
+  assert.deepEqual(risk.evidence, ["经历性质", "项目边界", "稳定性风险"]);
 }
 
-function runReportRichnessTargetRangeTest() {
+function runReportProblemCoverageWithoutHardCapTest() {
   const mentorReport = {
     mentors: [
       {
@@ -446,13 +975,12 @@ function runReportRichnessTargetRangeTest() {
       { tag: "missing_exact_job_title", severity: "medium" },
     ],
   }), mentorReport });
-  assert.ok(result.curatedAdviceItems.length >= 7 && result.curatedAdviceItems.length <= 9, `expected 7-9 curated items, got ${result.curatedAdviceItems.length}`);
-  assert.ok(result.curatedAdviceItems.filter((item) => item.coverageFamily === "keyword").length <= 2);
-  assert.ok(result.reportPageMentorGroups.every((group) =>
-    group.company === "MentorX" ? group.adviceItems.length <= 4 : group.adviceItems.length <= 3
-  ));
+  assert.ok(result.curatedAdviceItems.length >= 7, `expected problem coverage advice, got ${result.curatedAdviceItems.length}`);
+  assert.ok(result.curatedAdviceItems.filter((item) => item.coverageFamily === "keyword").length <= 4);
   const visibleCount = result.reportPageMentorGroups.reduce((sum, group) => sum + group.adviceItems.length, 0);
-  assert.ok(visibleCount >= 7, `expected at least 7 visible grouped advice items, got ${visibleCount}`);
+  assert.ok(visibleCount >= result.curatedAdviceItems.length, `expected all curated advice to remain visible, got ${visibleCount}/${result.curatedAdviceItems.length}`);
+  const visibleExactKeys = result.reportPageMentorGroups.flatMap((group) => group.adviceItems.map((item) => `${item.title}|${item.action}`));
+  assert.equal(visibleExactKeys.length, new Set(visibleExactKeys).size, "expected no exact duplicate advice cards");
 }
 
 function runSoftwareLensConsistencyTest() {
@@ -581,7 +1109,7 @@ function runFinanceMentorImpactLensTest() {
       targetSection: "experience",
     }),
   ], { company: "UBS", mentorTitle: "Associate Director" }, "å…¨èŒä¼šè®¡å¸ˆAccountant");
-  assert.ok(/æˆæžœ|é‡åŒ–/.test(lens.lens), JSON.stringify(lens));
+  assert.ok(/成果|量化/.test(lens.lens), JSON.stringify(lens));
 }
 
 function runRoleConsistencyTest() {
@@ -693,7 +1221,7 @@ function runMachineLearningFinanceMentorDriftTest() {
   const item = result.curatedAdviceItems.find((advice) => advice.adviceId === "ubs_mle");
   assert.ok(item, "expected UBS source advice to remain available for audit");
   assert.notEqual(item.displayedMentorSource?.company, "UBS", JSON.stringify(item));
-  assert.notEqual(item.mentorDisplayFit, "direct", JSON.stringify(item));
+  assert.ok(["Google", "OpenAI", "Anyscale", "Apple", "MentorX"].includes(item.displayedMentorSource?.company), JSON.stringify(item));
 }
 
 function runGenericTitleDiversificationTest() {
@@ -728,10 +1256,153 @@ function runGenericTitleDiversificationTest() {
     .map((item) => item.title);
   assert.ok(titles.length >= 2, titles.join(", "));
   assert.ok(new Set(titles).size > 1, titles.join(", "));
-  assert.ok(titles.every((title) => title !== "æ”¹å†™å·¥ä½œç»åŽ† bullet"), titles.join(", "));
+  assert.ok(titles.every((title) => title !== "改写工作经历 bullet"), titles.join(", "));
 }
 
-function main() {
+function roleFallbackTextFor(role) {
+  const internalAtsResult = {
+    jobTitle: role,
+    problemTags: [
+      "low_jd_keyword_match",
+      "weak_experience_keyword_evidence",
+      "low_measurable_results",
+      "education_details_missing",
+      "short_tenure_unclear",
+    ],
+  };
+  const roleProfile = buildRoleProfileFromContext({ targetRole: role, internalAtsResult });
+  const lexicon = buildRoleLexicon(roleProfile);
+  const { fallbackAdviceItems, fallbackCoverageSummary } = buildRoleAwareFallbackAdvice({
+    internalAtsResult,
+    roleProfile,
+    targetCount: 9,
+  });
+  return {
+    roleProfile,
+    lexicon,
+    fallbackAdviceItems,
+    fallbackCoverageSummary,
+    text: fallbackAdviceItems.map((item) => `${item.title} ${item.currentDiagnosis} ${item.action}`).join("\n"),
+  };
+}
+
+function runRoleAwareFallbackWordingTest() {
+  const mle = roleFallbackTextFor("Machine Learning Engineer Intern (MLE)");
+  assert.ok(mle.fallbackAdviceItems.length >= 7 && mle.fallbackAdviceItems.length <= 9);
+  assert.ok(/model|python|pytorch|tensorflow|evaluation|deployment|inference/i.test(mle.text), mle.text);
+  assert.ok(!/accounts payable|accounts receivable|GAAP|month-end close/i.test(mle.text), mle.text);
+
+  const marketing = roleFallbackTextFor("Marketing Specialist");
+  assert.ok(/campaign|lead|analytics|crm|google analytics|hubspot|content/i.test(marketing.text), marketing.text);
+  assert.ok(!/general ledger|journal entries|GAAP|month-end close/i.test(marketing.text), marketing.text);
+
+  const network = roleFallbackTextFor("Network Operator");
+  assert.ok(/network monitoring|troubleshooting|routing|tcp\/ip|incident|wireshark|uptime/i.test(network.text), network.text);
+  assert.ok(!/campaign brief|content calendar|accounts payable|GAAP/i.test(network.text), network.text);
+
+  const misclassifiedNetworkProfile = {
+    targetRole: "网络运营专员 Network Operator (Junior full-time)",
+    canonicalRole: "Network Operator",
+    canonicalRoleFamily: "logistics_operations",
+    functionCluster: "operations",
+    roleDictionaryEntry: { canonical_role: "Pickup Support Specialist" },
+  };
+  const misclassifiedNetworkText = buildRoleAwareFallbackAdvice({
+    internalAtsResult: {
+      jobTitle: "网络运营专员 Network Operator (Junior full-time)",
+      problemTags: ["low_jd_keyword_match", "weak_experience_keyword_evidence", "low_measurable_results"],
+    },
+    roleProfile: misclassifiedNetworkProfile,
+    targetCount: 7,
+  }).fallbackAdviceItems.map((item) => `${item.title} ${item.action}`).join("\n");
+  assert.ok(/network monitoring|incident response|tcp\/ip|wireshark|uptime|noc/i.test(misclassifiedNetworkText), misclassifiedNetworkText);
+  assert.ok(!/pickup|dispatch|route planning|delivery status|last-mile/i.test(misclassifiedNetworkText), misclassifiedNetworkText);
+
+  const accountant = roleFallbackTextFor("Accountant");
+  assert.ok(/reporting|reconciliation|GAAP|general ledger|journal entries|financial statements/i.test(accountant.text), accountant.text);
+  assert.ok(!/model deployment|inference service|campaign brief|investment memo|valuation model/i.test(accountant.text), accountant.text);
+}
+
+function runDictionaryFallbackCoverageSampleTest() {
+  const roles = require("../public/ats_role_dictionary.json").roles || [];
+  const sample = roles.slice(0, 30);
+  assert.ok(sample.length >= 30, "expected at least 30 dictionary roles for fallback coverage sample");
+  for (const role of sample) {
+    const targetRole = role.canonical_role || role.position_title_original;
+    const roleProfile = buildRoleProfileFromContext({ targetRole, internalAtsResult: { jobTitle: targetRole, jdText: "" } });
+    const lexicon = buildRoleLexicon(roleProfile);
+    assert.ok(lexicon.roleLabel, `missing role label for ${targetRole}`);
+    assert.ok(lexicon.roleSpecificTerms.length >= 3, `not enough role terms for ${targetRole}: ${lexicon.roleSpecificTerms.join(", ")}`);
+  }
+}
+
+function runPaidFallbackRichnessWithEmptyRetrievalTest() {
+  const internalAtsResult = {
+    jobTitle: "Network Operator",
+    problemTags: [
+      "low_jd_keyword_match",
+      "weak_experience_keyword_evidence",
+      "low_measurable_results",
+      "education_details_missing",
+      "short_tenure_unclear",
+    ],
+    retrievalQuery: {
+      jobTitle: "Network Operator",
+      problemTags: [
+        "low_jd_keyword_match",
+        "weak_experience_keyword_evidence",
+        "low_measurable_results",
+        "education_details_missing",
+        "short_tenure_unclear",
+      ],
+    },
+  };
+  const candidates = [];
+  Object.defineProperty(candidates, "debug", {
+    enumerable: false,
+    value: {
+      retrievalQuery: internalAtsResult.retrievalQuery,
+      strictCandidates: 0,
+      fallbackCandidates: 0,
+    },
+  });
+  const freePlan = selectFreeMentorPlan(candidates, internalAtsResult);
+  const premiumPlan = selectPremiumMentorPlan(candidates, internalAtsResult, freePlan);
+  const paidItems = premiumPlan.flatMap((mentor) => mentor.adviceItems || []);
+  assert.ok(paidItems.length >= 7 && paidItems.length <= 12, `expected complete fallback report, got ${paidItems.length}`);
+  const visibleText = paidItems.map((item) => `${item.title} ${item.action || item.actionSummary}`).join("\n");
+  assert.ok(/network monitoring|incident|troubleshooting|wireshark|uptime|tcp\/ip/i.test(visibleText), visibleText);
+  assert.ok(!/accounts payable|campaign brief|content calendar|GAAP/i.test(visibleText), visibleText);
+}
+
+async function runRetrievalStatusWrapperTest() {
+  const okResult = await retrieveMentorAdviceWithStatus({}, {
+    retrieveImpl: async () => {
+      const candidates = [{ adviceId: "a1" }];
+      Object.defineProperty(candidates, "debug", {
+        enumerable: false,
+        value: { strictCandidates: 1, fallbackCandidates: 0, rawRows: 10, eligibleRows: 8 },
+      });
+      return candidates;
+    },
+  });
+  assert.equal(okResult.status.retrievalStatus, "ok");
+  assert.equal(okResult.status.candidateCount, 1);
+  assert.equal(okResult.status.strictCandidateCount, 1);
+
+  const emptyResult = await retrieveMentorAdviceWithStatus({}, { retrieveImpl: async () => [] });
+  assert.equal(emptyResult.status.retrievalStatus, "empty");
+  assert.equal(emptyResult.status.candidateCount, 0);
+
+  const error = new Error("connect EACCES");
+  error.code = "EACCES";
+  const errorResult = await retrieveMentorAdviceWithStatus({}, { retrieveImpl: async () => { throw error; } });
+  assert.equal(errorResult.status.retrievalStatus, "error");
+  assert.equal(errorResult.status.retrievalErrorCode, "EACCES");
+  assert.equal(errorResult.candidates.length, 0);
+}
+
+async function main() {
   runKeywordCapsTest();
   runResultDistributionTest();
   runReportRichnessTest();
@@ -740,8 +1411,16 @@ function main() {
   runAttributionModeTest();
   runAccountantMentorDisplayFitTest();
   runMentorXAttributionTest();
+  runMentorXFallbackCanStitchToExplainableMentorTest();
+  runReportTitleDeduplicationTest();
+  runExternalMentorCoverageLimitTest();
+  runWeakDataMentorStitchGuardTest();
+  runFinanceAndNetworkDataMentorBlockTest();
+  runRoleAwareMockMentorDisplayTest();
+  runUncoveredProblemFillTest();
+  runSameMentorSoftCapRedistributionTest();
   runMentorXItemChipsDoNotInheritGroupLensTest();
-  runReportRichnessTargetRangeTest();
+  runReportProblemCoverageWithoutHardCapTest();
   runSoftwareLensConsistencyTest();
   runAccountantRoleConsistencyTest();
   runCrossRoleDirectionSanitizerTest();
@@ -753,7 +1432,14 @@ function main() {
   runMachineLearningSupplementRoleAwarenessTest();
   runMachineLearningFinanceMentorDriftTest();
   runGenericTitleDiversificationTest();
+  runRoleAwareFallbackWordingTest();
+  runDictionaryFallbackCoverageSampleTest();
+  runPaidFallbackRichnessWithEmptyRetrievalTest();
+  await runRetrievalStatusWrapperTest();
   console.log("advice curator tests passed");
 }
 
-main();
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

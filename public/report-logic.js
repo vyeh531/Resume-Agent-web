@@ -1597,16 +1597,6 @@ function renderMentorGroupHeader(mentor, groupIdx, totalGroups) {
     : avatarCircle(mentor.company || mentorDisplayName, 56);
   const lens = mentor.mentorGroupLens || "";
   const lensReason = mentor.mentorGroupReason || "";
-  const attributionMode = mentor.attributionMode || "";
-  const sourceDisclosure = mentor.sourceDisclosure || (
-    attributionMode === "verified_original"
-      ? "来源：该导师建议"
-      : attributionMode === "mentorx_strategy"
-        ? "来源：MentorX 策略建议"
-        : attributionMode === "stitched_lens"
-          ? "来源：MentorX 按该导师背景整理"
-          : ""
-  );
   return `
     <div style="display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid #E6DEF2;margin-bottom:20px;">
       ${logoHtml}
@@ -1879,16 +1869,6 @@ function renderAdviceItem(item, i) {
   const insight = item.mentorInsight || item.mentorLens || item.reason || item.I_insight || item.P_mentor || "";
   const hrPov = item.hrPerspective || item.HR_os || item.hrPov || item.recruiterPerspective || HR_PERSPECTIVE_LOOKUP.get(String(item.adviceId || "")) || HR_PERSPECTIVE_LOOKUP.get(adviceIdentity(item)) || fallbackHrPerspective(item);
   const fitType = item.mentorDisplayFit || item.mentorFitType || "";
-  const attributionMode = item.attributionMode || "";
-  const sourceDisclosure = item.sourceDisclosure || (
-    attributionMode === "verified_original"
-      ? "来源：该导师建议"
-      : attributionMode === "mentorx_strategy"
-        ? "来源：MentorX 策略建议"
-        : attributionMode === "stitched_lens"
-          ? "来源：MentorX 按该导师背景整理"
-          : ""
-  );
   const rawTopicCluster = item.displayAdviceType || item.topicCluster || sectionLabel(item.targetSection);
   const topicCluster = /ATS\s*通用建议/i.test(String(rawTopicCluster)) ? "" : rawTopicCluster;
   const fitCfg = FIT_TYPE_CONFIG[fitType];
@@ -1911,7 +1891,6 @@ function renderAdviceItem(item, i) {
         ${fitChip}
       </div>
       <h4 style="margin:0 0 13px;font-size:15px;font-weight:700;color:#111827;line-height:1.4;"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#111827;color:#fff;font-size:11px;margin-right:8px;vertical-align:1px;">${i + 1}</span>${escapeHtml(item.title)}</h4>
-      ${sourceDisclosure ? `<div style="font-size:11px;color:#9CA3AF;margin:-5px 0 11px 30px;">${escapeHtml(sourceDisclosure)}</div>` : ""}
       ${diagnosis ? `<div style="margin-bottom:11px;">
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
           <span style="width:3px;height:14px;background:#D4A574;border-radius:2px;flex-shrink:0;"></span>
@@ -2004,16 +1983,10 @@ function renderInsiderTipsSection(tips) {
   return tips.map((tip) => {
     const company = tip.company || tip.industryLabel || '公司/行业';
     const title = tip.knowledgeTitle || `${company} 的候选人偏好`;
-    const sourceMentor = tip.sourceMentorName || tip.mentorName || '';
-    const sourceTitle = tip.sourceMentorTitle || tip.mentorTitle || '';
-    const sourceTopic = tip.sourceTopic || tip.topic || '';
-    const sourceParts = [company, sourceMentor, sourceTitle].filter(Boolean).join(' · ');
     const isGeneralFallback = tip.source === 'fallback' && /^general_insider_/.test(String(tip.sourceAdviceId || ''));
-    const sourceLine = isGeneralFallback
-      ? '來自各大公司導師根据通用招聘筛选规律整理'
-      : [sourceParts, sourceTopic ? `对应主题：${sourceTopic}` : ''].filter(Boolean).join(' · ');
-    const logo = tip.companyLogo
-      ? `<img src="${escapeAttr(tip.companyLogo)}" alt="${escapeAttr(company)}" style="width:46px;height:46px;object-fit:contain;border-radius:8px;background:#fff;padding:5px;border:1px solid #E6DEF2;" />`
+    const logoUrl = tip.companyLogo || (isGeneralFallback ? "/logo/logo__no_bg.png" : "");
+    const logo = logoUrl
+      ? `<img src="${escapeAttr(logoUrl)}" alt="${escapeAttr(company)}" style="width:46px;height:46px;object-fit:contain;border-radius:8px;background:#fff;padding:5px;border:1px solid #E6DEF2;" />`
       : `<div style="width:46px;height:46px;border-radius:8px;background:var(--paper-warm,#FFFFFF);border:1px solid #E6DEF2;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;color:var(--jade,#5333A6);">${escapeHtml(company[0] || '?')}</div>`;
     const typeLabel = {
       company_preference: '公司偏好',
@@ -2033,7 +2006,6 @@ function renderInsiderTipsSection(tips) {
     <span style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(83,51,166,0.10);color:var(--jade,#5333A6);white-space:nowrap;">${escapeHtml(typeLabel)}</span>
   </div>
   <p style="font-size:14px;line-height:1.65;color:var(--ink);margin:0 0 10px;">${escapeHtml(tip.insight)}</p>
-  ${sourceLine ? `<div style="font-size:11.5px;color:var(--ink-soft);line-height:1.45;">来源：${escapeHtml(sourceLine)}</div>` : ''}
 </div>`;
   }).join('');
 }
@@ -2043,7 +2015,7 @@ function buildDefaultInsiderTips(limit = 4) {
   return [
     {
       company: "通用招聘规律",
-      companyLogo: "",
+      companyLogo: "/logo/logo__no_bg.png",
       industryLabel: "跨行业筛选",
       knowledgeTitle: "ATS 往往先读结构，再读内容",
       insight: "很多筛选系统会先用 section 标题、日期、职位名和关键词位置判断简历结构；如果 Skills、Experience、Projects 的边界不清楚，后面的关键词即使出现，也可能被归到错误语境里。",
@@ -2051,7 +2023,7 @@ function buildDefaultInsiderTips(limit = 4) {
     },
     {
       company: "通用招聘规律",
-      companyLogo: "",
+      companyLogo: "/logo/logo__no_bg.png",
       industryLabel: "跨行业筛选",
       knowledgeTitle: "招聘方会看关键词出现的位置",
       insight: "同一个关键词出现在 Skills 和出现在 Experience 里的权重感不一样；只在技能栏出现，容易被当作会用工具，放在经历结果里，才更像真实做过相关任务。",
@@ -2059,7 +2031,7 @@ function buildDefaultInsiderTips(limit = 4) {
     },
     {
       company: "通用招聘规律",
-      companyLogo: "",
+      companyLogo: "/logo/logo__no_bg.png",
       industryLabel: "跨行业筛选",
       knowledgeTitle: "JD 的前几条职责通常不是随机排序",
       insight: "很多岗位描述会把最常筛选的职责和 required skills 放在前半段；如果简历最上方没有回应这些高优先级信号，即使后面内容不错，也可能在快速扫描时被低估。",
@@ -2067,7 +2039,7 @@ function buildDefaultInsiderTips(limit = 4) {
     },
     {
       company: "通用招聘规律",
-      companyLogo: "",
+      companyLogo: "/logo/logo__no_bg.png",
       industryLabel: "跨行业筛选",
       knowledgeTitle: "过度贴合单一 JD 也可能扣分",
       insight: "简历如果把某一份 JD 的词逐条硬塞进去，反而会显得像关键词堆砌；更稳的做法是覆盖同类岗位都会反复出现的核心信号，让简历对一组相似岗位都有解释力。",

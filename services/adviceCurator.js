@@ -1,6 +1,12 @@
 ﻿"use strict";
 
 const { buildRoleProfileFromContext } = require("../src/ats/role-profile");
+const {
+  buildRoleAwareFallbackAdvice,
+  buildFallbackAdviceForSlot,
+  buildRoleLexicon,
+  slotForProblemTag,
+} = require("../src/ats/role-fallback-advice");
 
 
 function asArray(value) {
@@ -55,6 +61,8 @@ function cleanMentorSource(source = {}) {
     companyLogo: source.companyLogo || null,
     mentorTitle,
     mentorSubtitle: source.mentorSubtitle || "",
+    badges: source.badges || [],
+    isMockMentor: source.isMockMentor === true || /^mock_/.test(String(mentorId || "")),
   };
   return {
     ...profile,
@@ -67,8 +75,8 @@ const MENTORX_SOURCE = {
   mentorName: "MentorX",
   company: "MentorX",
   companyLogo: "/logo/MentorX.png",
-  mentorTitle: "ç®€åŽ†ç­–ç•¥ç»„",
-  mentorSubtitle: "ç®€åŽ†ç­–ç•¥ç»„",
+  mentorTitle: "简历策略组",
+  mentorSubtitle: "简历策略组",
 };
 
 function sameMentorSource(a = {}, b = {}) {
@@ -79,14 +87,19 @@ function sameMentorSource(a = {}, b = {}) {
   return mentorGroupKey(left) === mentorGroupKey(right);
 }
 
+function isRoleAwareMockMentor(profile = {}) {
+  return profile?.isMockMentor === true || /^mock_/.test(String(profile?.mentorId || ""));
+}
+
 function sourceDisclosureFor(mode) {
-  if (mode === "verified_original") return "æ¥æºï¼šè¯¥å¯¼å¸ˆå»ºè®®";
-  if (mode === "mentorx_strategy") return "æ¥æºï¼šMentorX ç­–ç•¥å»ºè®®";
-  return "æ¥æºï¼šMentorX æŒ‰è¯¥å¯¼å¸ˆèƒŒæ™¯æ•´ç†";
+  if (mode === "verified_original") return "来源：该导师建议";
+  if (mode === "mentorx_strategy") return "来源：MentorX 策略建议";
+  return "来源：MentorX 按该导师背景整理";
 }
 
 function inferAttributionMode(item = {}, originalSource = null, displayedSource = null) {
   const explicit = normalizeText(item.attributionMode);
+  if (isMentorXProfile(originalSource || {}) && displayedSource && !isMentorXProfile(displayedSource || {})) return "stitched_lens";
   if (["verified_original", "stitched_lens", "mentorx_strategy"].includes(explicit)) return explicit;
   if (isMentorXProfile(displayedSource || {})) return "mentorx_strategy";
   if (originalSource && displayedSource && sameMentorSource(originalSource, displayedSource)) return "verified_original";
@@ -265,6 +278,252 @@ function buildMentorPool(mentors = [], items = []) {
   return [...byKey.values()];
 }
 
+function roleAwareMockMentors(context = {}) {
+  const roleProfile = context.roleProfile || roleProfileFromContext(context);
+  const family = roleProfile.canonicalRoleFamily || roleProfile.roleFamily || "";
+  const functionCluster = roleProfile.functionCluster || "";
+  const text = targetRoleText({ ...context, roleProfile });
+  if (family === "cloud_infrastructure" || ["cloud_infrastructure", "network_operations", "it_operations"].includes(functionCluster) ||
+    /network operator|network operations|noc\b|it infrastructure|network monitoring|网络运营|網絡運營|网络运维|網路/.test(text)) {
+    return [
+      {
+        mentorId: "mock_cisco_network_ops",
+        mentorName: "Cisco 网络运维视角",
+        company: "Cisco",
+        companyLogo: null,
+        mentorTitle: "Network Operations Engineer",
+        mentorSubtitle: "模拟大厂网络运维视角",
+        badges: ["network operations", "NOC", "routing", "TCP/IP", "incident response"],
+        isMockMentor: true,
+      },
+      {
+        mentorId: "mock_microsoft_cloud_infra",
+        mentorName: "Microsoft 云基础设施视角",
+        company: "Microsoft",
+        companyLogo: null,
+        mentorTitle: "Cloud Infrastructure Engineer",
+        mentorSubtitle: "模拟大厂基础设施视角",
+        badges: ["cloud infrastructure", "network monitoring", "SRE", "incident response", "runbook"],
+        isMockMentor: true,
+      },
+    ];
+  }
+  if (family === "logistics_operations" || /pickup support|logistics|dispatch|delivery operations|揽收|攬收|物流|配送/.test(text)) {
+    return [
+      {
+        mentorId: "mock_amazon_logistics_ops",
+        mentorName: "Amazon 运营视角",
+        company: "Amazon",
+        companyLogo: null,
+        mentorTitle: "Logistics Operations Manager",
+        mentorSubtitle: "模拟大厂运营视角",
+        badges: ["logistics operations", "dispatch coordination", "delivery operations", "process improvement"],
+        isMockMentor: true,
+      },
+      {
+        mentorId: "mock_dhl_supply_chain_ops",
+        mentorName: "DHL 供应链视角",
+        company: "DHL",
+        companyLogo: null,
+        mentorTitle: "Supply Chain Operations Lead",
+        mentorSubtitle: "模拟大厂供应链视角",
+        badges: ["supply chain", "pickup coordination", "exception handling", "operations reporting"],
+        isMockMentor: true,
+      },
+    ];
+  }
+  if (isFinanceTargetContext({ ...context, roleProfile })) {
+    return [
+      {
+        mentorId: "mock_jpmorgan_ib",
+        mentorName: "JPMorgan 投行视角",
+        company: "JPMorgan",
+        companyLogo: null,
+        mentorTitle: "Investment Banking Associate",
+        mentorSubtitle: "模拟大厂金融职能视角",
+        badges: ["investment banking", "valuation", "financial modeling", "deal execution"],
+        isMockMentor: true,
+      },
+      {
+        mentorId: "mock_goldman_finance",
+        mentorName: "Goldman Sachs 金融分析视角",
+        company: "Goldman Sachs",
+        companyLogo: null,
+        mentorTitle: "Financial Analyst",
+        mentorSubtitle: "模拟大厂金融分析视角",
+        badges: ["financial analysis", "investment memo", "pitch deck", "transaction support"],
+        isMockMentor: true,
+      },
+    ];
+  }
+  if (family === "accounting") {
+    return [
+      {
+        mentorId: "mock_deloitte_accounting",
+        mentorName: "Deloitte 会计视角",
+        company: "Deloitte",
+        companyLogo: null,
+        mentorTitle: "Audit & Assurance Senior",
+        mentorSubtitle: "模拟大厂审计会计视角",
+        badges: ["accounting", "audit", "financial reporting", "reconciliation"],
+        isMockMentor: true,
+      },
+      {
+        mentorId: "mock_pwc_accounting",
+        mentorName: "PwC 会计视角",
+        company: "PwC",
+        companyLogo: null,
+        mentorTitle: "Accounting Advisory Associate",
+        mentorSubtitle: "模拟大厂会计咨询视角",
+        badges: ["accounting advisory", "month-end close", "compliance", "reporting"],
+        isMockMentor: true,
+      },
+    ];
+  }
+  if (functionCluster === "marketing" || family === "marketing") {
+    return [
+      {
+        mentorId: "mock_google_growth_marketing",
+        mentorName: "Google 增长营销视角",
+        company: "Google",
+        companyLogo: null,
+        mentorTitle: "Growth Marketing Manager",
+        mentorSubtitle: "模拟大厂增长营销视角",
+        badges: ["growth marketing", "campaign analytics", "CRM", "content strategy"],
+        isMockMentor: true,
+      },
+      {
+        mentorId: "mock_meta_brand_marketing",
+        mentorName: "Meta 品牌营销视角",
+        company: "Meta",
+        companyLogo: null,
+        mentorTitle: "Brand Marketing Manager",
+        mentorSubtitle: "模拟大厂品牌营销视角",
+        badges: ["brand marketing", "campaign", "audience insight", "cross-functional"],
+        isMockMentor: true,
+      },
+    ];
+  }
+  if (functionCluster === "machine_learning" || family === "machine_learning" || family === "ai_engineer") {
+    return [
+      {
+        mentorId: "mock_google_ml",
+        mentorName: "Google ML 工程视角",
+        company: "Google",
+        companyLogo: null,
+        mentorTitle: "Machine Learning Engineer",
+        mentorSubtitle: "模拟大厂机器学习视角",
+        badges: ["machine learning", "model evaluation", "deployment", "python"],
+        isMockMentor: true,
+      },
+      {
+        mentorId: "mock_openai_ai",
+        mentorName: "OpenAI AI 工程视角",
+        company: "OpenAI",
+        companyLogo: null,
+        mentorTitle: "AI Engineer",
+        mentorSubtitle: "模拟大厂 AI 工程视角",
+        badges: ["AI engineering", "model deployment", "evaluation", "LLM"],
+        isMockMentor: true,
+      },
+    ];
+  }
+  if (functionCluster === "software" || /software|developer|engineer|frontend|backend|fullstack/.test(text)) {
+    return [
+      {
+        mentorId: "mock_google_swe",
+        mentorName: "Google 工程视角",
+        company: "Google",
+        companyLogo: null,
+        mentorTitle: "Software Engineer",
+        mentorSubtitle: "模拟大厂软件工程视角",
+        badges: ["software engineering", "backend", "system design", "deployment"],
+        isMockMentor: true,
+      },
+      {
+        mentorId: "mock_microsoft_swe",
+        mentorName: "Microsoft 工程视角",
+        company: "Microsoft",
+        companyLogo: null,
+        mentorTitle: "Software Engineer",
+        mentorSubtitle: "模拟大厂软件工程视角",
+        badges: ["software engineering", "cloud", "api", "production systems"],
+        isMockMentor: true,
+      },
+    ];
+  }
+  if (functionCluster === "operations" || /operations|operation|coordinator|support|运营|營運/.test(text)) {
+    return [
+      {
+        mentorId: "mock_amazon_ops",
+        mentorName: "Amazon 运营视角",
+        company: "Amazon",
+        companyLogo: null,
+        mentorTitle: "Operations Manager",
+        mentorSubtitle: "模拟大厂运营视角",
+        badges: ["operations", "process improvement", "stakeholder coordination", "reporting"],
+        isMockMentor: true,
+      },
+      {
+        mentorId: "mock_uber_ops",
+        mentorName: "Uber 运营视角",
+        company: "Uber",
+        companyLogo: null,
+        mentorTitle: "Operations Manager",
+        mentorSubtitle: "模拟大厂运营视角",
+        badges: ["market operations", "process", "metrics", "cross-functional"],
+        isMockMentor: true,
+      },
+    ];
+  }
+  if (functionCluster === "business" || family === "business_analysis") {
+    return [
+      {
+        mentorId: "mock_mckinsey_business",
+        mentorName: "McKinsey 商业分析视角",
+        company: "McKinsey",
+        companyLogo: null,
+        mentorTitle: "Business Analyst",
+        mentorSubtitle: "模拟大厂商业分析视角",
+        badges: ["business analysis", "stakeholder", "strategy", "problem solving"],
+        isMockMentor: true,
+      },
+      {
+        mentorId: "mock_accenture_business",
+        mentorName: "Accenture 咨询交付视角",
+        company: "Accenture",
+        companyLogo: null,
+        mentorTitle: "Business Consultant",
+        mentorSubtitle: "模拟大厂咨询交付视角",
+        badges: ["business consulting", "process", "delivery", "requirements"],
+        isMockMentor: true,
+      },
+    ];
+  }
+  return [
+    {
+      mentorId: "mock_google_business_ops",
+      mentorName: "Google 业务运营视角",
+      company: "Google",
+      companyLogo: null,
+      mentorTitle: "Business Operations Manager",
+      mentorSubtitle: "模拟大厂业务运营视角",
+      badges: ["business operations", "stakeholder", "metrics", "process"],
+      isMockMentor: true,
+    },
+    {
+      mentorId: "mock_microsoft_program_ops",
+      mentorName: "Microsoft 项目运营视角",
+      company: "Microsoft",
+      companyLogo: null,
+      mentorTitle: "Program Manager",
+      mentorSubtitle: "模拟大厂项目运营视角",
+      badges: ["program management", "cross-functional", "delivery", "reporting"],
+      isMockMentor: true,
+    },
+  ];
+}
+
 function problemLensAllowsMentor(item = {}, mentorClusters = []) {
   const clusters = new Set(mentorClusters);
   if (isMentorXProfile(item.mentorSource || {})) return true;
@@ -276,11 +535,20 @@ function problemLensAllowsMentor(item = {}, mentorClusters = []) {
   return false;
 }
 
+function isWeakAdjacentCluster(cluster = "", roleProfile = {}) {
+  const family = roleProfile.canonicalRoleFamily || roleProfile.roleFamily || "";
+  if (["logistics_operations", "supply_chain_logistics", "marketing", "cloud_infrastructure"].includes(family) && ["data", "analytics", "business"].includes(cluster)) {
+    return true;
+  }
+  if (family === "marketing" && cluster === "operations") return true;
+  return false;
+}
+
 function scoreMentorDisplayFit(item = {}, mentor = {}, context = {}, originalSource = null) {
   if (isMentorXProfile(mentor)) {
     return {
       mentor,
-      score: 35,
+      score: context.avoidMentorXDisplay ? 18 : 35,
       fit: "mentorx_strategy",
       reason: "No sufficiently explainable external mentor lens was found; MentorX strategy fallback is used.",
     };
@@ -301,11 +569,15 @@ function scoreMentorDisplayFit(item = {}, mentor = {}, context = {}, originalSou
   }
   const adjacentHits = roleProfile.adjacentClusters.filter((cluster) => mentorClusterSet.has(cluster));
   if (adjacentHits.length) {
-    score += 28;
-    if (fit !== "direct") fit = "adjacent";
+    const strongAdjacentHits = adjacentHits.filter((cluster) => !isWeakAdjacentCluster(cluster, roleProfile));
+    score += strongAdjacentHits.length ? 28 : 10;
+    if (fit !== "direct" && strongAdjacentHits.length) fit = "adjacent";
     reasons.push(`adjacent cluster: ${adjacentHits[0]}`);
   }
-  const skillHits = roleProfile.skillClusters.filter((cluster) => mentorClusterSet.has(cluster) || adviceClusterSet.has(cluster));
+  const skillHits = unique([
+    ...roleProfile.skillClusters.filter((cluster) => mentorClusterSet.has(cluster)),
+    ...adviceClusters.filter((cluster) => mentorClusterSet.has(cluster)),
+  ]);
   if (skillHits.length) {
     score += Math.min(20, skillHits.length * 7);
     reasons.push(`skill cluster: ${skillHits[0]}`);
@@ -342,20 +614,41 @@ function scoreMentorDisplayFit(item = {}, mentor = {}, context = {}, originalSou
 }
 
 function selectDisplayedMentorForAdvice(item = {}, mentorPool = [], context = {}, originalSource = null) {
-  if (isMentorXProfile(originalSource || {})) {
-    return {
-      displayedMentorSource: cleanMentorSource(originalSource) || cleanMentorSource(MENTORX_SOURCE),
-      mentorDisplayFit: "mentorx_strategy",
-      mentorFitReason: "Original advice is a MentorX strategy fallback.",
-      displayMentorScore: 35,
-    };
-  }
   const candidates = asArray(mentorPool).length ? mentorPool : [originalSource, MENTORX_SOURCE].filter(Boolean);
   const scored = candidates
     .map((mentor) => scoreMentorDisplayFit(item, mentor, context, originalSource))
     .sort((a, b) => b.score - a.score || (sameMentorSource(a.mentor, originalSource) ? -1 : 1));
-  const best = scored[0];
-  if (!best || best.score < 35 || isMentorXProfile(best.mentor)) {
+  const viableExternal = scored.find((candidate) =>
+    !isMentorXProfile(candidate.mentor) &&
+    !isUnexplainableExternalMentor(candidate.mentor, context) &&
+    !isRoleFamilyUnsafeDisplayedMentor(candidate.mentor, item, context) &&
+    !isWeakDataAnalyticsMentorForTarget(candidate.mentor, item, context) &&
+    candidate.score >= (context.avoidMentorXDisplay ? 25 : 35)
+  );
+  const best = viableExternal || scored[0];
+  if (!best ||
+    best.score < 35 ||
+    isMentorXProfile(best.mentor) ||
+    isUnexplainableExternalMentor(best.mentor, context) ||
+    isRoleFamilyUnsafeDisplayedMentor(best.mentor, item, context) ||
+    isWeakDataAnalyticsMentorForTarget(best.mentor, item, context)) {
+    if (viableExternal) {
+      return {
+        displayedMentorSource: cleanMentorSource(viableExternal.mentor),
+        mentorDisplayFit: viableExternal.fit,
+        mentorFitReason: viableExternal.reason,
+        displayMentorScore: Math.round(viableExternal.score),
+      };
+    }
+    const fallbackMock = selectRoleAwareMockDisplayedMentor(item, context, mentorPool);
+    if (fallbackMock) {
+      return {
+        displayedMentorSource: cleanMentorSource(fallbackMock.mentor),
+        mentorDisplayFit: fallbackMock.fit || "mock_lens",
+        mentorFitReason: fallbackMock.reason || "Role-aware mock mentor lens used because no suitable real mentor was available.",
+        displayMentorScore: Math.round(fallbackMock.score || 25),
+      };
+    }
     return {
       displayedMentorSource: cleanMentorSource(MENTORX_SOURCE),
       mentorDisplayFit: "mentorx_strategy",
@@ -369,6 +662,144 @@ function selectDisplayedMentorForAdvice(item = {}, mentorPool = [], context = {}
     mentorFitReason: best.reason,
     displayMentorScore: Math.round(best.score),
   };
+}
+
+function selectRoleAwareMockDisplayedMentor(item = {}, context = {}, mentorPool = []) {
+  const mockMentors = asArray(mentorPool).filter((mentor) => mentor.isMockMentor || /^mock_/.test(String(mentor.mentorId || "")));
+  const candidates = mockMentors.length ? mockMentors : roleAwareMockMentors(context);
+  const scored = candidates
+    .map((mentor) => scoreMentorDisplayFit(item, mentor, context, item.originalMentorSource))
+    .filter((candidate) =>
+      !isUnexplainableExternalMentor(candidate.mentor, context) &&
+      !isRoleFamilyUnsafeDisplayedMentor(candidate.mentor, item, context) &&
+      !isWeakDataAnalyticsMentorForTarget(candidate.mentor, item, context)
+    )
+    .sort((a, b) => b.score - a.score);
+  if (scored[0]) return scored[0];
+  const fallback = candidates[deterministicIndex(adviceExactKey(item) || item.adviceId || item.title || "", candidates.length || 1)];
+  return fallback ? {
+    mentor: fallback,
+    score: 25,
+    fit: "mock_lens",
+    reason: "Role-aware mock mentor lens used because no suitable real mentor was available.",
+  } : null;
+}
+
+function isUnexplainableExternalMentor(mentor = {}, context = {}) {
+  if (!mentor || isMentorXProfile(mentor)) return false;
+  const family = context.roleProfile?.canonicalRoleFamily || context.internalAtsResult?.profile?.roleFamily || "";
+  const text = lowerText([
+    mentor.company,
+    mentor.mentorTitle,
+    mentor.mentorSubtitle,
+    mentor.careerPathDisplay,
+  ].filter(Boolean).join(" "));
+  const hardwareFamilies = new Set(["hardware_electrical", "mechanical_engineering", "manufacturing_process", "industrial_quality", "civil_construction"]);
+  if (/thermal engineer|process engineer|mechanical engineer|manufacturing engineer/.test(text) && !hardwareFamilies.has(family)) return true;
+  if (/architecture designer|architectural designer/.test(text) && !["design_creative", "ux_research_design", "civil_construction"].includes(family)) return true;
+  return false;
+}
+
+function targetRoleText(context = {}) {
+  return lowerText([
+    context.targetRole,
+    context.internalAtsResult?.jobTitle,
+    context.internalAtsResult?.profile?.targetRole,
+    context.retrievalQuery?.targetRole,
+    context.retrievalQuery?.roleFamily,
+    context.roleProfile?.canonicalRole,
+    context.roleProfile?.canonicalRoleFamily,
+    context.roleProfile?.functionCluster,
+  ].filter(Boolean).join(" "));
+}
+
+function mentorDescriptorText(mentor = {}) {
+  return lowerText([
+    mentor.company,
+    mentor.mentorTitle,
+    mentor.mentorSubtitle,
+    mentor.careerPathDisplay,
+    ...(mentor.badges || []),
+  ].filter(Boolean).join(" "));
+}
+
+function isFinanceTargetContext(context = {}) {
+  const roleProfile = context.roleProfile || roleProfileFromContext(context);
+  const family = roleProfile.canonicalRoleFamily || roleProfile.roleFamily || "";
+  const functionCluster = roleProfile.functionCluster || "";
+  const text = targetRoleText({ ...context, roleProfile });
+  return ["finance", "accounting", "trading_quant"].includes(functionCluster) ||
+    /finance|financial|investment|banking|asset management|private equity|valuation|accounting|accountant|audit|tax|会计|會計|金融|投資|投资|银行|銀行/.test(`${family} ${text}`);
+}
+
+function isNetworkInfraTargetContext(context = {}) {
+  const roleProfile = context.roleProfile || roleProfileFromContext(context);
+  const family = roleProfile.canonicalRoleFamily || roleProfile.roleFamily || "";
+  const functionCluster = roleProfile.functionCluster || "";
+  const text = targetRoleText({ ...context, roleProfile });
+  return ["cloud_infrastructure", "it_operations"].includes(family) ||
+    ["cloud_infrastructure", "network_operations", "it_operations"].includes(functionCluster) ||
+    /network operator|network operations|noc\b|it infrastructure|network monitoring|网络运营|網絡運營|网络运维|網路/.test(`${family} ${text}`);
+}
+
+function hasFinanceMentorSignal(mentor = {}) {
+  return /ubs|barclays|blackrock|goldman|jpmorgan|morgan stanley|bank|finance|financial|investment|asset management|private equity|accounting|audit|tax/.test(mentorDescriptorText(mentor));
+}
+
+function hasNetworkInfraMentorSignal(mentor = {}) {
+  return /network|noc\b|infrastructure|cloud|site reliability|sre\b|devops|systems engineer|it operations|security operations|telecom|routing|tcp\/ip/.test(mentorDescriptorText(mentor));
+}
+
+function isDataOrAnalyticsMentor(mentor = {}) {
+  return /data scientist|data analyst|data\s*&\s*financial analyst|analytics|business analytics|machine learning|ml engineer|ai engineer|data science/.test(mentorDescriptorText(mentor));
+}
+
+function hasFinanceAdviceSignal(item = {}) {
+  return /financial model|financial modeling|valuation|dcf|deal|transaction|investment analysis|investment banking|asset management|private equity|pitch deck|investment memo|comparable compan|m&a|merger|acquisition|equity research|financial statement|financial reporting|portfolio|投行|投资|投資|估值|交易|并购|併購/.test(lowerText(adviceText(item)));
+}
+
+function hasStrictFinanceFunctionAdviceSignal(item = {}) {
+  return /financial model|financial modeling|valuation|dcf|deal|transaction|investment analysis|pitch deck|investment memo|comparable compan|m&a|merger|acquisition|equity research|financial statement|financial reporting|portfolio analysis|portfolio construction|投行项目|金融建模|估值|交易执行|并购|併購/.test(lowerText(adviceText(item)));
+}
+
+function isBroadDataFinancialMentor(mentor = {}) {
+  return /data\s*&\s*financial analyst|data and financial analyst|cbre/.test(mentorDescriptorText(mentor));
+}
+
+function isRoleFamilyUnsafeDisplayedMentor(mentor = {}, item = {}, context = {}) {
+  if (!mentor || isMentorXProfile(mentor)) return false;
+  if (isFinanceTargetContext(context) && !hasFinanceMentorSignal(mentor) && !isRoleAwareMockMentor(mentor)) return true;
+  if (!isDataOrAnalyticsMentor(mentor)) return false;
+  if (isNetworkInfraTargetContext(context) && !hasNetworkInfraMentorSignal(mentor)) return true;
+  if (isFinanceTargetContext(context) && isBroadDataFinancialMentor(mentor) && !hasStrictFinanceFunctionAdviceSignal(item)) return true;
+  if (isFinanceTargetContext(context) && (!hasFinanceMentorSignal(mentor) || !hasFinanceAdviceSignal(item))) return true;
+  return false;
+}
+
+function isWeakDataAnalyticsMentorForTarget(mentor = {}, item = {}, context = {}) {
+  if (!mentor || isMentorXProfile(mentor)) return false;
+  const roleProfile = context.roleProfile || roleProfileFromContext(context);
+  const family = roleProfile.canonicalRoleFamily || roleProfile.roleFamily || "";
+  const functionCluster = roleProfile.functionCluster || "";
+  const targetAllowsDataLens = [
+    "data_analyst",
+    "data_engineer",
+    "data_scientist",
+    "machine_learning",
+    "ai_engineer",
+    "trading_quant",
+  ].includes(family) || ["data", "machine_learning", "quant_trading"].includes(functionCluster);
+  if (targetAllowsDataLens) return false;
+
+  const isDataMentor = isDataOrAnalyticsMentor(mentor);
+  if (!isDataMentor) return false;
+
+  const itemText = lowerText(adviceText(item));
+  const hasStrongDataTooling = /\b(sql|tableau|power\s*bi|analytics?|data pipeline|python|r\b|model|experiment|a\/b test|ab test|google analytics|looker|grafana|wireshark|splunk|zabbix|nagios)\b/.test(itemText);
+  const hasWeakOpsDataToolingOnly = /\b(dashboard|crm|tracking dashboard|operations report)\b/.test(itemText) && !hasStrongDataTooling;
+  if (hasWeakOpsDataToolingOnly) return true;
+  const hasExplicitDataTooling = hasStrongDataTooling;
+  return !hasExplicitDataTooling;
 }
 
 function unique(items) {
@@ -728,13 +1159,13 @@ function evidenceMatchesCoverage(evidence = [], coverageFamily = "") {
 }
 
 function defaultEvidenceForCoverage(coverageFamily = "", targetSection = "") {
-  if (coverageFamily === "keyword") return ["JD å…³é”®è¯", "ATS åŒ¹é…", targetSection === "skills" ? "Skills æŽ’åº" : "ç»åŽ†è¯æ®"];
-  if (coverageFamily === "positioning") return ["å²—ä½å®šä½", "å¼€å¤´ä¸»çº¿", "ç›®æ ‡å²—ä½"];
-  if (coverageFamily === "experience_evidence") return ["ç»åŽ†è¯æ®", "æŽ¨è¿›åŠ¨ä½œ", "äº¤ä»˜ç‰©"];
-  if (coverageFamily === "impact_metrics") return ["é‡åŒ–ç»“æžœ", "æˆæžœè¡¨è¾¾", "å½±å“è§„æ¨¡"];
-  if (coverageFamily === "risk_explanation") return ["ç»åŽ†æ€§è´¨", "é¡¹ç›®è¾¹ç•Œ", "ç¨³å®šæ€§é£Žé™©"];
-  if (coverageFamily === "junior_signal") return ["è¯¾ç¨‹/è¯ä¹¦", "æ•™è‚²è®­ç»ƒ", "å²—ä½èƒ½åŠ›è¯æ®"];
-  if (coverageFamily === "cross_domain_transfer") return ["å¯è¿ç§»èƒ½åŠ›", "è·¨é¢†åŸŸè¡¨è¾¾", "ç›®æ ‡å²—ä½è¯­è¨€"];
+  if (coverageFamily === "keyword") return ["JD 关键词", "ATS 匹配", targetSection === "skills" ? "Skills 排序" : "经历证据"];
+  if (coverageFamily === "positioning") return ["岗位定位", "开头主线", "目标岗位"];
+  if (coverageFamily === "experience_evidence") return ["经历证据", "推进动作", "交付物"];
+  if (coverageFamily === "impact_metrics") return ["量化结果", "成果表达", "影响规模"];
+  if (coverageFamily === "risk_explanation") return ["经历性质", "项目边界", "稳定性风险"];
+  if (coverageFamily === "junior_signal") return ["课程/证书", "教育训练", "岗位能力证据"];
+  if (coverageFamily === "cross_domain_transfer") return ["可迁移能力", "跨领域表达", "目标岗位语言"];
   return [];
 }
 
@@ -852,6 +1283,30 @@ function buildDuplicateGroupKey(item = {}) {
   return `${item.coverageFamily || inferCoverageFamily(item)}:${item.targetSection || inferTargetSection(item)}:${item.actionFamily || inferActionFamily(item)}`;
 }
 
+function hasCaseSpecificLeak(item = {}) {
+  const text = lowerText(adviceText(item));
+  return /dyson|diffuser|cofounder|project management club|professional summary|alpha research|specific company classification/i.test(text);
+}
+
+function hasRoleDriftLeak(item = {}, context = {}) {
+  const text = lowerText(adviceText(item));
+  const family = context.roleProfile?.canonicalRoleFamily || context.internalAtsResult?.profile?.roleFamily || "";
+  const forbiddenByFamily = {
+    logistics_operations: /machine learning|deep learning|model training|feature engineering|pytorch|tensorflow|scikit-learn|classification|regression|nlp|computer vision|inference service/i,
+    marketing: /general ledger|journal entries|account reconciliation|month-end close|gaap|quickbooks|netsuite|audit workpaper/i,
+    machine_learning: /general ledger|accounts payable|accounts receivable|month-end close|gaap|dispatch scheduling|pickup schedule/i,
+    cloud_infrastructure: /dyson|diffuser|3d modeling|prototype fabrication|campaign brief|content calendar|general ledger|gaap/i,
+    finance: /dyson|diffuser|3d modeling|prototype fabrication|model deployment|pytorch|tensorflow/i,
+  };
+  return Boolean(forbiddenByFamily[family]?.test(text));
+}
+
+function isUnsafeCuratedAdvice(item = {}, context = {}) {
+  const source = lowerText(item.source || "");
+  if (!source || source === "fallback") return false;
+  return hasCaseSpecificLeak(item) || hasRoleDriftLeak(item, context);
+}
+
 function deterministicIndex(value = "", modulo = 1) {
   const text = normalizeText(value);
   let hash = 0;
@@ -882,28 +1337,374 @@ function diversifyAdviceTitle(item = {}, context = {}) {
     /^æ”¹å†™å·¥ä½œç»åŽ†\s*bullet$/i.test(title) ||
     /^rewrite\s+experience\s+bullet$/i.test(compact) ||
     /^rewrite\s+work\s+experience\s+bullet$/i.test(compact);
-  if (!isGenericExperienceTitle) return title;
-
   const family = item.coverageFamily || inferCoverageFamily(item);
-  if (family === "keyword") {
-    return pickTitleVariant(item, ["æŠŠ JD å…³é”®è¯æ”¾å›žç»åŽ†", "è¡¥é½ç»åŽ†é‡Œçš„å…³é”®è¯è¯æ®", "è®©å…³é”®è¯å‡ºçŽ°åœ¨çœŸå®žé¡¹ç›®é‡Œ"]);
+  const actionFamily = item.actionFamily || inferActionFamily(item);
+  const genericTitlePatterns = [
+    /bullet/i,
+    /jd\s*keyword/i,
+    /keyword/i,
+    /summary/i,
+    /skills?/i,
+    /junior/i,
+    /title/i,
+    /position/i,
+    /target role/i,
+    /impact/i,
+    /metric/i,
+    /tenure/i,
+    /intern/i,
+    /course/i,
+    /education/i,
+    /tool/i,
+    /delivery/i,
+    /section/i,
+    /weight/i,
+    /关键词|岗位|定位|成果|量化|经历|证据|短期|实习|课程|教育|工具|交付|篇幅|权重|技能/.test(title),
+  ];
+  const shouldDiversify = isGenericExperienceTitle ||
+    genericTitlePatterns.some((pattern) => pattern instanceof RegExp ? pattern.test(compact) || pattern.test(title) : Boolean(pattern));
+  if (!shouldDiversify) return title;
+
+  if (family === "keyword" || actionFamily === "skills_keyword_ordering" || actionFamily === "keyword_in_experience") {
+    if (actionFamily === "skills_keyword_ordering" || item.targetSection === "skills") {
+      return pickTitleVariant(item, ["整理 Skills 关键词", "补齐技能区关键词", "重排岗位关键词"]);
+    }
+    if (actionFamily === "keyword_in_experience" || item.targetSection === "experience") {
+      return pickTitleVariant(item, ["把技能词写成项目证据", "让关键词出现在真实项目里", "补齐经历里的关键词证据"]);
+    }
+    return pickTitleVariant(item, ["把 JD 关键词放回经历", "补齐关键词匹配信号", "校准 ATS 关键词"]);
   }
   if (family === "readability_structure") {
-    return pickTitleVariant(item, ["è°ƒæ•´ç»åŽ†ç¯‡å¹…æƒé‡", "é‡æŽ’æœ€ç›¸å…³ç»åŽ†é¡ºåº", "çªå‡ºæ ¸å¿ƒç»åŽ†"]);
+    return pickTitleVariant(item, ["调整经历篇幅权重", "重排最相关经历顺序", "突出核心经历"]);
   }
-  if (family === "impact_metrics") {
-    return pickTitleVariant(item, ["å¼ºåŒ– bullet çš„ç»“æžœè¡¨è¾¾", "è¡¥ä¸Šæˆæžœæ•°å­—å’Œè§„æ¨¡", "æŠŠç»åŽ†æ”¹æˆå¯è¡¡é‡ç»“æžœ"]);
+  if (family === "impact_metrics" || actionFamily === "experience_impact_metrics") {
+    const text = lowerText(`${item.title || ""} ${item.action || ""} ${item.actionSummary || ""}`);
+    if (/frequency|scale|efficiency|throughput|cycle|volume|频率|规模|效率|处理量|覆盖范围/.test(text)) {
+      return pickTitleVariant(item, ["补上规模、频率和效率", "说明处理量与影响范围", "把工作量写成可比较指标"]);
+    }
+    return pickTitleVariant(item, ["补上结果数字", "用指标说明实际贡献", "把经历改成可衡量结果"]);
   }
-  if (family === "risk_explanation") {
-    return pickTitleVariant(item, ["è¯´æ˜ŽçŸ­æœŸç»åŽ†æ€§è´¨", "äº¤ä»£å®žä¹ æˆ–é¡¹ç›®å‘¨æœŸ", "è¡¥æ¸…ç»åŽ†è¾¹ç•Œ"]);
+  if (family === "risk_explanation" || actionFamily === "short_tenure_explanation") {
+    return pickTitleVariant(item, ["说明短期经历性质", "交代实习或项目周期", "补清经历边界"]);
   }
-  if (family === "positioning") {
-    return pickTitleVariant(item, ["è¡¥ä¸Šç›®æ ‡å²—ä½åŽŸè¯", "ç»Ÿä¸€å¼€å¤´å²—ä½å®šä½", "è®© Summary æŒ‡å‘ç›®æ ‡å²—ä½"]);
+  if (family === "positioning" || actionFamily === "summary_positioning") {
+    return pickTitleVariant(item, ["补上目标岗位原词", "统一开头岗位定位", "让 Summary 指向目标岗位"]);
   }
-  if (family === "junior_signal") {
-    return pickTitleVariant(item, ["ç”¨è¯¾ç¨‹æˆ–é¡¹ç›®è¡¥è¶³ junior ä¿¡å·", "æŠŠè®­ç»ƒèƒŒæ™¯å†™æˆå²—ä½è¯æ®"]);
+  if (family === "junior_signal" || actionFamily === "education_coursework_signal") {
+    return pickTitleVariant(item, ["用课程或项目补足 junior 信号", "把训练背景写成岗位证据"]);
   }
-  return pickTitleVariant(item, ["è¡¥å¼ºç»åŽ†é‡Œçš„åŠ¨ä½œå’Œäº¤ä»˜", "æŠŠèŒè´£å†™æˆé¡¹ç›®è¯æ®", "é‡å†™æ ¸å¿ƒç»åŽ† bullet"]);
+  if (actionFamily === "tool_delivery_context") {
+    return pickTitleVariant(item, ["补足工具与交付场景", "把岗位工具写回经历", "用工具证明实际交付"]);
+  }
+  return pickTitleVariant(item, ["补强经历里的动作和交付", "把职责写成项目证据", "重写核心经历 bullet"]);
+}
+
+function duplicateTitleVariants(item = {}) {
+  const family = item.coverageFamily || inferCoverageFamily(item);
+  const actionFamily = item.actionFamily || inferActionFamily(item);
+  if (family === "keyword" || actionFamily === "skills_keyword_ordering" || actionFamily === "keyword_in_experience") {
+    if (actionFamily === "skills_keyword_ordering" || item.targetSection === "skills") {
+      return ["整理 Skills 关键词", "补齐技能区关键词", "重排岗位关键词", "校准 ATS 关键词"];
+    }
+    if (actionFamily === "keyword_in_experience" || item.targetSection === "experience") {
+      return ["把技能词写成项目证据", "让关键词出现在真实项目里", "补齐经历里的关键词证据", "把 JD 关键词放回经历"];
+    }
+    return ["把 JD 关键词放回经历", "补齐关键词匹配信号", "校准 ATS 关键词", "把技能词写成项目证据"];
+  }
+  if (family === "impact_metrics" || actionFamily === "experience_impact_metrics") {
+    const text = lowerText(`${item.title || ""} ${item.action || ""} ${item.actionSummary || ""}`);
+    if (/frequency|scale|efficiency|throughput|cycle|volume|频率|规模|效率|处理量|覆盖范围/.test(text)) {
+      return ["补上规模、频率和效率", "说明处理量与影响范围", "把工作量写成可比较指标", "补上成果数字和规模"];
+    }
+    return ["补上结果数字", "用指标说明实际贡献", "把经历改成可衡量结果", "强化 bullet 的结果表达"];
+  }
+  if (family === "positioning" || actionFamily === "summary_positioning") {
+    return ["补上目标岗位原词", "统一开头岗位定位", "让 Summary 指向目标岗位", "收束简历主线"];
+  }
+  if (family === "risk_explanation" || actionFamily === "short_tenure_explanation") {
+    return ["说明短期经历性质", "交代实习或项目周期", "补清经历边界", "降低短期经历疑虑"];
+  }
+  if (family === "junior_signal" || actionFamily === "education_coursework_signal") {
+    return ["用课程或项目补足 junior 信号", "把训练背景写成岗位证据", "补强教育训练证据"];
+  }
+  if (actionFamily === "tool_delivery_context") {
+    return ["补足工具与交付场景", "把岗位工具写回经历", "用工具证明实际交付"];
+  }
+  if (family === "readability_structure") {
+    return ["调整经历篇幅权重", "重排最相关经历顺序", "突出核心经历"];
+  }
+  return ["补强经历里的动作和交付", "把职责写成项目证据", "重写核心经历 bullet", "补齐项目产出证据"];
+}
+
+function makeUniqueReportTitle(item = {}, usedTitles = new Set(), occurrence = 0) {
+  const current = normalizeText(item.title);
+  if (current && !usedTitles.has(current)) {
+    usedTitles.add(current);
+    return item.title;
+  }
+  const variants = duplicateTitleVariants(item);
+  const seedOffset = deterministicIndex(`${item.adviceId || ""}|${item.action || item.actionSummary || ""}|${occurrence}`, variants.length || 1);
+  for (let i = 0; i < variants.length; i += 1) {
+    const candidate = variants[(seedOffset + i) % variants.length];
+    const key = normalizeText(candidate);
+    if (key && !usedTitles.has(key)) {
+      usedTitles.add(key);
+      return candidate;
+    }
+  }
+  const fallback = `${current || "修改建议"}（${occurrence + 1}）`;
+  usedTitles.add(fallback);
+  return fallback;
+}
+
+function dedupeReportAdviceTitles(groups = []) {
+  const usedTitles = new Set();
+  const occurrences = new Map();
+  return groups.map((group) => ({
+    ...group,
+    adviceItems: asArray(group.adviceItems).map((item) => {
+      const titleKey = normalizeText(item.title);
+      const occurrence = occurrences.get(titleKey) || 0;
+      occurrences.set(titleKey, occurrence + 1);
+      return {
+        ...item,
+        title: makeUniqueReportTitle(item, usedTitles, occurrence),
+      };
+    }),
+  }));
+}
+
+function limitGroupAdviceItemsByCoverage(items = [], limit = 3, options = {}) {
+  const maxPerFamily = Number.isFinite(Number(options.maxPerFamily))
+    ? Number(options.maxPerFamily)
+    : 1;
+  const allowOverflow = options.allowOverflow === true;
+  const sorted = asArray(items).sort((a, b) => {
+    const aSupplement = a.source === "curator_supplement";
+    const bSupplement = b.source === "curator_supplement";
+    if (aSupplement !== bSupplement) return aSupplement ? 1 : -1;
+    return compareAdvice(a, b);
+  });
+  const selected = [];
+  const selectedKeys = new Set();
+  const selectedSlotKeys = new Set();
+  const familyCounts = new Map();
+  const add = (item) => {
+    const key = adviceExactKey(item);
+    const slotKey = item.duplicateGroupKey || buildDuplicateGroupKey(item);
+    if (selectedKeys.has(key) || selected.length >= limit) return false;
+    if (selectedSlotKeys.has(slotKey)) return false;
+    selected.push(item);
+    selectedKeys.add(key);
+    selectedSlotKeys.add(slotKey);
+    const family = item.coverageFamily || inferCoverageFamily(item);
+    familyCounts.set(family, (familyCounts.get(family) || 0) + 1);
+    return true;
+  };
+
+  for (const item of sorted) {
+    const family = item.coverageFamily || inferCoverageFamily(item);
+    if ((familyCounts.get(family) || 0) === 0) add(item);
+    if (selected.length >= limit) break;
+  }
+  for (const item of sorted) {
+    const family = item.coverageFamily || inferCoverageFamily(item);
+    if ((familyCounts.get(family) || 0) < maxPerFamily) add(item);
+    if (selected.length >= limit) break;
+  }
+  if (allowOverflow) {
+    for (const item of sorted) {
+      add(item);
+      if (selected.length >= limit) break;
+    }
+  }
+  return selected;
+}
+
+function selectAlternativeDisplayedMentor(item = {}, currentGroup = {}, context = {}) {
+  const candidates = asArray(context.mentorPool)
+    .filter((mentor) => !sameMentorSource(mentor, currentGroup))
+    .filter((mentor) => !isMentorXProfile(mentor));
+  const scored = candidates
+    .map((mentor) => scoreMentorDisplayFit(item, mentor, context, item.originalMentorSource))
+    .filter((candidate) =>
+      candidate.score >= (isRoleAwareMockMentor(currentGroup) && isRoleAwareMockMentor(candidate.mentor) ? 15 : 35) &&
+      !isUnexplainableExternalMentor(candidate.mentor, context) &&
+      !isRoleFamilyUnsafeDisplayedMentor(candidate.mentor, item, context) &&
+      !isWeakDataAnalyticsMentorForTarget(candidate.mentor, item, context)
+    )
+    .sort((a, b) => b.score - a.score);
+  return scored[0] || null;
+}
+
+function redistributeOverloadedMentorGroups(groups = [], context = {}, softCap = 5) {
+  const output = groups.slice();
+  const groupForMentor = (mentor) => {
+    const key = mentorGroupKey(mentor);
+    let group = output.find((candidate) => mentorGroupKey(candidate) === key);
+    if (!group) {
+      group = {
+        mentorId: mentor.mentorId || key,
+        mentorName: mentor.mentorName || "导师",
+        company: mentor.company || "",
+        companyLogo: mentorLogoFor(mentor),
+        mentorTitle: mentor.mentorTitle || "",
+        mentorSubtitle: mentor.mentorSubtitle || "",
+        careerPathDisplay: mentor.careerPathDisplay || null,
+        badges: mentor.badges || [],
+        matchReason: "",
+        matchedProblems: [],
+        adviceItems: [],
+      };
+      output.push(group);
+    }
+    return group;
+  };
+
+  for (const group of output.slice()) {
+    if (isMentorXProfile(group) || asArray(group.adviceItems).length <= softCap) continue;
+    const movable = group.adviceItems
+      .slice()
+      .sort((a, b) => Number(a.displayPriority || 0) - Number(b.displayPriority || 0));
+    for (const item of movable) {
+      if (group.adviceItems.length <= softCap) break;
+      const alternative = selectAlternativeDisplayedMentor(item, group, context);
+      if (!alternative) continue;
+      const targetGroup = groupForMentor(cleanMentorSource(alternative.mentor));
+      const slotKey = item.duplicateGroupKey || buildDuplicateGroupKey(item);
+      if (targetGroup.adviceItems.some((existing) => (existing.duplicateGroupKey || buildDuplicateGroupKey(existing)) === slotKey)) continue;
+      group.adviceItems = group.adviceItems.filter((existing) => adviceExactKey(existing) !== adviceExactKey(item));
+      const displayed = cleanMentorSource(alternative.mentor);
+      const attributionMode = inferAttributionMode(item, item.originalMentorSource, displayed);
+      targetGroup.adviceItems.push({
+        ...item,
+        mentorSource: displayed,
+        displayedMentorSource: displayed,
+        attributionMode,
+        sourceDisclosure: sourceDisclosureFor(attributionMode),
+        mentorDisplayFit: alternative.fit,
+        mentorFitReason: alternative.reason,
+        displayMentorScore: Math.round(alternative.score),
+      });
+    }
+  }
+  return output.filter((group) => asArray(group.adviceItems).length);
+}
+
+function balanceRoleAwareMockGroups(groups = [], context = {}, softCap = 5) {
+  const output = groups.map((group) => ({ ...group, adviceItems: asArray(group.adviceItems).slice() }));
+  const mockMentors = roleAwareMockMentors(context)
+    .map(cleanMentorSource)
+    .filter(Boolean)
+    .filter((mentor) => !isMentorXProfile(mentor));
+  if (mockMentors.length < 2) return output;
+
+  const groupForMentor = (mentor) => {
+    const key = mentorGroupKey(mentor);
+    let group = output.find((candidate) => mentorGroupKey(candidate) === key);
+    if (!group) {
+      group = {
+        mentorId: mentor.mentorId || key,
+        mentorName: mentor.mentorName || "导师",
+        company: mentor.company || "",
+        companyLogo: mentorLogoFor(mentor),
+        mentorTitle: mentor.mentorTitle || "",
+        mentorSubtitle: mentor.mentorSubtitle || "",
+        careerPathDisplay: mentor.careerPathDisplay || null,
+        badges: mentor.badges || [],
+        matchReason: "",
+        matchedProblems: [],
+        adviceItems: [],
+      };
+      output.push(group);
+    }
+    return group;
+  };
+
+  for (const group of output.slice()) {
+    if (!isRoleAwareMockMentor(group) || asArray(group.adviceItems).length <= softCap) continue;
+    const alternatives = mockMentors.filter((mentor) =>
+      !sameMentorSource(mentor, group) &&
+      !isRoleFamilyUnsafeDisplayedMentor(mentor, group.adviceItems[0] || {}, context)
+    );
+    if (!alternatives.length) continue;
+    const movable = group.adviceItems
+      .slice()
+      .sort((a, b) => Number(a.displayPriority || 0) - Number(b.displayPriority || 0));
+    let altIndex = 0;
+    for (const item of movable) {
+      if (group.adviceItems.length <= softCap) break;
+      const displayed = alternatives[altIndex % alternatives.length];
+      altIndex += 1;
+      const targetGroup = groupForMentor(displayed);
+      if (adviceExactKey(item) && targetGroup.adviceItems.some((existing) => adviceExactKey(existing) === adviceExactKey(item))) continue;
+      group.adviceItems = group.adviceItems.filter((existing) => adviceExactKey(existing) !== adviceExactKey(item));
+      const attributionMode = inferAttributionMode(item, item.originalMentorSource, displayed);
+      targetGroup.adviceItems.push({
+        ...item,
+        mentorSource: displayed,
+        displayedMentorSource: displayed,
+        attributionMode,
+        sourceDisclosure: sourceDisclosureFor(attributionMode),
+        mentorDisplayFit: item.mentorDisplayFit || "mock_lens",
+        mentorFitReason: item.mentorFitReason || "Role-aware mock mentor lens used because no suitable real mentor was available.",
+        displayMentorScore: item.displayMentorScore || 25,
+      });
+    }
+  }
+  return output.filter((group) => asArray(group.adviceItems).length);
+}
+
+function replaceMentorXDisplayedGroups(groups = [], context = {}) {
+  const output = groups.filter((group) => !isMentorXProfile(group)).map((group) => ({ ...group, adviceItems: asArray(group.adviceItems).slice() }));
+  const groupForMentor = (mentor) => {
+    const key = mentorGroupKey(mentor);
+    let group = output.find((candidate) => mentorGroupKey(candidate) === key);
+    if (!group) {
+      group = {
+        mentorId: mentor.mentorId || key,
+        mentorName: mentor.mentorName || "导师",
+        company: mentor.company || "",
+        companyLogo: mentorLogoFor(mentor),
+        mentorTitle: mentor.mentorTitle || "",
+        mentorSubtitle: mentor.mentorSubtitle || "",
+        careerPathDisplay: mentor.careerPathDisplay || null,
+        badges: mentor.badges || [],
+        matchReason: "",
+        matchedProblems: [],
+        adviceItems: [],
+      };
+      output.push(group);
+    }
+    return group;
+  };
+
+  const mentorXItems = groups
+    .filter((group) => isMentorXProfile(group))
+    .flatMap((group) => asArray(group.adviceItems));
+  for (const item of mentorXItems) {
+    const mockFit = selectRoleAwareMockDisplayedMentor(item, context, context.mentorPool || []);
+    const displayed = cleanMentorSource(mockFit?.mentor);
+    if (!displayed || isMentorXProfile(displayed)) continue;
+    const targetGroup = groupForMentor(displayed);
+    const slotKey = item.duplicateGroupKey || buildDuplicateGroupKey(item);
+    if (targetGroup.adviceItems.some((existing) =>
+      adviceExactKey(existing) === adviceExactKey(item) ||
+      (existing.duplicateGroupKey || buildDuplicateGroupKey(existing)) === slotKey
+    )) continue;
+    const attributionMode = inferAttributionMode(item, item.originalMentorSource, displayed);
+    targetGroup.adviceItems.push({
+      ...item,
+      mentorSource: displayed,
+      displayedMentorSource: displayed,
+      attributionMode,
+      sourceDisclosure: sourceDisclosureFor(attributionMode),
+      mentorDisplayFit: mockFit?.fit || "mock_lens",
+      mentorFitReason: mockFit?.reason || "Role-aware mock mentor lens used because no suitable real mentor was available.",
+      displayMentorScore: Math.round(mockFit?.score || 25),
+    });
+  }
+  return output.filter((group) => asArray(group.adviceItems).length);
 }
 
 function displayPriorityFor(item = {}, context = {}) {
@@ -1017,7 +1818,7 @@ function chooseBestByKey(items, keyFn) {
 }
 
 function enforceKeywordCaps(items, context = {}) {
-  const maxKeyword = isKeywordCritical(context) ? 2 : 2;
+  const maxKeyword = isKeywordCritical(context) ? 4 : 3;
   let globalKeywordCount = 0;
   const keywordByMentor = new Map();
   const output = [];
@@ -1131,15 +1932,176 @@ function fillReportRichness(normalized = [], curated = [], context = {}) {
   let output = curated.slice();
   if (output.length >= 7) return output;
   const existingKeys = new Set(output.map(adviceExactKey));
-  const supplements = supplementalAdviceTemplates(context)
+  let keywordCount = output.filter((item) => item.coverageFamily === "keyword").length;
+  const roleFallback = buildRoleAwareFallbackAdvice({
+    internalAtsResult: context.internalAtsResult || {},
+    retrievalQuery: context.retrievalQuery || {},
+    roleProfile: context.roleProfile,
+    targetCount: 9,
+    usedAdviceItems: output,
+  }).fallbackAdviceItems || [];
+  const supplements = [
+    ...roleFallback.map((item) => ({
+      ...item,
+      priority: "low",
+      displayPriority: Math.min(Number(item.displayPriority || 40), 35),
+      source: item.source || "curator_supplement",
+    })),
+    ...supplementalAdviceTemplates(context),
+  ]
     .map((item) => normalizeAdviceItemForCuration(item, context, { ...MENTORX_SOURCE }))
     .filter((item) => normalizeText(item.title) && normalizeText(item.action || item.actionSummary));
   for (const item of supplements) {
     if (output.length >= 7) break;
     const key = adviceExactKey(item);
     if (existingKeys.has(key)) continue;
+    if (item.coverageFamily === "keyword" && keywordCount >= 2) continue;
     output.push(item);
     existingKeys.add(key);
+    if (item.coverageFamily === "keyword") keywordCount += 1;
+  }
+  return output.sort(compareAdvice);
+}
+
+function problemTagValue(problem = {}) {
+  if (typeof problem === "string") return problem;
+  return problem.tag || problem.problemTag || problem.id || "";
+}
+
+function problemSeverityValue(problem = {}) {
+  if (typeof problem === "string") return "medium";
+  return problem.severity || "medium";
+}
+
+function coveredProblemTagSet(items = []) {
+  return new Set(asArray(items).flatMap((item) => asArray(item.relatedProblemTags)).filter(Boolean));
+}
+
+function genericAdviceForUncoveredProblem(problem = {}, context = {}) {
+  const tag = problemTagValue(problem);
+  const targetRole = normalizeText(context.targetRole || context.internalAtsResult?.jobTitle || "目标岗位");
+  const priority = problemSeverityValue(problem);
+  const roleProfile = context.roleProfile || roleProfileFromContext(context);
+  const lexicon = buildRoleLexicon(roleProfile);
+  const topTools = asArray(lexicon.topTools).slice(0, 3).join("、") || "相关工具";
+  const deliverables = asArray(lexicon.deliverables).slice(0, 3).join("、") || "岗位交付物";
+
+  if (/github|project_link|portfolio|link|链接|作品/.test(tag)) {
+    return {
+      adviceId: `uncovered_${compactKey(tag) || "link_evidence"}`,
+      title: "补上项目链接或作品入口",
+      currentDiagnosis: "简历里有项目或作品经历，但可验证入口还不够明确，读者很难快速确认真实产出。",
+      action: `为最贴近 ${targetRole} 的项目补上 GitHub、作品集、Demo、报告或可访问链接，并在 bullet 中说明它对应的 ${deliverables}。`,
+      mentorInsight: "项目链接不是装饰，它能把技能清单变成可验证证据，尤其适合经验还不长的候选人。",
+      hrPerspective: "如果项目经历很关键，我会希望能看到可验证入口；否则只能按文字描述打折判断。",
+      targetSection: "projects",
+      coverageFamily: "technical_depth",
+      actionFamily: "project_link_evidence",
+      relatedProblemTags: [tag],
+      evidence: ["项目链接", "可验证证据", "作品入口"],
+      priority,
+      source: "curator_supplement",
+      mentorSource: MENTORX_SOURCE,
+    };
+  }
+  if (/location|exp_location|missing_exp_location|地点|地點/.test(tag)) {
+    return {
+      adviceId: `uncovered_${compactKey(tag) || "experience_location"}`,
+      title: "补齐经历地点信息",
+      currentDiagnosis: "部分经历缺少地点或工作形式信息，履历结构看起来不够完整。",
+      action: "在 Experience 每段标题行补齐城市/地区、Remote/Hybrid 或项目所在地；如果是线上项目，也可以明确写成 Remote Project。",
+      mentorInsight: "地点信息不是核心卖点，但它能降低 HR 理解成本，让经历标题行更完整。",
+      hrPerspective: "我扫经历时会看公司、职位、地点和时间是否完整；缺字段会让简历显得不够规范。",
+      targetSection: "experience",
+      coverageFamily: "readability_structure",
+      actionFamily: "experience_location_completion",
+      relatedProblemTags: [tag],
+      evidence: ["经历地点", "标题行完整度", "格式规范"],
+      priority,
+      source: "curator_supplement",
+      mentorSource: MENTORX_SOURCE,
+    };
+  }
+  if (/repetitive_verbs|verb|action_verb|重复|重複/.test(tag)) {
+    return {
+      adviceId: `uncovered_${compactKey(tag) || "action_verbs"}`,
+      title: "替换重复动词",
+      currentDiagnosis: "经历 bullet 的开头动词有重复，读起来像职责罗列，动作层次不够清楚。",
+      action: `按 ${targetRole} 的工作语境，把重复的 participated / assisted / responsible for 改成更具体的动作，例如 analyzed、coordinated、built、monitored、reconciled、reported，并连接 ${topTools} 或 ${deliverables}。`,
+      mentorInsight: "动词要服务事实，不是为了变花；每个动词最好能带出一个动作、方法或交付物。",
+      hrPerspective: "连续看到相同动词时，我会很难判断每条经历的差异和深度。",
+      targetSection: "experience",
+      coverageFamily: "experience_evidence",
+      actionFamily: "action_verb_variety",
+      relatedProblemTags: [tag],
+      evidence: ["动作动词", "经历层次", "可读性"],
+      priority,
+      source: "curator_supplement",
+      mentorSource: MENTORX_SOURCE,
+    };
+  }
+  if (/resume_optimization_gap|content_quality|format|readability|structure/.test(tag)) {
+    return {
+      adviceId: `uncovered_${compactKey(tag) || "resume_structure"}`,
+      title: "统一简历结构与信息层级",
+      currentDiagnosis: "简历还有部分结构性优化空间，重要信息和弱相关内容的层级不够分明。",
+      action: `把最贴近 ${targetRole} 的经历、项目和技能放到更靠前位置；弱相关内容只保留能证明协作、交付或基础职业能力的部分。`,
+      mentorInsight: "完整报告不只改关键词，也要让读者第一眼看到最相关证据。",
+      hrPerspective: "我不会平均阅读每个 section；越靠前、越清楚的内容越影响第一判断。",
+      targetSection: "overall",
+      coverageFamily: "readability_structure",
+      actionFamily: "section_relevance_order",
+      relatedProblemTags: [tag],
+      evidence: ["信息层级", "Section 顺序", "可读性"],
+      priority,
+      source: "curator_supplement",
+      mentorSource: MENTORX_SOURCE,
+    };
+  }
+  return null;
+}
+
+function fillUncoveredProblemAdvice(normalized = [], curated = [], context = {}) {
+  const output = curated.slice();
+  const existingExact = new Set(output.map(adviceExactKey));
+  const existingSlots = new Set(output.map((item) => item.duplicateGroupKey || buildDuplicateGroupKey(item)));
+  const coveredTags = coveredProblemTagSet(output);
+  const roleProfile = context.roleProfile || roleProfileFromContext(context);
+  const roleLexicon = buildRoleLexicon(roleProfile);
+  const problems = asArray(context.problemTags)
+    .map((problem) => ({ raw: problem, tag: problemTagValue(problem) }))
+    .filter((problem) => problem.tag && !coveredTags.has(problem.tag));
+
+  for (const problem of problems) {
+    const slotId = slotForProblemTag(problem.tag);
+    const rawItem = slotId
+      ? buildFallbackAdviceForSlot(slotId, roleLexicon, {
+          relatedProblemTags: [problem.tag],
+          displayPriority: 45,
+          priority: problemSeverityValue(problem.raw),
+        }, context)
+      : genericAdviceForUncoveredProblem(problem.raw, context);
+    if (!rawItem) continue;
+    const item = normalizeAdviceItemForCuration({
+      ...rawItem,
+      adviceId: rawItem.adviceId || `uncovered_${compactKey(problem.tag)}`,
+      relatedProblemTags: unique([...(rawItem.relatedProblemTags || []), problem.tag]),
+      source: rawItem.source || "curator_supplement",
+    }, context, MENTORX_SOURCE);
+    const exact = adviceExactKey(item);
+    const slot = item.duplicateGroupKey || buildDuplicateGroupKey(item);
+    if (existingExact.has(exact) || existingSlots.has(slot)) {
+      const existing = output.find((candidate) => (candidate.duplicateGroupKey || buildDuplicateGroupKey(candidate)) === slot);
+      if (existing && !asArray(existing.relatedProblemTags).includes(problem.tag)) {
+        existing.relatedProblemTags = unique([...asArray(existing.relatedProblemTags), problem.tag]);
+        coveredTags.add(problem.tag);
+      }
+      continue;
+    }
+    output.push(item);
+    existingExact.add(exact);
+    existingSlots.add(slot);
+    coveredTags.add(problem.tag);
   }
   return output.sort(compareAdvice);
 }
@@ -1166,7 +2128,6 @@ function selectDiverseReportAdviceItems(normalized = [], context = {}) {
     sameMentorSlotSeen.add(mentorSlotKey);
     duplicateCounts.set(slotKey, (duplicateCounts.get(slotKey) || 0) + 1);
     selected.push(item);
-    if (selected.length >= 9) break;
   }
 
   return selected.sort(compareAdvice);
@@ -1175,7 +2136,8 @@ function selectDiverseReportAdviceItems(normalized = [], context = {}) {
 function curateAdviceItems(items = [], context = {}) {
   const normalized = items
     .map((item) => normalizeAdviceItemForCuration(item, context, item._mentor || {}))
-    .filter((item) => normalizeText(item.title) && normalizeText(item.action || item.actionSummary));
+    .filter((item) => normalizeText(item.title) && normalizeText(item.action || item.actionSummary))
+    .filter((item) => !isUnsafeCuratedAdvice(item, context));
   let curated = selectDiverseReportAdviceItems(normalized, context);
 
   const addBestFamily = (family) => {
@@ -1195,8 +2157,9 @@ function curateAdviceItems(items = [], context = {}) {
   }
 
   curated = fillReportRichness(normalized, curated, context);
+  curated = fillUncoveredProblemAdvice(normalized, curated, context);
 
-  return curated.sort(compareAdvice).slice(0, 9);
+  return curated.sort(compareAdvice);
 }
 
 function selectResultPageAdviceItems(curatedItems = [], context = {}) {
@@ -1230,44 +2193,44 @@ function selectResultPageAdviceItems(curatedItems = [], context = {}) {
 
 const LENS_CONFIG = {
   positioning: {
-    lens: "å²—ä½å®šä½è§†è§’",
-    reason: "è¿™ç»„å»ºè®®ä¸»è¦é’ˆå¯¹ç®€åŽ†å¼€å¤´ã€ç›®æ ‡å²—ä½åŽŸè¯å’Œæ•´ä½“ä¸»çº¿ï¼Œè®© HR æ›´å¿«åˆ¤æ–­ä½ çš„æŠ•é€’æ–¹å‘ã€‚",
+    lens: "岗位定位视角",
+    reason: "这组建议主要针对简历开头、目标岗位原词和整体主线，让 HR 更快判断你的投递方向。",
   },
   keyword: {
-    lens: "ATS å…³é”®è¯è§†è§’",
-    reason: "è¿™ç»„å»ºè®®ä¸»è¦é’ˆå¯¹ JD å…³é”®è¯è¦†ç›–å’Œæ”¾ç½®ä½ç½®ï¼Œå¸®åŠ© ATS ä¸Ž HR åŒæ—¶çœ‹åˆ°åŒ¹é…è¯æ®ã€‚",
+    lens: "ATS 关键词视角",
+    reason: "这组建议主要针对 JD 关键词覆盖和放置位置，帮助 ATS 与 HR 同时看到匹配证据。",
   },
   experience_evidence: {
-    lens: "ç»åŽ†è¯æ®è§†è§’",
-    reason: "è¿™ç»„å»ºè®®ä¸»è¦é’ˆå¯¹ç»åŽ† bullet çš„åŠ¨ä½œã€æ–¹æ³•ã€å·¥å…·å’Œäº§å‡ºï¼Œè®©æ ¸å¿ƒèƒ½åŠ›æœ‰çœŸå®žé¡¹ç›®è¯æ®æ”¯æ’‘ã€‚",
+    lens: "经历证据视角",
+    reason: "这组建议主要针对经历 bullet 的动作、方法、工具和产出，让核心能力有真实项目证据支撑。",
   },
   impact_metrics: {
-    lens: "æˆæžœé‡åŒ–è§†è§’",
-    reason: "è¿™ç»„å»ºè®®ä¸»è¦é’ˆå¯¹ç»“æžœã€æŒ‡æ ‡å’Œä¸šåŠ¡ä»·å€¼è¡¨è¾¾ï¼Œè®©è¯»è€…æ›´å®¹æ˜“åˆ¤æ–­ä½ çš„å®žé™…è´¡çŒ®ã€‚",
+    lens: "成果量化视角",
+    reason: "这组建议主要针对结果、指标和业务价值表达，让读者更容易判断你的实际贡献。",
   },
   risk_explanation: {
-    lens: "çŸ­æœŸç»åŽ†ä¸Žé£Žé™©è§£é‡Šè§†è§’",
-    reason: "è¿™ç»„å»ºè®®ä¸»è¦é’ˆå¯¹çŸ­æœŸç»åŽ†ã€å®žä¹ æ€§è´¨æˆ–é¡¹ç›®è¾¹ç•Œè¯´æ˜Žï¼Œå¸®åŠ© HR æ›´å¿«ç†è§£æ¯æ®µç»åŽ†çš„æ€§è´¨å’Œäº§å‡ºã€‚",
+    lens: "短期经历与风险解释视角",
+    reason: "这组建议主要针对短期经历、实习性质或项目边界说明，帮助 HR 更快理解每段经历的性质和产出。",
   },
   junior_signal: {
-    lens: "Junior èƒŒæ™¯è¡¥å¼ºè§†è§’",
-    reason: "è¿™ç»„å»ºè®®ä¸»è¦é’ˆå¯¹è¯¾ç¨‹ã€é¡¹ç›®ã€è¯ä¹¦å’Œè®­ç»ƒç»åŽ†ï¼ŒæŠŠ junior å€™é€‰äººçš„å­¦ä¹ è¯æ®è½¬æˆå²—ä½èƒ½åŠ›ä¿¡å·ã€‚",
+    lens: "Junior 背景补强视角",
+    reason: "这组建议主要针对课程、项目、证书和训练经历，把 junior 候选人的学习证据转成岗位能力信号。",
   },
   cross_domain_transfer: {
-    lens: "è·¨é¢†åŸŸè¿ç§»è§†è§’",
-    reason: "è¿™ç»„å»ºè®®ä¸»è¦é’ˆå¯¹éžå…¸åž‹èƒŒæ™¯å’Œå¯è¿ç§»èƒ½åŠ›è¡¨è¾¾ï¼Œå¸®åŠ©ä½ æŠŠå·²æœ‰ç»åŽ†ç¿»è¯‘æˆç›®æ ‡å²—ä½èƒ½ç†è§£çš„è¯­è¨€ã€‚",
+    lens: "跨领域迁移视角",
+    reason: "这组建议主要针对非典型背景和可迁移能力表达，帮助你把已有经历翻译成目标岗位能理解的语言。",
   },
   technical_depth: {
-    lens: "æŠ€æœ¯é¡¹ç›®æ·±åº¦è§†è§’",
-    reason: "è¿™ç»„å»ºè®®ä¸»è¦é’ˆå¯¹æŠ€æœ¯é¡¹ç›®ã€ç³»ç»Ÿå®žçŽ°å’Œå·¥ç¨‹åŒ–äº¤ä»˜ï¼Œè®©æŠ€æœ¯èƒ½åŠ›ä¸åªåœç•™åœ¨å·¥å…·æ¸…å•ã€‚",
+    lens: "技术项目深度视角",
+    reason: "这组建议主要针对技术项目、系统实现和工程化交付，让技术能力不只停留在工具清单。",
   },
   business_data_context: {
-    lens: "ä¸šåŠ¡ / é‡‘èž / æ•°æ®åœºæ™¯è§†è§’",
-    reason: "è¿™ç»„å»ºè®®ä¸»è¦é’ˆå¯¹æ•°æ®ã€ä¸šåŠ¡åœºæ™¯å’Œå†³ç­–ä»·å€¼ï¼ŒæŠŠåˆ†æžæˆ–é¡¹ç›®ç»åŽ†è¿žæŽ¥åˆ°å²—ä½çœŸå®žå·¥ä½œè¯­å¢ƒã€‚",
+    lens: "业务 / 金融 / 数据场景视角",
+    reason: "这组建议主要针对数据、业务场景和决策价值，把分析或项目经历连接到岗位真实工作语境。",
   },
   readability_structure: {
-    lens: "ç‰ˆé¢ä¸Žå¯è¯»æ€§è§†è§’",
-    reason: "è¿™ç»„å»ºè®®ä¸»è¦é’ˆå¯¹ section é¡ºåºã€ä¿¡æ¯æƒé‡å’Œå¯æ‰«ææ€§ï¼Œè®©é‡è¦ç»åŽ†æ›´å®¹æ˜“è¢« HR ç¬¬ä¸€çœ¼çœ‹åˆ°ã€‚",
+    lens: "版面与可读性视角",
+    reason: "这组建议主要针对 section 顺序、信息权重和可扫描性，让重要经历更容易被 HR 第一眼看到。",
   },
 };
 
@@ -1329,16 +2292,13 @@ function buildReportPageMentorGroups(curatedItems = [], originalMentors = [], co
   }
   const groupCount = groups.size;
   const totalCurated = curatedItems.length;
-  return [...groups.values()].slice(0, 5).map((group) => {
-    const groupLimit = isMentorXProfile(group) && (totalCurated < 7 || groupCount <= 3) ? 4 : 3;
-    group.adviceItems = group.adviceItems
-      .sort((a, b) => {
-        const aSupplement = a.source === "curator_supplement";
-        const bSupplement = b.source === "curator_supplement";
-        if (aSupplement !== bSupplement) return aSupplement ? 1 : -1;
-        return compareAdvice(a, b);
-      })
-      .slice(0, groupLimit);
+  const limitedGroups = [...groups.values()].map((group) => {
+    const groupLimit = Math.max(1, group.adviceItems.length);
+    const isStrategyGroup = isMentorXProfile(group);
+    group.adviceItems = limitGroupAdviceItemsByCoverage(group.adviceItems, groupLimit, {
+      maxPerFamily: Number.POSITIVE_INFINITY,
+      allowOverflow: true,
+    });
     const lens = inferMentorGroupLens(group.adviceItems, group, context.targetRole);
     const modes = unique(group.adviceItems.map((item) => item.attributionMode || "verified_original"));
     const attributionMode = modes.length === 1 ? modes[0] : (modes.includes("stitched_lens") ? "stitched_lens" : "verified_original");
@@ -1358,6 +2318,116 @@ function buildReportPageMentorGroups(curatedItems = [], originalMentors = [], co
       })),
     };
   });
+  const displayedKeys = new Set(limitedGroups.flatMap((group) => group.adviceItems || []).map(adviceExactKey));
+  const missingItems = curatedItems.filter((item) => !displayedKeys.has(adviceExactKey(item))).sort(compareAdvice);
+  if (missingItems.length) {
+    for (const item of missingItems) {
+      const displayFit = selectDisplayedMentorForAdvice(item, context.mentorPool || [], context, item.originalMentorSource);
+      const displayed = displayFit.displayedMentorSource;
+      if (!displayed || isMentorXProfile(displayed)) continue;
+      const key = mentorGroupKey(displayed);
+      let targetGroup = limitedGroups.find((group) => mentorGroupKey(group) === key);
+      if (!targetGroup) {
+        targetGroup = {
+          mentorId: displayed.mentorId || key,
+          mentorName: displayed.mentorName || "导师",
+          company: displayed.company || "",
+          companyLogo: mentorLogoFor(displayed),
+          mentorTitle: displayed.mentorTitle || "",
+          mentorSubtitle: displayed.mentorSubtitle || "",
+          careerPathDisplay: displayed.careerPathDisplay || null,
+          badges: displayed.badges || [],
+          matchReason: displayFit.mentorFitReason || "",
+          matchedProblems: [],
+          adviceItems: [],
+        };
+        limitedGroups.push(targetGroup);
+      }
+      const slotKey = item.duplicateGroupKey || buildDuplicateGroupKey(item);
+      if (targetGroup.adviceItems.some((existing) => (existing.duplicateGroupKey || buildDuplicateGroupKey(existing)) === slotKey)) continue;
+      const attributionMode = inferAttributionMode(item, item.originalMentorSource, displayed);
+      targetGroup.adviceItems.push({
+        ...item,
+        mentorSource: displayed,
+        displayedMentorSource: displayed,
+        attributionMode,
+        sourceDisclosure: sourceDisclosureFor(attributionMode),
+        mentorDisplayFit: displayFit.mentorDisplayFit,
+        mentorFitReason: displayFit.mentorFitReason,
+        displayMentorScore: displayFit.displayMentorScore,
+      });
+      displayedKeys.add(adviceExactKey(item));
+    }
+  }
+  const remainingMissingItems = curatedItems
+    .filter((item) => !displayedKeys.has(adviceExactKey(item)))
+    .sort(compareAdvice);
+  if (remainingMissingItems.length) {
+    for (const item of remainingMissingItems) {
+      const displayFit = selectDisplayedMentorForAdvice(item, context.mentorPool || [], context, item.originalMentorSource);
+      let displayed = displayFit.displayedMentorSource;
+      if (!displayed || isMentorXProfile(displayed)) {
+        displayed = cleanMentorSource(selectRoleAwareMockDisplayedMentor(item, context, context.mentorPool || [])?.mentor);
+      }
+      if (!displayed || isMentorXProfile(displayed)) continue;
+      const key = mentorGroupKey(displayed);
+      let targetGroup = limitedGroups.find((group) => mentorGroupKey(group) === key);
+      if (!targetGroup) {
+        targetGroup = {
+          mentorId: displayed.mentorId || key,
+          mentorName: displayed.mentorName || "导师",
+          company: displayed.company || "",
+          companyLogo: mentorLogoFor(displayed),
+          mentorTitle: displayed.mentorTitle || "",
+          mentorSubtitle: displayed.mentorSubtitle || "",
+          careerPathDisplay: displayed.careerPathDisplay || null,
+          badges: displayed.badges || [],
+          matchReason: displayFit.mentorFitReason || "",
+          matchedProblems: [],
+          adviceItems: [],
+        };
+        limitedGroups.push(targetGroup);
+      }
+      const slotKey = item.duplicateGroupKey || buildDuplicateGroupKey(item);
+      if ((targetGroup.adviceItems || []).some((existing) =>
+        adviceExactKey(existing) === adviceExactKey(item) ||
+        (existing.duplicateGroupKey || buildDuplicateGroupKey(existing)) === slotKey
+      )) continue;
+      const attributionMode = inferAttributionMode(item, item.originalMentorSource, displayed);
+      targetGroup.adviceItems.push({
+        ...item,
+        mentorSource: displayed,
+        displayedMentorSource: displayed,
+        attributionMode,
+        sourceDisclosure: sourceDisclosureFor(attributionMode),
+        mentorDisplayFit: displayFit.mentorDisplayFit,
+        mentorFitReason: displayFit.mentorFitReason,
+        displayMentorScore: displayFit.displayMentorScore,
+      });
+    }
+  }
+  const noMentorXGroups = replaceMentorXDisplayedGroups(limitedGroups, context);
+  const balancedExternalGroups = redistributeOverloadedMentorGroups(noMentorXGroups, context, 5);
+  const balancedGroups = balanceRoleAwareMockGroups(balancedExternalGroups, context, 5);
+  const refreshedGroups = balancedGroups.map((group) => {
+    const lens = inferMentorGroupLens(group.adviceItems, group, context.targetRole);
+    const modes = unique(group.adviceItems.map((item) => item.attributionMode || "verified_original"));
+    const attributionMode = modes.length === 1 ? modes[0] : (modes.includes("stitched_lens") ? "stitched_lens" : "verified_original");
+    return {
+      ...group,
+      attributionMode,
+      sourceDisclosure: sourceDisclosureFor(attributionMode),
+      mentorGroupLens: lens.lens,
+      mentorGroupReason: lens.reason,
+      adviceItems: asArray(group.adviceItems).map((item) => ({
+        ...item,
+        mentorGroupLens: lens.lens,
+        mentorGroupReason: lens.reason,
+        sourceDisclosure: item.sourceDisclosure || sourceDisclosureFor(item.attributionMode || attributionMode),
+      })),
+    };
+  });
+  return dedupeReportAdviceTitles(refreshedGroups);
 }
 
 function buildCoverageSummary(curatedItems = [], context = {}) {
@@ -1374,8 +2444,9 @@ function buildCoverageSummary(curatedItems = [], context = {}) {
     coverageFamilies: families,
     totalAdviceItems: curatedItems.length,
     targetAdviceCountMin: 7,
-    targetAdviceCountMax: 9,
+    targetAdviceCountMax: null,
     adviceCountStatus: curatedItems.length >= 7 ? "sufficient" : "candidate_pool_insufficient",
+    curationMode: "problem_coverage_dedupe",
     shortageReason: curatedItems.length >= 7 ? "" : "Curated candidate pool had fewer than 7 non-duplicate, role-safe advice items.",
   };
 }
@@ -1393,11 +2464,17 @@ function curateMentorAdvicePlan(input = {}) {
     internalAtsResult,
     problemTags: asArray(internalAtsResult.problemTags),
     targetRole: input.targetRole || internalAtsResult.jobTitle || internalAtsResult.profile?.targetRole || "",
+    avoidMentorXDisplay: input.avoidMentorXDisplay !== false,
   };
   const mentorReport = input.mentorReport || {};
   const rawItems = input.items || flattenMentorItems(mentorReport);
   const roleProfile = roleProfileFromContext(context);
-  const mentorPool = buildMentorPool(asArray(mentorReport.mentors), rawItems);
+  const mentorPool = buildMentorPool([
+    ...asArray(mentorReport.mentors),
+    ...asArray(input.mentorPool),
+    ...asArray(input.candidateMentors),
+    ...roleAwareMockMentors({ ...context, roleProfile }),
+  ], rawItems);
   context.roleProfile = roleProfile;
   context.mentorPool = mentorPool;
   const curatedAdviceItems = curateAdviceItems(rawItems, context);

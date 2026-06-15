@@ -9,13 +9,14 @@ import {
   formatPublicFreeReport,
 } from '../../src/ats/report-formatter';
 import {
-  retrieveMentorAdvice,
+  retrieveMentorAdviceWithStatus,
   selectFreeMentorPlan,
   selectPremiumMentorPlan,
   buildLockedAdvicePreview,
   formatPublicFreeMentorAdvice,
   formatPremiumMentorReport,
   retrieveInsiderTips,
+  groupAdviceByMentor,
 } from '../../services/mentorAdviceRetrieval';
 import { curateMentorAdvicePlan } from '../../services/adviceCurator';
 import { parsePDF, parseDocx } from '../../file-parser';
@@ -43,6 +44,8 @@ function logRetrievalDebug({
   selectedFreeAdviceId,
   paidAdviceCount,
   roleMismatchPenalty,
+  retrievalStatus,
+  retrievalErrorCode,
   selectedScope,
   rawRows,
   eligibleRows,
@@ -61,6 +64,8 @@ function logRetrievalDebug({
     excludedInterviewAdvice,
     paidAdvice: paidAdviceCount,
     roleMismatchPenalty,
+    retrievalStatus,
+    retrievalErrorCode,
   }));
 }
 
@@ -100,7 +105,11 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
   const internalAtsResult = formatInternalAtsResult(rawScoreResult, input);
   mark('format_internal_ats');
   const retrievalQuery = internalAtsResult.retrievalQuery;
-  const mentorCandidates = await retrieveMentorAdvice(retrievalQuery);
+  const {
+    candidates: mentorCandidates,
+    status: retrievalStatus,
+  } = await retrieveMentorAdviceWithStatus(retrievalQuery);
+  internalAtsResult.retrievalStatus = retrievalStatus;
   mark('retrieve_mentor_advice');
   const freeMentorPlan = selectFreeMentorPlan(mentorCandidates, internalAtsResult);
   const premiumMentorPlan = selectPremiumMentorPlan(mentorCandidates, internalAtsResult, freeMentorPlan);
@@ -114,8 +123,12 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
     freeAdvice,
     paidAdvice,
     mentorReport: premiumMentorReport,
+    candidateMentors: groupAdviceByMentor(mentorCandidates),
     targetRole: internalAtsResult.jobTitle,
   });
+  if (curatedAdvice?.coverageSummary) {
+    curatedAdvice.coverageSummary.retrievalStatus = retrievalStatus;
+  }
   const companyInsiderTips = await retrieveInsiderTips({ internalAtsResult, limit: 4 });
   mark('format_reports');
   logRetrievalDebug({
@@ -126,6 +139,8 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
     selectedFreeAdviceId: freeAdvice?.mentorId || null,
     paidAdviceCount: paidAdvice.reduce((sum, mentor) => sum + (mentor.adviceItems?.length || 0), 0),
     roleMismatchPenalty: mentorCandidates.debug?.maxRoleMismatchPenalty ?? 0,
+    retrievalStatus: retrievalStatus?.retrievalStatus,
+    retrievalErrorCode: retrievalStatus?.retrievalErrorCode,
     selectedScope: mentorCandidates.debug?.selectedScope || 'mentor_plan',
     rawRows: mentorCandidates.debug?.rawRows ?? 0,
     eligibleRows: mentorCandidates.debug?.eligibleRows ?? 0,
@@ -133,6 +148,7 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
   });
   const lockedPreview = buildLockedAdvicePreview(premiumMentorPlan, internalAtsResult);
   const publicReport = formatPublicFreeReport(internalAtsResult, freeAdvice, lockedPreview, curatedAdvice);
+  publicReport.retrievalStatus = retrievalStatus;
   const premiumReport = {
     ...formatPremiumUnlockedReport(internalAtsResult, {
       ...premiumMentorReport,
@@ -145,6 +161,7 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
       },
     }),
     companyInsiderTips,
+    retrievalStatus,
   };
   mark('format_public_premium');
   logAdvicePlan(freeMentorPlan, premiumMentorPlan, premiumReport.coverageSummary);
@@ -193,6 +210,7 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
     freeAdvice: freeMentorPlan,
     paidAdvice,
     premiumReport,
+    retrievalStatus,
   };
 }
 

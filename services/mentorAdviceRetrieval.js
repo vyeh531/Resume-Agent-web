@@ -5,6 +5,13 @@ const path = require("path");
 const db = require("../database");
 const actionGovernance = require("./actionGovernance");
 const titleGovernance = require("./titleGovernance");
+const { buildRoleProfileFromContext } = require("../src/ats/role-profile");
+const {
+  buildRoleAwareFallbackAdvice,
+  buildRoleLexicon,
+  buildFallbackAdviceForSlot,
+  slotForProblemTag,
+} = require("../src/ats/role-fallback-advice");
 // pg pool is retrieved lazily via db.getPool()
 
 const FALLBACK_FREE_ADVICE = {
@@ -3713,6 +3720,61 @@ async function retrieveMentorAdvice(retrievalQuery = {}, options = {}) {
   return candidates;
 }
 
+async function retrieveMentorAdviceWithStatus(retrievalQuery = {}, options = {}) {
+  const retrieveImpl = options.retrieveImpl || retrieveMentorAdvice;
+  try {
+    const candidates = await retrieveImpl(retrievalQuery, options);
+    const debug = candidates?.debug || {};
+    const status = {
+      retrievalStatus: candidates.length > 0 ? "ok" : "empty",
+      candidateCount: candidates.length || 0,
+      retrievalErrorCode: null,
+      retrievalErrorMessage: null,
+      strictCandidateCount: debug.strictCandidates || 0,
+      fallbackCandidateCount: debug.fallbackCandidates || 0,
+      rawRows: debug.rawRows ?? null,
+      eligibleRows: debug.eligibleRows ?? null,
+      selectedScope: debug.selectedScope || null,
+    };
+    Object.defineProperty(candidates, "retrievalStatus", {
+      enumerable: false,
+      value: status,
+    });
+    return { candidates, status };
+  } catch (error) {
+    const candidates = [];
+    const status = {
+      retrievalStatus: "error",
+      candidateCount: 0,
+      retrievalErrorCode: error?.code || error?.name || "RETRIEVAL_ERROR",
+      retrievalErrorMessage: error?.message || String(error),
+      strictCandidateCount: 0,
+      fallbackCandidateCount: 0,
+      rawRows: null,
+      eligibleRows: null,
+      selectedScope: null,
+    };
+    Object.defineProperty(candidates, "debug", {
+      enumerable: false,
+      value: {
+        strictCandidates: 0,
+        fallbackCandidates: 0,
+        rawRows: null,
+        eligibleRows: null,
+        selectedScope: null,
+        timings: {},
+        retrievalQuery,
+        retrievalStatus: status,
+      },
+    });
+    Object.defineProperty(candidates, "retrievalStatus", {
+      enumerable: false,
+      value: status,
+    });
+    return { candidates, status };
+  }
+}
+
 function selectFreeAdvice(candidates, retrievalQuery = candidates?.debug?.retrievalQuery || {}) {
   const requireResumeIntent = isHighRiskAtsGap(retrievalQuery);
   const governanceContext = {
@@ -5728,7 +5790,33 @@ function selectGlobalAdviceItems(candidates, targetProblemTags, count, coveredTa
   return selectedItems.slice(0, count);
 }
 
+function buildRoleFallbackContext(internalAtsResult = {}, context = {}) {
+  const retrievalQuery = context.retrievalQuery || internalAtsResult.retrievalQuery || {};
+  const targetRole = context.targetRole || context.roleName || internalAtsResult.jobTitle || retrievalQuery.jobTitle || retrievalQuery.targetRole;
+  const roleProfile = context.roleProfile || buildRoleProfileFromContext({
+    internalAtsResult,
+    retrievalQuery,
+    targetRole,
+  });
+  return {
+    retrievalQuery,
+    targetRole,
+    roleProfile,
+    roleLexicon: context.roleLexicon || buildRoleLexicon(roleProfile),
+  };
+}
+
 function fallbackAdviceForObligation(obligation = {}, context = {}) {
+  if (context.useLegacyRoleFallback !== true) {
+    const fallbackContext = buildRoleFallbackContext(context.internalAtsResult || {}, context);
+    const slotId = slotForProblemTag(obligation.tag || obligation.problemTag || "", obligation.coverageFamily || "");
+    if (slotId) {
+      return buildFallbackAdviceForSlot(slotId, fallbackContext.roleLexicon, obligation, {
+        targetRole: fallbackContext.targetRole,
+        displayPriority: ["critical", "high"].includes(obligation.severity) ? 90 : 70,
+      });
+    }
+  }
   const roleName = context.roleName || "目标岗位";
   const targetRole = context.targetRole || roleName;
   const contextKeywords = arrayOf(context.topMissingKeywords || context.missingKeywords)
@@ -5886,6 +5974,34 @@ function fallbackAdviceForObligation(obligation = {}, context = {}) {
 }
 
 function fallbackAdviceItems(internalAtsResult = {}, count = 3, usedTags = new Set(), options = {}) {
+  if (options.useLegacyRoleFallback !== true) {
+    const fallbackContext = buildRoleFallbackContext(internalAtsResult, {
+      retrievalQuery: options.retrievalQuery || internalAtsResult.retrievalQuery,
+      targetRole: options.targetRole || internalAtsResult.jobTitle,
+      roleProfile: options.roleProfile,
+    });
+    const { fallbackAdviceItems: roleAwareItems } = buildRoleAwareFallbackAdvice({
+      internalAtsResult,
+      retrievalQuery: fallbackContext.retrievalQuery,
+      roleProfile: fallbackContext.roleProfile,
+      targetCount: Math.max(count, 9),
+      usedAdviceItems: options.usedAdviceItems || [],
+    });
+    const selectedRoleAware = [];
+    for (const item of roleAwareItems) {
+      if (selectedRoleAware.length >= count) break;
+      const tags = item.relatedProblemTags || item.problemTags || [];
+      const hasUsedTag = tags.some((tag) => usedTags.has(tag));
+      const coverageKey = item.adviceId || `${item.coverageFamily}:${item.actionFamily}`;
+      if (usedTags.has(coverageKey) || (hasUsedTag && selectedRoleAware.length >= Math.min(count, 3))) continue;
+      selectedRoleAware.push(item);
+      usedTags.add(coverageKey);
+      tags.forEach((tag) => usedTags.add(tag));
+    }
+    if (selectedRoleAware.length >= Math.min(count, 7) || options.forceRoleAwareFallback !== false) {
+      return selectedRoleAware.slice(0, count);
+    }
+  }
   const profile = internalAtsResult.profile || {};
   const roleFamily = normalizeTerm(profile.roleFamily || "");
   const targetRole = internalAtsResult.jobTitle || profile.targetRole || "target role";
@@ -8198,6 +8314,7 @@ module.exports = {
   retrieveStrictCandidates,
   retrieveFallbackCandidates,
   retrieveMentorAdvice,
+  retrieveMentorAdviceWithStatus,
   retrieveInsiderTips,
   isDisplayableInsiderKnowledge,
   buildInsiderKnowledgeTip,
