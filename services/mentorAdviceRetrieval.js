@@ -3702,7 +3702,9 @@ async function retrieveMentorAdvice(retrievalQuery = {}, options = {}) {
       rawRows,
       eligibleRows,
       excludedInterviewAdvice,
-      maxRoleMismatchPenalty: candidates.reduce((max, card) => Math.max(max, card.roleMismatchPenalty || 0), 0),
+      maxRoleMismatchPenalty: candidates.length
+        ? candidates.reduce((max, card) => Math.max(max, card.roleMismatchPenalty || 0), 0)
+        : 0,
       selectedScope: candidates[0]?.adviceScope || "fallback",
       timings,
       retrievalQuery,

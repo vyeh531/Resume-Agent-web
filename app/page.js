@@ -49,6 +49,12 @@ export default function HomePage() {
                   </div>
                 </div>
               </label>
+              <span className="input-hint">如果 PDF 无法解析，也可以直接粘贴简历文本。</span>
+            </div>
+
+            <div className="input-group">
+              <label className="input-label">简历文本 <span className="text-mute" style={{fontWeight:400}}>(上传失败时可用)</span></label>
+              <textarea className="textarea" name="resumeText" rows="6" placeholder="如果 PDF / Word 解析失败，可把简历内容粘贴到这里…"></textarea>
             </div>
 
             <div className="input-group">

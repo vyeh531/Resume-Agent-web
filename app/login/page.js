@@ -199,6 +199,17 @@ export default function LoginPage() {
           }
         }
 
+        function markAnalysisFailed(message) {
+          setLoginProgress(100, message || "分析失败，请返回首页重新提交，或改用简历文本粘贴方式。");
+          const pill = document.getElementById("analysisPill");
+          if (pill) pill.innerHTML = '<span class="dot"></span>失败';
+          if (loginButton) {
+            loginButton.disabled = false;
+            loginButton.textContent = "返回首页重新提交";
+            loginButton.onclick = function(){ window.location.href = "/"; };
+          }
+        }
+
         async function pollLoginAnalysis() {
           if (typeof Store === "undefined" || typeof getAnalysisJobAPI !== "function") {
             setTimeout(pollLoginAnalysis, 300);
@@ -221,9 +232,7 @@ export default function LoginPage() {
               return;
             }
             if (job.status === "failed") {
-              setLoginProgress(Math.max(job.progress || 20, 20), "分析失败，请返回首页重新提交。");
-              const pill = document.getElementById("analysisPill");
-              if (pill) pill.innerHTML = '<span class="dot"></span>失败';
+              markAnalysisFailed(job.error ? "分析失败：" + job.error : "分析失败，请返回首页重新提交，或改用简历文本粘贴方式。");
               return;
             }
             const stageText = job.stage === "scoring"
@@ -233,8 +242,11 @@ export default function LoginPage() {
                 : "正在扫描你的履历亮点。";
             setLoginProgress(Math.min(94, job.progress || 12), stageText);
             setTimeout(pollLoginAnalysis, 1200);
-          } catch {
-            setTimeout(pollLoginAnalysis, 1800);
+          } catch (error) {
+            const message = error && (error.code === "JOB_NOT_FOUND" || error.message === "JOB_NOT_FOUND")
+              ? "分析任务已中断，请返回首页重新提交。"
+              : "无法确认分析状态，请返回首页重新提交，或改用简历文本粘贴方式。";
+            markAnalysisFailed(message);
           }
         }
 

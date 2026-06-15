@@ -47,8 +47,11 @@ function showLoader(text, subtext, rotate, options = {}) {
   const progressEl = o.querySelector(".loader-progress-fill");
   const progressLabelEl = o.querySelector(".loader-progress-label");
   const badgeEl = o.querySelector(".loader-badge");
+  const dotsEl = o.querySelector(".loader-dots");
   textEl.textContent    = text    || "";
   subtextEl.textContent = subtext || "";
+  if (dotsEl) dotsEl.style.display = "flex";
+  if (progressEl) progressEl.style.background = "linear-gradient(90deg,#5333A6,#7A52C5,#B47EDB)";
   o.classList.add("show");
 
   // Stop any previous rotation
@@ -126,6 +129,29 @@ function hideLoader() {
   }
   const o = document.querySelector(".loader-overlay");
   if (o) o.classList.remove("show");
+}
+
+function showLoaderError(text, subtext) {
+  showLoader(text || "分析失败", subtext || "请返回首页重新提交，或改用简历文本粘贴方式。", false);
+  if (window.__resumeAppState.loaderRotateTimer) {
+    clearInterval(window.__resumeAppState.loaderRotateTimer);
+    window.__resumeAppState.loaderRotateTimer = null;
+  }
+  if (window.__resumeAppState.loaderProgressTimer) {
+    clearInterval(window.__resumeAppState.loaderProgressTimer);
+    window.__resumeAppState.loaderProgressTimer = null;
+  }
+  const o = document.querySelector(".loader-overlay");
+  if (!o) return;
+  const progressEl = o.querySelector(".loader-progress-fill");
+  const progressLabelEl = o.querySelector(".loader-progress-label");
+  const dotsEl = o.querySelector(".loader-dots");
+  if (progressEl) {
+    progressEl.style.width = "100%";
+    progressEl.style.background = "linear-gradient(90deg,#B42318,#E05243)";
+  }
+  if (progressLabelEl) progressLabelEl.textContent = "ERROR";
+  if (dotsEl) dotsEl.style.display = "none";
 }
 
 function inferTargetJobFromJD(jdText) {
@@ -250,21 +276,23 @@ function extractTargetJobFromJD(jdText) {
 async function submitResume(form) {
   if (window.__resumeAppState.isSubmitting) return false;
   const file     = form.elements["resume"].files[0];
+  const pastedResumeText = (form.elements["resumeText"]?.value || "").trim();
   const job      = form.elements["job"].value.trim();
   const jd       = form.elements["jd"].value.trim();
   const errorBox = form.querySelector(".form-error");
   const btn      = form.querySelector('button[type="submit"]');
-  if (!file) { errorBox.textContent = "请先上传你的简历文件"; errorBox.classList.add("show"); return false; }
+  if (!file && !pastedResumeText) { errorBox.textContent = "请先上传简历文件，或直接粘贴简历文本"; errorBox.classList.add("show"); return false; }
   if (!job && !jd) { errorBox.textContent = "请填写目标岗位或粘贴目标岗位 JD，二选一即可"; errorBox.classList.add("show"); return false; }
   errorBox.classList.remove("show");
   window.__resumeAppState.isSubmitting = true;
   if (btn) btn.disabled = true;
   try {
-    const resumeText = await readResumeFile(file);
+    const resumeText = pastedResumeText || await readResumeFile(file);
+    const resumeName = file?.name || "手动粘贴的简历";
     const targetJob = normalizeTargetJobTitle(job || extractTargetJobFromJD(jd));
-    const analysisJob = await startAnalysisJobAPI(resumeText, targetJob || null, jd, file.name);
+    const analysisJob = await startAnalysisJobAPI(resumeText, targetJob || null, jd, file?.name || "pasted-resume.txt");
     window.Store.set({
-      resumeName: file.name,
+      resumeName,
       jobTitle: targetJob,
       targetLabel: targetJob,
       jdText: jd,
@@ -350,7 +378,7 @@ async function waitForAnalysisJobAndRedirect(btn) {
     return;
   }
   if (!current.analysisJobId || typeof getAnalysisJobAPI !== "function") {
-    showLoader("正在登录…", "3 秒即将跳转…");
+    showLoaderError("分析任务未启动", "请返回首页重新提交，或改用简历文本粘贴方式。");
     if (btn) btn.disabled = false;
     return;
   }
@@ -366,14 +394,17 @@ async function waitForAnalysisJobAndRedirect(btn) {
       return;
     }
     if (job.status === "failed") {
-      hideLoader();
       if (btn) btn.disabled = false;
-      alert("分析失败，请返回首页重新提交。");
+      showLoaderError("分析失败", job.error ? "原因：" + job.error : "请返回首页重新提交，或改用简历文本粘贴方式。");
       return;
     }
     setTimeout(() => waitForAnalysisJobAndRedirect(btn), 1200);
   } catch (err) {
-    setTimeout(() => waitForAnalysisJobAndRedirect(btn), 1800);
+    if (btn) btn.disabled = false;
+    const message = err?.code === "JOB_NOT_FOUND"
+      ? "分析任务已中断，请返回首页重新提交。"
+      : (err?.message || "无法确认分析状态，请返回首页重新提交。");
+    showLoaderError("无法确认分析状态", message);
   }
 }
 
@@ -504,6 +535,7 @@ if (document.readyState === "loading") {
 
 window.submitResume = submitResume;
 window.showLoader = showLoader;
+window.showLoaderError = showLoaderError;
 window.hideLoader = hideLoader;
 window.mockLogin = window.mockLogin || mockLogin;
 window.mockPayment = mockPayment;

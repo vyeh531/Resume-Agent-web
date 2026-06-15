@@ -95,6 +95,7 @@ export default function AnalyzingPage() {
         const stepBoundaries = [25, 55, 80, 100];
         let visualPct = 8;
         let lastKnownJob = null;
+        let analysisStopped = false;
         function applyProgress(pct) {
           pctEl.textContent = pct;
           fillEl.style.width = pct + "%";
@@ -150,6 +151,7 @@ export default function AnalyzingPage() {
               return;
             }
             if (job.status === "failed") {
+              analysisStopped = true;
               subStatusEl.textContent = "分析失败，请返回首页重试";
               Store.set({ analysisJobError: job.error || "analysis failed" });
               return;
@@ -160,6 +162,7 @@ export default function AnalyzingPage() {
           } catch (error) {
             console.warn("[Analysis Job] poll failed", error.message);
             if (error.code === "JOB_NOT_FOUND" || error.message === "JOB_NOT_FOUND") {
+              analysisStopped = true;
               Store.set({
                 analysisJobId: null,
                 analysisJobStatus: "failed",
@@ -168,10 +171,23 @@ export default function AnalyzingPage() {
               subStatusEl.textContent = "分析任务已中断，请返回首页重新提交。";
               return;
             }
-            setTimeout(pollJob, 1800);
+            analysisStopped = true;
+            Store.set({
+              analysisJobStatus: "failed",
+              analysisJobError: error.message || "analysis status polling failed",
+            });
+            subStatusEl.textContent = "无法确认分析状态，请返回首页重新提交，或改用简历文本粘贴方式。";
+            stepEls.forEach((li) => {
+              const status = li.querySelector(".step-status");
+              if (li.dataset.state === "active" && status) status.textContent = "失败";
+            });
           }
         }
         const tick = setInterval(() => {
+          if (analysisStopped) {
+            clearInterval(tick);
+            return;
+          }
           const elapsed = (Date.now() - startedAt) / 1000;
           const cap = lastKnownJob?.status === "completed" ? 100 : 94;
           const pct = Math.min(cap, Math.max(visualPct, Math.floor(12 + elapsed * 3)));
