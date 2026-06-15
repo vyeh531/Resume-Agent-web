@@ -527,11 +527,11 @@ Why this matters:
 - A DB access failure must not be interpreted as retrieval quality failure.
 - `candidateCount = 0` is only valid when retrieval status is `empty`.
 - If `.env` is not loaded, `pg` may fall back to localhost and produce `ECONNREFUSED ::1:5432`; the audit harness now prevents that by loading env files first.
-- True retrieval quality testing for the five desktop cases must run in an environment that both has DB access and is allowed to use those resume/JD-derived retrieval queries.
+- True retrieval quality testing for the desktop JD cases must run in an environment that both has DB access and is allowed to use those resume/JD-derived retrieval queries.
 
 ## Retrieval Quality Fix Pass
 
-Issues found in the first DB-backed five-case audit:
+Issues found in the first DB-backed desktop JD audit:
 
 - Retrieval itself worked, but several cases still had bad advice because title / role context was wrong or too broad.
 - Paid report display could show only 4-6 items even when the curator had 7 items.
@@ -1017,7 +1017,7 @@ Mobile sync notes:
 
 ## Desktop Audit Guard Tightening
 
-Issues observed after the latest five-case audit:
+Issues observed after the latest desktop JD audit:
 
 - Aaron / Investment Banking still allowed CBRE `Data & Financial Analyst` to display broad keyword and repetitive-verb advice.
 - Yuxin / Network Operator still displayed Amazon / DHL logistics mock mentors because logistics mock matching ran before the network / infrastructure override.
@@ -1095,6 +1095,113 @@ Verification:
 - Synthetic check:
   - Generic IB fallback impact advice displays under finance mocks such as Goldman Sachs / JPMorgan, not Amazon.
   - 9 Network Operator fallback items split into Cisco (5) and Microsoft (4).
+- `node scripts/test_advice_curator.js`
+- `node scripts/test_mle_role_safety.js`
+- `npm test`
+- `npm run build`
+
+## Expanded Desktop JD Audit Guards
+
+Issues observed after expanding the desktop audit folder from 5 to 10 JD files:
+
+- Generic `Amazon · Vice President` could still appear for finance, software engineering, backend, and production-technology roles.
+- Data Engineering JD could be displayed under broad analyst / data-science mentors such as CBRE `Data & Financial Analyst` or Polarr/Facebook `Lead Data Scientist`, instead of data engineering / platform / cloud lenses.
+- `Data Engineering` could be inferred as generic software too early because the title contains `Engineering`.
+
+Fixes:
+
+- `services/adviceCurator.js`
+  - Role inference now detects `Data Engineer / Data Engineering / Analytics Engineer / ETL / Data Platform / Data Pipeline` before the generic software-engineer match.
+  - Added data engineering role-aware mock mentors:
+    - Databricks · Data Engineer
+    - Snowflake · Data Platform Engineer
+  - Added generic-executive guard:
+    - Broad titles like `Vice President`, `VP`, `Founder`, `CEO`, or `Director` are blocked for finance / technical / network roles unless the mentor identity has a clear functional signal.
+  - Added data engineering mentor guard:
+    - Data Engineering targets block broad Data Scientist / Data Analyst / Data & Financial Analyst mentors unless the mentor identity itself has data engineering, platform, cloud, backend, or infrastructure signal.
+  - Added final unsafe-displayed-group cleanup:
+    - Even if an unsafe original DB mentor group was already formed, report construction now moves its advice to a safe role-aware mock or explainable mentor.
+  - Preserved attribution contract:
+    - Safe original mentors such as UBS on accounting/finance can remain `verified_original`.
+    - Forbidden role-drift originals, such as finance mentors for MLE, are still moved away.
+- `scripts/test_advice_curator.js`
+  - Added regressions for:
+    - Software Engineer generic advice must not display under Amazon VP.
+    - Data Engineering advice must display under Databricks / Snowflake instead of CBRE / Polarr.
+    - Safe verified original attribution remains intact.
+    - Forbidden role-drift original mentors are not preserved.
+
+Verification:
+
+- Synthetic check:
+  - Software Engineer advice displays under Google / Microsoft, not Amazon VP.
+  - Data Engineering advice displays under Databricks / Snowflake.
+  - Investment Banking advice displays under Goldman Sachs / JPMorgan, not Amazon VP.
+- `node scripts/test_advice_curator.js`
+- `node scripts/test_mle_role_safety.js`
+- `npm test`
+- `npm run build`
+
+## Generic Executive Guard Expansion
+
+Issue observed after rerunning the 10-JD desktop audit:
+
+- Amazon `Vice President` still appeared in several reports.
+- The guard was already effective for synthetic finance/software/data cases, but the product rule should be broader:
+  - Generic executive titles without function signal should not display for any specialized target function.
+  - Specialized targets should use role-aware mentors or role-aware mock mentors.
+
+Fixes:
+
+- `services/adviceCurator.js`
+  - Added `isSpecializedTargetContext()`.
+  - Generic executives are now blocked for any specialized function cluster, not only finance / technical / network.
+  - Marketing fallback advice now routes to Meta / Google marketing mock lenses instead of Amazon `Vice President`.
+  - Software, finance, and data engineering behavior remains:
+    - Software -> Google / Microsoft.
+    - Investment Banking -> Goldman Sachs / JPMorgan.
+    - Data Engineering -> Databricks / Snowflake.
+- `scripts/test_advice_curator.js`
+  - Added regression that Marketing Specialist advice must not preserve Amazon `Vice President`.
+
+Verification:
+
+- Synthetic check:
+  - Marketing Specialist -> Meta / Google.
+  - Software Engineer -> Google / Microsoft.
+  - Investment Banking Analyst -> Goldman Sachs / JPMorgan.
+  - Data Engineering -> Databricks / Snowflake.
+- `node scripts/test_advice_curator.js`
+- `node scripts/test_mle_role_safety.js`
+- `npm test`
+- `npm run build`
+
+## Final Unsafe Group Cleanup
+
+Issue observed after another 10-JD audit:
+
+- Synthetic item-level routing correctly moved Amazon `Vice President` away from finance/software/data roles.
+- However, DB-backed report groups that had already formed could still survive into the final `reportPageMentorGroups`.
+- Data Engineering could also keep a finance mentor group for a generic risk/boundary item after earlier group construction.
+
+Fixes:
+
+- `services/adviceCurator.js`
+  - Added `isHardUnsafeReportGroup()`.
+  - Added `hardCleanUnsafeReportGroups()` immediately before final lens refresh/title de-dupe.
+  - Final report groups now get rechecked after all grouping, missing-item fill, replacement, and redistribution steps.
+  - Hard cleanup moves:
+    - generic executives in specialized roles;
+    - finance mentors in non-finance/non-accounting roles when they lack a relevant functional signal;
+    - non-data-engineering mentors in Data Engineering reports.
+  - Moved items are reassigned to role-aware mock mentors and retain stitched attribution metadata.
+- `scripts/test_advice_curator.js`
+  - Added regression that formed Data Engineering report groups cannot keep Amazon VP or Morgan Stanley finance groups.
+
+Verification:
+
+- Synthetic check:
+  - Data Engineering report with preformed Amazon VP and Morgan Stanley groups is rewritten to Databricks / Snowflake.
 - `node scripts/test_advice_curator.js`
 - `node scripts/test_mle_role_safety.js`
 - `npm test`

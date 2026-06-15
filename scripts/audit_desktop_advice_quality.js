@@ -143,9 +143,10 @@ async function runCase({ resumeText, jdPath }) {
 
 function writeMarkdown(results, inputDir) {
   const lines = [];
-  lines.push("# MentorX Advice Quality Audit - Desktop Cases");
+  lines.push("# MentorX Advice Quality Audit - Desktop JD Cases");
   lines.push("");
   lines.push(`Input folder: \`${inputDir}\``);
+  lines.push(`Case count: ${results.length}`);
   lines.push("");
   lines.push("| Case | Job title | Retrieval status | Candidates | Free items | Paid items |");
   lines.push("| --- | --- | --- | ---: | ---: | ---: |");

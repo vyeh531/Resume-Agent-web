@@ -336,8 +336,8 @@ function runAccountantMentorDisplayFitTest() {
   assert.ok(item, "expected accountant positioning advice");
   assert.equal(item.originalMentorSource.company, "Neurotech");
   assert.notEqual(item.displayedMentorSource.company, "Neurotech");
-  assert.ok(["UBS", "Barclays", "MentorX"].includes(item.displayedMentorSource.company), item.displayedMentorSource.company);
-  assert.ok(["stitched_lens", "mentorx_strategy"].includes(item.attributionMode), item.attributionMode);
+  assert.ok(["UBS", "Barclays", "Deloitte", "PwC"].includes(item.displayedMentorSource.company), item.displayedMentorSource.company);
+  assert.equal(item.attributionMode, "stitched_lens");
   assert.ok(!/该导师建议/.test(item.sourceDisclosure), item.sourceDisclosure);
 }
 
@@ -690,6 +690,79 @@ function runFinanceAndNetworkDataMentorBlockTest() {
   } });
   const broadImpactItem = broadNonFinanceResult.curatedAdviceItems.find((item) => item.adviceId === "ib_generic_impact");
   assert.notEqual(broadImpactItem.displayedMentorSource.company, "Amazon", JSON.stringify(broadImpactItem.displayedMentorSource));
+
+  const softwareVpResult = curateMentorAdvicePlan({ ...makeContext({
+    jobTitle: "Software Engineer",
+    problemTags: [{ tag: "low_measurable_results", severity: "high" }],
+  }), mentorReport: {
+    mentors: [
+      { ...amazonVp, adviceItems: [] },
+      {
+        ...mentorXSource,
+        adviceItems: [makeItem("swe_generic_impact", {
+          title: "补上规模、频率和效率",
+          action: "Add latency, reliability, throughput, or user impact metrics to the software engineering bullet.",
+          coverageFamily: "impact_metrics",
+          actionFamily: "impact_metrics",
+          source: "fallback",
+          mentorSource: mentorXSource,
+          originalMentorSource: mentorXSource,
+          relatedProblemTags: ["low_measurable_results"],
+        })],
+      },
+    ],
+  } });
+  const softwareImpactItem = softwareVpResult.curatedAdviceItems.find((item) => item.adviceId === "swe_generic_impact");
+  assert.notEqual(softwareImpactItem.displayedMentorSource.company, "Amazon", JSON.stringify(softwareImpactItem.displayedMentorSource));
+
+  const marketingVpResult = curateMentorAdvicePlan({ ...makeContext({
+    jobTitle: "Marketing Specialist",
+    problemTags: [{ tag: "weak_target_role_alignment", severity: "high" }],
+  }), mentorReport: {
+    mentors: [
+      { ...amazonVp, adviceItems: [makeItem("marketing_vp_positioning", {
+        title: "补上目标岗位原词",
+        action: "Rework Summary and Skills around campaign, CRM, growth, and content evidence.",
+        coverageFamily: "positioning",
+        actionFamily: "summary_positioning",
+        source: "db_adapted",
+        mentorSource: amazonVp,
+        originalMentorSource: amazonVp,
+        relatedProblemTags: ["weak_target_role_alignment"],
+      })] },
+    ],
+  } });
+  const marketingVpItem = marketingVpResult.curatedAdviceItems.find((item) => item.adviceId === "marketing_vp_positioning");
+  assert.notEqual(marketingVpItem.displayedMentorSource.company, "Amazon", JSON.stringify(marketingVpItem.displayedMentorSource));
+
+  const dataEngineeringResult = curateMentorAdvicePlan({ ...makeContext({
+    jobTitle: "technical leader in our Data Engineering team",
+    problemTags: [{ tag: "weak_experience_keyword_evidence", severity: "high" }],
+  }), mentorReport: {
+    mentors: [
+      { ...cbreDataFinance, adviceItems: [] },
+      { ...polarrData, adviceItems: [] },
+      {
+        ...mentorXSource,
+        adviceItems: [makeItem("data_eng_evidence", {
+          title: "补强经历里的动作和交付",
+          action: "Rewrite the bullet with ETL, data pipeline, Spark, Airflow, SQL, and platform reliability deliverables.",
+          coverageFamily: "experience_evidence",
+          actionFamily: "experience_bullet_evidence",
+          source: "fallback",
+          mentorSource: mentorXSource,
+          originalMentorSource: mentorXSource,
+          relatedProblemTags: ["weak_experience_keyword_evidence"],
+        })],
+      },
+    ],
+  } });
+  const dataEngineeringItem = dataEngineeringResult.curatedAdviceItems.find((item) => item.adviceId === "data_eng_evidence");
+  assert.ok(["Databricks", "Snowflake"].includes(dataEngineeringItem.displayedMentorSource.company), JSON.stringify(dataEngineeringItem.displayedMentorSource));
+  const dataEngineeringCompanies = new Set(dataEngineeringResult.reportPageMentorGroups.map((group) => group.company));
+  assert.ok(!dataEngineeringCompanies.has("Amazon"), [...dataEngineeringCompanies].join(","));
+  assert.ok(!dataEngineeringCompanies.has("Morgan Stanley"), [...dataEngineeringCompanies].join(","));
+  assert.ok(dataEngineeringCompanies.has("Databricks") || dataEngineeringCompanies.has("Snowflake"), [...dataEngineeringCompanies].join(","));
 
   const networkResult = curateMentorAdvicePlan({ ...makeContext({
     jobTitle: "网络运营专员 Network Operator (Junior full-time)",

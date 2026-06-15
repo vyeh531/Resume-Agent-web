@@ -130,6 +130,8 @@ function roleProfileFromContext(context = {}) {
     functionCluster = "accounting";
   } else if (/finance|financial|fp&a|valuation|treasury|investment|bank|é‡‘èž|è´¢åŠ¡|è²¡å‹™/.test(`${targetText} ${roleFamilyText}`)) {
     functionCluster = "finance";
+  } else if (/data engineer|data engineering|analytics engineer|etl|data platform|data pipeline|数据工程|資料工程/.test(`${targetText} ${roleFamilyText}`)) {
+    functionCluster = "data";
   } else if (/software|developer|engineer|frontend|backend|fullstack|swe|sde|å¼€å‘|å·¥ç¨‹/.test(`${targetText} ${roleFamilyText}`)) {
     functionCluster = "software";
   } else if (/data|analytics|business analyst|sql|tableau|æ•°æ®|è³‡æ–™|åˆ†æž/.test(`${targetText} ${roleFamilyText}`)) {
@@ -164,9 +166,9 @@ function roleProfileFromContext(context = {}) {
       forbiddenDriftClusters: ["accounting", "audit", "tax", "finance_operations", "investment_research", "compliance", "finance"],
     },
     data: {
-      adjacentClusters: ["analytics", "business", "finance", "product", "operations"],
-      skillClusters: ["sql", "tableau", "power_bi", "excel", "reporting", "analytics"],
-      forbiddenDriftClusters: ["software_deep", "design"],
+      adjacentClusters: ["analytics", "data_engineering", "software", "cloud_infrastructure", "product"],
+      skillClusters: ["sql", "python", "etl", "data_pipeline", "analytics", "cloud"],
+      forbiddenDriftClusters: ["design", "accounting", "audit", "tax"],
     },
     design: {
       adjacentClusters: ["product", "portfolio", "marketing", "creative"],
@@ -217,6 +219,7 @@ function clustersForText(value = "") {
   add("quant_trading", /quant|trading|trader|risk quant|é‡åŒ–|äº¤æ˜“/);
   add("compliance", /compliance|control|regulatory|risk management|åˆè§„|åˆè¦|å†…æŽ§|å…§æŽ§/);
   add("software", /software|developer|engineer|frontend|backend|fullstack|api|java|python|google|amazon|aws|meta|microsoft|openai|anyscale|å¼€å‘|å·¥ç¨‹/);
+  add("data_engineering", /data engineer|data engineering|analytics engineer|etl|data pipeline|data platform|spark|airflow|dbt|snowflake|databricks|bigquery/);
   add("machine_learning", /machine learning|\bml\b|\bmle\b|deep learning|pytorch|tensorflow|model|llm|nlp|computer vision/);
   add("model_evaluation", /evaluation|accuracy|precision|recall|f1|auc|metric/);
   add("ml_deployment", /deployment|serving|pipeline|mlops|cloud|docker|api/);
@@ -332,6 +335,30 @@ function roleAwareMockMentors(context = {}) {
       },
     ];
   }
+  if (family === "accounting" || functionCluster === "accounting") {
+    return [
+      {
+        mentorId: "mock_deloitte_accounting",
+        mentorName: "Deloitte 会计视角",
+        company: "Deloitte",
+        companyLogo: null,
+        mentorTitle: "Audit & Assurance Senior",
+        mentorSubtitle: "模拟大厂审计会计视角",
+        badges: ["accounting", "audit", "financial reporting", "reconciliation"],
+        isMockMentor: true,
+      },
+      {
+        mentorId: "mock_pwc_accounting",
+        mentorName: "PwC 会计视角",
+        company: "PwC",
+        companyLogo: null,
+        mentorTitle: "Accounting Advisory Associate",
+        mentorSubtitle: "模拟大厂会计咨询视角",
+        badges: ["accounting advisory", "month-end close", "compliance", "reporting"],
+        isMockMentor: true,
+      },
+    ];
+  }
   if (isFinanceTargetContext({ ...context, roleProfile })) {
     return [
       {
@@ -356,30 +383,6 @@ function roleAwareMockMentors(context = {}) {
       },
     ];
   }
-  if (family === "accounting") {
-    return [
-      {
-        mentorId: "mock_deloitte_accounting",
-        mentorName: "Deloitte 会计视角",
-        company: "Deloitte",
-        companyLogo: null,
-        mentorTitle: "Audit & Assurance Senior",
-        mentorSubtitle: "模拟大厂审计会计视角",
-        badges: ["accounting", "audit", "financial reporting", "reconciliation"],
-        isMockMentor: true,
-      },
-      {
-        mentorId: "mock_pwc_accounting",
-        mentorName: "PwC 会计视角",
-        company: "PwC",
-        companyLogo: null,
-        mentorTitle: "Accounting Advisory Associate",
-        mentorSubtitle: "模拟大厂会计咨询视角",
-        badges: ["accounting advisory", "month-end close", "compliance", "reporting"],
-        isMockMentor: true,
-      },
-    ];
-  }
   if (functionCluster === "marketing" || family === "marketing") {
     return [
       {
@@ -400,6 +403,31 @@ function roleAwareMockMentors(context = {}) {
         mentorTitle: "Brand Marketing Manager",
         mentorSubtitle: "模拟大厂品牌营销视角",
         badges: ["brand marketing", "campaign", "audience insight", "cross-functional"],
+        isMockMentor: true,
+      },
+    ];
+  }
+  if (functionCluster === "data" || family === "data_engineer" || family === "data_analyst" ||
+    /data engineer|data engineering|analytics engineer|etl|data platform|data pipeline/.test(text)) {
+    return [
+      {
+        mentorId: "mock_databricks_data_engineering",
+        mentorName: "Databricks 数据工程视角",
+        company: "Databricks",
+        companyLogo: null,
+        mentorTitle: "Data Engineer",
+        mentorSubtitle: "模拟大厂数据工程视角",
+        badges: ["data engineering", "Spark", "ETL", "data pipeline"],
+        isMockMentor: true,
+      },
+      {
+        mentorId: "mock_snowflake_data_platform",
+        mentorName: "Snowflake 数据平台视角",
+        company: "Snowflake",
+        companyLogo: null,
+        mentorTitle: "Data Platform Engineer",
+        mentorSubtitle: "模拟大厂数据平台视角",
+        badges: ["data platform", "SQL", "warehouse", "pipeline reliability"],
         isMockMentor: true,
       },
     ];
@@ -615,10 +643,42 @@ function scoreMentorDisplayFit(item = {}, mentor = {}, context = {}, originalSou
 
 function selectDisplayedMentorForAdvice(item = {}, mentorPool = [], context = {}, originalSource = null) {
   const candidates = asArray(mentorPool).length ? mentorPool : [originalSource, MENTORX_SOURCE].filter(Boolean);
+  const explicitDisplayed = cleanMentorSource(item.displayedMentorSource);
+  if (explicitDisplayed &&
+    !isMentorXProfile(explicitDisplayed) &&
+    !isUnexplainableExternalMentor(explicitDisplayed, context) &&
+    !isRoleFamilyUnsafeDisplayedMentor(explicitDisplayed, item, context) &&
+    !isWeakDataAnalyticsMentorForTarget(explicitDisplayed, item, context)) {
+    const scored = scoreMentorDisplayFit(item, explicitDisplayed, context, originalSource);
+    return {
+      displayedMentorSource: explicitDisplayed,
+      mentorDisplayFit: scored.fit,
+      mentorFitReason: scored.reason,
+      displayMentorScore: Math.round(scored.score),
+    };
+  }
+  const cleanOriginal = cleanMentorSource(originalSource);
+  if (shouldPreserveOriginalMentorSource(cleanOriginal, item, context)) {
+    const originalScore = scoreMentorDisplayFit(item, cleanOriginal, context, originalSource);
+    return {
+      displayedMentorSource: cleanOriginal,
+      mentorDisplayFit: originalScore.fit,
+      mentorFitReason: originalScore.reason,
+      displayMentorScore: Math.round(originalScore.score),
+    };
+  }
   const scored = candidates
     .map((mentor) => scoreMentorDisplayFit(item, mentor, context, originalSource))
     .sort((a, b) => b.score - a.score || (sameMentorSource(a.mentor, originalSource) ? -1 : 1));
-  const viableExternal = scored.find((candidate) =>
+  const viableRealExternal = scored.find((candidate) =>
+    !isRoleAwareMockMentor(candidate.mentor) &&
+    !isMentorXProfile(candidate.mentor) &&
+    !isUnexplainableExternalMentor(candidate.mentor, context) &&
+    !isRoleFamilyUnsafeDisplayedMentor(candidate.mentor, item, context) &&
+    !isWeakDataAnalyticsMentorForTarget(candidate.mentor, item, context) &&
+    candidate.score >= (context.avoidMentorXDisplay ? 25 : 35)
+  );
+  const viableExternal = viableRealExternal || scored.find((candidate) =>
     !isMentorXProfile(candidate.mentor) &&
     !isUnexplainableExternalMentor(candidate.mentor, context) &&
     !isRoleFamilyUnsafeDisplayedMentor(candidate.mentor, item, context) &&
@@ -750,8 +810,40 @@ function hasNetworkInfraMentorSignal(mentor = {}) {
   return /network|noc\b|infrastructure|cloud|site reliability|sre\b|devops|systems engineer|it operations|security operations|telecom|routing|tcp\/ip/.test(mentorDescriptorText(mentor));
 }
 
+function hasTechnicalMentorSignal(mentor = {}) {
+  return /software|engineer|developer|backend|frontend|fullstack|infrastructure|cloud|platform|systems|sre\b|devops|data engineer|data engineering|machine learning|ml engineer|ai engineer|technical|production technology/.test(mentorDescriptorText(mentor));
+}
+
+function isTechnicalTargetContext(context = {}) {
+  const roleProfile = context.roleProfile || roleProfileFromContext(context);
+  const family = roleProfile.canonicalRoleFamily || roleProfile.roleFamily || "";
+  const functionCluster = roleProfile.functionCluster || "";
+  const text = targetRoleText({ ...context, roleProfile });
+  return ["software", "machine_learning", "data", "cloud_infrastructure", "network_operations", "it_operations"].includes(functionCluster) ||
+    /software|developer|engineer|backend|frontend|fullstack|data engineer|data engineering|machine learning|\bmle\b|ai engineer|network operator|infrastructure|production technology|技术|技術|工程/.test(`${family} ${text}`);
+}
+
+function isSpecializedTargetContext(context = {}) {
+  const roleProfile = context.roleProfile || roleProfileFromContext(context);
+  const functionCluster = roleProfile.functionCluster || "";
+  if (!functionCluster || ["general", "business"].includes(functionCluster)) return false;
+  return true;
+}
+
+function isDataEngineeringTargetContext(context = {}) {
+  const roleProfile = context.roleProfile || roleProfileFromContext(context);
+  const family = roleProfile.canonicalRoleFamily || roleProfile.roleFamily || "";
+  const functionCluster = roleProfile.functionCluster || "";
+  const text = targetRoleText({ ...context, roleProfile });
+  return functionCluster === "data" && /data engineer|data engineering|analytics engineer|etl|data platform|data pipeline|数据工程|資料工程/.test(`${family} ${text}`);
+}
+
 function isDataOrAnalyticsMentor(mentor = {}) {
   return /data scientist|data analyst|data\s*&\s*financial analyst|analytics|business analytics|machine learning|ml engineer|ai engineer|data science/.test(mentorDescriptorText(mentor));
+}
+
+function isBroadDataScienceOrAnalystMentor(mentor = {}) {
+  return /data scientist|lead data scientist|data analyst|data\s*&\s*financial analyst|business analytics/.test(mentorDescriptorText(mentor));
 }
 
 function hasFinanceAdviceSignal(item = {}) {
@@ -766,14 +858,38 @@ function isBroadDataFinancialMentor(mentor = {}) {
   return /data\s*&\s*financial analyst|data and financial analyst|cbre/.test(mentorDescriptorText(mentor));
 }
 
+function isGenericExecutiveMentor(mentor = {}) {
+  const text = mentorDescriptorText(mentor);
+  if (!/\b(vp|vice president|founder|ceo|chief executive|director|general manager|president)\b/.test(text)) return false;
+  if (hasFinanceMentorSignal(mentor) || hasTechnicalMentorSignal(mentor) || hasNetworkInfraMentorSignal(mentor)) return false;
+  return !/software|engineer|engineering|data|analytics|machine learning|\bml\b|ai|finance|financial|investment|banking|marketing|growth|brand|operations|logistics|network|infrastructure|cloud|product/.test(text);
+}
+
 function isRoleFamilyUnsafeDisplayedMentor(mentor = {}, item = {}, context = {}) {
   if (!mentor || isMentorXProfile(mentor)) return false;
+  if (isGenericExecutiveMentor(mentor) && isSpecializedTargetContext(context)) return true;
   if (isFinanceTargetContext(context) && !hasFinanceMentorSignal(mentor) && !isRoleAwareMockMentor(mentor)) return true;
+  if (isTechnicalTargetContext(context) && isGenericExecutiveMentor(mentor) && !hasTechnicalMentorSignal(mentor) && !isRoleAwareMockMentor(mentor)) return true;
+  if (isDataEngineeringTargetContext(context) && isBroadDataScienceOrAnalystMentor(mentor) && !/data engineer|data engineering|platform|cloud|backend|infrastructure/.test(mentorDescriptorText(mentor))) return true;
   if (!isDataOrAnalyticsMentor(mentor)) return false;
   if (isNetworkInfraTargetContext(context) && !hasNetworkInfraMentorSignal(mentor)) return true;
   if (isFinanceTargetContext(context) && isBroadDataFinancialMentor(mentor) && !hasStrictFinanceFunctionAdviceSignal(item)) return true;
   if (isFinanceTargetContext(context) && (!hasFinanceMentorSignal(mentor) || !hasFinanceAdviceSignal(item))) return true;
   return false;
+}
+
+function shouldPreserveOriginalMentorSource(mentor = {}, item = {}, context = {}) {
+  if (!mentor || isMentorXProfile(mentor)) return false;
+  const roleProfile = context.roleProfile || roleProfileFromContext(context);
+  const mentorClusters = inferMentorClusters(mentor);
+  if (asArray(roleProfile.forbiddenDriftClusters).some((cluster) => mentorClusters.includes(cluster))) return false;
+  if (isUnexplainableExternalMentor(mentor, context)) return false;
+  if (isGenericExecutiveMentor(mentor) && isSpecializedTargetContext(context)) return false;
+  if (isFinanceTargetContext(context) && !hasFinanceMentorSignal(mentor)) return false;
+  if (isNetworkInfraTargetContext(context) && !hasNetworkInfraMentorSignal(mentor)) return false;
+  if (isDataEngineeringTargetContext(context) && isBroadDataScienceOrAnalystMentor(mentor) && !/data engineer|data engineering|platform|cloud|backend|infrastructure/.test(mentorDescriptorText(mentor))) return false;
+  if (isWeakDataAnalyticsMentorForTarget(mentor, item, context)) return false;
+  return true;
 }
 
 function isWeakDataAnalyticsMentorForTarget(mentor = {}, item = {}, context = {}) {
@@ -1655,6 +1771,129 @@ function balanceRoleAwareMockGroups(groups = [], context = {}, softCap = 5) {
   return output.filter((group) => asArray(group.adviceItems).length);
 }
 
+function replaceUnsafeDisplayedGroups(groups = [], context = {}) {
+  const output = [];
+  const groupForMentor = (mentor) => {
+    const key = mentorGroupKey(mentor);
+    let group = output.find((candidate) => mentorGroupKey(candidate) === key);
+    if (!group) {
+      group = {
+        mentorId: mentor.mentorId || key,
+        mentorName: mentor.mentorName || "导师",
+        company: mentor.company || "",
+        companyLogo: mentorLogoFor(mentor),
+        mentorTitle: mentor.mentorTitle || "",
+        mentorSubtitle: mentor.mentorSubtitle || "",
+        careerPathDisplay: mentor.careerPathDisplay || null,
+        badges: mentor.badges || [],
+        matchReason: "",
+        matchedProblems: [],
+        adviceItems: [],
+      };
+      output.push(group);
+    }
+    return group;
+  };
+
+  for (const group of groups) {
+    for (const item of asArray(group.adviceItems)) {
+      const unsafe = isRoleFamilyUnsafeDisplayedMentor(group, item, context) ||
+        isWeakDataAnalyticsMentorForTarget(group, item, context) ||
+        isUnexplainableExternalMentor(group, context);
+      let displayed = cleanMentorSource(group);
+      let displayFit = null;
+      if (unsafe) {
+        const mockFit = selectRoleAwareMockDisplayedMentor(item, context, context.mentorPool || []);
+        displayed = cleanMentorSource(mockFit?.mentor);
+        displayFit = mockFit;
+      }
+      if (!displayed || isMentorXProfile(displayed)) continue;
+      const targetGroup = groupForMentor(displayed);
+      if (targetGroup.adviceItems.some((existing) => adviceExactKey(existing) === adviceExactKey(item))) continue;
+      const attributionMode = inferAttributionMode(item, item.originalMentorSource, displayed);
+      targetGroup.adviceItems.push({
+        ...item,
+        mentorSource: displayed,
+        displayedMentorSource: displayed,
+        attributionMode,
+        sourceDisclosure: sourceDisclosureFor(attributionMode),
+        mentorDisplayFit: displayFit?.fit || item.mentorDisplayFit,
+        mentorFitReason: displayFit?.reason || item.mentorFitReason,
+        displayMentorScore: Math.round(displayFit?.score || item.displayMentorScore || 0),
+      });
+    }
+  }
+  return output.filter((group) => asArray(group.adviceItems).length);
+}
+
+function isHardUnsafeReportGroup(group = {}, item = {}, context = {}) {
+  if (!group || isMentorXProfile(group)) return false;
+  if (isGenericExecutiveMentor(group) && isSpecializedTargetContext(context)) return true;
+  const roleProfile = context.roleProfile || roleProfileFromContext(context);
+  const functionCluster = roleProfile.functionCluster || "";
+  if (functionCluster !== "finance" && functionCluster !== "accounting" && hasFinanceMentorSignal(group)) {
+    const groupText = mentorDescriptorText(group);
+    if (!/marketing|growth|brand|software|engineer|data engineer|data engineering|machine learning|ml engineer|ai engineer|network|infrastructure|cloud|operations|logistics/.test(groupText)) {
+      return true;
+    }
+  }
+  if (isDataEngineeringTargetContext(context) && !isRoleAwareMockMentor(group) && !/data engineer|data engineering|data platform|platform engineer|cloud|backend|infrastructure/.test(mentorDescriptorText(group))) {
+    return true;
+  }
+  return false;
+}
+
+function hardCleanUnsafeReportGroups(groups = [], context = {}) {
+  const output = [];
+  const groupForMentor = (mentor) => {
+    const key = mentorGroupKey(mentor);
+    let group = output.find((candidate) => mentorGroupKey(candidate) === key);
+    if (!group) {
+      group = {
+        mentorId: mentor.mentorId || key,
+        mentorName: mentor.mentorName || "导师",
+        company: mentor.company || "",
+        companyLogo: mentorLogoFor(mentor),
+        mentorTitle: mentor.mentorTitle || "",
+        mentorSubtitle: mentor.mentorSubtitle || "",
+        careerPathDisplay: mentor.careerPathDisplay || null,
+        badges: mentor.badges || [],
+        matchReason: "",
+        matchedProblems: [],
+        adviceItems: [],
+      };
+      output.push(group);
+    }
+    return group;
+  };
+
+  for (const group of groups) {
+    for (const item of asArray(group.adviceItems)) {
+      let displayed = cleanMentorSource(group);
+      let fit = null;
+      if (isHardUnsafeReportGroup(group, item, context)) {
+        fit = selectRoleAwareMockDisplayedMentor(item, context, context.mentorPool || []);
+        displayed = cleanMentorSource(fit?.mentor);
+      }
+      if (!displayed || isMentorXProfile(displayed)) continue;
+      const targetGroup = groupForMentor(displayed);
+      if (targetGroup.adviceItems.some((existing) => adviceExactKey(existing) === adviceExactKey(item))) continue;
+      const attributionMode = inferAttributionMode(item, item.originalMentorSource, displayed);
+      targetGroup.adviceItems.push({
+        ...item,
+        mentorSource: displayed,
+        displayedMentorSource: displayed,
+        attributionMode,
+        sourceDisclosure: sourceDisclosureFor(attributionMode),
+        mentorDisplayFit: fit?.fit || item.mentorDisplayFit,
+        mentorFitReason: fit?.reason || item.mentorFitReason,
+        displayMentorScore: Math.round(fit?.score || item.displayMentorScore || 0),
+      });
+    }
+  }
+  return output.filter((group) => asArray(group.adviceItems).length);
+}
+
 function replaceMentorXDisplayedGroups(groups = [], context = {}) {
   const output = groups.filter((group) => !isMentorXProfile(group)).map((group) => ({ ...group, adviceItems: asArray(group.adviceItems).slice() }));
   const groupForMentor = (mentor) => {
@@ -2408,8 +2647,11 @@ function buildReportPageMentorGroups(curatedItems = [], originalMentors = [], co
   }
   const noMentorXGroups = replaceMentorXDisplayedGroups(limitedGroups, context);
   const balancedExternalGroups = redistributeOverloadedMentorGroups(noMentorXGroups, context, 5);
-  const balancedGroups = balanceRoleAwareMockGroups(balancedExternalGroups, context, 5);
-  const refreshedGroups = balancedGroups.map((group) => {
+  const safeGroups = replaceUnsafeDisplayedGroups(balancedExternalGroups, context);
+  const balancedGroups = balanceRoleAwareMockGroups(safeGroups, context, 5);
+  const hardSafeGroups = hardCleanUnsafeReportGroups(balancedGroups, context);
+  const finalBalancedGroups = balanceRoleAwareMockGroups(hardSafeGroups, context, 5);
+  const refreshedGroups = finalBalancedGroups.map((group) => {
     const lens = inferMentorGroupLens(group.adviceItems, group, context.targetRole);
     const modes = unique(group.adviceItems.map((item) => item.attributionMode || "verified_original"));
     const attributionMode = modes.length === 1 ? modes[0] : (modes.includes("stitched_lens") ? "stitched_lens" : "verified_original");

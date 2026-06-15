@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-06-15T08:56:47.592Z",
+  "generatedAt": "2026-06-15T11:14:58.819Z",
   "inputDir": "C:\\Users\\viviy\\Desktop\\新增資料夾",
   "resumeFile": "C:\\Users\\viviy\\Desktop\\新增資料夾\\Aaron_Li_Resume.pdf",
-  "caseCount": 5,
+  "caseCount": 10,
   "results": [
     {
       "caseName": "Aaron Li JD",
@@ -61,12 +61,12 @@
       "paidAdviceCount": 10,
       "reportMentorGroups": [
         {
-          "mentorId": "mentor_10_f導師",
-          "mentorName": "F導師",
-          "company": "UBS",
-          "mentorTitle": "Associate Director",
+          "mentorId": "mock_jpmorgan_ib",
+          "mentorName": "JPMorgan 投行视角",
+          "company": "JPMorgan",
+          "mentorTitle": "Investment Banking Associate",
           "mentorGroupLens": "成果量化视角",
-          "adviceCount": 1,
+          "adviceCount": 5,
           "adviceItems": [
             {
               "adviceId": "seg_4158",
@@ -78,17 +78,7 @@
               "attributionMode": "verified_original",
               "sourceDisclosure": "来源：该导师建议",
               "action": "为核心 bullet 补充数量、频率、规模、效率或结果，例如处理量、覆盖范围、故障率、响应时间、转化率或节省成本。"
-            }
-          ]
-        },
-        {
-          "mentorId": "mentor_1_z導師",
-          "mentorName": "Z導師",
-          "company": "Morgan Stanley",
-          "mentorTitle": "FICC derivatives Asset management,VP",
-          "mentorGroupLens": "Junior 背景补强视角",
-          "adviceCount": 5,
-          "adviceItems": [
+            },
             {
               "adviceId": "seg_4205",
               "title": "把训练背景写成岗位证据",
@@ -112,49 +102,6 @@
               "action": "如果这段经历是实习，请在 title 中明确标注 Intern / Internship；如果是项目制经历，在 bullet 中说明项目周期、职责边界和最终产出。"
             },
             {
-              "adviceId": "rolefb_asset_management_analyst_keyword_gap",
-              "title": "整理 Skills 关键词",
-              "coverageFamily": "keyword",
-              "actionFamily": "skills_keyword_ordering",
-              "targetSection": "skills",
-              "source": "fallback",
-              "attributionMode": "stitched_lens",
-              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
-              "action": "对照 JD 提取真实掌握的 business process、operations、strategy、workflow，优先放入 Summary、Skills 和最相关经历，不要只堆在一个技能列表里。"
-            },
-            {
-              "adviceId": "uncovered_missing exp location",
-              "title": "补强经历里的动作和交付",
-              "coverageFamily": "experience_evidence",
-              "actionFamily": "experience_location_completion",
-              "targetSection": "experience",
-              "source": "curator_supplement",
-              "attributionMode": "stitched_lens",
-              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
-              "action": "在 Experience 每段标题行补齐城市/地区、Remote/Hybrid 或项目所在地；如果是线上项目，也可以明确写成 Remote Project。"
-            },
-            {
-              "adviceId": "uncovered_repetitive verbs",
-              "title": "替换重复动词",
-              "coverageFamily": "business_data_context",
-              "actionFamily": "action_verb_variety",
-              "targetSection": "experience",
-              "source": "curator_supplement",
-              "attributionMode": "stitched_lens",
-              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
-              "action": "按 Investment Banking Analyst 的工作语境，把重复的 participated / assisted / responsible for 改成更具体的动作，例如 analyzed、coordinated、built、monitored、reconciled、reported，并连接 excel、powerpoint、sql 或 business requirements document、process map"
-            }
-          ]
-        },
-        {
-          "mentorId": "mock_jpmorgan_ib",
-          "mentorName": "JPMorgan 投行视角",
-          "company": "JPMorgan",
-          "mentorTitle": "Investment Banking Associate",
-          "mentorGroupLens": "ATS 关键词视角",
-          "adviceCount": 3,
-          "adviceItems": [
-            {
               "adviceId": "rolefb_asset_management_analyst_keyword_in_experience",
               "title": "补齐经历里的关键词证据",
               "coverageFamily": "keyword",
@@ -166,36 +113,25 @@
               "action": "选 2-3 条经历 bullet，把 business analysis、process improvement、requirements gathering、operations analysis 和 excel、powerpoint、sql、tableau 放进具体动作中，并说明完成了什么 business requirements document、process map、strategy deck、operating model"
             },
             {
-              "adviceId": "rolefb_asset_management_analyst_junior_signal",
-              "title": "用课程或项目补足 junior 信号",
-              "coverageFamily": "junior_signal",
-              "actionFamily": "education_signal",
-              "targetSection": "education",
-              "source": "fallback",
+              "adviceId": "uncovered_missing exp location",
+              "title": "补强经历里的动作和交付",
+              "coverageFamily": "experience_evidence",
+              "actionFamily": "experience_location_completion",
+              "targetSection": "experience",
+              "source": "curator_supplement",
               "attributionMode": "stitched_lens",
               "sourceDisclosure": "来源：MentorX 按该导师背景整理",
-              "action": "保留和 Asset Management Analyst 相关的课程、证书或项目，把它们写成「学了什么 business analysis、process improvement、requirements gathering、operations analysis + 做了什么 business requirements document、process map、strategy deck、operating model + 支撑哪项岗"
-            },
-            {
-              "adviceId": "rolefb_asset_management_analyst_positioning",
-              "title": "让 Summary 指向目标岗位",
-              "coverageFamily": "positioning",
-              "actionFamily": "summary_positioning",
-              "targetSection": "summary",
-              "source": "fallback",
-              "attributionMode": "stitched_lens",
-              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
-              "action": "在 Summary 第一或第二句自然写出 Asset Management Analyst，并紧接一句连接 business analysis、process improvement、requirements gathering、operations analysis、business requirements document、process map、strategy deck、operating model 或最相关项目证据。"
+              "action": "在 Experience 每段标题行补齐城市/地区、Remote/Hybrid 或项目所在地；如果是线上项目，也可以明确写成 Remote Project。"
             }
           ]
         },
         {
-          "mentorId": "mentor_6_x導師",
-          "mentorName": "X導師",
-          "company": "Amazon",
-          "mentorTitle": "Vice President",
-          "mentorGroupLens": "成果量化视角",
-          "adviceCount": 1,
+          "mentorId": "mock_goldman_finance",
+          "mentorName": "Goldman Sachs 金融分析视角",
+          "company": "Goldman Sachs",
+          "mentorTitle": "Financial Analyst",
+          "mentorGroupLens": "业务 / 金融 / 数据场景视角",
+          "adviceCount": 5,
           "adviceItems": [
             {
               "adviceId": "rolefb_asset_management_analyst_impact_metrics",
@@ -207,6 +143,50 @@
               "attributionMode": "stitched_lens",
               "sourceDisclosure": "来源：MentorX 按该导师背景整理",
               "action": "为核心 bullet 补充 cost savings、efficiency、cycle time、throughput，例如处理量、频率、规模、效率、准确率、响应时间或节省成本。"
+            },
+            {
+              "adviceId": "rolefb_asset_management_analyst_positioning",
+              "title": "让 Summary 指向目标岗位",
+              "coverageFamily": "positioning",
+              "actionFamily": "summary_positioning",
+              "targetSection": "summary",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "在 Summary 第一或第二句自然写出 Asset Management Analyst，并紧接一句连接 business analysis、process improvement、requirements gathering、operations analysis、business requirements document、process map、strategy deck、operating model 或最相关项目证据。"
+            },
+            {
+              "adviceId": "rolefb_asset_management_analyst_keyword_gap",
+              "title": "整理 Skills 关键词",
+              "coverageFamily": "keyword",
+              "actionFamily": "skills_keyword_ordering",
+              "targetSection": "skills",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "对照 JD 提取真实掌握的 business process、operations、strategy、workflow，优先放入 Summary、Skills 和最相关经历，不要只堆在一个技能列表里。"
+            },
+            {
+              "adviceId": "uncovered_repetitive verbs",
+              "title": "替换重复动词",
+              "coverageFamily": "business_data_context",
+              "actionFamily": "action_verb_variety",
+              "targetSection": "experience",
+              "source": "curator_supplement",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "按 Investment Banking Analyst 的工作语境，把重复的 participated / assisted / responsible for 改成更具体的动作，例如 analyzed、coordinated、built、monitored、reconciled、reported，并连接 excel、powerpoint、sql 或 business requirements document、process map"
+            },
+            {
+              "adviceId": "rolefb_asset_management_analyst_junior_signal",
+              "title": "用课程或项目补足 junior 信号",
+              "coverageFamily": "junior_signal",
+              "actionFamily": "education_signal",
+              "targetSection": "education",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "保留和 Asset Management Analyst 相关的课程、证书或项目，把它们写成「学了什么 business analysis、process improvement、requirements gathering、operations analysis + 做了什么 business requirements document、process map、strategy deck、operating model + 支撑哪项岗"
             }
           ]
         }
@@ -538,6 +518,1341 @@
       }
     },
     {
+      "caseName": "jd1",
+      "jdFile": "C:\\Users\\viviy\\Desktop\\新增資料夾\\jd1.txt",
+      "jobTitle": "technical leader in our Data Engineering team",
+      "total": 40,
+      "risk": "高",
+      "retrievalStatus": {
+        "retrievalStatus": "ok",
+        "candidateCount": 23,
+        "retrievalErrorCode": null,
+        "retrievalErrorMessage": null,
+        "strictCandidateCount": 23,
+        "fallbackCandidateCount": 11,
+        "rawRows": 26619,
+        "eligibleRows": 13075,
+        "selectedScope": "resume_ats"
+      },
+      "retrievalQualityStatus": "retrieval_ok",
+      "candidateCount": 23,
+      "freeAdviceItems": [
+        {
+          "adviceId": "seg_3560",
+          "title": "补上规模、频率和效率",
+          "coverageFamily": "impact_metrics",
+          "actionFamily": "impact_metrics",
+          "targetSection": "experience",
+          "source": "db_adapted",
+          "attributionMode": "stitched_lens",
+          "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+          "action": "为核心 bullet 补充数量、频率、规模、效率或结果，例如处理量、覆盖范围、故障率、响应时间、转化率或节省成本。"
+        },
+        {
+          "adviceId": "rolefb_technical_leader_in_our_data_engineering_keyword_in_experience",
+          "title": "补齐经历里的关键词证据",
+          "coverageFamily": "keyword",
+          "actionFamily": "keyword_in_experience",
+          "targetSection": "experience",
+          "source": "fallback",
+          "attributionMode": "stitched_lens",
+          "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+          "action": "选 2-3 条经历 bullet，把 岗位核心技能、业务理解、交付能力 和 岗位工具、常用系统、协作工具 放进具体动作中，并说明完成了什么 核心交付物、分析结果、项目产出。"
+        },
+        {
+          "adviceId": "uncovered_missing exp location",
+          "title": "补强经历里的动作和交付",
+          "coverageFamily": "experience_evidence",
+          "actionFamily": "experience_location_completion",
+          "targetSection": "experience",
+          "source": "curator_supplement",
+          "attributionMode": "stitched_lens",
+          "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+          "action": "在 Experience 每段标题行补齐城市/地区、Remote/Hybrid 或项目所在地；如果是线上项目，也可以明确写成 Remote Project。"
+        }
+      ],
+      "paidAdviceCount": 9,
+      "reportMentorGroups": [
+        {
+          "mentorId": "mock_databricks_data_engineering",
+          "mentorName": "Databricks 数据工程视角",
+          "company": "Databricks",
+          "mentorTitle": "Data Engineer",
+          "mentorGroupLens": "成果量化视角",
+          "adviceCount": 5,
+          "adviceItems": [
+            {
+              "adviceId": "seg_3560",
+              "title": "补上规模、频率和效率",
+              "coverageFamily": "impact_metrics",
+              "actionFamily": "impact_metrics",
+              "targetSection": "experience",
+              "source": "db_adapted",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "为核心 bullet 补充数量、频率、规模、效率或结果，例如处理量、覆盖范围、故障率、响应时间、转化率或节省成本。"
+            },
+            {
+              "adviceId": "rolefb_data_engineer_junior_signal",
+              "title": "用课程或项目补足 junior 信号",
+              "coverageFamily": "junior_signal",
+              "actionFamily": "education_signal",
+              "targetSection": "skills",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "把 machine learning、recruiting、sourcing 这类硬技能补进 Skills，并在 Experience 或 Projects 中写出你实际使用它们解决了什么问题。"
+            },
+            {
+              "adviceId": "rolefb_technical_leader_in_our_data_engineering_keyword_in_experience",
+              "title": "补齐经历里的关键词证据",
+              "coverageFamily": "keyword",
+              "actionFamily": "keyword_in_experience",
+              "targetSection": "experience",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "选 2-3 条经历 bullet，把 岗位核心技能、业务理解、交付能力 和 岗位工具、常用系统、协作工具 放进具体动作中，并说明完成了什么 核心交付物、分析结果、项目产出。"
+            },
+            {
+              "adviceId": "uncovered_missing github link",
+              "title": "补上项目链接或作品入口",
+              "coverageFamily": "business_data_context",
+              "actionFamily": "project_link_evidence",
+              "targetSection": "projects",
+              "source": "curator_supplement",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "为最贴近 technical leader in our Data Engineering team 的项目补上 GitHub、作品集、Demo、报告或可访问链接，并在 bullet 中说明它对应的 核心交付物、分析结果、项目产出。"
+            },
+            {
+              "adviceId": "uncovered_missing exp location",
+              "title": "补强经历里的动作和交付",
+              "coverageFamily": "experience_evidence",
+              "actionFamily": "experience_location_completion",
+              "targetSection": "experience",
+              "source": "curator_supplement",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "在 Experience 每段标题行补齐城市/地区、Remote/Hybrid 或项目所在地；如果是线上项目，也可以明确写成 Remote Project。"
+            }
+          ]
+        },
+        {
+          "mentorId": "mock_snowflake_data_platform",
+          "mentorName": "Snowflake 数据平台视角",
+          "company": "Snowflake",
+          "mentorTitle": "Data Platform Engineer",
+          "mentorGroupLens": "业务 / 金融 / 数据场景视角",
+          "adviceCount": 4,
+          "adviceItems": [
+            {
+              "adviceId": "rolefb_technical_leader_in_our_data_engineering_positioning",
+              "title": "补上目标岗位原词",
+              "coverageFamily": "positioning",
+              "actionFamily": "summary_positioning",
+              "targetSection": "summary",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "在 Summary 第一或第二句自然写出 technical leader in our Data Engineering team，并紧接一句连接 岗位核心技能、业务理解、交付能力、核心交付物、分析结果、项目产出 或最相关项目证据。"
+            },
+            {
+              "adviceId": "rolefb_technical_leader_in_our_data_engineering_keyword_gap",
+              "title": "重排岗位关键词",
+              "coverageFamily": "keyword",
+              "actionFamily": "skills_keyword_ordering",
+              "targetSection": "skills",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "对照 JD 提取真实掌握的 JD 高频词，优先放入 Summary、Skills 和最相关经历，不要只堆在一个技能列表里。"
+            },
+            {
+              "adviceId": "rolefb_technical_leader_in_our_data_engineering_short_tenure_risk",
+              "title": "补清经历边界",
+              "coverageFamily": "risk_explanation",
+              "actionFamily": "risk_explanation",
+              "targetSection": "experience",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "如果这段经历是实习，请在 title 中明确标注 Intern / Internship；如果是项目制经历，在 bullet 中说明项目周期、职责边界和最终产出。"
+            },
+            {
+              "adviceId": "uncovered_repetitive verbs",
+              "title": "替换重复动词",
+              "coverageFamily": "business_data_context",
+              "actionFamily": "action_verb_variety",
+              "targetSection": "experience",
+              "source": "curator_supplement",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "按 technical leader in our Data Engineering team 的工作语境，把重复的 participated / assisted / responsible for 改成更具体的动作，例如 analyzed、coordinated、built、monitored、reconciled、reported，并连接 岗位工具、常用系统、协作工具 或 核心交付物、分析结果、项目产出。"
+            }
+          ]
+        }
+      ],
+      "coverageSummary": {
+        "totalProblemsDetected": 12,
+        "problemsCovered": 12,
+        "coverageRatio": 1,
+        "coveredProblemTags": [
+          "low_measurable_results",
+          "low_hard_skill_match",
+          "low_jd_keyword_match",
+          "education_details_missing",
+          "weak_experience_keyword_evidence",
+          "missing_github_link",
+          "missing_exp_location",
+          "repetitive_verbs",
+          "weak_target_role_alignment",
+          "missing_exact_job_title",
+          "weak_summary_role_alignment",
+          "short_tenure_unclear"
+        ],
+        "uncoveredProblemTags": [],
+        "totalObligationsDetected": 24,
+        "obligationsCovered": 18,
+        "coveredObligationIds": [
+          "keyword:machine learning",
+          "keyword:recruiting",
+          "keyword:sourcing",
+          "problem:low_hard_skill_match",
+          "problem:low_jd_keyword_match",
+          "problem:low_measurable_results",
+          "problem:weak_target_role_alignment",
+          "suggestion:1:missing_exact_job_title",
+          "topProblem:low_hard_skill_match",
+          "topProblem:low_measurable_results",
+          "weakDimension:C",
+          "weakDimension:D",
+          "weakDimension:F",
+          "dimensionProblem:B:1:weak_experience_keyword_evidence",
+          "dimensionProblem:C:0:low_measurable_results",
+          "dimensionProblem:C:1:low_measurable_results",
+          "dimensionProblem:C:2:weak_result_orientation",
+          "dimensionProblem:C:3:weak_experience_keyword_evidence"
+        ],
+        "uncoveredObligationIds": [
+          "keyword:computer science",
+          "keyword:triage",
+          "problem:short_tenure_unclear",
+          "topProblem:education_details_missing",
+          "dimensionProblem:B:0:missing_priority_keywords",
+          "dimensionProblem:C:4:short_tenure_unclear"
+        ],
+        "coverageFamilies": [
+          "impact_metrics",
+          "junior_signal",
+          "keyword",
+          "business_data_context",
+          "experience_evidence",
+          "positioning",
+          "risk_explanation"
+        ],
+        "totalAdviceItems": 10,
+        "targetAdviceCountMin": 7,
+        "targetAdviceCountMax": null,
+        "adviceCountStatus": "sufficient",
+        "curationMode": "problem_coverage_dedupe",
+        "shortageReason": "",
+        "retrievalStatus": {
+          "retrievalStatus": "ok",
+          "candidateCount": 23,
+          "retrievalErrorCode": null,
+          "retrievalErrorMessage": null,
+          "strictCandidateCount": 23,
+          "fallbackCandidateCount": 11,
+          "rawRows": 26619,
+          "eligibleRows": 13075,
+          "selectedScope": "resume_ats"
+        }
+      }
+    },
+    {
+      "caseName": "jd2",
+      "jdFile": "C:\\Users\\viviy\\Desktop\\新增資料夾\\jd2.txt",
+      "jobTitle": "Ai Engineer",
+      "total": 28,
+      "risk": "高",
+      "retrievalStatus": {
+        "retrievalStatus": "ok",
+        "candidateCount": 76,
+        "retrievalErrorCode": null,
+        "retrievalErrorMessage": null,
+        "strictCandidateCount": 76,
+        "fallbackCandidateCount": 23,
+        "rawRows": 26619,
+        "eligibleRows": 13075,
+        "selectedScope": "resume_strategy"
+      },
+      "retrievalQualityStatus": "retrieval_ok",
+      "candidateCount": 76,
+      "freeAdviceItems": [
+        {
+          "adviceId": "seg_3560",
+          "title": "补上规模、频率和效率",
+          "coverageFamily": "impact_metrics",
+          "actionFamily": "impact_metrics",
+          "targetSection": "experience",
+          "source": "db_adapted",
+          "attributionMode": "stitched_lens",
+          "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+          "action": "为核心 bullet 补充数量、频率、规模、效率或结果，例如处理量、覆盖范围、故障率、响应时间、转化率或节省成本。"
+        },
+        {
+          "adviceId": "uncovered_missing github link",
+          "title": "补上项目链接或作品入口",
+          "coverageFamily": "experience_evidence",
+          "actionFamily": "project_link_evidence",
+          "targetSection": "projects",
+          "source": "curator_supplement",
+          "attributionMode": "stitched_lens",
+          "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+          "action": "为最贴近 Ai Engineer 的项目补上 GitHub、作品集、Demo、报告或可访问链接，并在 bullet 中说明它对应的 model、experiment report、training pipeline。"
+        },
+        {
+          "adviceId": "rolefb_ai_engineer_keyword_in_experience",
+          "title": "让关键词出现在真实项目里",
+          "coverageFamily": "keyword",
+          "actionFamily": "keyword_in_experience",
+          "targetSection": "experience",
+          "source": "fallback",
+          "attributionMode": "stitched_lens",
+          "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+          "action": "选 2-3 条经历 bullet，把 machine learning、deep learning、model training、feature engineering 和 python、pytorch、tensorflow、scikit-learn 放进具体动作中，并说明完成了什么 model、experiment report、training pipeline、inference service。"
+        }
+      ],
+      "paidAdviceCount": 9,
+      "reportMentorGroups": [
+        {
+          "mentorId": "mentor_3_g導師",
+          "mentorName": "G導師",
+          "company": "Anyscale",
+          "mentorTitle": "Staff Machine Learning Engineer",
+          "mentorGroupLens": "经历证据视角",
+          "adviceCount": 5,
+          "adviceItems": [
+            {
+              "adviceId": "seg_3560",
+              "title": "补上规模、频率和效率",
+              "coverageFamily": "impact_metrics",
+              "actionFamily": "impact_metrics",
+              "targetSection": "experience",
+              "source": "db_adapted",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "为核心 bullet 补充数量、频率、规模、效率或结果，例如处理量、覆盖范围、故障率、响应时间、转化率或节省成本。"
+            },
+            {
+              "adviceId": "rolefb_ai_engineer_junior_signal",
+              "title": "把训练背景写成岗位证据",
+              "coverageFamily": "junior_signal",
+              "actionFamily": "education_signal",
+              "targetSection": "skills",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "把 software development、algorithms、pipeline 这类硬技能补进 Skills，并在 Experience 或 Projects 中写出你实际使用它们解决了什么问题。"
+            },
+            {
+              "adviceId": "rolefb_ai_engineer_keyword_in_experience",
+              "title": "让关键词出现在真实项目里",
+              "coverageFamily": "keyword",
+              "actionFamily": "keyword_in_experience",
+              "targetSection": "experience",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "选 2-3 条经历 bullet，把 machine learning、deep learning、model training、feature engineering 和 python、pytorch、tensorflow、scikit-learn 放进具体动作中，并说明完成了什么 model、experiment report、training pipeline、inference service。"
+            },
+            {
+              "adviceId": "uncovered_missing github link",
+              "title": "补上项目链接或作品入口",
+              "coverageFamily": "experience_evidence",
+              "actionFamily": "project_link_evidence",
+              "targetSection": "projects",
+              "source": "curator_supplement",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "为最贴近 Ai Engineer 的项目补上 GitHub、作品集、Demo、报告或可访问链接，并在 bullet 中说明它对应的 model、experiment report、training pipeline。"
+            },
+            {
+              "adviceId": "uncovered_repetitive verbs",
+              "title": "替换重复动词",
+              "coverageFamily": "experience_evidence",
+              "actionFamily": "action_verb_variety",
+              "targetSection": "experience",
+              "source": "curator_supplement",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "按 Ai Engineer 的工作语境，把重复的 participated / assisted / responsible for 改成更具体的动作，例如 analyzed、coordinated、built、monitored、reconciled、reported，并连接 python、pytorch、tensorflow 或 model、experiment report、training pipeline。"
+            }
+          ]
+        },
+        {
+          "mentorId": "mentor_8_h導師",
+          "mentorName": "H導師",
+          "company": "Amazon",
+          "mentorTitle": "ML Engineer",
+          "mentorGroupLens": "经历证据视角",
+          "adviceCount": 4,
+          "adviceItems": [
+            {
+              "adviceId": "rolefb_ai_engineer_positioning",
+              "title": "补上目标岗位原词",
+              "coverageFamily": "positioning",
+              "actionFamily": "summary_positioning",
+              "targetSection": "summary",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "在 Summary 第一或第二句自然写出 AI Engineer，并紧接一句连接 machine learning、deep learning、model training、feature engineering、model、experiment report、training pipeline、inference service 或最相关项目证据。"
+            },
+            {
+              "adviceId": "rolefb_ai_engineer_short_tenure_risk",
+              "title": "补清经历边界",
+              "coverageFamily": "risk_explanation",
+              "actionFamily": "risk_explanation",
+              "targetSection": "experience",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "如果这段经历是实习，请在 title 中明确标注 Intern / Internship；如果是项目制经历，在 bullet 中说明项目周期、职责边界和最终产出。"
+            },
+            {
+              "adviceId": "rolefb_ai_engineer_keyword_gap",
+              "title": "补齐技能区关键词",
+              "coverageFamily": "keyword",
+              "actionFamily": "skills_keyword_ordering",
+              "targetSection": "skills",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "对照 JD 提取真实掌握的 classification、regression、nlp、computer vision，优先放入 Summary、Skills 和最相关经历，不要只堆在一个技能列表里。"
+            },
+            {
+              "adviceId": "uncovered_missing exp location",
+              "title": "补强经历里的动作和交付",
+              "coverageFamily": "experience_evidence",
+              "actionFamily": "experience_location_completion",
+              "targetSection": "experience",
+              "source": "curator_supplement",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "在 Experience 每段标题行补齐城市/地区、Remote/Hybrid 或项目所在地；如果是线上项目，也可以明确写成 Remote Project。"
+            }
+          ]
+        }
+      ],
+      "coverageSummary": {
+        "totalProblemsDetected": 12,
+        "problemsCovered": 12,
+        "coverageRatio": 1,
+        "coveredProblemTags": [
+          "low_measurable_results",
+          "low_jd_keyword_match",
+          "low_hard_skill_match",
+          "education_details_missing",
+          "missing_github_link",
+          "weak_experience_keyword_evidence",
+          "repetitive_verbs",
+          "missing_exp_location",
+          "weak_target_role_alignment",
+          "missing_exact_job_title",
+          "weak_summary_role_alignment",
+          "short_tenure_unclear"
+        ],
+        "uncoveredProblemTags": [],
+        "totalObligationsDetected": 24,
+        "obligationsCovered": 19,
+        "coveredObligationIds": [
+          "problem:low_jd_keyword_match",
+          "keyword:algorithms",
+          "keyword:software development",
+          "problem:low_hard_skill_match",
+          "problem:low_measurable_results",
+          "problem:weak_target_role_alignment",
+          "suggestion:1:missing_exact_job_title",
+          "topProblem:low_hard_skill_match",
+          "topProblem:low_measurable_results",
+          "weakDimension:C",
+          "weakDimension:D",
+          "weakDimension:F",
+          "dimensionProblem:B:1:weak_experience_keyword_evidence",
+          "dimensionProblem:C:0:low_measurable_results",
+          "dimensionProblem:C:1:low_measurable_results",
+          "dimensionProblem:C:2:weak_result_orientation",
+          "dimensionProblem:C:3:weak_experience_keyword_evidence",
+          "dimensionProblem:C:5:weak_experience_keyword_evidence",
+          "dimensionProblem:C:6:weak_experience_keyword_evidence"
+        ],
+        "uncoveredObligationIds": [
+          "topProblem:education_details_missing",
+          "problem:short_tenure_unclear",
+          "dimensionProblem:B:0:missing_priority_keywords",
+          "dimensionProblem:C:4:short_tenure_unclear",
+          "dimensionProblem:D:0:missing_priority_keywords"
+        ],
+        "coverageFamilies": [
+          "impact_metrics",
+          "junior_signal",
+          "experience_evidence",
+          "keyword",
+          "positioning",
+          "risk_explanation"
+        ],
+        "totalAdviceItems": 10,
+        "targetAdviceCountMin": 7,
+        "targetAdviceCountMax": null,
+        "adviceCountStatus": "sufficient",
+        "curationMode": "problem_coverage_dedupe",
+        "shortageReason": "",
+        "retrievalStatus": {
+          "retrievalStatus": "ok",
+          "candidateCount": 76,
+          "retrievalErrorCode": null,
+          "retrievalErrorMessage": null,
+          "strictCandidateCount": 76,
+          "fallbackCandidateCount": 23,
+          "rawRows": 26619,
+          "eligibleRows": 13075,
+          "selectedScope": "resume_strategy"
+        }
+      }
+    },
+    {
+      "caseName": "jd3",
+      "jdFile": "C:\\Users\\viviy\\Desktop\\新增資料夾\\jd3.txt",
+      "jobTitle": "Software Engineer",
+      "total": 27,
+      "risk": "高",
+      "retrievalStatus": {
+        "retrievalStatus": "ok",
+        "candidateCount": 120,
+        "retrievalErrorCode": null,
+        "retrievalErrorMessage": null,
+        "strictCandidateCount": 120,
+        "fallbackCandidateCount": 54,
+        "rawRows": 26619,
+        "eligibleRows": 13075,
+        "selectedScope": "resume_ats"
+      },
+      "retrievalQualityStatus": "retrieval_ok",
+      "candidateCount": 120,
+      "freeAdviceItems": [
+        {
+          "adviceId": "seg_3560",
+          "title": "补上规模、频率和效率",
+          "coverageFamily": "impact_metrics",
+          "actionFamily": "impact_metrics",
+          "targetSection": "experience",
+          "source": "db_adapted",
+          "attributionMode": "stitched_lens",
+          "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+          "action": "为核心 bullet 补充数量、频率、规模、效率或结果，例如处理量、覆盖范围、故障率、响应时间、转化率或节省成本。"
+        },
+        {
+          "adviceId": "seg_12461",
+          "title": "补上目标岗位原词",
+          "coverageFamily": "positioning",
+          "actionFamily": "summary_positioning",
+          "targetSection": "overall",
+          "source": "db_adapted",
+          "attributionMode": "verified_original",
+          "sourceDisclosure": "来源：该导师建议",
+          "action": "围绕 Software Engineer 重排 Summary、Skills 和最靠前的经历，把最相关的职责、关键词和结果证据放到前面，弱相关内容收住。"
+        },
+        {
+          "adviceId": "rolefb_software_engineer_short_tenure_risk",
+          "title": "说明短期经历性质",
+          "coverageFamily": "risk_explanation",
+          "actionFamily": "risk_explanation",
+          "targetSection": "experience",
+          "source": "fallback",
+          "attributionMode": "stitched_lens",
+          "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+          "action": "如果这段经历是实习，请在 title 中明确标注 Intern / Internship；如果是项目制经历，在 bullet 中说明项目周期、职责边界和最终产出。"
+        }
+      ],
+      "paidAdviceCount": 11,
+      "reportMentorGroups": [
+        {
+          "mentorId": "mock_google_swe",
+          "mentorName": "Google 工程视角",
+          "company": "Google",
+          "mentorTitle": "Software Engineer",
+          "mentorGroupLens": "成果量化视角",
+          "adviceCount": 4,
+          "adviceItems": [
+            {
+              "adviceId": "seg_3560",
+              "title": "补上规模、频率和效率",
+              "coverageFamily": "impact_metrics",
+              "actionFamily": "impact_metrics",
+              "targetSection": "experience",
+              "source": "db_adapted",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "为核心 bullet 补充数量、频率、规模、效率或结果，例如处理量、覆盖范围、故障率、响应时间、转化率或节省成本。"
+            },
+            {
+              "adviceId": "rolefb_software_engineer_short_tenure_risk",
+              "title": "说明短期经历性质",
+              "coverageFamily": "risk_explanation",
+              "actionFamily": "risk_explanation",
+              "targetSection": "experience",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "如果这段经历是实习，请在 title 中明确标注 Intern / Internship；如果是项目制经历，在 bullet 中说明项目周期、职责边界和最终产出。"
+            },
+            {
+              "adviceId": "rolefb_software_engineer_section_weighting",
+              "title": "把职责写成项目证据",
+              "coverageFamily": "experience_evidence",
+              "actionFamily": "section_weighting",
+              "targetSection": "experience",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "把最贴近 Software Engineer 的经历或项目放到更靠前位置，并给它多 1-2 条 bullet；弱相关经历只保留能证明 built applications、implemented features、designed apis、协作或基础职业能力的内容。"
+            },
+            {
+              "adviceId": "seg_13304",
+              "title": "用指标说明实际贡献",
+              "coverageFamily": "impact_metrics",
+              "actionFamily": "impact_metrics",
+              "targetSection": "summary",
+              "source": "db_adapted",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "将每条bullet point补充具体的方法论和专业词汇，说明用了什么模型/工具/流程来达成结果，参照目标岗位JD将方法套进去，使内容有完整逻辑链。"
+            }
+          ]
+        },
+        {
+          "mentorId": "nordstrom|software engineer|t",
+          "mentorName": "T導師",
+          "company": "Nordstrom",
+          "mentorTitle": "Software Engineer",
+          "mentorGroupLens": "岗位定位视角",
+          "adviceCount": 5,
+          "adviceItems": [
+            {
+              "adviceId": "seg_12461",
+              "title": "补上目标岗位原词",
+              "coverageFamily": "positioning",
+              "actionFamily": "summary_positioning",
+              "targetSection": "overall",
+              "source": "db_adapted",
+              "attributionMode": "verified_original",
+              "sourceDisclosure": "来源：该导师建议",
+              "action": "围绕 Software Engineer 重排 Summary、Skills 和最靠前的经历，把最相关的职责、关键词和结果证据放到前面，弱相关内容收住。"
+            },
+            {
+              "adviceId": "rolefb_software_engineer_junior_signal",
+              "title": "用课程或项目补足 junior 信号",
+              "coverageFamily": "junior_signal",
+              "actionFamily": "education_signal",
+              "targetSection": "skills",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "把 machine learning、software development、code review 这类硬技能补进 Skills，并在 Experience 或 Projects 中写出你实际使用它们解决了什么问题。"
+            },
+            {
+              "adviceId": "uncovered_missing github link",
+              "title": "补上项目链接或作品入口",
+              "coverageFamily": "experience_evidence",
+              "actionFamily": "project_link_evidence",
+              "targetSection": "projects",
+              "source": "curator_supplement",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "为最贴近 Software Engineer 的项目补上 GitHub、作品集、Demo、报告或可访问链接，并在 bullet 中说明它对应的 application、api、service。"
+            },
+            {
+              "adviceId": "rolefb_software_engineer_positioning",
+              "title": "统一开头岗位定位",
+              "coverageFamily": "positioning",
+              "actionFamily": "summary_positioning",
+              "targetSection": "summary",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "在 Summary 第一或第二句自然写出 Software Engineer，并紧接一句连接 data structures、algorithms、api development、testing、application、api、service、feature 或最相关项目证据。"
+            },
+            {
+              "adviceId": "uncovered_missing exp location",
+              "title": "补强经历里的动作和交付",
+              "coverageFamily": "experience_evidence",
+              "actionFamily": "experience_location_completion",
+              "targetSection": "experience",
+              "source": "curator_supplement",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "在 Experience 每段标题行补齐城市/地区、Remote/Hybrid 或项目所在地；如果是线上项目，也可以明确写成 Remote Project。"
+            }
+          ]
+        },
+        {
+          "mentorId": "mentor_2_g導師",
+          "mentorName": "G導師",
+          "company": "Anyscale",
+          "mentorTitle": "Staff Machine Learning Engineer",
+          "mentorGroupLens": "ATS 关键词视角",
+          "adviceCount": 2,
+          "adviceItems": [
+            {
+              "adviceId": "rolefb_software_engineer_keyword_in_experience",
+              "title": "补齐经历里的关键词证据",
+              "coverageFamily": "keyword",
+              "actionFamily": "keyword_in_experience",
+              "targetSection": "experience",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "选 2-3 条经历 bullet，把 data structures、algorithms、api development、testing 和 python、java、javascript、git 放进具体动作中，并说明完成了什么 application、api、service、feature。"
+            },
+            {
+              "adviceId": "uncovered_repetitive verbs",
+              "title": "替换重复动词",
+              "coverageFamily": "experience_evidence",
+              "actionFamily": "action_verb_variety",
+              "targetSection": "experience",
+              "source": "curator_supplement",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "按 Software Engineer 的工作语境，把重复的 participated / assisted / responsible for 改成更具体的动作，例如 analyzed、coordinated、built、monitored、reconciled、reported，并连接 python、java、javascript 或 application、api、service。"
+            }
+          ]
+        }
+      ],
+      "coverageSummary": {
+        "totalProblemsDetected": 12,
+        "problemsCovered": 12,
+        "coverageRatio": 1,
+        "coveredProblemTags": [
+          "low_measurable_results",
+          "low_jd_keyword_match",
+          "low_hard_skill_match",
+          "weak_target_role_alignment",
+          "short_tenure_unclear",
+          "weak_experience_keyword_evidence",
+          "education_details_missing",
+          "missing_github_link",
+          "repetitive_verbs",
+          "missing_exp_location",
+          "missing_exact_job_title",
+          "weak_summary_role_alignment"
+        ],
+        "uncoveredProblemTags": [],
+        "totalObligationsDetected": 24,
+        "obligationsCovered": 17,
+        "coveredObligationIds": [
+          "problem:low_jd_keyword_match",
+          "keyword:code review",
+          "keyword:machine learning",
+          "keyword:software development",
+          "problem:low_hard_skill_match",
+          "problem:low_measurable_results",
+          "problem:short_tenure_unclear",
+          "problem:weak_target_role_alignment",
+          "suggestion:1:missing_exact_job_title",
+          "topProblem:low_hard_skill_match",
+          "topProblem:low_measurable_results",
+          "weakDimension:C",
+          "weakDimension:D",
+          "weakDimension:F",
+          "dimensionProblem:B:1:weak_experience_keyword_evidence",
+          "dimensionProblem:C:0:low_measurable_results",
+          "dimensionProblem:C:1:low_measurable_results"
+        ],
+        "uncoveredObligationIds": [
+          "topProblem:education_details_missing",
+          "keyword:aws",
+          "keyword:azure",
+          "keyword:docker",
+          "keyword:gcp",
+          "keyword:prompt engineering",
+          "dimensionProblem:B:0:missing_priority_keywords"
+        ],
+        "coverageFamilies": [
+          "impact_metrics",
+          "positioning",
+          "risk_explanation",
+          "experience_evidence",
+          "keyword",
+          "junior_signal"
+        ],
+        "totalAdviceItems": 11,
+        "targetAdviceCountMin": 7,
+        "targetAdviceCountMax": null,
+        "adviceCountStatus": "sufficient",
+        "curationMode": "problem_coverage_dedupe",
+        "shortageReason": "",
+        "retrievalStatus": {
+          "retrievalStatus": "ok",
+          "candidateCount": 120,
+          "retrievalErrorCode": null,
+          "retrievalErrorMessage": null,
+          "strictCandidateCount": 120,
+          "fallbackCandidateCount": 54,
+          "rawRows": 26619,
+          "eligibleRows": 13075,
+          "selectedScope": "resume_ats"
+        }
+      }
+    },
+    {
+      "caseName": "jd4",
+      "jdFile": "C:\\Users\\viviy\\Desktop\\新增資料夾\\jd4.txt",
+      "jobTitle": "strong product-minded or infrastructure-focused backend engineers",
+      "total": 25,
+      "risk": "高",
+      "retrievalStatus": {
+        "retrievalStatus": "ok",
+        "candidateCount": 120,
+        "retrievalErrorCode": null,
+        "retrievalErrorMessage": null,
+        "strictCandidateCount": 120,
+        "fallbackCandidateCount": 55,
+        "rawRows": 26619,
+        "eligibleRows": 13075,
+        "selectedScope": "resume_ats"
+      },
+      "retrievalQualityStatus": "retrieval_ok",
+      "candidateCount": 120,
+      "freeAdviceItems": [
+        {
+          "adviceId": "seg_3560",
+          "title": "补上规模、频率和效率",
+          "coverageFamily": "impact_metrics",
+          "actionFamily": "impact_metrics",
+          "targetSection": "experience",
+          "source": "db_adapted",
+          "attributionMode": "stitched_lens",
+          "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+          "action": "为核心 bullet 补充数量、频率、规模、效率或结果，例如处理量、覆盖范围、故障率、响应时间、转化率或节省成本。"
+        },
+        {
+          "adviceId": "seg_12461",
+          "title": "补上目标岗位原词",
+          "coverageFamily": "positioning",
+          "actionFamily": "summary_positioning",
+          "targetSection": "overall",
+          "source": "db_adapted",
+          "attributionMode": "verified_original",
+          "sourceDisclosure": "来源：该导师建议",
+          "action": "围绕 strong product-minded or infrastructure-focused backend engineers 重排 Summary、Skills 和最靠前的经历，把最相关的职责、关键词和结果证据放到前面，弱相关内容收住。"
+        },
+        {
+          "adviceId": "rolefb_backend_engineer_short_tenure_risk",
+          "title": "说明短期经历性质",
+          "coverageFamily": "risk_explanation",
+          "actionFamily": "risk_explanation",
+          "targetSection": "experience",
+          "source": "fallback",
+          "attributionMode": "stitched_lens",
+          "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+          "action": "如果这段经历是实习，请在 title 中明确标注 Intern / Internship；如果是项目制经历，在 bullet 中说明项目周期、职责边界和最终产出。"
+        }
+      ],
+      "paidAdviceCount": 10,
+      "reportMentorGroups": [
+        {
+          "mentorId": "mock_google_swe",
+          "mentorName": "Google 工程视角",
+          "company": "Google",
+          "mentorTitle": "Software Engineer",
+          "mentorGroupLens": "成果量化视角",
+          "adviceCount": 3,
+          "adviceItems": [
+            {
+              "adviceId": "seg_3560",
+              "title": "补上规模、频率和效率",
+              "coverageFamily": "impact_metrics",
+              "actionFamily": "impact_metrics",
+              "targetSection": "experience",
+              "source": "db_adapted",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "为核心 bullet 补充数量、频率、规模、效率或结果，例如处理量、覆盖范围、故障率、响应时间、转化率或节省成本。"
+            },
+            {
+              "adviceId": "rolefb_backend_engineer_short_tenure_risk",
+              "title": "说明短期经历性质",
+              "coverageFamily": "risk_explanation",
+              "actionFamily": "risk_explanation",
+              "targetSection": "experience",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "如果这段经历是实习，请在 title 中明确标注 Intern / Internship；如果是项目制经历，在 bullet 中说明项目周期、职责边界和最终产出。"
+            },
+            {
+              "adviceId": "seg_13304",
+              "title": "用指标说明实际贡献",
+              "coverageFamily": "impact_metrics",
+              "actionFamily": "impact_metrics",
+              "targetSection": "summary",
+              "source": "db_adapted",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "将每条bullet point补充具体的方法论和专业词汇，说明用了什么模型/工具/流程来达成结果，参照目标岗位JD将方法套进去，使内容有完整逻辑链。"
+            }
+          ]
+        },
+        {
+          "mentorId": "nordstrom|software engineer|t",
+          "mentorName": "T導師",
+          "company": "Nordstrom",
+          "mentorTitle": "Software Engineer",
+          "mentorGroupLens": "岗位定位视角",
+          "adviceCount": 5,
+          "adviceItems": [
+            {
+              "adviceId": "seg_12461",
+              "title": "补上目标岗位原词",
+              "coverageFamily": "positioning",
+              "actionFamily": "summary_positioning",
+              "targetSection": "overall",
+              "source": "db_adapted",
+              "attributionMode": "verified_original",
+              "sourceDisclosure": "来源：该导师建议",
+              "action": "围绕 strong product-minded or infrastructure-focused backend engineers 重排 Summary、Skills 和最靠前的经历，把最相关的职责、关键词和结果证据放到前面，弱相关内容收住。"
+            },
+            {
+              "adviceId": "rolefb_backend_engineer_junior_signal",
+              "title": "用课程或项目补足 junior 信号",
+              "coverageFamily": "junior_signal",
+              "actionFamily": "education_signal",
+              "targetSection": "skills",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "把 debugging、computer vision、gcp 这类硬技能补进 Skills，并在 Experience 或 Projects 中写出你实际使用它们解决了什么问题。"
+            },
+            {
+              "adviceId": "uncovered_missing github link",
+              "title": "补上项目链接或作品入口",
+              "coverageFamily": "experience_evidence",
+              "actionFamily": "project_link_evidence",
+              "targetSection": "projects",
+              "source": "curator_supplement",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "为最贴近 strong product-minded or infrastructure-focused backend engineers 的项目补上 GitHub、作品集、Demo、报告或可访问链接，并在 bullet 中说明它对应的 application、api、service。"
+            },
+            {
+              "adviceId": "rolefb_backend_engineer_positioning",
+              "title": "统一开头岗位定位",
+              "coverageFamily": "positioning",
+              "actionFamily": "summary_positioning",
+              "targetSection": "summary",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "在 Summary 第一或第二句自然写出 Backend Engineer，并紧接一句连接 api design、database design、microservices、server-side development、application、api、service、feature 或最相关项目证据。"
+            },
+            {
+              "adviceId": "uncovered_missing exp location",
+              "title": "补强经历里的动作和交付",
+              "coverageFamily": "experience_evidence",
+              "actionFamily": "experience_location_completion",
+              "targetSection": "experience",
+              "source": "curator_supplement",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "在 Experience 每段标题行补齐城市/地区、Remote/Hybrid 或项目所在地；如果是线上项目，也可以明确写成 Remote Project。"
+            }
+          ]
+        },
+        {
+          "mentorId": "mentor_2_g導師",
+          "mentorName": "G導師",
+          "company": "Anyscale",
+          "mentorTitle": "Staff Machine Learning Engineer",
+          "mentorGroupLens": "ATS 关键词视角",
+          "adviceCount": 2,
+          "adviceItems": [
+            {
+              "adviceId": "rolefb_backend_engineer_keyword_in_experience",
+              "title": "把技能词写成项目证据",
+              "coverageFamily": "keyword",
+              "actionFamily": "keyword_in_experience",
+              "targetSection": "experience",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "选 2-3 条经历 bullet，把 api design、database design、microservices、server-side development 和 node.js、python、java、postgresql 放进具体动作中，并说明完成了什么 application、api、service、feature。"
+            },
+            {
+              "adviceId": "uncovered_repetitive verbs",
+              "title": "替换重复动词",
+              "coverageFamily": "experience_evidence",
+              "actionFamily": "action_verb_variety",
+              "targetSection": "experience",
+              "source": "curator_supplement",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "按 strong product-minded or infrastructure-focused backend engineers 的工作语境，把重复的 participated / assisted / responsible for 改成更具体的动作，例如 analyzed、coordinated、built、monitored、reconciled、reported，并连接 node.js、python、java 或 appl"
+            }
+          ]
+        }
+      ],
+      "coverageSummary": {
+        "totalProblemsDetected": 12,
+        "problemsCovered": 12,
+        "coverageRatio": 1,
+        "coveredProblemTags": [
+          "low_measurable_results",
+          "low_jd_keyword_match",
+          "low_hard_skill_match",
+          "weak_target_role_alignment",
+          "education_details_missing",
+          "short_tenure_unclear",
+          "weak_experience_keyword_evidence",
+          "missing_github_link",
+          "repetitive_verbs",
+          "missing_exp_location",
+          "missing_exact_job_title",
+          "weak_summary_role_alignment"
+        ],
+        "uncoveredProblemTags": [],
+        "totalObligationsDetected": 24,
+        "obligationsCovered": 18,
+        "coveredObligationIds": [
+          "problem:low_jd_keyword_match",
+          "keyword:computer vision",
+          "keyword:debugging",
+          "keyword:gcp",
+          "problem:low_hard_skill_match",
+          "problem:low_measurable_results",
+          "problem:short_tenure_unclear",
+          "problem:weak_target_role_alignment",
+          "suggestion:1:missing_exact_job_title",
+          "topProblem:low_hard_skill_match",
+          "topProblem:low_measurable_results",
+          "weakDimension:C",
+          "weakDimension:D",
+          "weakDimension:F",
+          "dimensionProblem:B:1:weak_experience_keyword_evidence",
+          "dimensionProblem:C:0:low_measurable_results",
+          "dimensionProblem:C:1:low_measurable_results",
+          "dimensionProblem:C:2:weak_result_orientation"
+        ],
+        "uncoveredObligationIds": [
+          "topProblem:education_details_missing",
+          "keyword:aws",
+          "keyword:azure",
+          "keyword:code reviews",
+          "keyword:docker",
+          "dimensionProblem:B:0:missing_priority_keywords"
+        ],
+        "coverageFamilies": [
+          "impact_metrics",
+          "positioning",
+          "junior_signal",
+          "risk_explanation",
+          "keyword",
+          "experience_evidence"
+        ],
+        "totalAdviceItems": 10,
+        "targetAdviceCountMin": 7,
+        "targetAdviceCountMax": null,
+        "adviceCountStatus": "sufficient",
+        "curationMode": "problem_coverage_dedupe",
+        "shortageReason": "",
+        "retrievalStatus": {
+          "retrievalStatus": "ok",
+          "candidateCount": 120,
+          "retrievalErrorCode": null,
+          "retrievalErrorMessage": null,
+          "strictCandidateCount": 120,
+          "fallbackCandidateCount": 55,
+          "rawRows": 26619,
+          "eligibleRows": 13075,
+          "selectedScope": "resume_ats"
+        }
+      }
+    },
+    {
+      "caseName": "jd5",
+      "jdFile": "C:\\Users\\viviy\\Desktop\\新增資料夾\\jd5.txt",
+      "jobTitle": "Senior Software Engineer, Production Technology",
+      "total": 35,
+      "risk": "高",
+      "retrievalStatus": {
+        "retrievalStatus": "ok",
+        "candidateCount": 115,
+        "retrievalErrorCode": null,
+        "retrievalErrorMessage": null,
+        "strictCandidateCount": 115,
+        "fallbackCandidateCount": 54,
+        "rawRows": 26619,
+        "eligibleRows": 13075,
+        "selectedScope": "resume_ats"
+      },
+      "retrievalQualityStatus": "retrieval_ok",
+      "candidateCount": 115,
+      "freeAdviceItems": [
+        {
+          "adviceId": "seg_3560",
+          "title": "补上规模、频率和效率",
+          "coverageFamily": "impact_metrics",
+          "actionFamily": "impact_metrics",
+          "targetSection": "experience",
+          "source": "db_adapted",
+          "attributionMode": "stitched_lens",
+          "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+          "action": "为核心 bullet 补充数量、频率、规模、效率或结果，例如处理量、覆盖范围、故障率、响应时间、转化率或节省成本。"
+        },
+        {
+          "adviceId": "seg_4053",
+          "title": "补上目标岗位原词",
+          "coverageFamily": "positioning",
+          "actionFamily": "summary_positioning",
+          "targetSection": "overall",
+          "source": "db_adapted",
+          "attributionMode": "stitched_lens",
+          "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+          "action": "围绕 Senior Software Engineer, Production Technology 重排 Summary、Skills 和最靠前的经历，把最相关的职责、关键词和结果证据放到前面，弱相关内容收住。"
+        },
+        {
+          "adviceId": "rolefb_software_engineer_short_tenure_risk",
+          "title": "说明短期经历性质",
+          "coverageFamily": "risk_explanation",
+          "actionFamily": "risk_explanation",
+          "targetSection": "experience",
+          "source": "fallback",
+          "attributionMode": "stitched_lens",
+          "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+          "action": "如果这段经历是实习，请在 title 中明确标注 Intern / Internship；如果是项目制经历，在 bullet 中说明项目周期、职责边界和最终产出。"
+        }
+      ],
+      "paidAdviceCount": 10,
+      "reportMentorGroups": [
+        {
+          "mentorId": "mock_google_swe",
+          "mentorName": "Google 工程视角",
+          "company": "Google",
+          "mentorTitle": "Software Engineer",
+          "mentorGroupLens": "成果量化视角",
+          "adviceCount": 3,
+          "adviceItems": [
+            {
+              "adviceId": "seg_3560",
+              "title": "补上规模、频率和效率",
+              "coverageFamily": "impact_metrics",
+              "actionFamily": "impact_metrics",
+              "targetSection": "experience",
+              "source": "db_adapted",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "为核心 bullet 补充数量、频率、规模、效率或结果，例如处理量、覆盖范围、故障率、响应时间、转化率或节省成本。"
+            },
+            {
+              "adviceId": "rolefb_software_engineer_short_tenure_risk",
+              "title": "说明短期经历性质",
+              "coverageFamily": "risk_explanation",
+              "actionFamily": "risk_explanation",
+              "targetSection": "experience",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "如果这段经历是实习，请在 title 中明确标注 Intern / Internship；如果是项目制经历，在 bullet 中说明项目周期、职责边界和最终产出。"
+            },
+            {
+              "adviceId": "seg_13304",
+              "title": "用指标说明实际贡献",
+              "coverageFamily": "impact_metrics",
+              "actionFamily": "impact_metrics",
+              "targetSection": "summary",
+              "source": "db_adapted",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "将每条bullet point补充具体的方法论和专业词汇，说明用了什么模型/工具/流程来达成结果，参照目标岗位JD将方法套进去，使内容有完整逻辑链。"
+            }
+          ]
+        },
+        {
+          "mentorId": "mentor_4_t導師",
+          "mentorName": "T導師",
+          "company": "Nordstrom",
+          "mentorTitle": "Software Engineer",
+          "mentorGroupLens": "岗位定位视角",
+          "adviceCount": 5,
+          "adviceItems": [
+            {
+              "adviceId": "seg_4053",
+              "title": "补上目标岗位原词",
+              "coverageFamily": "positioning",
+              "actionFamily": "summary_positioning",
+              "targetSection": "overall",
+              "source": "db_adapted",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "围绕 Senior Software Engineer, Production Technology 重排 Summary、Skills 和最靠前的经历，把最相关的职责、关键词和结果证据放到前面，弱相关内容收住。"
+            },
+            {
+              "adviceId": "rolefb_software_engineer_junior_signal",
+              "title": "把训练背景写成岗位证据",
+              "coverageFamily": "junior_signal",
+              "actionFamily": "education_signal",
+              "targetSection": "skills",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "把 javascript、documentation、ci/cd 这类硬技能补进 Skills，并在 Experience 或 Projects 中写出你实际使用它们解决了什么问题。"
+            },
+            {
+              "adviceId": "uncovered_missing github link",
+              "title": "补上项目链接或作品入口",
+              "coverageFamily": "experience_evidence",
+              "actionFamily": "project_link_evidence",
+              "targetSection": "projects",
+              "source": "curator_supplement",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "为最贴近 Senior Software Engineer, Production Technology 的项目补上 GitHub、作品集、Demo、报告或可访问链接，并在 bullet 中说明它对应的 application、api、service。"
+            },
+            {
+              "adviceId": "rolefb_software_engineer_positioning",
+              "title": "统一开头岗位定位",
+              "coverageFamily": "positioning",
+              "actionFamily": "summary_positioning",
+              "targetSection": "summary",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "在 Summary 第一或第二句自然写出 Software Engineer，并紧接一句连接 data structures、algorithms、api development、testing、application、api、service、feature 或最相关项目证据。"
+            },
+            {
+              "adviceId": "uncovered_missing exp location",
+              "title": "补强经历里的动作和交付",
+              "coverageFamily": "experience_evidence",
+              "actionFamily": "experience_location_completion",
+              "targetSection": "experience",
+              "source": "curator_supplement",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "在 Experience 每段标题行补齐城市/地区、Remote/Hybrid 或项目所在地；如果是线上项目，也可以明确写成 Remote Project。"
+            }
+          ]
+        },
+        {
+          "mentorId": "mentor_2_g導師",
+          "mentorName": "G導師",
+          "company": "Anyscale",
+          "mentorTitle": "Staff Machine Learning Engineer",
+          "mentorGroupLens": "ATS 关键词视角",
+          "adviceCount": 2,
+          "adviceItems": [
+            {
+              "adviceId": "rolefb_software_engineer_keyword_in_experience",
+              "title": "补齐经历里的关键词证据",
+              "coverageFamily": "keyword",
+              "actionFamily": "keyword_in_experience",
+              "targetSection": "experience",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "选 2-3 条经历 bullet，把 data structures、algorithms、api development、testing 和 python、java、javascript、git 放进具体动作中，并说明完成了什么 application、api、service、feature。"
+            },
+            {
+              "adviceId": "uncovered_repetitive verbs",
+              "title": "替换重复动词",
+              "coverageFamily": "experience_evidence",
+              "actionFamily": "action_verb_variety",
+              "targetSection": "experience",
+              "source": "curator_supplement",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "按 Senior Software Engineer, Production Technology 的工作语境，把重复的 participated / assisted / responsible for 改成更具体的动作，例如 analyzed、coordinated、built、monitored、reconciled、reported，并连接 python、java、javascript 或 application、api、ser"
+            }
+          ]
+        }
+      ],
+      "coverageSummary": {
+        "totalProblemsDetected": 12,
+        "problemsCovered": 12,
+        "coverageRatio": 1,
+        "coveredProblemTags": [
+          "low_measurable_results",
+          "low_jd_keyword_match",
+          "low_hard_skill_match",
+          "weak_experience_keyword_evidence",
+          "weak_target_role_alignment",
+          "short_tenure_unclear",
+          "education_details_missing",
+          "missing_github_link",
+          "repetitive_verbs",
+          "missing_exp_location",
+          "missing_exact_job_title",
+          "weak_summary_role_alignment"
+        ],
+        "uncoveredProblemTags": [],
+        "totalObligationsDetected": 24,
+        "obligationsCovered": 18,
+        "coveredObligationIds": [
+          "problem:low_jd_keyword_match",
+          "keyword:ci/cd",
+          "keyword:documentation",
+          "keyword:java",
+          "keyword:javascript",
+          "problem:low_hard_skill_match",
+          "problem:low_measurable_results",
+          "problem:short_tenure_unclear",
+          "problem:weak_target_role_alignment",
+          "suggestion:1:missing_exact_job_title",
+          "topProblem:low_hard_skill_match",
+          "topProblem:low_measurable_results",
+          "weakDimension:C",
+          "weakDimension:D",
+          "weakDimension:F",
+          "dimensionProblem:B:1:weak_experience_keyword_evidence",
+          "dimensionProblem:C:0:low_measurable_results",
+          "dimensionProblem:C:1:low_measurable_results"
+        ],
+        "uncoveredObligationIds": [
+          "topProblem:education_details_missing",
+          "keyword:ai",
+          "keyword:epic",
+          "keyword:linux",
+          "keyword:typescript",
+          "dimensionProblem:B:0:missing_priority_keywords"
+        ],
+        "coverageFamilies": [
+          "impact_metrics",
+          "positioning",
+          "risk_explanation",
+          "keyword",
+          "junior_signal",
+          "experience_evidence"
+        ],
+        "totalAdviceItems": 10,
+        "targetAdviceCountMin": 7,
+        "targetAdviceCountMax": null,
+        "adviceCountStatus": "sufficient",
+        "curationMode": "problem_coverage_dedupe",
+        "shortageReason": "",
+        "retrievalStatus": {
+          "retrievalStatus": "ok",
+          "candidateCount": 115,
+          "retrievalErrorCode": null,
+          "retrievalErrorMessage": null,
+          "strictCandidateCount": 115,
+          "fallbackCandidateCount": 54,
+          "rawRows": 26619,
+          "eligibleRows": 13075,
+          "selectedScope": "resume_ats"
+        }
+      }
+    },
+    {
       "caseName": "Ruihang JD",
       "jdFile": "C:\\Users\\viviy\\Desktop\\新增資料夾\\Ruihang JD.txt",
       "jobTitle": "Marketing Specialist",
@@ -564,8 +1879,8 @@
           "actionFamily": "impact_metrics",
           "targetSection": "experience",
           "source": "db_adapted",
-          "attributionMode": "stitched_lens",
-          "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+          "attributionMode": "verified_original",
+          "sourceDisclosure": "来源：该导师建议",
           "action": "为核心 bullet 补充数量、频率、规模、效率或结果，例如处理量、覆盖范围、故障率、响应时间、转化率或节省成本。"
         },
         {
@@ -599,7 +1914,7 @@
           "company": "Meta",
           "mentorTitle": "Brand Marketing Manager",
           "mentorGroupLens": "成果量化视角",
-          "adviceCount": 5,
+          "adviceCount": 4,
           "adviceItems": [
             {
               "adviceId": "seg_4158",
@@ -608,10 +1923,53 @@
               "actionFamily": "impact_metrics",
               "targetSection": "experience",
               "source": "db_adapted",
-              "attributionMode": "stitched_lens",
-              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "attributionMode": "verified_original",
+              "sourceDisclosure": "来源：该导师建议",
               "action": "为核心 bullet 补充数量、频率、规模、效率或结果，例如处理量、覆盖范围、故障率、响应时间、转化率或节省成本。"
             },
+            {
+              "adviceId": "rolefb_marketing_specialist_keyword_gap",
+              "title": "补齐技能区关键词",
+              "coverageFamily": "keyword",
+              "actionFamily": "skills_keyword_ordering",
+              "targetSection": "skills",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "对照 JD 提取真实掌握的 campaign、brand、audience、content，优先放入 Summary、Skills 和最相关经历，不要只堆在一个技能列表里。"
+            },
+            {
+              "adviceId": "rolefb_marketing_specialist_positioning",
+              "title": "统一开头岗位定位",
+              "coverageFamily": "positioning",
+              "actionFamily": "summary_positioning",
+              "targetSection": "summary",
+              "source": "fallback",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "在 Summary 第一或第二句自然写出 Marketing Specialist，并紧接一句连接 content strategy、campaign analysis、audience segmentation、marketing strategy、campaign brief、content calendar、market research report、press release 或最相关项目证据。"
+            },
+            {
+              "adviceId": "uncovered_repetitive verbs",
+              "title": "替换重复动词",
+              "coverageFamily": "cross_domain_transfer",
+              "actionFamily": "action_verb_variety",
+              "targetSection": "experience",
+              "source": "curator_supplement",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "按 Marketing Specialist 的工作语境，把重复的 participated / assisted / responsible for 改成更具体的动作，例如 analyzed、coordinated、built、monitored、reconciled、reported，并连接 google analytics、hubspot、canva 或 campaign brief、content calendar、market"
+            }
+          ]
+        },
+        {
+          "mentorId": "mentor_1_y導師",
+          "mentorName": "Y導師",
+          "company": "Amazon",
+          "mentorTitle": "Marketing Manager",
+          "mentorGroupLens": "岗位定位视角",
+          "adviceCount": 5,
+          "adviceItems": [
             {
               "adviceId": "seg_10202",
               "title": "补上目标岗位原词",
@@ -646,27 +2004,6 @@
               "action": "如果这段经历是实习，请在 title 中明确标注 Intern / Internship；如果是项目制经历，在 bullet 中说明项目周期、职责边界和最终产出。"
             },
             {
-              "adviceId": "uncovered_missing exp location",
-              "title": "补强经历里的动作和交付",
-              "coverageFamily": "experience_evidence",
-              "actionFamily": "experience_location_completion",
-              "targetSection": "experience",
-              "source": "curator_supplement",
-              "attributionMode": "stitched_lens",
-              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
-              "action": "在 Experience 每段标题行补齐城市/地区、Remote/Hybrid 或项目所在地；如果是线上项目，也可以明确写成 Remote Project。"
-            }
-          ]
-        },
-        {
-          "mentorId": "mock_google_growth_marketing",
-          "mentorName": "Google 增长营销视角",
-          "company": "Google",
-          "mentorTitle": "Growth Marketing Manager",
-          "mentorGroupLens": "ATS 关键词视角",
-          "adviceCount": 2,
-          "adviceItems": [
-            {
               "adviceId": "rolefb_marketing_specialist_keyword_in_experience",
               "title": "把技能词写成项目证据",
               "coverageFamily": "keyword",
@@ -678,47 +2015,15 @@
               "action": "选 2-3 条经历 bullet，把 content strategy、campaign analysis、audience segmentation、marketing strategy 和 google analytics、hubspot、canva、google ads 放进具体动作中，并说明完成了什么 campaign brief、content calendar、market research report、press rel"
             },
             {
-              "adviceId": "uncovered_repetitive verbs",
-              "title": "替换重复动词",
-              "coverageFamily": "cross_domain_transfer",
-              "actionFamily": "action_verb_variety",
+              "adviceId": "uncovered_missing exp location",
+              "title": "补强经历里的动作和交付",
+              "coverageFamily": "experience_evidence",
+              "actionFamily": "experience_location_completion",
               "targetSection": "experience",
               "source": "curator_supplement",
               "attributionMode": "stitched_lens",
               "sourceDisclosure": "来源：MentorX 按该导师背景整理",
-              "action": "按 Marketing Specialist 的工作语境，把重复的 participated / assisted / responsible for 改成更具体的动作，例如 analyzed、coordinated、built、monitored、reconciled、reported，并连接 google analytics、hubspot、canva 或 campaign brief、content calendar、market"
-            }
-          ]
-        },
-        {
-          "mentorId": "mentor_1_y導師",
-          "mentorName": "Y導師",
-          "company": "Amazon",
-          "mentorTitle": "Marketing Manager",
-          "mentorGroupLens": "ATS 关键词视角",
-          "adviceCount": 2,
-          "adviceItems": [
-            {
-              "adviceId": "rolefb_marketing_specialist_keyword_gap",
-              "title": "补齐技能区关键词",
-              "coverageFamily": "keyword",
-              "actionFamily": "skills_keyword_ordering",
-              "targetSection": "skills",
-              "source": "fallback",
-              "attributionMode": "stitched_lens",
-              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
-              "action": "对照 JD 提取真实掌握的 campaign、brand、audience、content，优先放入 Summary、Skills 和最相关经历，不要只堆在一个技能列表里。"
-            },
-            {
-              "adviceId": "rolefb_marketing_specialist_positioning",
-              "title": "统一开头岗位定位",
-              "coverageFamily": "positioning",
-              "actionFamily": "summary_positioning",
-              "targetSection": "summary",
-              "source": "fallback",
-              "attributionMode": "stitched_lens",
-              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
-              "action": "在 Summary 第一或第二句自然写出 Marketing Specialist，并紧接一句连接 content strategy、campaign analysis、audience segmentation、marketing strategy、campaign brief、content calendar、market research report、press release 或最相关项目证据。"
+              "action": "在 Experience 每段标题行补齐城市/地区、Remote/Hybrid 或项目所在地；如果是线上项目，也可以明确写成 Remote Project。"
             }
           ]
         }
@@ -1113,7 +2418,7 @@
           "company": "Cisco",
           "mentorTitle": "Network Operations Engineer",
           "mentorGroupLens": "经历证据视角",
-          "adviceCount": 9,
+          "adviceCount": 5,
           "adviceItems": [
             {
               "adviceId": "seg_3560",
@@ -1149,19 +2454,40 @@
               "action": "如果这段经历是实习，请在 title 中明确标注 Intern / Internship；如果是项目制经历，在 bullet 中说明项目周期、职责边界和最终产出。"
             },
             {
-              "adviceId": "rolefb_network_operator_junior_full-time_junior_signal",
-              "title": "把训练背景写成岗位证据",
-              "coverageFamily": "junior_signal",
-              "actionFamily": "education_signal",
-              "targetSection": "education",
-              "source": "fallback",
+              "adviceId": "uncovered_repetitive verbs",
+              "title": "替换重复动词",
+              "coverageFamily": "experience_evidence",
+              "actionFamily": "action_verb_variety",
+              "targetSection": "experience",
+              "source": "curator_supplement",
               "attributionMode": "stitched_lens",
               "sourceDisclosure": "来源：MentorX 按该导师背景整理",
-              "action": "保留和 网络运营专员 Network Operator (Junior full-time) 相关的课程、证书或项目，把它们写成「学了什么 network monitoring、incident response、troubleshooting、ticket handling + 做了什么 incident report、network status report、troubleshooting log、runbook + 支撑哪项岗位"
+              "action": "按 网络运营专员 Network Operator (Junior full-time) 的工作语境，把重复的 participated / assisted / responsible for 改成更具体的动作，例如 analyzed、coordinated、built、monitored、reconciled、reported，并连接 Zabbix、Nagios、Grafana 或 incident report、network s"
             },
             {
-              "adviceId": "rolefb_network_operator_junior_full-time_experience_evidence",
+              "adviceId": "uncovered_missing exp location",
               "title": "补强经历里的动作和交付",
+              "coverageFamily": "experience_evidence",
+              "actionFamily": "experience_location_completion",
+              "targetSection": "experience",
+              "source": "curator_supplement",
+              "attributionMode": "stitched_lens",
+              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
+              "action": "在 Experience 每段标题行补齐城市/地区、Remote/Hybrid 或项目所在地；如果是线上项目，也可以明确写成 Remote Project。"
+            }
+          ]
+        },
+        {
+          "mentorId": "mock_microsoft_cloud_infra",
+          "mentorName": "Microsoft 云基础设施视角",
+          "company": "Microsoft",
+          "mentorTitle": "Cloud Infrastructure Engineer",
+          "mentorGroupLens": "Junior 背景补强视角",
+          "adviceCount": 4,
+          "adviceItems": [
+            {
+              "adviceId": "rolefb_network_operator_junior_full-time_experience_evidence",
+              "title": "重写核心经历 bullet",
               "coverageFamily": "experience_evidence",
               "actionFamily": "experience_bullet_evidence",
               "targetSection": "experience",
@@ -1193,26 +2519,15 @@
               "action": "选 2-3 条经历 bullet，把 network monitoring、incident response、troubleshooting、ticket handling 和 Zabbix、Nagios、Grafana、Wireshark 放进具体动作中，并说明完成了什么 incident report、network status report、troubleshooting log、runbook。"
             },
             {
-              "adviceId": "uncovered_repetitive verbs",
-              "title": "替换重复动词",
-              "coverageFamily": "experience_evidence",
-              "actionFamily": "action_verb_variety",
-              "targetSection": "experience",
-              "source": "curator_supplement",
+              "adviceId": "rolefb_network_operator_junior_full-time_junior_signal",
+              "title": "把训练背景写成岗位证据",
+              "coverageFamily": "junior_signal",
+              "actionFamily": "education_signal",
+              "targetSection": "education",
+              "source": "fallback",
               "attributionMode": "stitched_lens",
               "sourceDisclosure": "来源：MentorX 按该导师背景整理",
-              "action": "按 网络运营专员 Network Operator (Junior full-time) 的工作语境，把重复的 participated / assisted / responsible for 改成更具体的动作，例如 analyzed、coordinated、built、monitored、reconciled、reported，并连接 Zabbix、Nagios、Grafana 或 incident report、network s"
-            },
-            {
-              "adviceId": "uncovered_missing exp location",
-              "title": "把职责写成项目证据",
-              "coverageFamily": "experience_evidence",
-              "actionFamily": "experience_location_completion",
-              "targetSection": "experience",
-              "source": "curator_supplement",
-              "attributionMode": "stitched_lens",
-              "sourceDisclosure": "来源：MentorX 按该导师背景整理",
-              "action": "在 Experience 每段标题行补齐城市/地区、Remote/Hybrid 或项目所在地；如果是线上项目，也可以明确写成 Remote Project。"
+              "action": "保留和 网络运营专员 Network Operator (Junior full-time) 相关的课程、证书或项目，把它们写成「学了什么 network monitoring、incident response、troubleshooting、ticket handling + 做了什么 incident report、network status report、troubleshooting log、runbook + 支撑哪项岗位"
             }
           ]
         }
