@@ -23,6 +23,7 @@ if (s.reportId && s.reportAccessToken && (!s.premiumKeywordBreakdown || !s.premi
       if (!premiumReport) return;
       window.Store.set({
         premiumMentors: premiumReport.mentors || null,
+        reportPageMentorGroups: premiumReport.reportPageMentorGroups || null,
         premiumAdviceItems: premiumReport.allAdviceItems || null,
         premiumKeywordBreakdown: premiumReport.keywordBreakdown || null,
         missingKeywordChecklist: premiumReport.missingKeywordChecklist || null,
@@ -847,11 +848,17 @@ function renderMentorLogoIntro(pool) {
     </div>`;
 }
 
+function getReportPageMentorGroups() {
+  const groups = s.reportPageMentorGroups || atsResult.reportPageMentorGroups || atsResult.raw?.reportPageMentorGroups || [];
+  return Array.isArray(groups) ? groups : [];
+}
+
 function collectMentorLogoPool() {
   const pools = [
     ...(s.mentorLogoPool || []),
     ...(s.lockedAdvicePreview?.mentorLogoPool || []),
     ...(s.freeMentorAdvice?.mentorLogoPool || []),
+    ...getReportPageMentorGroups().map((m) => ({ company: m.company, companyLogo: m.companyLogo })),
     ...(s.premiumMentors || []).map((m) => ({ company: m.company, companyLogo: m.companyLogo })),
     ...(atsResult.raw?.premiumMentors || []).map((m) => ({ company: m.company, companyLogo: m.companyLogo })),
     ...(atsResult.raw?.freeMentorAdvice?.mentorLogoPool || []),
@@ -1577,6 +1584,7 @@ function renderAdviceBundle(items, logoPool) {
 function getCompanyLogo(company) {
   if (!company) return "";
   const lower = company.toLowerCase();
+  if (lower === "mentorx") return "/logo/MentorX.png";
   const match = STATIC_MENTOR_COMPANY_LOGOS.find(item => item.company && item.company.toLowerCase() === lower);
   return match ? match.companyLogo : "";
 }
@@ -1587,6 +1595,18 @@ function renderMentorGroupHeader(mentor, groupIdx, totalGroups) {
   const logoHtml = logoUrl
     ? `<div style="width:56px;height:56px;border-radius:10px;background:#fff;border:1px solid #E6DEF2;display:flex;align-items:center;justify-content:center;padding:7px;flex-shrink:0;"><img src="${escapeAttr(logoUrl)}" alt="${escapeAttr(mentor.company||"")}" style="max-width:100%;max-height:100%;object-fit:contain;"></div>`
     : avatarCircle(mentor.company || mentorDisplayName, 56);
+  const lens = mentor.mentorGroupLens || "";
+  const lensReason = mentor.mentorGroupReason || "";
+  const attributionMode = mentor.attributionMode || "";
+  const sourceDisclosure = mentor.sourceDisclosure || (
+    attributionMode === "verified_original"
+      ? "来源：该导师建议"
+      : attributionMode === "mentorx_strategy"
+        ? "来源：MentorX 策略建议"
+        : attributionMode === "stitched_lens"
+          ? "来源：MentorX 按该导师背景整理"
+          : ""
+  );
   return `
     <div style="display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid #E6DEF2;margin-bottom:20px;">
       ${logoHtml}
@@ -1594,6 +1614,8 @@ function renderMentorGroupHeader(mentor, groupIdx, totalGroups) {
         <div style="font-weight:700;font-size:17px;color:#111827;line-height:1.2;">${escapeHtml(mentorDisplayName)}</div>
         ${mentor.company ? `<div style="font-size:12px;color:#6B7280;margin-top:3px;">${escapeHtml(mentor.company)}</div>` : ""}
         ${mentor.mentorTitle ? `<div style="font-size:11px;color:#9CA3AF;margin-top:2px;">${escapeHtml(mentor.mentorTitle)}</div>` : ""}
+        ${lens ? `<div style="display:inline-flex;align-items:center;margin-top:8px;font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:99px;background:#F0E8FA;color:#5333A6;border:1px solid #E6DEF2;">本次视角：${escapeHtml(lens)}</div>` : ""}
+        ${lensReason ? `<p style="margin:7px 0 0;font-size:12px;line-height:1.55;color:#6B7280;">${escapeHtml(lensReason)}</p>` : ""}
       </div>
       <span style="font-size:11px;color:#9CA3AF;font-weight:500;flex-shrink:0;">导师 ${groupIdx+1} / ${totalGroups}</span>
     </div>`;
@@ -1615,10 +1637,16 @@ function renderMentorGrouped(mentors) {
   return valid.map((m, i) => renderMentorGroup(m, i, valid.length)).join("");
 }
 
+function countVisibleMentorGroupAdvice(mentors = []) {
+  return (mentors || []).reduce((sum, mentor) =>
+    sum + ((mentor.adviceItems || []).filter(item => !isUnsafeReportAdvice(item)).length), 0);
+}
+
 function flattenAllAdviceItems() {
   const seen = new Set();
   const out = [];
   const sources = [
+    ...getReportPageMentorGroups().flatMap(m => m.adviceItems || []),
     ...(s.premiumAdviceItems || []),
     ...((s.premiumMentors || []).flatMap(m => m.adviceItems || [])),
   ];
@@ -1677,6 +1705,7 @@ function collectHrPerspectiveLookup() {
   const sources = [
     ...(s.premiumAdviceItems || []),
     ...(atsResult.raw?.premiumAdviceItems || []),
+    ...getReportPageMentorGroups().flatMap(m => m.adviceItems || m.adviceList || []),
     ...((s.premiumMentors || []).flatMap(m => m.adviceItems || m.adviceList || [])),
     ...((atsResult.raw?.premiumMentors || []).flatMap(m => m.adviceItems || m.adviceList || [])),
     ...(s.freeMentorAdvice?.adviceItems || []),
@@ -1755,6 +1784,7 @@ function isMissingSummaryAdvice(item = {}) {
 }
 function collectReportAdviceItems() {
   const sources = [
+    ...getReportPageMentorGroups().flatMap(m => m.adviceItems || []),
     ...(s.premiumAdviceItems || []),
     ...(atsResult.raw?.premiumAdviceItems || []),
     ...((s.premiumMentors || []).flatMap(m => m.adviceItems || [])),
@@ -1783,6 +1813,10 @@ function collectReportAdviceItems() {
 }
 
 const FIT_TYPE_CONFIG = {
+  direct: { label:"同职能导师", bg:"#F0FDF4", color:"#166534", border:"#BBF7D0" },
+  adjacent: { label:"相邻职能视角", bg:"#FFF7ED", color:"#92400E", border:"#FDE68A" },
+  problem_lens: { label:"问题视角匹配", bg:"#EFF6FF", color:"#1D4ED8", border:"#BFDBFE" },
+  mentorx_strategy: { label:"MentorX 策略", bg:"#F3F4F6", color:"#4B5563", border:"#E5E7EB" },
   same_role: { label:"同职位导师", bg:"#F0E8FA", color:"#5333A6", border:"#E6DEF2" },
   same_industry: { label:"同产业导师", bg:"#F0FDF4", color:"#15803D", border:"#BBF7D0" },
   same_function: { label:"同职能导师", bg:"#F0FDF4", color:"#166534", border:"#BBF7D0" },
@@ -1790,20 +1824,80 @@ const FIT_TYPE_CONFIG = {
   recruiter_perspective: { label:"HR", bg:"#FFF1F2", color:"#9F1239", border:"#FECDD3" },
 };
 
+function normalizeEvidenceChipsForDisplay(item = {}) {
+  const text = [
+    item.title,
+    item.currentDiagnosis,
+    item.problemSummary,
+    item.action,
+    item.actionSummary,
+    item.mentorInsight,
+    item.mentorLens,
+    item.reason,
+    item.actionFamily,
+    item.canonicalActionFamily,
+    item.coverageFamily,
+    ...(item.relatedProblemTags || []),
+  ].filter(Boolean).join(" ").toLowerCase();
+  const familyEvidence = {
+    positioning: ["岗位定位", "开头主线", "目标岗位"],
+    keyword: ["JD 关键词", "ATS 匹配", item.targetSection === "skills" ? "Skills 排序" : "经历证据"],
+    keywords: ["JD 关键词", "ATS 匹配", item.targetSection === "skills" ? "Skills 排序" : "经历证据"],
+    experience_evidence: ["经历证据", "推进动作", "交付物"],
+    impact_metrics: ["量化结果", "成果表达", "影响规模"],
+    risk_explanation: ["经历性质", "项目边界", "稳定性风险"],
+    junior_signal: ["课程/证书", "教育训练", "岗位能力证据"],
+    cross_domain_transfer: ["可迁移能力", "跨领域表达", "目标岗位语言"],
+    readability_structure: ["Section 顺序", "信息权重", "可读性"],
+    technical_depth: ["技术深度", "项目方法", "工程证据"],
+    business_data_context: ["业务场景", "数据应用", "结论价值"],
+  };
+  if (familyEvidence[item.coverageFamily]) return familyEvidence[item.coverageFamily];
+  if (item.coverageFamily === "junior_signal" || item.actionFamily === "education_signal" || item.canonicalActionFamily === "education_signal") {
+    return ["课程/证书", "教育训练", "岗位能力证据"];
+  }
+  if (/short tenure|internship|intern\b|project period|短期|实习|實習|项目周期|項目週期|稳定性|穩定性/.test(text)) {
+    return ["经历性质", "项目边界", "稳定性风险"];
+  }
+  if (/cross-functional|collaboration|collaborat|teamwork|stakeholder|协作|協作|跨部门|跨部門|推进|推進|交付物|deliverable/.test(text)) {
+    return ["经历证据", "推进动作", "交付物"];
+  }
+  if (/course|coursework|certificate|education|课程|課程|证书|證書|教育/.test(text)) {
+    return ["课程/证书", "教育训练", "岗位能力证据"];
+  }
+  if (/quantif|metric|measurable|impact|成果|量化|数字|數字|规模|規模|效率/.test(text)) {
+    return ["量化结果", "成果表达", "影响规模"];
+  }
+  const evidence = Array.isArray(item.evidence) ? item.evidence.slice(0, 3) : [];
+  if (evidence.join(" ") === "经历性质 项目边界 稳定性风险") return ["经历证据", "推进动作", "交付物"];
+  return evidence;
+}
+
 function renderAdviceItem(item, i) {
   const diagnosis = item.currentDiagnosis || item.problemSummary || "";
   const action = item.action || item.actionSummary || "";
   const insight = item.mentorInsight || item.mentorLens || item.reason || item.I_insight || item.P_mentor || "";
   const hrPov = item.hrPerspective || item.HR_os || item.hrPov || item.recruiterPerspective || HR_PERSPECTIVE_LOOKUP.get(String(item.adviceId || "")) || HR_PERSPECTIVE_LOOKUP.get(adviceIdentity(item)) || fallbackHrPerspective(item);
-  const fitType = item.mentorFitType || "";
+  const fitType = item.mentorDisplayFit || item.mentorFitType || "";
+  const attributionMode = item.attributionMode || "";
+  const sourceDisclosure = item.sourceDisclosure || (
+    attributionMode === "verified_original"
+      ? "来源：该导师建议"
+      : attributionMode === "mentorx_strategy"
+        ? "来源：MentorX 策略建议"
+        : attributionMode === "stitched_lens"
+          ? "来源：MentorX 按该导师背景整理"
+          : ""
+  );
   const rawTopicCluster = item.displayAdviceType || item.topicCluster || sectionLabel(item.targetSection);
   const topicCluster = /ATS\s*通用建议/i.test(String(rawTopicCluster)) ? "" : rawTopicCluster;
   const fitCfg = FIT_TYPE_CONFIG[fitType];
   const fitChip = fitCfg
     ? `<span style="display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:${fitCfg.bg};color:${fitCfg.color};border:1px solid ${fitCfg.border};">${fitCfg.label}</span>`
     : "";
-  const evidenceChips = (item.evidence || []).length
-    ? `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;">${item.evidence.map(e => `<span style="font-size:11px;padding:2px 8px;border-radius:99px;background:#F3F4F6;color:#6B7280;border:1px solid #E5E7EB;">${escapeHtml(e)}</span>`).join("")}</div>`
+  const displayEvidence = normalizeEvidenceChipsForDisplay(item);
+  const evidenceChips = displayEvidence.length
+    ? `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;">${displayEvidence.map(e => `<span style="font-size:11px;padding:2px 8px;border-radius:99px;background:#F3F4F6;color:#6B7280;border:1px solid #E5E7EB;">${escapeHtml(e)}</span>`).join("")}</div>`
     : "";
   const divider = i > 0
     ? `<div style="height:1px;background:linear-gradient(to right,transparent,rgba(0,0,0,0.07),transparent);margin:22px 0;"></div>`
@@ -1817,6 +1911,7 @@ function renderAdviceItem(item, i) {
         ${fitChip}
       </div>
       <h4 style="margin:0 0 13px;font-size:15px;font-weight:700;color:#111827;line-height:1.4;"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#111827;color:#fff;font-size:11px;margin-right:8px;vertical-align:1px;">${i + 1}</span>${escapeHtml(item.title)}</h4>
+      ${sourceDisclosure ? `<div style="font-size:11px;color:#9CA3AF;margin:-5px 0 11px 30px;">${escapeHtml(sourceDisclosure)}</div>` : ""}
       ${diagnosis ? `<div style="margin-bottom:11px;">
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
           <span style="width:3px;height:14px;background:#D4A574;border-radius:2px;flex-shrink:0;"></span>
@@ -1845,12 +1940,15 @@ const premiumMentors = s.premiumMentors;
 const premiumAdviceItems = collectReportAdviceItems();
 const mentorLogoPool = collectMentorLogoPool();
 const legacyMentors = s.mentorAdvice;
+const reportPageMentorGroupsForRender = getReportPageMentorGroups();
+const hasCuratedGroupsForRender = reportPageMentorGroupsForRender.some(m => (m.adviceItems || []).length > 0);
 if (mentorsSection) {
   const num = mentorsSection.querySelector(".section-num");
   if (num) {
     const legacyAdviceCount = (legacyMentors || []).reduce((sum, mentor) =>
       sum + ((mentor.adviceItems || mentor.adviceList || []).length), 0);
-    const adviceCount = (premiumAdviceItems || []).length || legacyAdviceCount;
+    const curatedAdviceCount = hasCuratedGroupsForRender ? countVisibleMentorGroupAdvice(reportPageMentorGroupsForRender) : 0;
+    const adviceCount = curatedAdviceCount || (premiumAdviceItems || []).length || legacyAdviceCount;
     num.textContent = adviceCount ? `04 · 完整 ${adviceCount} 条导师建议` : "04 · 完整导师建议";
   }
 }
@@ -1861,7 +1959,9 @@ if (mentorLogoIntroSlot) {
 const mentorsListEl = document.getElementById("mentorsList");
 if (mentorsListEl) {
   const hasAnyAdvice = (premiumAdviceItems && premiumAdviceItems.length > 0) || (s.premiumMentors || []).some(m => (m.adviceItems || []).length > 0);
-  if (hasAnyAdvice) {
+  if (hasCuratedGroupsForRender) {
+    mentorsListEl.innerHTML = renderMentorGrouped(reportPageMentorGroupsForRender);
+  } else if (hasAnyAdvice) {
     mentorsListEl.innerHTML = renderMentorGroupedFromAdviceItems();
   } else if (legacyMentors && legacyMentors.length > 0) {
     mentorsListEl.innerHTML = legacyMentors.map((m,i)=>renderPremiumMentorCard(m,i)).join("");

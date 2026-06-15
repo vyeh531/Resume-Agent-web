@@ -176,6 +176,7 @@ export default function LoginPage() {
             atsResult,
             targetLabel: Store.get().targetLabel || Store.get().jobTitle || publicReport.jobTitle || atsResult.jobTitle || null,
             freeMentorAdvice: publicReport.freeMentorAdvice || null,
+            resultPageAdviceItems: publicReport.resultPageAdviceItems || null,
             lockedAdvicePreview: publicReport.lockedAdvicePreview || null,
             mentorLogoPool: publicReport.lockedAdvicePreview?.mentorLogoPool || publicReport.freeMentorAdvice?.mentorLogoPool || null,
             analysisJobStatus: "completed",

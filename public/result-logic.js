@@ -2284,6 +2284,32 @@ function renderFreeMentor(m) {
   }
 }
 
+function collectResultPageAdviceItems() {
+  const items = s.resultPageAdviceItems || atsResult.resultPageAdviceItems || atsResult.raw?.resultPageAdviceItems || [];
+  return Array.isArray(items) ? items.filter(Boolean).slice(0, 3) : [];
+}
+
+function renderResultPageAdvicePreview(items) {
+  const mentorFreeEl = document.getElementById("mentorFree");
+  if (!mentorFreeEl || !items.length) return false;
+  const adviceHtml = ensureThreeFreeAdviceItems(items).map(renderApiAdviceItem).join("");
+  mentorFreeEl.innerHTML = `
+    <div style="background:#FFFFFF;border:1px solid rgba(69,42,147,.10);border-radius:20px;padding:20px 20px 18px;box-shadow:0 1px 6px rgba(69,42,147,.08);">
+      ${adviceHtml}
+    </div>`;
+  const section = mentorFreeEl.closest(".section");
+  const numEl = section?.querySelector(".section-num");
+  const titleEl = section?.querySelector(".section-title");
+  const descEl = section?.querySelector(".section-desc");
+  if (numEl) numEl.textContent = "免费试读 · 3 个优先修改点";
+  if (titleEl) titleEl.textContent = "先改这 3 件事";
+  if (descEl) descEl.textContent = "系统从完整导师建议中挑出最值得先处理的三个修改动作，优先覆盖不同简历部位。";
+  if (titleEl && !document.getElementById("mentorLogoIntro")) {
+    titleEl.insertAdjacentHTML("afterend", renderMentorLogoIntro());
+  }
+  return true;
+}
+
 function renderLockedAdvicePreview(preview) {
   const areaEl = document.getElementById("lockedMentorsArea");
   if (!areaEl || !preview) return;
@@ -2328,8 +2354,14 @@ function renderLockedAdvicePreviewClean(preview) {
 }
 
 (function renderMentorAdvice() {
+  const resultAdviceItems = collectResultPageAdviceItems();
   const freeMentor  = s.freeMentorAdvice || atsResult.raw?.freeMentorAdvice;
   const lockedPrev  = s.lockedAdvicePreview || atsResult.raw?.lockedAdvicePreview;
+  if (resultAdviceItems.length) {
+    renderResultPageAdvicePreview(resultAdviceItems);
+    renderLockedAdvicePreviewClean(lockedPrev);
+    return;
+  }
   if (freeMentor) {
     renderFreeMentor(freeMentor);
     renderLockedAdvicePreviewClean(lockedPrev);

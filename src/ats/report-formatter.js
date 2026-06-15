@@ -1212,7 +1212,103 @@ function topicPreviewLabel(topicValue) {
   return labels[topicValue] || "\u5bfc\u5e08\u4fee\u6539\u5efa\u8bae";
 }
 
-function formatPublicFreeReport(internalAtsResult, freeAdvice, lockedPreview) {
+function reportAdviceText(item = {}) {
+  return [
+    item.title,
+    item.currentDiagnosis,
+    item.problemSummary,
+    item.action,
+    item.actionSummary,
+    item.mentorInsight,
+    item.mentorLens,
+    item.reason,
+    item.actionFamily,
+    item.canonicalActionFamily,
+    item.coverageFamily,
+    ...(asArray(item.relatedProblemTags)),
+  ].filter(Boolean).join(" ").toLowerCase();
+}
+
+function normalizeEvidenceForReport(item = {}) {
+  const text = reportAdviceText(item);
+  const familyEvidence = {
+    positioning: ["岗位定位", "开头主线", "目标岗位"],
+    keyword: ["JD 关键词", "ATS 匹配", item.targetSection === "skills" ? "Skills 排序" : "经历证据"],
+    keywords: ["JD 关键词", "ATS 匹配", item.targetSection === "skills" ? "Skills 排序" : "经历证据"],
+    experience_evidence: ["经历证据", "推进动作", "交付物"],
+    impact_metrics: ["量化结果", "成果表达", "影响规模"],
+    risk_explanation: ["经历性质", "项目边界", "稳定性风险"],
+    junior_signal: ["课程/证书", "教育训练", "岗位能力证据"],
+    cross_domain_transfer: ["可迁移能力", "跨领域表达", "目标岗位语言"],
+    readability_structure: ["Section 顺序", "信息权重", "可读性"],
+    technical_depth: ["技术深度", "项目方法", "工程证据"],
+    business_data_context: ["业务场景", "数据应用", "结论价值"],
+  };
+  if (familyEvidence[item.coverageFamily]) return familyEvidence[item.coverageFamily];
+  if (item.coverageFamily === "junior_signal" || item.actionFamily === "education_signal" || item.canonicalActionFamily === "education_signal") {
+    return ["课程/证书", "教育训练", "岗位能力证据"];
+  }
+  if (/short tenure|internship|intern\b|project period|短期|实习|實習|项目周期|項目週期|稳定性|穩定性/.test(text)) {
+    return ["经历性质", "项目边界", "稳定性风险"];
+  }
+  if (/cross-functional|collaboration|collaborat|teamwork|stakeholder|协作|協作|跨部门|跨部門|推进|推進|交付物|deliverable/.test(text)) {
+    return ["经历证据", "推进动作", "交付物"];
+  }
+  if (/course|coursework|certificate|education|课程|課程|证书|證書|教育/.test(text)) {
+    return ["课程/证书", "教育训练", "岗位能力证据"];
+  }
+  if (/quantif|metric|measurable|impact|成果|量化|数字|數字|规模|規模|效率/.test(text)) {
+    return ["量化结果", "成果表达", "影响规模"];
+  }
+  const evidence = asArray(item.evidence).slice(0, 3);
+  if (evidence.join(" ") === "经历性质 项目边界 稳定性风险") return ["经历证据", "推进动作", "交付物"];
+  return evidence;
+}
+
+function stripCuratedAdviceItemForPublic(item = {}) {
+  const stripMentorSource = (source) => source ? {
+    mentorId: source.mentorId || null,
+    mentorName: source.mentorName || "",
+    company: source.company || "",
+    companyLogo: source.companyLogo || null,
+    mentorTitle: source.mentorTitle || "",
+  } : null;
+  return {
+    adviceId: item.adviceId,
+    title: item.title,
+    currentDiagnosis: item.currentDiagnosis || item.problemSummary,
+    problemSummary: item.problemSummary || item.currentDiagnosis,
+    action: item.action || item.actionSummary,
+    actionSummary: item.actionSummary || item.action,
+    mentorLens: item.mentorLens || item.mentorInsight || item.reason || "",
+    mentorInsight: item.mentorInsight || item.mentorLens || item.reason || "",
+    hrPerspective: item.hrPerspective || item.HR_os || "",
+    HR_os: item.HR_os || item.hrPerspective || "",
+    targetSection: item.targetSection || "overall",
+    priority: item.priority || "medium",
+    topicCluster: item.topicCluster || item.displayAdviceType || "",
+    displayAdviceType: item.displayAdviceType || item.topicCluster || "",
+    actionSlot: item.actionSlot || "",
+    actionFamily: item.actionFamily || item.canonicalActionFamily || "",
+    canonicalActionFamily: item.canonicalActionFamily || item.actionFamily || "",
+    coverageFamily: item.coverageFamily || "",
+    displayPriority: item.displayPriority || 0,
+    isPreviewWorthy: item.isPreviewWorthy !== false,
+    attributionMode: item.attributionMode || "verified_original",
+    sourceDisclosure: item.sourceDisclosure || "",
+    originalMentorSource: stripMentorSource(item.originalMentorSource),
+    displayedMentorSource: stripMentorSource(item.displayedMentorSource),
+    mentorSource: stripMentorSource(item.mentorSource),
+    mentorDisplayFit: item.mentorDisplayFit || "",
+    mentorFitReason: item.mentorFitReason || "",
+    displayMentorScore: item.displayMentorScore || 0,
+    adviceSkillClusters: item.adviceSkillClusters || [],
+    source: item.source || "db",
+    mentorSourceType: item.mentorSourceType || null,
+  };
+}
+
+function formatPublicFreeReport(internalAtsResult, freeAdvice, lockedPreview, curatedAdvice = null) {
   const riskBucket = riskToBucket(internalAtsResult.risk, internalAtsResult.total);
   const topProblems = riskBucket === "low" ? [] : internalAtsResult.topProblems.slice(0, 3);
   const topInsights = riskBucket === "high"
@@ -1246,6 +1342,7 @@ function formatPublicFreeReport(internalAtsResult, freeAdvice, lockedPreview) {
     keywordMatchCount: buildKeywordMatchCount(internalAtsResult),
     topMissingKw: freeMissingKeywords,
     topMissingKeywords: freeMissingKeywords,
+    resultPageAdviceItems: asArray(curatedAdvice?.resultPageAdviceItems).slice(0, 3).map(stripCuratedAdviceItemForPublic),
     problems: publicProblems,
     suggestions: freeSuggestions,
   };
@@ -1404,6 +1501,13 @@ function formatPremiumUnlockedReport(internalAtsResult, paidAdviceOrMentorReport
     const allAdviceItems = asArray(mentorReport.allAdviceItems).length
       ? asArray(mentorReport.allAdviceItems)
       : mentorReport.mentors.flatMap((mentor) => asArray(mentor.adviceItems));
+    const stripMentorSource = (source) => source ? {
+      mentorId: source.mentorId || null,
+      mentorName: source.mentorName || "",
+      company: source.company || "",
+      companyLogo: source.companyLogo || null,
+      mentorTitle: source.mentorTitle || "",
+    } : null;
     const stripAdviceItem = (item) => ({
       adviceId: item.adviceId,
       title: item.title,
@@ -1413,7 +1517,7 @@ function formatPremiumUnlockedReport(internalAtsResult, paidAdviceOrMentorReport
       action: item.action || item.actionSummary,
       mentorLens: item.mentorLens || item.P_mentor || "",
       reason: item.reason || item.I_insight || "",
-      evidence: asArray(item.evidence).slice(0, 3),
+      evidence: normalizeEvidenceForReport(item),
       mentorInsight: item.mentorInsight || item.I_insight || item.mentorLens || item.P_mentor || "",
       example: item.example,
       rewriteExample: item.rewriteExample || null,
@@ -1426,8 +1530,25 @@ function formatPremiumUnlockedReport(internalAtsResult, paidAdviceOrMentorReport
       mentorFitType: item.mentorFitType || "",
       relatedProblemTags: asArray(item.relatedProblemTags).slice(0, 5),
       priority: item.priority || "medium",
+      actionSlot: item.actionSlot || "",
+      actionFamily: item.actionFamily || item.canonicalActionFamily || "",
+      canonicalActionFamily: item.canonicalActionFamily || item.actionFamily || "",
+      coverageFamily: item.coverageFamily || "",
+      duplicateGroupKey: item.duplicateGroupKey || "",
+      displayPriority: item.displayPriority || 0,
+      isPreviewWorthy: item.isPreviewWorthy !== false,
+      mentorGroupLens: item.mentorGroupLens || "",
+      mentorGroupReason: item.mentorGroupReason || "",
+      attributionMode: item.attributionMode || "verified_original",
+      sourceDisclosure: item.sourceDisclosure || "",
+      originalMentorSource: stripMentorSource(item.originalMentorSource),
+      displayedMentorSource: stripMentorSource(item.displayedMentorSource),
       source: item.source,
-      mentorSource: item.mentorSource || null,
+      mentorSource: stripMentorSource(item.mentorSource),
+      mentorDisplayFit: item.mentorDisplayFit || "",
+      mentorFitReason: item.mentorFitReason || "",
+      displayMentorScore: item.displayMentorScore || 0,
+      adviceSkillClusters: item.adviceSkillClusters || [],
     });
     return {
       mentors: mentorReport.mentors.slice(0, 4).map((mentor) => ({
@@ -1440,8 +1561,30 @@ function formatPremiumUnlockedReport(internalAtsResult, paidAdviceOrMentorReport
         badges: asArray(mentor.badges).slice(0, 4),
         matchReason: mentor.matchReason,
         matchedProblems: asArray(mentor.matchedProblems).slice(0, 8),
+        attributionMode: mentor.attributionMode || "",
+        sourceDisclosure: mentor.sourceDisclosure || "",
+        mentorGroupLens: mentor.mentorGroupLens || "",
+        mentorGroupReason: mentor.mentorGroupReason || "",
         adviceItems: asArray(mentor.adviceItems).slice(0, 3).map(stripAdviceItem),
       })),
+      reportPageMentorGroups: asArray(mentorReport.reportPageMentorGroups).slice(0, 5).map((mentor) => ({
+        mentorId: mentor.mentorId,
+        mentorName: mentor.mentorName,
+        company: mentor.company,
+        companyLogo: mentor.companyLogo || null,
+        mentorTitle: mentor.mentorTitle,
+        mentorSubtitle: mentor.mentorSubtitle,
+        badges: asArray(mentor.badges).slice(0, 4),
+        matchReason: mentor.matchReason,
+        matchedProblems: asArray(mentor.matchedProblems).slice(0, 8),
+        attributionMode: mentor.attributionMode || "",
+        sourceDisclosure: mentor.sourceDisclosure || "",
+        mentorGroupLens: mentor.mentorGroupLens || "",
+        mentorGroupReason: mentor.mentorGroupReason || "",
+        adviceItems: asArray(mentor.adviceItems).slice(0, 4).map(stripAdviceItem),
+      })),
+      curatedAdviceItems: asArray(mentorReport.curatedAdviceItems).slice(0, 12).map(stripAdviceItem),
+      resultPageAdviceItems: asArray(mentorReport.resultPageAdviceItems).slice(0, 3).map(stripAdviceItem),
       allAdviceItems: allAdviceItems.slice(0, 12).map(stripAdviceItem),
       freeAdviceItems: allAdviceItems.slice(0, 3).map(stripAdviceItem),
       paidAdviceItems: allAdviceItems.slice(3, 12).map(stripAdviceItem),

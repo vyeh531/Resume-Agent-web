@@ -17,6 +17,7 @@ import {
   formatPremiumMentorReport,
   retrieveInsiderTips,
 } from '../../services/mentorAdviceRetrieval';
+import { curateMentorAdvicePlan } from '../../services/adviceCurator';
 import { parsePDF, parseDocx } from '../../file-parser';
 import db from '../../database';
 
@@ -107,6 +108,14 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
   const freeAdvice = formatPublicFreeMentorAdvice(freeMentorPlan, internalAtsResult);
   const paidAdvice = premiumMentorPlan.slice(1);
   const premiumMentorReport = formatPremiumMentorReport(premiumMentorPlan, internalAtsResult);
+  const curatedAdvice = curateMentorAdvicePlan({
+    internalAtsResult,
+    retrievalQuery,
+    freeAdvice,
+    paidAdvice,
+    mentorReport: premiumMentorReport,
+    targetRole: internalAtsResult.jobTitle,
+  });
   const companyInsiderTips = await retrieveInsiderTips({ internalAtsResult, limit: 4 });
   mark('format_reports');
   logRetrievalDebug({
@@ -123,9 +132,18 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
     excludedInterviewAdvice: mentorCandidates.debug?.excludedInterviewAdvice ?? 0,
   });
   const lockedPreview = buildLockedAdvicePreview(premiumMentorPlan, internalAtsResult);
-  const publicReport = formatPublicFreeReport(internalAtsResult, freeAdvice, lockedPreview);
+  const publicReport = formatPublicFreeReport(internalAtsResult, freeAdvice, lockedPreview, curatedAdvice);
   const premiumReport = {
-    ...formatPremiumUnlockedReport(internalAtsResult, premiumMentorReport),
+    ...formatPremiumUnlockedReport(internalAtsResult, {
+      ...premiumMentorReport,
+      curatedAdviceItems: curatedAdvice.curatedAdviceItems,
+      resultPageAdviceItems: curatedAdvice.resultPageAdviceItems,
+      reportPageMentorGroups: curatedAdvice.reportPageMentorGroups,
+      coverageSummary: {
+        ...(premiumMentorReport.coverageSummary || {}),
+        ...(curatedAdvice.coverageSummary || {}),
+      },
+    }),
     companyInsiderTips,
   };
   mark('format_public_premium');

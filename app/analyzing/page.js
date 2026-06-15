@@ -123,6 +123,7 @@ export default function AnalyzingPage() {
             reportAccessToken: result.reportAccessToken || null,
             atsResult,
             freeMentorAdvice: publicReport.freeMentorAdvice || null,
+            resultPageAdviceItems: publicReport.resultPageAdviceItems || null,
             lockedAdvicePreview: publicReport.lockedAdvicePreview || null,
             mentorLogoPool: publicReport.lockedAdvicePreview?.mentorLogoPool || publicReport.freeMentorAdvice?.mentorLogoPool || null,
             analysisJobStatus: "completed",
