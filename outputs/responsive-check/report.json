@@ -1,0 +1,227 @@
+[
+  {
+    "page": "home",
+    "path": "/",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "screenshot": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP - web\\outputs\\responsive-check\\iphone-home.png",
+    "title": "MentorX · 简历石沉大海?大厂导师智慧核心联合帮你升级",
+    "url": "http://127.0.0.1:3000/",
+    "scrollWidth": 390,
+    "scrollHeight": 2301,
+    "overflowX": 0,
+    "offenders": []
+  },
+  {
+    "page": "login",
+    "path": "/login",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "screenshot": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP - web\\outputs\\responsive-check\\iphone-login.png",
+    "title": "MentorX · 简历石沉大海?大厂导师智慧核心联合帮你升级",
+    "url": "http://127.0.0.1:3000/login",
+    "scrollWidth": 390,
+    "scrollHeight": 875,
+    "overflowX": 0,
+    "offenders": []
+  },
+  {
+    "page": "result",
+    "path": "/result",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "screenshot": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP - web\\outputs\\responsive-check\\iphone-result.png",
+    "title": "MentorX · 简历石沉大海?大厂导师智慧核心联合帮你升级",
+    "url": "http://127.0.0.1:3000/result",
+    "scrollWidth": 390,
+    "scrollHeight": 3672,
+    "overflowX": 0,
+    "offenders": []
+  },
+  {
+    "page": "payment",
+    "path": "/payment",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "screenshot": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP - web\\outputs\\responsive-check\\iphone-payment.png",
+    "title": "MentorX · 简历石沉大海?大厂导师智慧核心联合帮你升级",
+    "url": "http://127.0.0.1:3000/payment",
+    "scrollWidth": 390,
+    "scrollHeight": 1240,
+    "overflowX": 0,
+    "offenders": []
+  },
+  {
+    "page": "report",
+    "path": "/report",
+    "viewport": {
+      "width": 399,
+      "height": 864
+    },
+    "screenshot": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP - web\\outputs\\responsive-check\\iphone-report.png",
+    "title": "MentorX · 简历石沉大海?大厂导师智慧核心联合帮你升级",
+    "url": "http://127.0.0.1:3000/report",
+    "scrollWidth": 399,
+    "scrollHeight": 7115,
+    "overflowX": 9,
+    "offenders": []
+  },
+  {
+    "page": "home",
+    "path": "/",
+    "viewport": {
+      "width": 768,
+      "height": 1024
+    },
+    "screenshot": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP - web\\outputs\\responsive-check\\tablet-home.png",
+    "title": "MentorX · 简历石沉大海?大厂导师智慧核心联合帮你升级",
+    "url": "http://127.0.0.1:3000/",
+    "scrollWidth": 768,
+    "scrollHeight": 1842,
+    "overflowX": 0,
+    "offenders": []
+  },
+  {
+    "page": "login",
+    "path": "/login",
+    "viewport": {
+      "width": 768,
+      "height": 1024
+    },
+    "screenshot": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP - web\\outputs\\responsive-check\\tablet-login.png",
+    "title": "MentorX · 简历石沉大海?大厂导师智慧核心联合帮你升级",
+    "url": "http://127.0.0.1:3000/login",
+    "scrollWidth": 768,
+    "scrollHeight": 1024,
+    "overflowX": 0,
+    "offenders": []
+  },
+  {
+    "page": "result",
+    "path": "/result",
+    "viewport": {
+      "width": 768,
+      "height": 1024
+    },
+    "screenshot": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP - web\\outputs\\responsive-check\\tablet-result.png",
+    "title": "MentorX · 简历石沉大海?大厂导师智慧核心联合帮你升级",
+    "url": "http://127.0.0.1:3000/result",
+    "scrollWidth": 768,
+    "scrollHeight": 3164,
+    "overflowX": 0,
+    "offenders": []
+  },
+  {
+    "page": "payment",
+    "path": "/payment",
+    "viewport": {
+      "width": 768,
+      "height": 1024
+    },
+    "screenshot": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP - web\\outputs\\responsive-check\\tablet-payment.png",
+    "title": "MentorX · 简历石沉大海?大厂导师智慧核心联合帮你升级",
+    "url": "http://127.0.0.1:3000/payment",
+    "scrollWidth": 768,
+    "scrollHeight": 1049,
+    "overflowX": 0,
+    "offenders": []
+  },
+  {
+    "page": "report",
+    "path": "/report",
+    "viewport": {
+      "width": 837,
+      "height": 1116
+    },
+    "screenshot": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP - web\\outputs\\responsive-check\\tablet-report.png",
+    "title": "MentorX · 简历石沉大海?大厂导师智慧核心联合帮你升级",
+    "url": "http://127.0.0.1:3000/report",
+    "scrollWidth": 837,
+    "scrollHeight": 5732,
+    "overflowX": 69,
+    "offenders": []
+  },
+  {
+    "page": "home",
+    "path": "/",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "screenshot": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP - web\\outputs\\responsive-check\\desktop-home.png",
+    "title": "MentorX · 简历石沉大海?大厂导师智慧核心联合帮你升级",
+    "url": "http://127.0.0.1:3000/",
+    "scrollWidth": 1425,
+    "scrollHeight": 1365,
+    "overflowX": 0,
+    "offenders": []
+  },
+  {
+    "page": "login",
+    "path": "/login",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "screenshot": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP - web\\outputs\\responsive-check\\desktop-login.png",
+    "title": "MentorX · 简历石沉大海?大厂导师智慧核心联合帮你升级",
+    "url": "http://127.0.0.1:3000/login",
+    "scrollWidth": 1440,
+    "scrollHeight": 1000,
+    "overflowX": 0,
+    "offenders": []
+  },
+  {
+    "page": "result",
+    "path": "/result",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "screenshot": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP - web\\outputs\\responsive-check\\desktop-result.png",
+    "title": "MentorX · 简历石沉大海?大厂导师智慧核心联合帮你升级",
+    "url": "http://127.0.0.1:3000/result",
+    "scrollWidth": 1425,
+    "scrollHeight": 3479,
+    "overflowX": 0,
+    "offenders": []
+  },
+  {
+    "page": "payment",
+    "path": "/payment",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "screenshot": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP - web\\outputs\\responsive-check\\desktop-payment.png",
+    "title": "MentorX · 简历石沉大海?大厂导师智慧核心联合帮你升级",
+    "url": "http://127.0.0.1:3000/payment",
+    "scrollWidth": 1425,
+    "scrollHeight": 1125,
+    "overflowX": 0,
+    "offenders": []
+  },
+  {
+    "page": "report",
+    "path": "/report",
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "screenshot": "C:\\Users\\viviy\\Documents\\GitHub\\Resume-Agent-MVP - web\\outputs\\responsive-check\\desktop-report.png",
+    "title": "MentorX · 简历石沉大海?大厂导师智慧核心联合帮你升级",
+    "url": "http://127.0.0.1:3000/report",
+    "scrollWidth": 1425,
+    "scrollHeight": 4664,
+    "overflowX": 0,
+    "offenders": []
+  }
+]
