@@ -37,6 +37,29 @@ mentor_kb-v5.db
 *.log
 __pycache__/
 *.pyc
-.vercel
 data/salary/raw/*
 !data/salary/raw/.gitkeep
+
+# Additional build / test output
+out/
+dist/
+build/
+.turbo/
+.cache/
+coverage/
+test-results/
+playwright-report/
+
+# Local secrets / tool state
+.env.*.local
+.vercel/
+.codex_tmp_pdf_preview/
+
+# Generated reports and browser profiles
+outputs/
+
+# Local database backups
+mentor_kb-v5.before-*.db
+
+# Temporary filesystem leftovers
+.fuse_hidden*
