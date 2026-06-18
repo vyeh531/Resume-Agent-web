@@ -3735,6 +3735,19 @@
   .result-page .result-dimension-card .tile-value{
     margin-top: 8px;
     font-size: 24px;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .result-page #salaryRange,
+  .report-page #reportSalaryRange{
+    display: block;
+    max-width: 100%;
+    font-size: 20px !important;
+    line-height: 1.12;
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
 
   .result-page .result-dimension-divider{
@@ -4523,6 +4536,52 @@
 
   .home-page .btn{
     min-height: 40px;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 899px){
+  html,
+  body{
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .page,
+  .report-page,
+  .result-page{
+    box-sizing: border-box;
+  }
+
+  .report-page .export-card,
+  .report-page .export-card-main,
+  .report-page .export-card-actions,
+  .report-page .ai-rewrite-pdf{
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .report-page .report-ats-card{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    overflow: hidden;
+  }
+
+  .report-page .report-ats-visual{
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  .report-page .report-ats-visual #atsRadarChart{
+    width: min(100%, 320px);
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-inline: auto;
+    overflow: visible;
   }
 }
 

@@ -28,8 +28,21 @@ export default function HomePage() {
           <div className="panel-kicker">START DIAGNOSIS</div>
           <h2 className="section-title">把简历交给大厂导师</h2>
           <form className="card" onSubmit={(e) => { e.preventDefault(); if (window.submitResume) window.submitResume(e.currentTarget); }} noValidate>
-            <div className="input-group">
+            <div className="input-group resume-source-group">
               <label className="input-label">上传简历</label>
+              <div className="resume-source-toggle" role="radiogroup" aria-label="resume input mode">
+                <label className="resume-source-option">
+                  <input type="radio" name="resumeInputMode" value="file" defaultChecked />
+                  <span className="resume-source-radio" aria-hidden="true"></span>
+                  <span>上传档案</span>
+                </label>
+                <label className="resume-source-option">
+                  <input type="radio" name="resumeInputMode" value="text" />
+                  <span className="resume-source-radio" aria-hidden="true"></span>
+                  <span>文字输入简历</span>
+                </label>
+              </div>
+              <div className="resume-source-panel" data-resume-source-panel="file">
               <label className="file-upload" id="fileUploadLabel">
                 <input type="file" name="resume" id="resumeFileInput" accept=".pdf,.doc,.docx,.txt,text/plain" />
                 <div className="fu-empty" id="fuEmpty">
@@ -49,10 +62,11 @@ export default function HomePage() {
                   </div>
                 </div>
               </label>
+              </div>
               <span className="input-hint">如果 PDF 无法解析，也可以直接粘贴简历文本。</span>
             </div>
 
-            <div className="input-group">
+            <div className="input-group" hidden>
               <label className="input-label">简历文本 <span className="text-mute" style={{fontWeight:400}}>(上传失败时可用)</span></label>
               <textarea className="textarea" name="resumeText" rows="6" placeholder="如果 PDF / Word 解析失败，可把简历内容粘贴到这里…"></textarea>
             </div>

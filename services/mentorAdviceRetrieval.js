@@ -8179,9 +8179,300 @@ function buildInsiderKnowledgeTip(row = {}, retrievalQuery = {}) {
 // ── Company / Industry Knowledge Tips ─────────────────────────────────────────
 // Surfaces knowledge-style company or industry hiring patterns. These are not
 // mentor advice items and should not be rendered as HR/mentor perspectives.
+function inferInsiderAudience(targetText = "") {
+  const text = String(targetText || "").toLowerCase().replace(/[_-]+/g, " ");
+  if (/\b(product manager|product owner|apm|roadmap|product strategy|product management)\b|產品|产品|產品經理|产品经理/.test(text)) return "product";
+  if (/\b(ux|ui|designer|design|creative|brand designer|visual|figma|art director)\b|設計|设计|視覺|视觉|品牌設計|品牌设计/.test(text)) return "design_creative";
+  if (/\b(data|analytics|bi|business intelligence|sql|tableau|power bi|scientist|machine learning|ml|mle|ai engineer|llm|model|research scientist)\b|資料|数据|數據|分析|机器学习|機器學習|算法/.test(text)) return "data";
+  if (/\b(account|accounting|audit|tax|finance|financial|investment|banking|trading|quant|equity research|risk|wealth|asset|markets|ibd|m&a|actuarial|fp&a)\b|金融|投行|投資|投资|銀行|银行|風控|风控|會計|会计|精算/.test(text)) return "finance";
+  if (/\b(marketing|growth|sales|customer success|account executive|business development|communications|public relations|pr|brand|content|seo|sem)\b|行銷|营销|市場|市场|銷售|销售|客戶成功|客户成功|公關|公关/.test(text)) return "marketing_sales";
+  if (/\b(software|swe|sde|developer|backend|frontend|full stack|cloud|devops|sre|cyber|security|it support|help desk|platform|infrastructure)\b|軟體|软件|工程|後端|后端|前端|雲端|云端|資安|网安|技術支持|技术支持/.test(text)) return "tech";
+  if (/\b(hardware|electrical|mechanical|manufacturing|process engineer|quality|industrial|civil|construction|semiconductor|embedded|firmware|pcb|thermal)\b|硬體|硬件|電機|电气|機械|机械|製造|制造|品質|质量|土木|半導體|半导体/.test(text)) return "engineering_hardware";
+  if (/\b(healthcare|clinical|nurse|pharmacist|physician|public health|life sciences|biotech|pharma|biology|biomedical|genomics|bioinformatics)\b|醫療|医疗|臨床|临床|護理|护理|藥|药|生命科學|生命科学|生物/.test(text)) return "healthcare_life_sciences";
+  if (/\b(social services|social worker|case manager|counselor|community organizer|family services)\b|社工|心理|社會服務|社会服务/.test(text)) return "social_services";
+  if (/\b(legal|law|attorney|paralegal|compliance|regulatory|policy|public sector|government|sustainability|environmental|esg|climate)\b|法律|法務|法务|合規|合规|政策|政府|公部門|公共部门|永續|可持续|環境|环境|氣候|气候/.test(text)) return "legal_policy";
+  if (/\b(teacher|education|curriculum|instructional|academic|research assistant|postdoc|professor|student affairs)\b|教育|教師|教师|課程|课程|學術|学术|研究助理/.test(text)) return "education_research";
+  if (/\b(journalist|journalism|media|reporter|editor|producer|video|publishing|hospitality|event|hotel|tourism)\b|媒體|媒体|新聞|新闻|記者|记者|編輯|编辑|活動|活动|酒店|旅遊|旅游/.test(text)) return "media";
+  if (/\b(hr|recruiter|talent|human resources|people operations)\b|人資|人力|招聘/.test(text)) return "hr_people";
+  if (/\b(real estate|property|brokerage|leasing)\b|房地產|房地产/.test(text)) return "real_estate";
+  if (/\b(consulting|business analyst|business operations|operations|supply chain|logistics|procurement|project manager|program manager|hospitality|event)\b|顧問|顾问|商業分析|商业分析|營運|运营|供應鏈|供应链|物流|採購|采购|專案|项目/.test(text)) return "business_ops";
+  return "other";
+}
+
+function tipMatchesAudience(tip = {}, audience = "") {
+  if (!audience) return false;
+  if (tip.audience === audience) return true;
+  return Array.isArray(tip.audiences) && tip.audiences.includes(audience);
+}
+
 function buildGeneralInsiderTips(retrievalQuery = {}, limit = 4) {
   const targetRole = displayLabelForRoleTerm(retrievalQuery.targetRole || retrievalQuery.roleFamily);
+  const targetText = [
+    retrievalQuery.targetRole,
+    retrievalQuery.roleFamily,
+    retrievalQuery.queryText,
+    ...(retrievalQuery.priorityKeywords || []),
+  ].filter(Boolean).join(" ").toLowerCase();
+  const targetIsFinance = /\b(finance|financial|investment|banking|trading|equity|research|risk|wealth|asset|accounting|analyst|markets|ibd|m&a)\b|金融|投行|投資|投资|銀行|银行|風控|风控|會計|会计/.test(targetText);
+  const targetIsTech = /\b(ai|machine learning|ml|llm|software|engineer|developer|data|product|design|cloud|system|backend|frontend|hardware|swe|sde)\b|工程|技術|技术|資料|数据|產品|产品|設計|设计|算法|軟體|软件/.test(targetText);
+  const targetAudience = inferInsiderAudience(targetText);
   const base = [
+    {
+      company: "Apple",
+      companyLogo: "/logos/Apple.png",
+      industryLabel: "產品體驗 / 跨職能協作",
+      sourceMentorName: "Apple 產品導師",
+      sourceMentorTitle: "產品體驗與跨職能推進視角",
+      knowledgeTitle: "Apple 類團隊會看你是否理解使用者體驗",
+      insight: "Apple 類職位不只看你完成了什麼任務，也會看你是否能把細節品質、使用者體驗和跨團隊推進講清楚。履歷裡如果只寫 feature delivery，缺少 user impact、design trade-off 或品質要求，會少掉很重要的產品感信號。",
+      knowledgeType: "talent_profile",
+      audience: "tech",
+      audiences: ["tech", "product", "design_creative"],
+    },
+    {
+      company: "OpenAI",
+      companyLogo: "/logos/OpenAI.png",
+      industryLabel: "AI Lab / 技術深挖",
+      sourceMentorName: "OpenAI 技術導師",
+      sourceMentorTitle: "AI Lab 履歷與面試信號",
+      knowledgeTitle: "OpenAI 類團隊更看重 problem finding",
+      insight: "OpenAI 類團隊不只看你會不會用模型，而是看你能不能在模糊問題裡自己定義方向。AI project 最好寫出 evaluation、failure mode、latency、cost 和安全邊界，否則容易被看成只是套 API。",
+      knowledgeType: "company_preference",
+      audience: "tech",
+      audiences: ["tech", "data", "education_research"],
+    },
+    {
+      company: "Amazon",
+      companyLogo: "/logos/Amazon.png",
+      industryLabel: "Leadership Principles / 技術決策",
+      sourceMentorName: "Amazon 面試導師",
+      sourceMentorTitle: "行為面與技術面試視角",
+      knowledgeTitle: "Amazon 類面試會把 ownership 當核心信號",
+      insight: "Amazon 類面試很看重 Leadership Principles，不是把它當文化題，而是用來判斷你過去怎麼做決策、承擔責任、處理 trade-off。履歷裡如果只有技術名詞，缺少 ownership 和 impact，會少掉一半信號。",
+      knowledgeType: "interview_standard",
+      audience: "tech",
+      audiences: ["tech", "business_ops"],
+    },
+    {
+      company: "Google",
+      companyLogo: "/logos/google.png",
+      industryLabel: "結構化思考 / 問題拆解",
+      sourceMentorName: "Google 技術導師",
+      sourceMentorTitle: "工程問題拆解視角",
+      knowledgeTitle: "Google 類面試看重你如何拆問題",
+      insight: "Google 類面試常用開放式問題觀察候選人如何拆解、假設、推導和修正方案。履歷中的 project bullet 如果能呈現「問題、方法、trade-off、結果」的思考鏈，會比只列工具和結果更有說服力。",
+      knowledgeType: "interview_standard",
+      audience: "tech",
+      audiences: ["tech", "data", "education_research"],
+    },
+    {
+      company: "Meta",
+      companyLogo: "/logos/Meta.png",
+      industryLabel: "系統設計 / 行為面",
+      sourceMentorName: "Meta 系統設計導師",
+      sourceMentorTitle: "Full-loop 面試視角",
+      knowledgeTitle: "Meta 類 full loop 不只看 coding",
+      insight: "Meta 類工程面試通常會同時看 coding、design 和 behavioral。履歷如果只展示 coding execution，卻看不出系統設計、跨團隊合作或 product sense，會讓面試官少一塊判斷你 level 的證據。",
+      knowledgeType: "interview_standard",
+      audience: "tech",
+      audiences: ["tech", "product", "design_creative", "marketing_sales"],
+    },
+    {
+      company: "NVIDIA",
+      companyLogo: "/logos/NVIDIA.png",
+      industryLabel: "硬核技術 / Role fit",
+      sourceMentorName: "NVIDIA 硬核技術導師",
+      sourceMentorTitle: "技術基本功與職位匹配視角",
+      knowledgeTitle: "NVIDIA 類職位會非常在意硬核基本功",
+      insight: "NVIDIA 類技術職位不適合用很泛的 AI wrapper 敘事帶過。履歷最好清楚展示資料結構、系統、硬體、加速運算、模型或底層工程能力，並把內容對齊最匹配的 3 到 5 個目標職位。",
+      knowledgeType: "credential_expectation",
+      audience: "tech",
+      audiences: ["tech", "data", "engineering_hardware"],
+    },
+    {
+      company: "Goldman Sachs",
+      companyLogo: "/logos/Goldman Sachs.png",
+      industryLabel: "投行 / Superday",
+      sourceMentorName: "Goldman Sachs 投行導師",
+      sourceMentorTitle: "投行 Superday 與 division fit 視角",
+      knowledgeTitle: "Goldman Sachs 會看你的 division fit 是否穩定",
+      insight: "Goldman Sachs 類面試不是只看金融熱情，而是看你是否理解不同 division 的工作方式。履歷最好明確對齊 Investment Banking、Markets、Asset Management、Risk 或 Engineering，不要像一份什麼金融都可以的通用稿。",
+      knowledgeType: "company_preference",
+      audience: "finance",
+    },
+    {
+      company: "JPMorgan Chase",
+      companyLogo: "/logos/JPMorganChase.png",
+      industryLabel: "金融服務 / 成就量化",
+      sourceMentorName: "JPMorgan Chase 金融導師",
+      sourceMentorTitle: "金融履歷量化與面試視角",
+      knowledgeTitle: "JPMorgan Chase 類職位會希望先看到成就",
+      insight: "JPMorgan Chase 類職位會期待你把 achievement 放到前面，能量化就量化。金融、商業或技術履歷如果缺少金額、規模、速度、風險降低或流程效率，會少一層可信度。",
+      knowledgeType: "talent_profile",
+      audience: "finance",
+    },
+    {
+      company: "Morgan Stanley",
+      companyLogo: "/logos/Morgan Stanley.png",
+      industryLabel: "金融科技 / Exceptional ideas",
+      sourceMentorName: "Morgan Stanley 科技金融導師",
+      sourceMentorTitle: "金融科技與研究信號視角",
+      knowledgeTitle: "Morgan Stanley 會看你是否能提出觀點",
+      insight: "Morgan Stanley 類職位很重視 exceptional ideas。投 IB、Research、Sales & Trading 或金融科技時，履歷不要只寫做了 market research，而要寫你提出了什麼判斷、怎麼支持它、對交易、客戶或投資決策有什麼用。",
+      knowledgeType: "company_preference",
+      audience: "finance",
+    },
+    {
+      company: "Bank of America",
+      companyLogo: "/logos/Bank of America.png",
+      industryLabel: "客戶結果 / Values fit",
+      sourceMentorName: "BofA 客戶業務導師",
+      sourceMentorTitle: "客戶結果與文化契合視角",
+      knowledgeTitle: "BofA 類面試會同時看能力和 values fit",
+      insight: "Bank of America 類面試常會同時接觸 HR、business managers 和未來同事，也會看你的 aspirations、character、values，以及你如何幫客戶交付更好結果。履歷裡要有 client impact、責任感和協作信號。",
+      knowledgeType: "talent_profile",
+      audience: "finance",
+    },
+    {
+      company: "Deloitte",
+      companyLogo: "/logos/Deloitte.png",
+      industryLabel: "Consulting / Business Operations",
+      sourceMentorName: "Deloitte 顧問導師",
+      sourceMentorTitle: "商業分析與專案交付視角",
+      knowledgeTitle: "Deloitte 類顧問職位會看問題拆解和交付節奏",
+      insight: "Deloitte 類 consulting 或 business operations 職位，不只看你是否做過分析，也看你能否把模糊問題拆成 scope、stakeholder、timeline、風險和可落地建議。履歷如果能呈現從診斷到執行的完整鏈條，會比只寫協助專案更有說服力。",
+      knowledgeType: "talent_profile",
+      audience: "business_ops",
+      audiences: ["business_ops", "legal_policy"],
+    },
+    {
+      company: "Salesforce",
+      companyLogo: "/logos/Salesforce.png",
+      industryLabel: "Sales / Customer Success",
+      sourceMentorName: "Salesforce 客戶成長導師",
+      sourceMentorTitle: "營收、客戶成功與 GTM 視角",
+      knowledgeTitle: "Salesforce 類職位會看你如何推動客戶採用",
+      insight: "Salesforce 類 sales、customer success、marketing 或 BD 職位，會希望看到你如何理解客戶痛點、推進 pipeline、提升 adoption 或 retention。履歷裡最好有客戶分層、轉換率、續約、營收或 campaign 成效，不要只停在溝通能力很好。",
+      knowledgeType: "talent_profile",
+      audience: "marketing_sales",
+      audiences: ["marketing_sales", "business_ops"],
+    },
+    {
+      company: "Johnson & Johnson",
+      companyLogo: "/logos/Johnson & Johnson.png",
+      industryLabel: "Healthcare / Life Sciences",
+      sourceMentorName: "Johnson & Johnson 醫療健康導師",
+      sourceMentorTitle: "臨床、法規與病患影響視角",
+      knowledgeTitle: "J&J 類職位會看安全性、合規和真實影響",
+      insight: "Johnson & Johnson 類 healthcare、clinical 或 life sciences 職位，履歷不能只寫研究或流程，還要讓人看到安全性、合規、資料品質、病患或醫療團隊影響。能把 scientific rigor 和 real-world impact 放在一起，會更像成熟候選人。",
+      knowledgeType: "credential_expectation",
+      audience: "healthcare_life_sciences",
+      audiences: ["healthcare_life_sciences", "legal_policy", "education_research"],
+    },
+    {
+      company: "Disney",
+      companyLogo: "/logos/Disney.png",
+      industryLabel: "Media / Brand Experience",
+      sourceMentorName: "Disney 內容品牌導師",
+      sourceMentorTitle: "內容、品牌與體驗設計視角",
+      knowledgeTitle: "Disney 類職位會看故事、受眾和體驗一致性",
+      insight: "Disney 類 media、communications、events 或 brand experience 職位，會看你是否理解受眾、故事節奏和跨渠道一致性。履歷最好不只列活動或內容產出，也要寫 audience growth、engagement、品牌一致性或現場體驗結果。",
+      knowledgeType: "company_preference",
+      audience: "media",
+      audiences: ["media", "marketing_sales", "design_creative", "business_ops"],
+    },
+    {
+      company: "Databricks",
+      companyLogo: "/logos/Databricks.png",
+      industryLabel: "Data Platform / Analytics Engineering",
+      sourceMentorName: "Databricks 數據平台導師",
+      sourceMentorTitle: "資料工程、分析與 ML 平台視角",
+      knowledgeTitle: "Databricks 類數據職位會看資料鏈路是否完整",
+      insight: "Databricks 類 data analyst、data engineer、data scientist 或 ML 職位，會看你是否能把資料來源、清洗、建模、評估和業務使用場景串起來。履歷如果只寫 SQL 或 model name，缺少 pipeline、data quality、latency、成本或 decision impact，會顯得深度不夠。",
+      knowledgeType: "credential_expectation",
+      audience: "data",
+    },
+    {
+      company: "Airbnb",
+      companyLogo: "/logos/Airbnb.png",
+      industryLabel: "Design / Marketplace Experience",
+      sourceMentorName: "Airbnb 設計體驗導師",
+      sourceMentorTitle: "使用者研究、服務體驗與商業轉化視角",
+      knowledgeTitle: "Airbnb 類設計職位會看你如何平衡使用者和商業",
+      insight: "Airbnb 類 UX、product design 或 creative 職位，不只看作品好不好看，也會看你如何定義使用者問題、驗證方案、處理 constraint，最後影響 conversion、trust、retention 或供需雙邊體驗。作品集和履歷都要讓決策過程看得見。",
+      knowledgeType: "talent_profile",
+      audience: "design_creative",
+      audiences: ["design_creative", "product"],
+    },
+    {
+      company: "Tesla",
+      companyLogo: "/logos/Tesla.png",
+      industryLabel: "Hardware / Manufacturing Engineering",
+      sourceMentorName: "Tesla 工程製造導師",
+      sourceMentorTitle: "硬體、製程與量產問題解決視角",
+      knowledgeTitle: "Tesla 類工程職位會看你能否把設計推到量產",
+      insight: "Tesla 類 hardware、mechanical、manufacturing、quality 或 process 職位，會看你是否能從設計、測試、失效分析一路推到量產改善。履歷裡最好有 yield、cycle time、defect rate、cost down、thermal、CAD、fixture 或 validation 這類可追問的工程證據。",
+      knowledgeType: "credential_expectation",
+      audience: "engineering_hardware",
+    },
+    {
+      company: "Microsoft",
+      companyLogo: "/logos/Microsoft.png",
+      industryLabel: "Policy / Compliance / Responsible Tech",
+      sourceMentorName: "Microsoft 政策合規導師",
+      sourceMentorTitle: "法規、風險治理與 responsible AI 視角",
+      knowledgeTitle: "Microsoft 類政策合規職位會看風險判斷和落地能力",
+      insight: "Microsoft 類 legal、policy、compliance 或 sustainability 職位，不只看你知道法規名詞，也看你能否把 policy requirement 轉成流程、審查、風險分級、stakeholder alignment 和可執行控制點。履歷要寫出你如何降低風險或推動治理落地。",
+      knowledgeType: "company_preference",
+      audience: "legal_policy",
+    },
+    {
+      company: "Netflix",
+      companyLogo: "/logos/Netflix.png",
+      industryLabel: "Media / Content Strategy",
+      sourceMentorName: "Netflix 內容策略導師",
+      sourceMentorTitle: "內容判斷、受眾洞察與營運節奏視角",
+      knowledgeTitle: "Netflix 類媒體職位會看內容判斷能否被數據支持",
+      insight: "Netflix 類 journalism、media、content、events 或 production 職位，會看你是否能把故事判斷、受眾洞察和成效數據放在一起。履歷不要只寫產出幾篇內容或辦幾場活動，也要呈現 engagement、retention、節目表現、合作方或流程效率。",
+      knowledgeType: "talent_profile",
+      audience: "media",
+    },
+    {
+      company: "LinkedIn",
+      companyLogo: "/logos/LinkedIn.png",
+      industryLabel: "Talent / HR / Professional Network",
+      sourceMentorName: "LinkedIn 人才策略導師",
+      sourceMentorTitle: "招聘、人才營運與候選人體驗視角",
+      knowledgeTitle: "LinkedIn 類 HR 職位會看你是否懂人才漏斗",
+      insight: "LinkedIn 類 HR、recruiting、talent operations 或 people analytics 職位，會看你是否理解 sourcing funnel、candidate experience、stakeholder calibration 和 hiring quality。履歷如果能量化 time-to-fill、offer acceptance、pipeline conversion 或 retention，會比只寫協助招聘更有力。",
+      knowledgeType: "talent_profile",
+      audience: "hr_people",
+      audiences: ["business_ops"],
+    },
+    {
+      company: "Compass",
+      companyLogo: "/logos/Compass.png",
+      industryLabel: "Real Estate / Local Market Operations",
+      sourceMentorName: "Compass 房地產營運導師",
+      sourceMentorTitle: "市場洞察、客戶關係與交易流程視角",
+      knowledgeTitle: "Compass 類 real estate 職位會看本地市場和交易推進",
+      insight: "Compass 類 real estate 或 client operations 職位，會看你是否理解 local market、客戶需求、交易節點和多方協作。履歷最好有 lead conversion、pipeline value、成交週期、客戶滿意度或流程標準化，而不是只寫溝通和行政支援。",
+      knowledgeType: "talent_profile",
+      audience: "real_estate",
+      audiences: ["business_ops"],
+    },
+    {
+      company: "UnitedHealth Group",
+      companyLogo: "/logos/UnitedHealth Group.png",
+      industryLabel: "Social Services / Healthcare Operations",
+      sourceMentorName: "UnitedHealth 社會服務導師",
+      sourceMentorTitle: "個案管理、服務可及性與健康結果視角",
+      knowledgeTitle: "UnitedHealth 類社會服務職位會看個案影響和協作網絡",
+      insight: "UnitedHealth 類 social services、case management 或 healthcare operations 職位，會看你如何評估需求、連結資源、追蹤服務結果並和醫療、社區或保險團隊協作。履歷裡有 caseload、服務完成率、轉介效率或 outcome improvement，會更像真實一線經驗。",
+      knowledgeType: "talent_profile",
+      audience: "social_services",
+      audiences: ["healthcare_life_sciences", "business_ops"],
+    },
     {
       knowledgeTitle: "ATS 往往先读结构，再读内容",
       insight: "很多筛选系统会先用 section 标题、日期、职位名和关键词位置判断简历结构；如果 Skills、Experience、Projects 的边界不清楚，后面的关键词即使出现，也可能被归到错误语境里。",
@@ -8203,15 +8494,29 @@ function buildGeneralInsiderTips(retrievalQuery = {}, limit = 4) {
       knowledgeType: "company_preference",
     },
   ];
-  return base.slice(0, Math.max(1, limit)).map((tip, index) => ({
+  const prioritized = [
+    ...base.filter((tip) => tip.audience === targetAudience),
+    ...base.filter((tip) => tip.audience !== targetAudience && tipMatchesAudience(tip, targetAudience)),
+    ...base.filter((tip) => targetAudience !== "tech" && tipMatchesAudience(tip, "tech")),
+    ...base.filter((tip) => targetAudience !== "finance" && tipMatchesAudience(tip, "finance")),
+    ...base.filter((tip) => tip.audience && tip.audience !== "general"),
+    ...base.filter((tip) => !tip.audience || tip.audience === "general"),
+  ];
+  const seenFallbackTips = new Set();
+  return prioritized.filter((tip) => {
+    const key = `${tip.company || ""}:${tip.knowledgeTitle || ""}`;
+    if (seenFallbackTips.has(key)) return false;
+    seenFallbackTips.add(key);
+    return true;
+  }).slice(0, Math.max(1, limit)).map((tip, index) => ({
     company: "通用招聘规律",
     companyLogo: "",
     industryLabel: "跨行业筛选",
     ...tip,
     relevanceReason: `与你申请的 ${targetRole} 方向相关。`,
-    sourceMentorName: "",
-    sourceMentorTitle: "",
-    sourceTopic: "通用招聘筛选",
+    sourceMentorName: tip.sourceMentorName || "大廠履歷導師",
+    sourceMentorTitle: tip.sourceMentorTitle || "履歷與招聘信號視角",
+    sourceTopic: tip.sourceTopic || tip.industryLabel || "公司招聘信號",
     sourceAdviceId: `general_insider_${index + 1}`,
     score: Number((0.35 - index * 0.01).toFixed(3)),
     source: "fallback",
@@ -8219,7 +8524,7 @@ function buildGeneralInsiderTips(retrievalQuery = {}, limit = 4) {
 }
 
 async function retrieveInsiderTips(options = {}) {
-  const { limit = 4 } = options;
+  const { limit = 6 } = options;
   const retrievalQuery = getInsiderRetrievalQuery(options);
   const pool = db.getPool();
   const knowledgeKeywords = [
@@ -8252,7 +8557,7 @@ async function retrieveInsiderTips(options = {}) {
     rows = result.rows;
   } catch (err) {
     console.error("[insider-tips] query error:", err.message);
-    return [];
+    return buildGeneralInsiderTips(retrievalQuery, limit);
   }
 
   const tips = rows
@@ -8270,7 +8575,18 @@ async function retrieveInsiderTips(options = {}) {
     selected.push(tip);
     if (selected.length >= limit) break;
   }
-  return selected.length ? selected : buildGeneralInsiderTips(retrievalQuery, limit);
+  if (selected.length >= limit) return selected.slice(0, limit);
+
+  const fallbackTips = buildGeneralInsiderTips(retrievalQuery, limit);
+  const seenAdviceIds = new Set(selected.map((tip) => String(tip.sourceAdviceId || "")));
+  for (const tip of fallbackTips) {
+    const adviceId = String(tip.sourceAdviceId || "");
+    if (adviceId && seenAdviceIds.has(adviceId)) continue;
+    selected.push(tip);
+    if (adviceId) seenAdviceIds.add(adviceId);
+    if (selected.length >= limit) break;
+  }
+  return selected.slice(0, limit);
 }
 
 module.exports = {

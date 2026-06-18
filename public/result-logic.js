@@ -1558,7 +1558,7 @@ const atsDetailEl = document.getElementById("atsDetail");
 if (atsDetailEl && atsScore) {
   atsDetailEl.innerHTML = renderRows([
     { k:"ATS 总分", v: atsScore + "/100", note: atsRiskText(atsResult.riskLevel) },
-    { k:"JD 关键词匹配", v: formatJdKeywordCount(atsResult), note:"已覆盖 / JD 关键词总数" },
+    { k:"JD 关键词匹配", v: formatDisplayJdKeywordCount(), note:"已覆盖 / JD 关键词总数" },
     { k:"简历质量", v: (atsResult.dimensions?.C?.score ?? "--") + "/" + (atsResult.dimensions?.C?.max ?? 12), note:"内容质量与成果表达" },
   ]);
 }
@@ -1574,7 +1574,7 @@ if (atsRiskCaptionEl) {
 const rankDetailEl = document.getElementById("rankDetail");
 if (rankDetailEl) {
   rankDetailEl.innerHTML = renderRows([
-    { k:"JD 关键词匹配", v: formatJdKeywordCount(atsResult), note:"已覆盖 / JD 关键词总数。" },
+    { k:"JD 关键词匹配", v: formatDisplayJdKeywordCount(), note:"已覆盖 / JD 关键词总数。" },
     { k:"整体覆盖率", v: formatJdKeywordMatchPercent(atsResult), note:"基于目标 JD 的关键词覆盖情况估算。" },
   ]) + renderStackedRows([
     { k:"主要缺口", v:"下方 JD Keyword 清单已整理关键词与放置建议。", note:"完整清单可付费解锁查看。" },
@@ -1902,16 +1902,25 @@ function getJdSkillDisplayCount(skills) {
   const total = skills.length;
   return { have, total, weak: Math.max(total - have, 0) };
 }
+function getDisplayJdKeywordCount() {
+  const items = buildKeywordItems();
+  if (items.length) return getJdSkillDisplayCount(items);
+  const jdCount = getJdKeywordCount(atsResult);
+  if (jdCount) return { have: jdCount.matched, total: jdCount.total, weak: Math.max(jdCount.total - jdCount.matched, 0) };
+  return { have: 0, total: 0, weak: 0 };
+}
+function formatDisplayJdKeywordCount() {
+  const count = getDisplayJdKeywordCount();
+  return count.total ? `${count.have}/${count.total}` : "--";
+}
 function renderSkillSection(skills) {
   const visibleCount = Math.min(skills.length, 3);
   const visibleSkills = skills.slice(0, visibleCount);
   const hiddenSkills = skills.slice(visibleCount);
-  const jdCount = getJdKeywordCount(atsResult);
-  const counts = jdCount ? {
-    have: jdCount.matched,
-    total: jdCount.total,
-    weak: Math.max(jdCount.total - jdCount.matched, 0),
-  } : getJdSkillDisplayCount(visibleSkills);
+  const paywallPreviewCount = Math.max(0, 10 - visibleCount);
+  const paywallPreviewSkills = hiddenSkills.slice(0, paywallPreviewCount);
+  const counts = getJdSkillDisplayCount(skills);
+  const lockedKeywordCount = Math.max(0, counts.total - visibleSkills.length - paywallPreviewSkills.length);
   const have  = counts.have;
   const weak  = counts.weak;
   const total = counts.total;
@@ -1928,10 +1937,16 @@ function renderSkillSection(skills) {
     <span class="skill-weak" style="flex:${Math.max(weak, 1)}"></span>`;
   if (skillListTop3El)    skillListTop3El.innerHTML    = visibleSkills.map(renderSkillRow).join("");
   if (skillPaywallListEl) {
-    skillPaywallListEl.innerHTML = hiddenSkills
+    skillPaywallListEl.innerHTML = paywallPreviewSkills
       .map((sk, i) => ({ ...sk, priority: visibleCount + i + 1 }))
       .map(renderSkillRow)
       .join("");
+  }
+  const paywallTextEl = document.querySelector("#skillPaywall .skill-paywall-overlay .text");
+  if (paywallTextEl) {
+    paywallTextEl.innerHTML = lockedKeywordCount > 0
+      ? `还有 <b style="color:var(--jade)">${lockedKeywordCount}</b> 个 keyword 等你解锁加强简历竞争力<br/><span style="color:var(--ink-soft);font-weight:500">包含关键词放置建议和完整改写报告</span>`
+      : `完整 JD Keyword 清单会随下方完整诊断一起解锁<br/><span style="color:var(--ink-soft);font-weight:500">包含关键词放置建议和改写报告</span>`;
   }
   if (expandBtn && hiddenSkills.length) {
     expandBtn.hidden = false;
@@ -2388,7 +2403,7 @@ if (atsResult && atsResult.atsScore) {
   // ATS system summary
   const sysSummaryEl = document.getElementById("atsSystemSummary");
   if (sysSummaryEl) {
-    const jdKeywordCount = formatJdKeywordCount(atsResult);
+    const jdKeywordCount = formatDisplayJdKeywordCount();
     const jdCount = getJdKeywordCount(atsResult);
     const coverageRatio = jdCount && jdCount.total ? jdCount.matched / jdCount.total : null;
     const coverageNote = coverageRatio !== null && coverageRatio >= 0.65
@@ -2508,6 +2523,6 @@ if (atsResult && atsResult.atsScore) {
   // ATS tile detail（覆盖前面的预设）
   if (atsDetailEl) atsDetailEl.innerHTML = renderRows([
     { k:"ATS 总分", v:`${atsResult.atsScore}/100`, note: atsRiskText(atsResult.riskLevel) },
-    { k:"JD 关键词匹配", v: formatJdKeywordCount(atsResult), note:"已覆盖 / JD 关键词总数" },
+    { k:"JD 关键词匹配", v: formatDisplayJdKeywordCount(), note:"已覆盖 / JD 关键词总数" },
   ]);
 }

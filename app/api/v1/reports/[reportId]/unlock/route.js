@@ -49,11 +49,24 @@ export async function POST(request, { params: paramsPromise }) {
           detailedSuggestions: premiumReport?.detailedSuggestions || fallbackPremiumReport.detailedSuggestions || null,
         }
       : premiumReport;
-    if (!Array.isArray(hydratedPremiumReport.companyInsiderTips) || hydratedPremiumReport.companyInsiderTips.length === 0) {
-      hydratedPremiumReport.companyInsiderTips = await retrieveInsiderTips({
+    if (!Array.isArray(hydratedPremiumReport.companyInsiderTips) || hydratedPremiumReport.companyInsiderTips.length < 6) {
+      const existingTips = Array.isArray(hydratedPremiumReport.companyInsiderTips)
+        ? hydratedPremiumReport.companyInsiderTips
+        : [];
+      const supplementalTips = await retrieveInsiderTips({
         internalAtsResult: unlock.report.internalAtsResult,
-        limit: 4,
+        limit: 6,
       });
+      const seenTipIds = new Set(existingTips.map((tip) => String(tip?.sourceAdviceId || tip?.insight || '')));
+      hydratedPremiumReport.companyInsiderTips = [
+        ...existingTips,
+        ...supplementalTips.filter((tip) => {
+          const key = String(tip?.sourceAdviceId || tip?.insight || '');
+          if (key && seenTipIds.has(key)) return false;
+          if (key) seenTipIds.add(key);
+          return true;
+        }),
+      ].slice(0, 6);
     }
     return Response.json({
       success: true,

@@ -129,7 +129,7 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
   if (curatedAdvice?.coverageSummary) {
     curatedAdvice.coverageSummary.retrievalStatus = retrievalStatus;
   }
-  const companyInsiderTips = await retrieveInsiderTips({ internalAtsResult, limit: 4 });
+  const companyInsiderTips = await retrieveInsiderTips({ internalAtsResult, limit: 6 });
   mark('format_reports');
   logRetrievalDebug({
     reportContext: input?.jobTitle || rawScoreResult.jobTitle || 'unknown',

@@ -275,19 +275,24 @@ function extractTargetJobFromJD(jdText) {
 
 async function submitResume(form) {
   if (window.__resumeAppState.isSubmitting) return false;
-  const file     = form.elements["resume"].files[0];
+  const inputMode = form.elements["resumeInputMode"]?.value || "file";
+  const selectedFile = form.elements["resume"].files[0];
   const pastedResumeText = (form.elements["resumeText"]?.value || "").trim();
+  const file = inputMode === "text" ? null : selectedFile;
+  const resumeTextInput = inputMode === "text" ? pastedResumeText : "";
   const job      = form.elements["job"].value.trim();
   const jd       = form.elements["jd"].value.trim();
   const errorBox = form.querySelector(".form-error");
   const btn      = form.querySelector('button[type="submit"]');
+  if (inputMode === "text" && !resumeTextInput) { errorBox.textContent = "请先粘贴简历文本"; errorBox.classList.add("show"); return false; }
+  if (inputMode !== "text" && !file) { errorBox.textContent = "请先上传简历文件，或切换为文字输入简历"; errorBox.classList.add("show"); return false; }
   if (!file && !pastedResumeText) { errorBox.textContent = "请先上传简历文件，或直接粘贴简历文本"; errorBox.classList.add("show"); return false; }
   if (!job && !jd) { errorBox.textContent = "请填写目标岗位或粘贴目标岗位 JD，二选一即可"; errorBox.classList.add("show"); return false; }
   errorBox.classList.remove("show");
   window.__resumeAppState.isSubmitting = true;
   if (btn) btn.disabled = true;
   try {
-    const resumeText = pastedResumeText || await readResumeFile(file);
+    const resumeText = resumeTextInput || await readResumeFile(file);
     const resumeName = file?.name || "手动粘贴的简历";
     const targetJob = normalizeTargetJobTitle(job || extractTargetJobFromJD(jd));
     const analysisJob = await startAnalysisJobAPI(resumeText, targetJob || null, jd, file?.name || "pasted-resume.txt");
@@ -349,6 +354,25 @@ function bindFileUpload() {
       if (success) success.style.display = "none";
     }
   });
+}
+
+function bindResumeInputMode() {
+  const form = document.querySelector(".home-page form");
+  if (!form) return;
+  const modeInputs = Array.from(form.querySelectorAll('input[name="resumeInputMode"]'));
+  const filePanel = form.querySelector('[data-resume-source-panel="file"]');
+  const textArea = form.querySelector('textarea[name="resumeText"]');
+  const textPanel = textArea?.closest(".input-group");
+  if (!modeInputs.length || !filePanel || !textPanel) return;
+  function sync() {
+    const mode = form.elements["resumeInputMode"]?.value || "file";
+    const isText = mode === "text";
+    filePanel.hidden = isText;
+    textPanel.hidden = !isText;
+    textPanel.classList.toggle("resume-text-active", isText);
+  }
+  modeInputs.forEach((input) => input.addEventListener("change", sync));
+  sync();
 }
 
 function storeAnalysisJobResult(result) {
@@ -525,6 +549,7 @@ function toast(msg) {
 }
 
 function initPage() {
+  bindResumeInputMode();
   bindFileUpload();
   console.log("[App] ready");
 }
