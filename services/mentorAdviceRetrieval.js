@@ -24,7 +24,7 @@ const FALLBACK_FREE_ADVICE = {
 
 const ACCOUNTING_FALLBACK_FREE_ADVICE = {
   adviceId: "adv_free_accounting_positioning",
-  title: "先让简历看起来像 Accounting 岗位",
+  title: "让简历定位更像 Accounting 岗位",
   problemSummary: "你的简历目前和目标 JD 的关键词与职责语言匹配度较低，ATS 可能无法明确判断你在申请 Accounting 方向。",
   actionSummary: "优先把 Summary、Skills 和第一段 Experience 改成 Accounting 相关语言，例如 financial reporting、reconciliation、Excel、QuickBooks、GAAP、accounts payable/receivable 等真实掌握的关键词。",
   source: "fallback",
@@ -4326,13 +4326,13 @@ function isBulletReadabilityAdvice(card = {}) {
 function titleForCurrentProblem(relatedProblemTags = [], card = {}) {
   const tags = new Set(relatedProblemTags);
   const text = `${card.title || ""} ${card.problemSummary || ""} ${card.actionSummary || ""} ${card.action || ""} ${card.topic || ""}`.toLowerCase();
-  if (tags.has("missing_summary")) return "先补上 Summary 段落";
+  if (tags.has("missing_summary")) return "补上 Summary 段落";
   if (tags.has("missing_exact_job_title")) return "补上目标岗位原词";
   if (tags.has("generic_resume_positioning") || tags.has("low_role_specificity")) return "聚焦目标岗位定位";
   const hasKeywordProblem = tags.has("low_jd_keyword_match") || tags.has("missing_priority_keywords") || tags.has("low_hard_skill_match");
   if (hasKeywordProblem && /排序|顺序|置于前列|放到前面|靠前|提前|移至后面|移到后面|reorder|section order/.test(text)) return "重排最相关项目与技能";
   if (hasKeywordProblem && /植入|嵌入|正文bullet|bullet point.*关键词|关键词.*bullet|关键词.*经历/.test(text)) return "把关键词嵌入经历 bullet";
-  if (hasKeywordProblem && /时间最近|最新技术状态|保留.*项目|替换旧项目|筛选.*项目/.test(text)) return "优先保留最新相关项目";
+  if (hasKeywordProblem && /时间最近|最新技术状态|保留.*项目|替换旧项目|筛选.*项目/.test(text)) return "保留最新相关项目";
   if (hasKeywordProblem && /(替换(?!旧项目)|轮换|同义|通用.*表达|terminology|术语)/.test(text)) return "把术语改成 JD 语言";
   if (hasKeywordProblem && /skills?|技能|skills区|skills版块|技能词条/.test(text)) return "整理 Skills 关键词";
   if (hasKeywordProblem && /逐句精读|逐条对比|逐条.*jd|对照jd|对照目标岗位|缺少哪些内容|哪些不匹配|分析.*匹配度|about the job|核心段落/.test(text)) return "逐条对照 JD 缺口";
@@ -4644,7 +4644,7 @@ function problemCoherencePatchForTag(tag = "", item = {}, internalAtsResult = {}
   const keywordPhrase = keywordText || "目标 JD 中真实掌握的核心关键词";
   const templates = {
     missing_summary: {
-      title: "先补上 Summary 段落",
+      title: "补上 Summary 段落",
       action: `新增 2-3 行 Summary：第一句写目标岗位 ${targetRole}，第二句连接你最相关的经历、技能和可量化成果。`,
       targetSection: "summary",
       canonicalActionFamily: "summary_creation",
@@ -4735,7 +4735,7 @@ function problemCoherencePatchForTag(tag = "", item = {}, internalAtsResult = {}
       actionDepth: "rewrite",
     },
     short_tenure_unclear: {
-      title: "说明短期经历性质",
+      title: "把短期经历说清楚",
       action: "如果这段经历是实习，请在 title 中明确标注 Intern / Internship；如果不是核心相关经历，用项目周期或产出说明这段短期经历的边界。",
       targetSection: "experience",
       canonicalActionFamily: "experience_evidence",
@@ -4861,7 +4861,7 @@ function titleFallbackForCard(card = {}) {
   if (canonical && !titleGovernance.isBadVisibleTitle(canonical)) return canonical;
   const family = canonicalActionFamilyOf(card);
   const titles = {
-    summary_creation: "先补上 Summary 段落",
+    summary_creation: "补上 Summary 段落",
     summary_positioning: "优化 Summary 岗位定位",
     jd_keyword_alignment: "补齐 JD 关键词证据",
     experience_evidence: "优化经历 bullet 证据",
@@ -5849,7 +5849,7 @@ function fallbackAdviceForObligation(obligation = {}, context = {}) {
   if (tag === "short_tenure_unclear") {
     return {
       ...base,
-      title: "说明短期经历性质",
+      title: "把短期经历说清楚",
       mentorLens: "短于 3 个月的经历如果没有标注原因，HR 很容易把它理解成稳定性风险，而不是正常实习或项目经历。",
       currentDiagnosis: obligation.message || "简历中存在在职时长较短的经历，当前没有足够说明，可能引发 HR 对稳定性或离职原因的疑虑。",
       action: "如果这段经历是实习，请在 title 中明确标注 Intern / Internship；如果不是核心相关经历，评估是否保留，或在 bullet 中用项目周期说明这段经历的边界和产出。",
@@ -5861,7 +5861,7 @@ function fallbackAdviceForObligation(obligation = {}, context = {}) {
   if (tag === "missing_summary") {
     return {
       ...base,
-      title: "先补上 Summary 段落",
+      title: "补上 Summary 段落",
       mentorLens: "没有 Summary 时，简历开头缺少岗位定位入口；先搭出这一段，后续目标岗位原词和 JD 关键词才有自然承载位置。",
       currentDiagnosis: obligation.message || "简历缺少 Summary 段落，HR 和 ATS 需要先有一条清晰的岗位定位线索。",
       action: `新增 2-3 行 Summary：第一句写目标岗位 ${targetRole}，第二句连接你最相关的经历、技能和可量化成果；先把段落搭起来，再补具体关键词。`,
@@ -6073,7 +6073,7 @@ function fallbackAdviceItems(internalAtsResult = {}, count = 3, usedTags = new S
   const templates = [
     {
       adviceId: "fb_target_role_positioning",
-      title: `先让简历看起来像 ${roleName} 岗位`,
+      title: `让简历定位更像 ${roleName} 岗位`,
       mentorLens: `从内部筛选角度看，ATS 和 recruiter 第一眼会先判断：这份简历到底是不是在投 ${roleName}。如果 Summary 和前几条经历没有出现岗位原词，很容易被归到不相关方向。`,
       currentDiagnosis: isAccounting
         ? "你的简历目前有基础经历和教育背景，但和这份 JD 的岗位语言连接较弱。系统检测到 JD Match 和职位相关性都偏低，说明简历还没有稳定传达 Accounting 定位。"
@@ -6175,7 +6175,7 @@ function fallbackAdviceItems(internalAtsResult = {}, count = 3, usedTags = new S
     },
     {
       adviceId: "fb_format_cleanup",
-      title: "先把版面压到可快速扫描",
+      title: "把版面整理到可快速扫描",
       mentorLens: "格式问题不只是好不好看，它会影响 ATS 解析，也会影响 HR 是否愿意继续读细节。",
       currentDiagnosis: "简历需要进一步检查版面、日期、section 顺序和一页可读性，避免内容被格式问题拖累。",
       action: "统一日期格式和 section 标题，删掉低相关内容，把最相关经历留在第一页上半部；导出 PDF 后检查是否仍可复制、可搜索、无错位。",
@@ -8031,6 +8031,7 @@ const KNOWLEDGE_COMPANY_PATTERN = /(amazon|aws|google|meta|facebook|microsoft|ap
 const KNOWLEDGE_INDUSTRY_PATTERN = /(多家公司|不同公司|同类公司|同類公司|岗位JD|崗位JD|JD分析|岗位通常|崗位通常|行业|行業|赛道|賽道|普遍|常见|常見|核心required|核心技能|required技能|preferred技能|加分项|加分項)/i;
 const KNOWLEDGE_PREFERENCE_PATTERN = /(偏好|看重|重视|重視|倾向|傾向|喜欢|喜歡|要求|门槛|門檻|筛选|篩選|录用|錄用|招募|招聘|面试|面試|考察|评估|評估|人才|候选人|候選人|画像|标准|標準|prefer|preferred|qualification|look for|value|hire|hiring|interview|screening|candidate|talent|bar)/i;
 const KNOWLEDGE_ACTION_PATTERN = /(建议你|建議你|你需要|你应该|你應該|你的简历|你的簡歷|简历中|簡歷中|在\s*(summary|skills|experience)|写进|寫進|放进|放進|补充到|補充到|添加|删除|刪除|改成|改写|改寫|重写|重寫|bullet|resume bullet|copy|复制|複製)/i;
+const INTERNAL_MENTOR_COMPANY_PATTERN = /^(mentorx|mentor|l导师|l導師|导师|導師)$/i;
 
 function getInsiderRetrievalQuery(options = {}) {
   const internal = options.internalAtsResult || {};
@@ -8079,6 +8080,10 @@ function companyOrIndustryReferenced(row = {}, text = "") {
   const company = String(row.mentor_company || "").trim();
   if (company && text.toLowerCase().includes(company.toLowerCase())) return true;
   return KNOWLEDGE_COMPANY_PATTERN.test(text) || KNOWLEDGE_INDUSTRY_PATTERN.test(text);
+}
+
+function isInternalMentorCompany(row = {}) {
+  return INTERNAL_MENTOR_COMPANY_PATTERN.test(String(row.mentor_company || "").trim());
 }
 
 function insiderKnowledgeType(text = "") {
@@ -8132,6 +8137,7 @@ function hasInsiderRoleFocusMismatch(row = {}, retrievalQuery = {}) {
 function isDisplayableInsiderKnowledge(row = {}, retrievalQuery = {}) {
   const insight = String(row.I_insight || "").trim();
   if (insight.length < 35) return false;
+  if (isInternalMentorCompany(row)) return false;
   if (!companyOrIndustryReferenced(row, insight)) return false;
   if (!KNOWLEDGE_PREFERENCE_PATTERN.test(insight)) return false;
   if (KNOWLEDGE_ACTION_PATTERN.test(insight)) return false;
@@ -8160,7 +8166,7 @@ function buildInsiderKnowledgeTip(row = {}, retrievalQuery = {}) {
     .filter((term) => term && insight.toLowerCase().includes(String(term).toLowerCase()))
     .slice(0, 3);
   const relevanceReason = `与你申请的 ${targetRole} 方向相关。`;
-  return {
+  return normalizeInsiderTipLanguage({
     company: row.mentor_company,
     companyLogo: resolveCompanyLogo(row.mentor_company),
     industryLabel: row.L1 || row.topic || "",
@@ -8173,7 +8179,7 @@ function buildInsiderKnowledgeTip(row = {}, retrievalQuery = {}) {
     sourceAdviceId: row.chunk_id || (row.id ? `seg_${row.id}` : ""),
     knowledgeType: insiderKnowledgeType(insight),
     score: Number(Math.min(1, relevance + Number(row.mentor_quality_score || 0) * 0.25).toFixed(3)),
-  };
+  });
 }
 
 // ── Company / Industry Knowledge Tips ─────────────────────────────────────────
@@ -8203,6 +8209,53 @@ function tipMatchesAudience(tip = {}, audience = "") {
   if (!audience) return false;
   if (tip.audience === audience) return true;
   return Array.isArray(tip.audiences) && tip.audiences.includes(audience);
+}
+
+function toSimplifiedChineseText(value = "") {
+  const map = {
+    "類": "类", "團": "团", "隊": "队", "會": "会", "職": "职", "體": "体",
+    "驗": "验", "與": "与", "進": "进", "視": "视", "頁": "页", "資": "资",
+    "料": "料", "數": "数", "據": "据", "導": "导", "師": "师", "試": "试",
+    "號": "号", "現": "现", "寫": "写", "歷": "历", "裡": "里", "註": "注",
+    "冊": "册", "應": "应", "該": "该", "為": "为", "處": "处", "過": "过",
+    "來": "来", "斷": "断", "擔": "担", "責": "责", "選": "选", "證": "证",
+    "據": "据", "塊": "块", "讓": "让", "說": "说", "服": "服", "缺": "缺",
+    "少": "少", "並": "并", "齊": "齐", "標": "标", "準": "准", "轉": "转",
+    "換": "换", "層": "层", "顧": "顾", "問": "问", "專": "专", "案": "案",
+    "風": "风", "險": "险", "節": "节", "奏": "奏", "執": "执", "條": "条",
+    "鏈": "链", "醫": "医", "療": "疗", "臨": "临", "規": "规", "範": "范",
+    "響": "响", "嚴": "严", "謹": "谨", "眾": "众", "跨": "跨", "產": "产",
+    "出": "出", "場": "场", "據": "据", "雙": "双", "邊": "边", "決": "决",
+    "見": "见", "製": "制", "測": "测", "類": "类", "這": "这", "種": "种",
+    "優": "优", "先": "先", "較": "较", "錯": "错", "誤": "误", "語": "语",
+    "境": "境", "篩": "筛", "職": "职", "責": "责", "錄": "录", "單": "单",
+    "擬": "拟", "滿": "满", "意": "意", "週": "周", "期": "期", "關": "关",
+    "係": "系", "準": "准", "協": "协", "作": "作", "網": "网", "絡": "络",
+  };
+  return String(value || "")
+    .replace(/[類團隊會職體驗與進視頁資料數據導師試號現寫歷裡註冊應該為處過來斷擔責選證塊讓說並齊標準轉換層顧問專風險節執條鏈醫療臨規範響嚴謹眾產場雙邊決見製測這種優較錯誤語篩錄單擬滿週關係協網絡]/g, (char) => map[char] || char)
+    .replace(/使用者/g, "用户")
+    .replace(/履历/g, "简历")
+    .replace(/岗位JD/g, "岗位 JD")
+    .replace(/大廠/g, "大厂")
+    .replace(/信號/g, "信号")
+    .replace(/\u984c/g, "题")
+    .replace(/\u8853/g, "术")
+    .replace(/\u696d/g, "业")
+    .replace(/\u52d9/g, "务");
+}
+
+function normalizeInsiderTipLanguage(tip = {}) {
+  const textFields = [
+    "company", "industryLabel", "sourceMentorName", "sourceMentorTitle",
+    "knowledgeTitle", "insight", "relevanceReason", "sourceTopic",
+  ];
+  return textFields.reduce((normalized, field) => {
+    if (typeof normalized[field] === "string") {
+      normalized[field] = toSimplifiedChineseText(normalized[field]);
+    }
+    return normalized;
+  }, { ...tip });
 }
 
 function buildGeneralInsiderTips(retrievalQuery = {}, limit = 4) {
@@ -8494,13 +8547,15 @@ function buildGeneralInsiderTips(retrievalQuery = {}, limit = 4) {
       knowledgeType: "company_preference",
     },
   ];
+  const audienceMatched = base.filter((tip) => tip.audience === targetAudience || tipMatchesAudience(tip, targetAudience));
+  const generalMatched = base.filter((tip) => !tip.audience || tip.audience === "general");
+  const broadFallback = targetAudience === "other"
+    ? base.filter((tip) => tip.audience && tip.audience !== "general")
+    : [];
   const prioritized = [
-    ...base.filter((tip) => tip.audience === targetAudience),
-    ...base.filter((tip) => tip.audience !== targetAudience && tipMatchesAudience(tip, targetAudience)),
-    ...base.filter((tip) => targetAudience !== "tech" && tipMatchesAudience(tip, "tech")),
-    ...base.filter((tip) => targetAudience !== "finance" && tipMatchesAudience(tip, "finance")),
-    ...base.filter((tip) => tip.audience && tip.audience !== "general"),
-    ...base.filter((tip) => !tip.audience || tip.audience === "general"),
+    ...audienceMatched,
+    ...generalMatched,
+    ...broadFallback,
   ];
   const seenFallbackTips = new Set();
   return prioritized.filter((tip) => {
@@ -8508,7 +8563,7 @@ function buildGeneralInsiderTips(retrievalQuery = {}, limit = 4) {
     if (seenFallbackTips.has(key)) return false;
     seenFallbackTips.add(key);
     return true;
-  }).slice(0, Math.max(1, limit)).map((tip, index) => ({
+  }).slice(0, Math.max(1, limit)).map((tip, index) => normalizeInsiderTipLanguage({
     company: "通用招聘规律",
     companyLogo: "",
     industryLabel: "跨行业筛选",

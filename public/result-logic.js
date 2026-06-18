@@ -130,13 +130,6 @@ const STATIC_MENTOR_COMPANY_LOGOS = [
   { company: "FedEx", companyLogo: "/logos/FedEx.png" },
   { company: "Amtrak", companyLogo: "/logos/Amtrak.png" },
 ];
-function getJdMatchRatio(ats) {
-  const value = ats?.jdMatchRatio ?? ats?.raw?.jdMatchRatio ?? ats?.raw?.metrics?.jdMatchRatio ?? ats?.metrics?.jdMatchRatio;
-  if (value === null || value === undefined || value === "") return null;
-  const number = Number(value);
-  if (!Number.isFinite(number)) return null;
-  return Math.round(number > 0 && number <= 1 ? number * 100 : number);
-}
 function getKeywordBreakdown() {
   return s.premiumKeywordBreakdown || atsResult.raw?.premiumKeywordBreakdown || atsResult.keywordBreakdown || atsResult.raw?.keywordBreakdown || [];
 }
@@ -211,31 +204,12 @@ function getJdKeywordCount(ats) {
   if (explicit && Number.isFinite(Number(explicit.total)) && Number(explicit.total) > 0) {
     return { matched: Number(explicit.matched || 0), total: Number(explicit.total) };
   }
-  const count = getKeywordBreakdown().reduce((acc, cat = {}) => {
-    const matched = Array.isArray(cat.matched) ? cat.matched.length : Number(cat.matched || 0);
-    const missing = Array.isArray(cat.missing) ? cat.missing.length : 0;
-    const total = Number(cat.total || matched + missing);
-    acc.matched += matched;
-    acc.total += total;
-    return acc;
-  }, { matched: 0, total: 0 });
-  return count.total > 0 ? count : null;
-}
-function formatJdKeywordCount(ats) {
-  const count = getJdKeywordCount(ats);
-  return count ? `${count.matched}/${count.total}` : "--";
+  return null;
 }
 function formatJdKeywordMatchValue(ats) {
   const count = getJdKeywordCount(ats);
   if (!count || !count.total) return "--";
   return `${count.matched}/${count.total}`;
-}
-function formatJdKeywordMatchPercent(ats) {
-  const ratio = getJdMatchRatio(ats);
-  if (ratio !== null) return ratio + "%";
-  const count = getJdKeywordCount(ats);
-  if (!count || !count.total) return "--";
-  return Math.round((count.matched / count.total) * 100) + "%";
 }
 function getTargetJobTitle() {
   const candidates = [s.jobTitle, atsResult.jobTitle, atsResult.raw && atsResult.raw.jobTitle];
@@ -1575,7 +1549,6 @@ const rankDetailEl = document.getElementById("rankDetail");
 if (rankDetailEl) {
   rankDetailEl.innerHTML = renderRows([
     { k:"JD 关键词匹配", v: formatDisplayJdKeywordCount(), note:"已覆盖 / JD 关键词总数。" },
-    { k:"整体覆盖率", v: formatJdKeywordMatchPercent(atsResult), note:"基于目标 JD 的关键词覆盖情况估算。" },
   ]) + renderStackedRows([
     { k:"主要缺口", v:"下方 JD Keyword 清单已整理关键词与放置建议。", note:"完整清单可付费解锁查看。" },
   ]);
@@ -1793,7 +1766,7 @@ const KEYWORD_CATEGORY_CONFIG = {
   domain_business: { label: "行业/业务词", sourceKeys: ["domain_keywords"] },
   soft_collab: { label: "软技能/协作词", sourceKeys: [] },
 };
-const CATEGORY_LABEL_TO_GROUP = {
+var CATEGORY_LABEL_TO_GROUP = {
   "核心技能": "skill_tool",
   "工具 / 技术": "skill_tool",
   "工具/技术": "skill_tool",
@@ -1803,7 +1776,7 @@ const CATEGORY_LABEL_TO_GROUP = {
 };
 function categoryGroupForTerm(term, sourceKey = "", sourceLabel = "") {
   const text = String(term || "").toLowerCase();
-  if (CATEGORY_LABEL_TO_GROUP[sourceLabel]) return CATEGORY_LABEL_TO_GROUP[sourceLabel];
+  if (CATEGORY_LABEL_TO_GROUP && CATEGORY_LABEL_TO_GROUP[sourceLabel]) return CATEGORY_LABEL_TO_GROUP[sourceLabel];
   if (["core_skills", "tools", "hard_skills"].includes(sourceKey)) return "skill_tool";
   if (["domain_keywords"].includes(sourceKey)) return "domain_business";
   if (["action_verbs", "nice_to_have"].includes(sourceKey)) return "responsibility_scene";
@@ -1903,8 +1876,6 @@ function getJdSkillDisplayCount(skills) {
   return { have, total, weak: Math.max(total - have, 0) };
 }
 function getDisplayJdKeywordCount() {
-  const items = buildKeywordItems();
-  if (items.length) return getJdSkillDisplayCount(items);
   const jdCount = getJdKeywordCount(atsResult);
   if (jdCount) return { have: jdCount.matched, total: jdCount.total, weak: Math.max(jdCount.total - jdCount.matched, 0) };
   return { have: 0, total: 0, weak: 0 };
@@ -1919,11 +1890,12 @@ function renderSkillSection(skills) {
   const hiddenSkills = skills.slice(visibleCount);
   const paywallPreviewCount = Math.max(0, 10 - visibleCount);
   const paywallPreviewSkills = hiddenSkills.slice(0, paywallPreviewCount);
-  const counts = getJdSkillDisplayCount(skills);
-  const lockedKeywordCount = Math.max(0, counts.total - visibleSkills.length - paywallPreviewSkills.length);
-  const have  = counts.have;
-  const weak  = counts.weak;
-  const total = counts.total;
+  const listCounts = getJdSkillDisplayCount(skills);
+  const displayCounts = getDisplayJdKeywordCount();
+  const lockedKeywordCount = Math.max(0, listCounts.total - visibleSkills.length - paywallPreviewSkills.length);
+  const have  = displayCounts.have;
+  const weak  = displayCounts.weak;
+  const total = displayCounts.total;
   const skillHaveEl    = document.getElementById("skillHave");
   const skillTotalEl   = document.getElementById("skillTotal");
   const skillSummaryEl = document.getElementById("skillSummary");
@@ -2102,7 +2074,7 @@ function normalizeMissingSummaryAdviceItem(item = {}) {
   const action = `新增 2-3 行 Summary：第一句写目标岗位 ${targetRole}，第二句连接你最相关的经历、技能和可量化成果；先把段落搭起来，再补具体关键词。`;
   return {
     ...item,
-    title: "先补上 Summary 段落",
+    title: "补上 Summary 段落",
     currentDiagnosis: "原简历目前缺少 Summary 段落；需要先有一个岗位定位入口，再谈把 JD 关键词放进 Summary。",
     problemSummary: "原简历目前缺少 Summary 段落；需要先有一个岗位定位入口，再谈把 JD 关键词放进 Summary。",
     action,
@@ -2115,8 +2087,67 @@ function normalizeMissingSummaryAdviceItem(item = {}) {
   };
 }
 
+function adviceTitleIntent(value = "") {
+  const text = String(value || "").toLowerCase();
+  if (/keyword|关键词|關鍵詞|jd|ats/.test(text)) return "keyword";
+  if (/skills?|技能|技术栈|技術棧/.test(text)) return "skills";
+  if (/summary|objective|简介|簡介|开头|開頭/.test(text)) return "summary";
+  if (/量化|数字|數字|metric|measurable|impact|成果|结果|結果/.test(text)) return "impact";
+  if (/bullet|experience|经历|經歷|项目|項目|project/.test(text)) return "experience";
+  if (/pdf|word|格式|版面|排版|日期|date|timeline|时间线|時間線/.test(text)) return "format";
+  if (/linkedin|github|portfolio|作品集|链接|鏈接|入口/.test(text)) return "link";
+  if (/education|course|gpa|certificate|课程|課程|证书|證書|教育/.test(text)) return "education";
+  return "";
+}
+
+function actionMatchedHumanTitle(item = {}) {
+  const tags = (item.relatedProblemTags || []).join(" ").toLowerCase();
+  const family = String(item.canonicalActionFamily || item.canonical_action_family || "").toLowerCase();
+  const section = String(item.targetSection || item.target_section || "").toLowerCase();
+  const action = [
+    item.action,
+    item.actionSummary,
+    item.mentorInsight,
+    item.mentorLens,
+    item.reason,
+    tags,
+    family,
+    section,
+  ].filter(Boolean).join(" ").toLowerCase();
+
+  if (/missing_summary/.test(action) || /(?:新增|补上|補上|add|create).{0,24}summary|summary.{0,24}(?:缺少|沒有|没有|missing)/i.test(action)) return "补上 Summary 段落";
+  if (/first person|第一人称|第一人稱/.test(action) && /summary/i.test(action)) return "把 Summary 语气改专业";
+  if (/keyword|关键词|關鍵詞|jd|ats/.test(action) && /summary/.test(action) && /skills?/.test(action) && /experience|经历|經歷/.test(action) && /分配|放到|放进|放進|写进|寫進|补进|補進/.test(action)) return "把 JD 关键词放到对的位置";
+  if (/summary|objective|简介|簡介|开头|開頭/.test(action) && /岗位原词|崗位原詞|目标岗位|目標崗位|exact.*title|job title|target role|定位|role alignment/.test(action)) return "让 Summary 对准目标岗位";
+  if (/skills?|技能|hard skill|工具/.test(action) && /补|補|加入|写进|寫進|放进|放進|缺失|missing|priority keyword|关键词|關鍵詞/.test(action)) return "补上 JD 里缺的技能词";
+  if (/keyword|关键词|關鍵詞|jd|ats/.test(action) && /bullet|experience|经历|經歷|项目|項目|证据|證據|使用场景|使用場景/.test(action)) return "把关键词写进真实经历";
+  if (/keyword|关键词|關鍵詞|jd|ats/.test(action)) return "补上 JD 里的关键证据";
+  if (/summary|objective|简介|簡介|开头|開頭/.test(action)) return "优化简历开头定位";
+  if (/short_tenure_unclear|short tenure|internship|intern\b|实习|實習|短期|时长|時長|项目周期|項目週期|稳定性|穩定性|title\s*中明确标注|title\s*中明確標注/.test(action)) return "把短期经历说清楚";
+  if (/bullet|experience|经历|經歷|项目|項目|project/.test(action) && /任务|任務|方法|工具|结果|結果|动作|動作|rewrite|改写|改成|重写|重寫/.test(action)) return "把经历改成动作和结果";
+  if (/量化|数字|數字|metric|measurable|impact|成果|结果|結果|规模|規模|效率|转化|轉化|%/.test(action)) return "把成果写得更可衡量";
+  if (/bullet|experience|经历|經歷|项目|項目|project/.test(action)) return "把经历证据写清楚";
+  if (/pdf|\bword\b|格式|版面|排版|日期|date|timeline|时间线|時間線/.test(action)) return "把提交格式整理稳";
+  if (/linkedin/i.test(action)) return "补上 LinkedIn 链接";
+  if (/github|gitlab|repo|repository|代码|代碼/.test(action)) return "补上项目代码入口";
+  if (/portfolio|作品集|personal website|project link/.test(action)) return "补上作品集入口";
+  if (/education|course|gpa|certificate|课程|課程|证书|證書|教育/.test(action)) return "把教育背景信号补清楚";
+  return "";
+}
+
+function displayAdviceTitle(item = {}) {
+  const title = String(item.title || "").trim();
+  const actionTitle = actionMatchedHumanTitle(item);
+  if (!actionTitle) return title || "优化这条简历建议";
+  const titleIntent = adviceTitleIntent(title);
+  const actionIntent = adviceTitleIntent(actionTitle);
+  const badTitle = !title || /先|简历优化建议\s*\d+|当前报告可用的导师建议不足|优化简历与目标岗位的匹配度/.test(title) || title.length > 80;
+  return badTitle || !titleIntent || titleIntent !== actionIntent ? actionTitle : title;
+}
+
 function renderApiAdviceItem(item, i) {
   item = normalizeMissingSummaryAdviceItem(item);
+  const title = displayAdviceTitle(item);
   const diagnosis   = item.currentDiagnosis || item.problemSummary || "";
   const action      = item.action || item.actionSummary || "";
   const insight     = item.mentorInsight || item.mentorLens || item.reason || item.I_insight || item.P_mentor || "";
@@ -2140,7 +2171,7 @@ function renderApiAdviceItem(item, i) {
         ${fitChip}
       </div>
       ${matchReason ? `<div style="display:flex;align-items:flex-start;gap:7px;background:#FAFAF8;border-radius:8px;padding:7px 10px;margin-bottom:12px;border:1px solid rgba(0,0,0,0.05);"><span style="font-size:11px;flex-shrink:0;opacity:.5;margin-top:1px;">💬</span><p style="margin:0;font-size:11.5px;line-height:1.55;color:#78716C;font-style:italic;">${escapeHtml(matchReason)}</p></div>` : ""}
-      <h4 style="margin:0 0 13px;font-size:15px;font-weight:700;color:#111827;line-height:1.4;"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#111827;color:#fff;font-size:11px;margin-right:8px;vertical-align:1px;">${i + 1}</span>${escapeHtml(item.title)}</h4>
+      <h4 style="margin:0 0 13px;font-size:15px;font-weight:700;color:#111827;line-height:1.4;"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#111827;color:#fff;font-size:11px;margin-right:8px;vertical-align:1px;">${i + 1}</span>${escapeHtml(title)}</h4>
       ${diagnosis ? `<div style="margin-bottom:11px;">
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
           <span style="width:3px;height:14px;background:#D4A574;border-radius:2px;flex-shrink:0;"></span>
@@ -2151,7 +2182,7 @@ function renderApiAdviceItem(item, i) {
       ${action ? `<div style="background:#F6FEF9;border:1px solid #D1FAE5;border-radius:12px;padding:12px 14px;margin-bottom:10px;">
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
           <span style="width:18px;height:18px;border-radius:50%;background:#059669;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;color:#fff;font-weight:700;">✓</span>
-          <span style="font-size:11px;font-weight:700;color:#065F46;letter-spacing:.02em;">建议你先做</span>
+          <span style="font-size:11px;font-weight:700;color:#065F46;letter-spacing:.02em;">建议你做</span>
         </div>
         <p style="margin:0;font-size:13px;line-height:1.65;color:#065F46;font-weight:600;">${escapeHtml(action)}</p>
       </div>` : ""}
@@ -2203,7 +2234,7 @@ function fallbackFreeAdviceItems() {
       adviceId: "free_fallback_jd_keyword",
       priority: "high",
       displayAdviceType: "JD Keyword",
-      title: "先把目标岗位关键词放进经历证据里",
+      title: "把目标岗位关键词写进经历证据",
       currentDiagnosis: "现在的经历描述容易停留在职责层，和目标岗位 JD 的关键词连接不够明确。",
       action: "挑 2 到 3 段最相关经历，把 JD 里的核心技能词改写成项目动作、工具和结果，而不是只放在技能列表。",
       mentorLens: "导师会先看关键词有没有被真实项目承接；只有出现在经历证据里，才像是你真的做过。",
@@ -2317,8 +2348,8 @@ function renderResultPageAdvicePreview(items) {
   const titleEl = section?.querySelector(".section-title");
   const descEl = section?.querySelector(".section-desc");
   if (numEl) numEl.textContent = "免费试读 · 3 个优先修改点";
-  if (titleEl) titleEl.textContent = "先改这 3 件事";
-  if (descEl) descEl.textContent = "系统从完整导师建议中挑出最值得先处理的三个修改动作，优先覆盖不同简历部位。";
+  if (titleEl) titleEl.textContent = "这 3 件事最值得改";
+  if (descEl) descEl.textContent = "系统从完整导师建议中挑出最值得处理的三个修改动作，覆盖不同简历部位。";
   if (titleEl && !document.getElementById("mentorLogoIntro")) {
     titleEl.insertAdjacentHTML("afterend", renderMentorLogoIntro());
   }

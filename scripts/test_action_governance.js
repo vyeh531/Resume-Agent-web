@@ -302,8 +302,121 @@ test("canonical title rules produce action titles and avoid system placeholders"
     action_depth: "rewrite",
     A_action: "将经历 bullet 改写为任务、方法和结果结构。",
   });
-  assert.strictEqual(proposed.canonical_title, "把经历改成任务-方法-结果");
+  assert.strictEqual(proposed.canonical_title, "把经历改成动作和结果");
   assert.ok(!titleGovernance.isBadVisibleTitle(proposed.canonical_title));
+});
+
+test("display title follows the action when old title is about the wrong topic", () => {
+  const title = titleGovernance.bestDisplayTitle(
+    {
+      title: "把经历改成可衡量结果",
+      action: "新增 2-3 行 Summary：第一句写目标岗位 Digital Marketing Strategist，第二句连接最相关经历、技能和可量化成果。",
+      relatedProblemTags: ["missing_summary"],
+      canonicalActionFamily: "summary_creation",
+      targetSection: "summary",
+    },
+    "把经历改成可衡量结果"
+  );
+  assert.strictEqual(title, "补上 Summary 段落");
+});
+
+test("short-tenure clarification title is not overwritten by generic experience wording", () => {
+  const title = titleGovernance.bestDisplayTitle(
+    {
+      title: "把经历改成动作和结果",
+      currentDiagnosis: "简历中有时长较短的经历，如果不标注 Intern / Internship 或说明项目周期，HR 可能会对稳定性产生疑虑。",
+      action: "如果这段经历是实习，请在 title 中明确标注 Intern / Internship；如果是项目制经历，在 bullet 中说明项目周期、职责边界和最终产出。",
+      mentorInsight: "任务、方法和结果要拆清楚，让人一眼看懂你贡献在哪。",
+      relatedProblemTags: ["short_tenure_unclear"],
+      canonicalActionFamily: "experience_evidence",
+      actionDepth: "clarify",
+      targetSection: "experience",
+    },
+    "把经历改成动作和结果"
+  );
+  assert.strictEqual(title, "把短期经历说清楚");
+});
+
+test("JD keyword distribution across sections is not titled as generic Summary work", () => {
+  const title = titleGovernance.bestDisplayTitle(
+    {
+      title: "优化简历开头定位",
+      currentDiagnosis: "简历与目标 JD 的关键词匹配偏低（当前 9/51），ATS 扫描时匹配信号不够强，容易在第一轮被过滤。",
+      action: "对照 JD 提取真实掌握的核心关键词，把它们分配到 Summary、Skills 和最相关的 Experience bullet 中。",
+      mentorInsight: "关键词不要只堆在 Skills，最好回到真实经历里，让 ATS 扫得到，HR 也看得到证据。",
+      relatedProblemTags: ["low_jd_keyword_match"],
+      canonicalActionFamily: "jd_keyword_alignment",
+      targetSection: "overall",
+    },
+    "优化简历开头定位"
+  );
+  assert.strictEqual(title, "把 JD 关键词放到对的位置");
+});
+
+test("keyword text is not mistaken for Word document formatting", () => {
+  const title = titleGovernance.bestDisplayTitle(
+    {
+      action: "Add priority keywords from the JD into Skills and the most relevant Experience bullet.",
+      relatedProblemTags: ["jd_keyword_gap"],
+      canonicalActionFamily: "jd_keyword_alignment",
+    },
+    ""
+  );
+  assert.notStrictEqual(title, "把提交格式整理稳");
+  assert.strictEqual(title, "补上 JD 里缺的技能词");
+});
+
+test("skills keyword action keeps a Skills-specific title", () => {
+  const title = titleGovernance.bestDisplayTitle(
+    {
+      action: "在 Skills 中补上 JD 缺失的 Python、SQL priority keywords。",
+      relatedProblemTags: ["missing_priority_keywords"],
+      canonicalActionFamily: "skills_section",
+      targetSection: "skills",
+    },
+    ""
+  );
+  assert.strictEqual(title, "补上 JD 里缺的技能词");
+});
+
+test("experience keyword evidence keeps an experience-specific title", () => {
+  const title = titleGovernance.bestDisplayTitle(
+    {
+      action: "把 JD 关键词写进 Experience bullet 的真实项目动作和结果。",
+      relatedProblemTags: ["weak_experience_keyword_evidence"],
+      canonicalActionFamily: "jd_keyword_alignment",
+      targetSection: "experience",
+    },
+    ""
+  );
+  assert.strictEqual(title, "把关键词写进真实经历");
+});
+
+test("summary-only positioning still uses a Summary title", () => {
+  const title = titleGovernance.bestDisplayTitle(
+    {
+      action: "把 Summary 第一句改成目标岗位定位，并写出目标岗位原词。",
+      relatedProblemTags: ["weak_summary_role_alignment"],
+      canonicalActionFamily: "summary_positioning",
+      targetSection: "summary",
+    },
+    ""
+  );
+  assert.strictEqual(title, "让 Summary 对准目标岗位");
+});
+
+test("legacy titles containing ordering language are replaced", () => {
+  const title = titleGovernance.bestDisplayTitle(
+    {
+      title: "先修简历开头这段",
+      action: "把 Summary 第一句改成目标岗位定位，并写出目标岗位原词。",
+      relatedProblemTags: ["weak_summary_role_alignment"],
+      canonicalActionFamily: "summary_positioning",
+      targetSection: "summary",
+    },
+    "先修简历开头这段"
+  );
+  assert.strictEqual(title, "让 Summary 对准目标岗位");
 });
 
 test("canonical title does not leak case-specific action terms", () => {

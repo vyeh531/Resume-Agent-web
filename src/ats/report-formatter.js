@@ -729,6 +729,11 @@ function insightMessage(item) {
 }
 
 function problemTitle(item) {
+  if (item.tag === "marketing_tool_gap") return "Marketing 工具证据不足";
+  if (item.tag === "marketing_metric_gap") return "Marketing 成果指标不足";
+  if (item.tag === "marketing_audience_channel_gap") return "缺少受众、渠道和 campaign 语境";
+  if (item.tag === "marketing_business_goal_gap") return "Marketing 业务目标不清楚";
+  if (item.tag === "marketing_experience_keyword_gap") return "Marketing 关键词缺少经历支撑";
   if (item.tag === "missing_summary") return "\u7f3a\u5c11 Summary \u5c97\u4f4d\u5b9a\u4f4d\u6bb5";
   if (item.tag === "low_hard_skill_match") return "\u6838\u5fc3\u786c\u6280\u80fd\u5339\u914d\u504f\u4f4e";
   if (item.tag === "missing_exact_job_title") return "\u7f3a\u5c11\u76ee\u6807\u5c97\u4f4d\u539f\u8bcd";
@@ -739,6 +744,11 @@ function problemTitle(item) {
 }
 
 const PROBLEM_MESSAGE_BY_TAG = {
+  marketing_tool_gap: "目标 Marketing JD 里的工具或平台没有在简历经历中形成证据，例如 CRM、GA4、HubSpot、Klaviyo、Meta Ads 或自动化工具。",
+  marketing_metric_gap: "Marketing 经历缺少 CTR、CVR、ROAS、CAC、retention、open rate、engagement rate 等结果指标，HR 难以判断 campaign 或增长工作的真实影响。",
+  marketing_audience_channel_gap: "经历描述没有讲清楚目标 audience、触达 channel、campaign 类型或内容场景，读者只能看到任务，难以判断 Marketing 判断力。",
+  marketing_business_goal_gap: "Marketing bullet 还没有连接到 acquisition、conversion、retention、engagement、brand awareness 或 pipeline 等业务目标。",
+  marketing_experience_keyword_gap: "Marketing 关键词可能出现在 Skills 或 JD 匹配里，但经历 bullet 里缺少对应的真实场景、动作和结果支撑。",
   uploaded_non_pdf_format: "上传文件不是稳定的 PDF 格式，可能在不同系统里出现版式错乱或解析失败。",
   file_naming_issue: "简历文件名不够清晰专业，可能影响招聘方快速识别候选人和目标岗位。",
   formatting_penalty_triggered: "简历格式或版面解析存在风险，系统可能无法稳定读取关键信息。",
@@ -820,6 +830,11 @@ function userFacingProblemMessage(item = {}, fallback = "") {
 }
 
 const PRIORITY_ACTION_BY_TAG = {
+  marketing_tool_gap: "把 JD 要求的 Marketing 工具写回真实经历：说明你用 CRM、GA4、HubSpot、Klaviyo、Meta Ads 等工具做了什么 campaign、分析或自动化动作。",
+  marketing_metric_gap: "把核心 Marketing bullet 改成「动作 + 指标结果」：优先补 CTR、CVR、ROAS、CAC、retention、open rate、engagement rate、leads 或 revenue impact。",
+  marketing_audience_channel_gap: "重写 Marketing bullet 时补齐「目标 audience + channel + campaign/action + result」，让 HR 看得出你面对谁、在哪个渠道、解决什么增长或品牌问题。",
+  marketing_business_goal_gap: "在 Summary 或前两段经历里说明你的 Marketing 工作服务什么业务目标，例如 acquisition、conversion、retention、engagement、brand awareness 或 pipeline。",
+  marketing_experience_keyword_gap: "不要只把 Marketing 关键词放在 Skills；选择 2-3 条经历，把关键词改写成具体 campaign、内容、CRM、广告投放或 analytics 场景。",
   uploaded_non_pdf_format: "将简历导出为 PDF 后再提交，确认打开后的版面、字体和链接都稳定可读。",
   file_naming_issue: "把上传文件名改成清楚的专业格式，例如 FirstName_LastName_Resume_TargetRole.pdf。",
   formatting_penalty_triggered: "先修复版面和解析风险：避免复杂表格、双栏错位、图片文字和不可复制文本。",
@@ -928,6 +943,9 @@ function buildStructuredSuggestions(internalAtsResult) {
 }
 
 function coverageFamilyForTag(tagName = "", dimension = "overall") {
+  if (/marketing_metric_gap/.test(tagName)) return "impact";
+  if (/marketing_tool_gap|marketing_audience_channel_gap|marketing_experience_keyword_gap/.test(tagName)) return "experience_evidence";
+  if (/marketing_business_goal_gap/.test(tagName)) return "positioning";
   if (/exact_job_title|summary|target_role|role_alignment|position|role_specificity/.test(tagName)) return "positioning";
   if (/keyword|hard_skill|priority_keyword|jd_match/.test(tagName)) return "keywords";
   if (/experience|evidence|skills_only|bullet|project_details/.test(tagName)) return "experience_evidence";
@@ -945,6 +963,8 @@ function coverageFamilyForTag(tagName = "", dimension = "overall") {
 }
 
 function targetSectionForTag(tagName = "", dimension = "overall") {
+  if (/marketing_business_goal_gap/.test(tagName)) return "summary";
+  if (/marketing_tool_gap|marketing_metric_gap|marketing_audience_channel_gap|marketing_experience_keyword_gap/.test(tagName)) return "experience";
   if (/missing_summary/.test(tagName)) return "summary";
   if (/exact_job_title|summary|target_role|role_alignment|position/.test(tagName)) return "summary";
   if (/keyword|hard_skill|priority_keyword/.test(tagName)) return "skills";

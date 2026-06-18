@@ -47,6 +47,7 @@ const {
   formatPremiumMentorReport,
   isDisplayableInsiderKnowledge,
   buildInsiderKnowledgeTip,
+  buildGeneralInsiderTips,
 } = require("../services/mentorAdviceRetrieval");
 const mentorInsightRulesBackfill = require("./backfill_segments_mentor_insight_rules");
 const mentorInsightLlmGeneration = require("./generate_segments_mentor_insight_llm");
@@ -2312,6 +2313,42 @@ test("company insider knowledge rejects direct resume actions", () => {
   };
 
   assert.strictEqual(isDisplayableInsiderKnowledge(row, retrievalQuery), false);
+});
+
+test("company insider knowledge rejects internal MentorX source rows", () => {
+  const retrievalQuery = {
+    targetRole: "Data Analyst",
+    roleFamily: "data_analyst",
+    filters: { roleFamily: ["data_analyst"], targetRoles: ["data_analyst"] },
+  };
+  const row = {
+    mentor_company: "MentorX",
+    mentor_title: "Mentor",
+    role_family: "data_analyst",
+    target_roles: "data_analyst",
+    I_insight: "eLearning岗位对数据分析的要求不仅是工具使用，更关注能否用数据量化课程效果（如完课率、用户满意度提升），这是简历加分项，也是面试高频考点。",
+  };
+
+  assert.strictEqual(isDisplayableInsiderKnowledge(row, retrievalQuery), false);
+});
+
+test("company insider fallback keeps MLE tips role-aligned and simplified", () => {
+  const tips = buildGeneralInsiderTips({
+    targetRole: "Machine Learning Engineer Intern",
+    roleFamily: "machine_learning",
+    priorityKeywords: ["Python", "model evaluation", "ML"],
+  }, 6);
+  const text = tips.map((tip) => [
+    tip.company,
+    tip.industryLabel,
+    tip.sourceMentorName,
+    tip.sourceMentorTitle,
+    tip.knowledgeTitle,
+    tip.insight,
+  ].join(" ")).join("\n");
+
+  assert.ok(!/Airbnb|UX|product design|creative|作品集/.test(text));
+  assert.ok(!/[類會職體驗與視資數據導師試號現寫歷裡應該為處過來斷擔責選證塊讓說並齊標準轉換層顧問專風險節執條鏈醫療臨規範響嚴謹眾產場雙邊決見製測這種優較錯誤語篩錄單擬滿週關係協網絡術劃級點業務實華營銷續約]/.test(text));
 });
 
 console.log(`\nAfter action precondition tests: ${passed + failed} tests: ${passed} passed, ${failed} failed`);

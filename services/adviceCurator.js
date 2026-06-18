@@ -555,6 +555,7 @@ function roleAwareMockMentors(context = {}) {
 function problemLensAllowsMentor(item = {}, mentorClusters = []) {
   const clusters = new Set(mentorClusters);
   if (isMentorXProfile(item.mentorSource || {})) return true;
+  if (/^marketing_/.test(item.coverageFamily || "")) return clusters.has("marketing") || clusters.has("business") || clusters.has("data");
   if (item.coverageFamily === "risk_explanation") return clusters.has("design") || clusters.has("operations") || clusters.has("business") || clusters.has("finance");
   if (item.coverageFamily === "cross_domain_transfer") return clusters.has("design") || clusters.has("business") || clusters.has("operations") || clusters.has("finance");
   if (item.coverageFamily === "readability_structure") return clusters.has("design") || clusters.has("business") || clusters.has("operations");
@@ -1266,6 +1267,8 @@ function evidenceMatchesCoverage(evidence = [], coverageFamily = "") {
   if (coverageFamily !== "risk_explanation" && /ç¨³å®šæ€§é£Žé™©|ç»åŽ†æ€§è´¨|é¡¹ç›®è¾¹ç•Œ|short tenure|internship period/i.test(text)) return false;
   if (coverageFamily !== "experience_evidence" && /æŽ¨è¿›åŠ¨ä½œ|äº¤ä»˜ç‰©|collaboration delivery/i.test(text)) return false;
   if (coverageFamily === "keyword") return /keyword|jd|ats|å…³é”®è¯|åŒ¹é…|æŠ€èƒ½/.test(text);
+  if (coverageFamily === "marketing_campaign_context") return /marketing|campaign|audience|channel|crm|ga4|hubspot|klaviyo|meta ads|工具|渠道|场景/.test(text);
+  if (coverageFamily === "marketing_growth_metrics") return /ctr|cvr|roas|cac|retention|open rate|engagement|conversion|metric|growth|业务目标|增长|指标/.test(text);
   if (coverageFamily === "positioning") return /position|summary|target|å²—ä½|å®šä½|å¼€å¤´|ä¸»çº¿/.test(text);
   if (coverageFamily === "experience_evidence") return /experience|bullet|project|collaboration|ç»åŽ†|é¡¹ç›®|è¯æ®|åä½œ|äº¤ä»˜/.test(text);
   if (coverageFamily === "impact_metrics") return /impact|metric|result|quant|æˆæžœ|é‡åŒ–|ç»“æžœ|è§„æ¨¡|æ•ˆçŽ‡/.test(text);
@@ -1276,6 +1279,8 @@ function evidenceMatchesCoverage(evidence = [], coverageFamily = "") {
 
 function defaultEvidenceForCoverage(coverageFamily = "", targetSection = "") {
   if (coverageFamily === "keyword") return ["JD 关键词", "ATS 匹配", targetSection === "skills" ? "Skills 排序" : "经历证据"];
+  if (coverageFamily === "marketing_campaign_context") return ["Marketing 工具", "audience/channel", "campaign 场景"];
+  if (coverageFamily === "marketing_growth_metrics") return ["CTR/CVR/ROAS", "业务目标", "增长结果"];
   if (coverageFamily === "positioning") return ["岗位定位", "开头主线", "目标岗位"];
   if (coverageFamily === "experience_evidence") return ["经历证据", "推进动作", "交付物"];
   if (coverageFamily === "impact_metrics") return ["量化结果", "成果表达", "影响规模"];
@@ -1288,6 +1293,9 @@ function defaultEvidenceForCoverage(coverageFamily = "", targetSection = "") {
 function inferActionFamily(item = {}) {
   const native = normalizeText(item.actionFamily || item.canonicalActionFamily);
   const allText = lowerText(adviceText(item));
+  const tagTextForAction = lowerText(asArray(item.relatedProblemTags).join(" "));
+  if (/marketing_metric_gap|marketing_business_goal_gap/.test(tagTextForAction)) return "marketing_growth_metrics";
+  if (/marketing_tool_gap|marketing_audience_channel_gap|marketing_experience_keyword_gap/.test(tagTextForAction)) return "marketing_campaign_context";
   if (native) {
     if (/short tenure|internship|intern|contract|gap|çŸ­æœŸ|å®žä¹ |å¯¦ç¿’|é¡¹ç›®å‘¨æœŸ|é …ç›®é€±æœŸ|æ—¶é•¿|æ™‚é•·|ç¨³å®šæ€§é£Žé™©|ç©©å®šæ€§é¢¨éšª/.test(allText)) {
       return "risk_explanation";
@@ -1350,6 +1358,8 @@ function inferCoverageFamily(item = {}) {
   const text = lowerText(adviceText(item));
   const tags = asArray(item.relatedProblemTags).join(" ");
   const combined = `${text} ${tags}`.toLowerCase();
+  if (actionFamily === "marketing_growth_metrics" || /marketing_metric_gap|marketing_business_goal_gap/.test(combined)) return "marketing_growth_metrics";
+  if (actionFamily === "marketing_campaign_context" || /marketing_tool_gap|marketing_audience_channel_gap|marketing_experience_keyword_gap/.test(combined)) return "marketing_campaign_context";
   if (["jd_keyword_alignment", "keyword_in_experience", "skills_keyword_ordering"].includes(actionFamily)) return "keyword";
   if (["summary_creation", "summary_positioning"].includes(actionFamily)) return "positioning";
   if (actionFamily === "impact_metrics") return "impact_metrics";
@@ -1385,6 +1395,8 @@ function inferActionSlot(item = {}) {
   if (coverage === "keyword" && section === "experience") return "keyword_in_experience";
   if (coverage === "keyword" && section === "skills") return "skills_keyword_ordering";
   if (coverage === "keyword") return "keyword_placement";
+  if (coverage === "marketing_campaign_context") return "marketing_campaign_context";
+  if (coverage === "marketing_growth_metrics") return "marketing_growth_metrics";
   if (coverage === "impact_metrics") return "experience_impact_metrics";
   if (coverage === "risk_explanation") return "short_tenure_explanation";
   if (coverage === "junior_signal") return "education_coursework_signal";
@@ -2447,6 +2459,14 @@ const LENS_CONFIG = {
     lens: "成果量化视角",
     reason: "这组建议主要针对结果、指标和业务价值表达，让读者更容易判断你的实际贡献。",
   },
+  marketing_campaign_context: {
+    lens: "Marketing Campaign 视角",
+    reason: "这组建议主要针对 Marketing 工具、audience、channel 和 campaign 场景，让经历不只停留在泛泛的活动支持。",
+  },
+  marketing_growth_metrics: {
+    lens: "Marketing 增长指标视角",
+    reason: "这组建议主要针对 CTR、CVR、ROAS、CAC、retention、open rate 等指标，把 Marketing 动作连接到业务结果。",
+  },
   risk_explanation: {
     lens: "短期经历与风险解释视角",
     reason: "这组建议主要针对短期经历、实习性质或项目边界说明，帮助 HR 更快理解每段经历的性质和产出。",
@@ -2485,6 +2505,10 @@ function inferMentorGroupLens(adviceItems = [], mentorProfile = {}, targetRole =
   }
   if (/software|engineer|machine learning|ml|ai|developer|anyscale|openai|google|amazon|meta/.test(mentorText)) {
     scores.set("technical_depth", (scores.get("technical_depth") || 0) + 0.25);
+  }
+  if (/marketing|growth|brand|crm|campaign|content|seo|sem|meta|google/.test(mentorText)) {
+    scores.set("marketing_campaign_context", (scores.get("marketing_campaign_context") || 0) + 0.3);
+    scores.set("marketing_growth_metrics", (scores.get("marketing_growth_metrics") || 0) + 0.25);
   }
   if (/architect|design|designer|portfolio|architecture/.test(mentorText)) {
     scores.set("cross_domain_transfer", (scores.get("cross_domain_transfer") || 0) + 0.2);

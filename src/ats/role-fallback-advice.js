@@ -44,6 +44,11 @@ const FAMILY_LEXICON_GUARDS = {
     forbidden: [/accounts payable/i, /accounts receivable/i, /reconciliation/i, /\bGAAP\b/i, /month-end close/i],
   },
   marketing: {
+    preferredSkills: ["campaign strategy", "growth marketing", "audience segmentation", "lifecycle marketing", "content strategy", "marketing analytics"],
+    preferredTools: ["GA4", "Google Analytics", "HubSpot", "Salesforce", "Klaviyo", "Meta Ads"],
+    preferredKeywords: ["campaign", "audience", "channel", "conversion", "retention", "engagement", "acquisition"],
+    preferredDeliverables: ["campaign brief", "content calendar", "CRM workflow", "performance report", "audience insight", "experiment readout"],
+    preferredMetrics: ["CTR", "CVR", "ROAS", "CAC", "open rate", "engagement rate", "retention"],
     forbidden: [/general ledger/i, /journal entries/i, /reconciliation/i, /\bGAAP\b/i, /month-end close/i],
   },
   cloud_infrastructure: {
@@ -130,6 +135,20 @@ const SLOT_DEFINITIONS = {
     targetSection: "Skills",
     defaultTags: ["weak_experience_keyword_evidence", "low_hard_skill_match", "missing_tool_context"],
   },
+  marketing_campaign_context: {
+    title: "补齐 Marketing 场景证据",
+    coverageFamily: "marketing_campaign_context",
+    actionFamily: "marketing_campaign_context",
+    targetSection: "Experience",
+    defaultTags: ["marketing_tool_gap", "marketing_audience_channel_gap", "marketing_experience_keyword_gap"],
+  },
+  marketing_growth_metrics: {
+    title: "补强 Marketing 指标结果",
+    coverageFamily: "marketing_growth_metrics",
+    actionFamily: "marketing_growth_metrics",
+    targetSection: "Experience",
+    defaultTags: ["marketing_metric_gap", "marketing_business_goal_gap"],
+  },
   section_weighting: {
     title: "调整经历篇幅权重",
     coverageFamily: "readability_structure",
@@ -140,6 +159,8 @@ const SLOT_DEFINITIONS = {
 };
 
 const PROBLEM_TAG_TO_SLOT = [
+  { pattern: /marketing_metric_gap|marketing_business_goal_gap/i, slot: "marketing_growth_metrics" },
+  { pattern: /marketing_tool_gap|marketing_audience_channel_gap|marketing_experience_keyword_gap/i, slot: "marketing_campaign_context" },
   { pattern: /short.*tenure|tenure.*unclear|internship.*unclear|stability/i, slot: "short_tenure_risk" },
   { pattern: /measurable|metric|quantif|impact|result/i, slot: "impact_metrics" },
   { pattern: /education|course|certificate|junior|training/i, slot: "junior_signal" },
@@ -319,6 +340,8 @@ function tagsMatchingSlot(problemTags = [], slotId = "") {
 }
 
 function buildEvidenceForSlot(slotId, lexicon = {}) {
+  if (slotId === "marketing_campaign_context") return ["Marketing 工具", "audience/channel", "campaign 场景"];
+  if (slotId === "marketing_growth_metrics") return ["CTR/CVR/ROAS", "业务目标", "增长结果"];
   if (slotId === "impact_metrics") return ["量化结果", "成果表达", "影响规模"];
   if (slotId === "short_tenure_risk") return ["经历性质", "项目边界", "稳定性风险"];
   if (slotId === "junior_signal") return ["课程/证书", "教育训练", "岗位能力证据"];
@@ -387,6 +410,18 @@ function buildSlotCopy(slotId, lexicon = {}) {
       mentorInsight: "工具名要和具体交付场景绑定，才能避免看起来像泛泛罗列。",
       hrPerspective: "我会看技能是否出现在真实场景里。只列工具名不如说明你用它完成了什么。",
     },
+    marketing_campaign_context: {
+      currentDiagnosis: `简历对 ${role} 的 Marketing 场景还不够具体，工具、audience、channel 和 campaign 之间没有形成清楚证据链。`,
+      action: `选择 2-3 条核心经历，改成「目标 audience + channel/campaign + 使用的 ${tools} + 你的动作 + 产出的 ${deliverables}」结构。`,
+      mentorInsight: "Marketing 简历最怕只写负责活动或内容；要让 HR 看到你面对谁、在哪个渠道、用了什么工具、推动了什么 campaign。",
+      hrPerspective: "我会看候选人是否真的理解用户、渠道和 campaign 机制，而不是只会列工具名或写泛泛的 marketing support。",
+    },
+    marketing_growth_metrics: {
+      currentDiagnosis: `简历里的 Marketing 经历还缺少指标和业务目标，读者不容易判断你对 ${role} 的增长、转化或品牌结果有多大贡献。`,
+      action: `把核心 bullet 补成「动作 + 业务目标 + 指标结果」：优先写 ${metrics}，并连接 acquisition、conversion、retention、engagement 或 brand awareness。`,
+      mentorInsight: "Marketing 的结果要落到 campaign KPI 和业务目标上；CTR、CVR、ROAS、CAC、open rate、retention 这类指标会让贡献变得可判断。",
+      hrPerspective: "如果没有指标，我只能看到你参与过 Marketing 工作；有指标和目标，我才知道你是否能影响增长、转化或用户参与。",
+    },
     section_weighting: {
       currentDiagnosis: "简历里不同经历的重要性还没有拉开，读者可能会把弱相关内容和核心经历看成同等重要。",
       action: `把最贴近 ${role} 的经历或项目放到更靠前位置，并给它多 1-2 条 bullet；弱相关经历只保留能证明 ${signals}、协作或基础职业能力的内容。`,
@@ -433,7 +468,10 @@ function buildFallbackAdviceForSlot(slotId, roleLexicon = {}, obligation = {}, c
 
 function slotPriority(slotId, problemTags = []) {
   const matched = tagsMatchingSlot(problemTags, slotId);
+  if (/^marketing_/.test(slotId) && !matched.length) return 40;
   const base = {
+    marketing_growth_metrics: 97,
+    marketing_campaign_context: 96,
     impact_metrics: 95,
     positioning: 90,
     experience_evidence: 88,

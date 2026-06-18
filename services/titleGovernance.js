@@ -17,7 +17,7 @@ const CASE_SPECIFIC_TITLE_TERMS = [
   /\bCPT\b/i,
 ];
 
-const GENERIC_TITLE = "明确简历修改优先级";
+const GENERIC_TITLE = "明确简历修改重点";
 const BAD_VISIBLE_TITLE_RE = /简历优化建议\s*\d+|当前报告可用的导师建议不足|优化简历与目标岗位的匹配度/i;
 
 function splitCsv(value) {
@@ -47,6 +47,87 @@ function textOf(row = {}) {
   ].filter(Boolean).join(" ");
 }
 
+function primaryActionTextOf(row = {}) {
+  return [
+    row.A_action,
+    row.action_summary,
+    row.rawActionSummary,
+    row.action,
+    row.actionSummary,
+    row.generalized_action,
+    row.generalizedAction,
+  ].find((value) => String(value || "").trim()) || "";
+}
+
+function actionTextOf(row = {}) {
+  return [
+    primaryActionTextOf(row),
+    row.mentorLens,
+    row.mentorInsight,
+    row.reason,
+    row.P_mentor,
+    row.I_insight,
+  ].filter(Boolean).join(" ");
+}
+
+function actionCentricTitle(row = {}) {
+  const actionText = actionTextOf(row).toLowerCase();
+  const fullText = textOf(row).toLowerCase();
+  const tags = splitCsv(row.problem_tags || row.relatedProblemTags).join(" ").toLowerCase();
+  const family = String(row.canonical_action_family || row.canonicalActionFamily || "").toLowerCase();
+  const targetSection = String(row.targetSection || row.target_section || "").toLowerCase();
+  const text = `${actionText} ${tags} ${family} ${targetSection}`;
+
+  if (/linkedin/i.test(text)) return "补上 LinkedIn 链接";
+  if (/github|gitlab|repo|repository|代码|代碼/.test(text)) return "补上项目代码入口";
+  if (/portfolio|作品集|personal website|project link/.test(text)) return "补上作品集入口";
+  if (/pdf|docx?|\bword\b|格式|版面|排版|字体|字體|spacing|行距|文件名|檔名/.test(text)) return "把提交格式整理稳";
+  if (/日期|date|timeline|时间线|時間線/.test(text)) return "把经历时间线补齐";
+  if (/missing_summary/.test(text) || /(?:新增|补上|補上|add|create).{0,24}summary|summary.{0,24}(?:缺少|沒有|没有|missing)/i.test(text)) return "补上 Summary 段落";
+  if (/first person|第一人称|第一人稱/.test(text) && /summary/i.test(text)) return "把 Summary 语气改专业";
+  if (/keyword|关键词|關鍵詞|jd|ats/.test(text) && /summary/.test(text) && /skills?/.test(text) && /experience|经历|經歷/.test(text) && /分配|放到|放进|放進|写进|寫進|补进|補進/.test(text)) return "把 JD 关键词放到对的位置";
+  if (/summary|objective|简介|簡介|开头|開頭/.test(text) && /岗位原词|崗位原詞|目标岗位|目標崗位|exact.*title|job title|target role|定位|role alignment/.test(`${text} ${fullText}`)) return "让 Summary 对准目标岗位";
+  if (/skills?|技能|技术栈|技術棧|工具/.test(text) && /排序|顺序|順序|靠前|前面|重排|reorder|分类|分類/.test(text)) return "把 Skills 排得更像这个岗位";
+  if (/skills?|技能|hard skill|工具/.test(text) && /补|補|加入|写进|寫進|放进|放進|缺失|missing|priority keyword|关键词|關鍵詞/.test(text)) return "补上 JD 里缺的技能词";
+  if (/keyword|关键词|關鍵詞|jd|ats/.test(text) && /bullet|experience|经历|經歷|项目|項目|证据|證據|使用场景|使用場景/.test(text)) return "把关键词写进真实经历";
+  if (/keyword|关键词|關鍵詞|jd|ats/.test(text)) return "补上 JD 里的关键证据";
+  if (/summary|objective|简介|簡介|开头|開頭/.test(text)) return "优化简历开头定位";
+  if (/short_tenure_unclear|short tenure|internship|intern\b|实习|實習|短期|时长|時長|项目周期|項目週期|稳定性|穩定性|title\s*中明确标注|title\s*中明確標注/.test(text)) return "把短期经历说清楚";
+  if (/action verb|动词|動詞|主动|主動|led|built|created|managed|delivered/.test(text)) return "换成更有力的动作动词";
+  if (/bullet|experience|经历|經歷|项目|項目|project/.test(text) && /任务|任務|方法|工具|结果|結果|动作|動作|rewrite|改写|改成|重写|重寫/.test(text)) return "把经历改成动作和结果";
+  if (/量化|数字|數字|metric|measurable|impact|成果|结果|結果|规模|規模|效率|转化|轉化|%/.test(text)) return "把成果写得更可衡量";
+  if (/bullet|experience|经历|經歷|项目|項目|project/.test(text)) return "把经历证据写清楚";
+  if (/education|course|coursework|gpa|certificate|课程|課程|证书|證書|教育/.test(text)) return "把教育背景信号补清楚";
+  if (/version|版本|tailor|定制|客制|投递|投遞|申请方向|申請方向/.test(text)) return "按申请方向做一版简历";
+
+  return "";
+}
+
+function titleIntent(value = "") {
+  const text = String(value || "").toLowerCase();
+  if (!text) return "";
+  if (/keyword|关键词|關鍵詞|jd|ats/.test(text)) return "keyword";
+  if (/skills?|技能|技术栈|技術棧/.test(text)) return "skills";
+  if (/summary|objective|简介|簡介|开头|開頭/.test(text)) return "summary";
+  if (/量化|数字|數字|metric|measurable|impact|成果|结果|結果/.test(text)) return "impact";
+  if (/bullet|experience|经历|經歷|项目|項目|project/.test(text)) return "experience";
+  if (/format|pdf|word|格式|版面|排版|日期|date|timeline|时间线|時間線/.test(text)) return "format";
+  if (/linkedin|github|portfolio|作品集|链接|鏈接|入口/.test(text)) return "link";
+  if (/education|course|gpa|certificate|课程|課程|证书|證書|教育/.test(text)) return "education";
+  return "";
+}
+
+function shouldPreferActionTitle(row = {}, visibleTitle = "") {
+  const actionTitle = actionCentricTitle(row);
+  if (!actionTitle) return false;
+  if (isBadVisibleTitle(visibleTitle)) return true;
+  const actionIntent = titleIntent(actionTitle);
+  const visibleIntent = titleIntent(visibleTitle);
+  if (!actionIntent) return false;
+  if (!visibleIntent) return true;
+  return actionIntent !== visibleIntent;
+}
+
 function hasCaseSpecificTitleTerm(value = "") {
   return CASE_SPECIFIC_TITLE_TERMS.some((pattern) => pattern.test(String(value || "")));
 }
@@ -56,6 +137,7 @@ function isBadVisibleTitle(value = "") {
   if (!title) return true;
   if (BAD_VISIBLE_TITLE_RE.test(title)) return true;
   if (title.length > 80) return true;
+  if (/先/.test(title)) return true;
   if (/^(你的现状|当前|求职者|候选人|学生|HR|导师)/.test(title)) return true;
   return false;
 }
@@ -103,6 +185,9 @@ function depthOf(row = {}) {
 }
 
 function titleFromRules(row = {}) {
+  const actionTitle = actionCentricTitle(row);
+  if (actionTitle && shouldPreferActionTitle(row, row.canonical_title || row.title || row.advice_card_title || "")) return actionTitle;
+
   const family = familyOf(row);
   const depth = depthOf(row);
   const text = textOf(row).toLowerCase();
@@ -202,8 +287,11 @@ function classifyTitleGovernance(row = {}) {
 
 function bestDisplayTitle(card = {}, personalizedTitle = "") {
   const personalized = compact(personalizedTitle);
+  const actionTitle = actionCentricTitle(card);
+  if (actionTitle && shouldPreferActionTitle(card, personalized)) return actionTitle;
   if (!isBadVisibleTitle(personalized) && !hasCaseSpecificTitleTerm(personalized)) return personalized;
   const canonical = compact(card.canonicalTitle || card.canonical_title);
+  if (actionTitle && shouldPreferActionTitle(card, canonical)) return actionTitle;
   if (!isBadVisibleTitle(canonical) && !hasCaseSpecificTitleTerm(canonical)) return canonical;
   const fallback = titleFromRules(card);
   return isBadVisibleTitle(fallback) ? "优化这条简历建议" : fallback;
@@ -218,6 +306,7 @@ module.exports = {
   depthOf,
   hasCaseSpecificTitleTerm,
   isBadVisibleTitle,
+  actionCentricTitle,
   titleFromRules,
   classifyTitleGovernance,
   bestDisplayTitle,
