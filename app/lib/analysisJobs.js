@@ -36,7 +36,7 @@ export function getAnalysisJob(jobId) {
   return publicJob(jobs.get(jobId));
 }
 
-export function startAnalysisJob({ resumeText, jobTitle, jdText, fileName, userId = null } = {}) {
+export function startAnalysisJob({ resumeText, jobTitle, jdText, fileName, userId = null, locale = 'zh-CN' } = {}) {
   cleanupJobs();
   const jobId = crypto.randomUUID();
   const now = Date.now();
@@ -59,13 +59,15 @@ export function startAnalysisJob({ resumeText, jobTitle, jdText, fileName, userI
       jobTitle,
       jdText,
       fileName: fileName || '',
+      locale,
     });
 
     updateJob(job, { stage: 'retrieving_advice', progress: 65 });
     const report = await buildAtsReportPayload(
       scoreResult.rawScoreResult,
-      { resumeText, jobTitle, jdText },
-      userId
+      { resumeText, jobTitle, jdText, locale },
+      userId,
+      { locale }
     );
 
     updateJob(job, {
@@ -79,6 +81,7 @@ export function startAnalysisJob({ resumeText, jobTitle, jdText, fileName, userI
         reportId: report.reportId,
         reportAccessToken: report.reportAccessToken,
         publicReport: report.publicReport,
+        locale,
         warning: scoreResult.warning || undefined,
         timestamp: new Date().toISOString(),
       },

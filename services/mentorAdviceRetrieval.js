@@ -12,6 +12,7 @@ const {
   buildFallbackAdviceForSlot,
   slotForProblemTag,
 } = require("../src/ats/role-fallback-advice");
+const { normalizeLocale, isEnglishLocale, pickLocalized } = require("../src/i18n/locale");
 // pg pool is retrieved lazily via db.getPool()
 
 const FALLBACK_FREE_ADVICE = {
@@ -3380,67 +3381,95 @@ function sanitizeCompoundAdviceText(text, resumeFacts) {
   }).join("");
 }
 
-function formatAdviceCardForPublic(row, retrievalQuery = {}) {
-  const preliminary = resolvedGovernedAction(row, governanceContextFromRetrievalQuery(retrievalQuery), roleSafeActionSummary(row, retrievalQuery));
-  const resumeFacts = retrievalQuery.resumeFacts || null;
+function localizeSegmentRow(row, locale) {
+  if (!isEnglishLocale(locale)) return row;
   return {
-    adviceId: row.id ? `seg_${row.id}` : row.chunk_id,
-    chunkId: row.chunk_id || null,
-    title: buildCardTitle(row),
-    problemSummary: cleanAndTruncate(row.user_problem_summary || row.P_mentor, 180),
+    ...row,
+    advice_card_title: pickLocalized(row.advice_card_title, row.advice_card_title_en, locale),
+    user_problem_summary: pickLocalized(row.user_problem_summary, row.user_problem_summary_en, locale),
+    action_summary: pickLocalized(row.action_summary, row.action_summary_en, locale),
+    canonical_title: pickLocalized(row.canonical_title, row.canonical_title_en, locale),
+    humanized_mentor_insight: pickLocalized(row.humanized_mentor_insight, row.humanized_mentor_insight_en, locale),
+    humanized_hr_perspective: pickLocalized(row.humanized_hr_perspective, row.humanized_hr_perspective_en, locale),
+    humanized_mentor_insight_raw: pickLocalized(row.humanized_mentor_insight_raw, row.humanized_mentor_insight_raw_en, locale),
+    humanized_hr_perspective_raw: pickLocalized(row.humanized_hr_perspective_raw, row.humanized_hr_perspective_raw_en, locale),
+    humanized_mentor_insight_generalized: pickLocalized(row.humanized_mentor_insight_generalized, row.humanized_mentor_insight_generalized_en, locale),
+    humanized_hr_perspective_generalized: pickLocalized(row.humanized_hr_perspective_generalized, row.humanized_hr_perspective_generalized_en, locale),
+  };
+}
+
+function formatAdviceCardForPublic(row, retrievalQuery = {}, options = {}) {
+  const locale = normalizeLocale(options.locale || retrievalQuery.locale);
+  const displayRow = localizeSegmentRow(row, locale);
+  const preliminary = resolvedGovernedAction(displayRow, governanceContextFromRetrievalQuery(retrievalQuery), roleSafeActionSummary(displayRow, retrievalQuery));
+  const resumeFacts = retrievalQuery.resumeFacts || null;
+  const usedEnglishFallback = isEnglishLocale(locale) && [
+    "advice_card_title_en",
+    "user_problem_summary_en",
+    "action_summary_en",
+    "humanized_mentor_insight_en",
+    "humanized_hr_perspective_en",
+  ].some((field) => row[field] && String(row[field]).trim());
+  return {
+    adviceId: displayRow.id ? `seg_${displayRow.id}` : displayRow.chunk_id,
+    chunkId: displayRow.chunk_id || null,
+    title: buildCardTitle(displayRow),
+    problemSummary: cleanAndTruncate(displayRow.user_problem_summary || displayRow.P_mentor, 180),
     actionSummary: decontextualizeActionText(sanitizeCompoundAdviceText(preliminary.action, resumeFacts) || ""),
-    rawActionSummary: row.A_action || row.action_summary || "",
-    mentorInsight: row.I_insight || "",
-    example: row.E_example || "",
-    hrPerspective: row.HR_os || "",
-    topic: row.topic_slug || row.L2,
-    mentorName: row.mentor_name,
-    unlockTier: row.unlock_tier || "paid",
-    safeToShowFree: Number(row.safe_to_show_free || 0) === 1,
-    roleFamily: row.role_family || "",
-    targetRoles: row.target_roles || "",
-    relatedProblemTags: splitCsv(row.problem_tags),
-    keywords: row.keywords || "",
-    atsDimensions: row.ats_dimensions || "",
-    dbPriority: row.priority,
-    confidence: row.confidence || "",
-    mentorQualityScore: row.mentor_quality_score,
-    feedbackScore: row.feedback_score,
-    requiresAiRewrite: Number(row.requires_ai_rewrite || 0) === 1,
-    retrieval_score: row.retrieval_score,
-    matched_reasons: row.matched_reasons || [],
-    roleMismatchPenalty: row.roleMismatchPenalty || 0,
-    conflictingExamplePenalty: row.conflictingExamplePenalty || 0,
-    adviceScope: row.adviceScope || inferAdviceScope(row),
-    adviceIntent: row.adviceIntent || inferAdviceIntent(row),
-    mentor_title: row.mentor_title || null,
-    mentor_career_keywords: row.mentor_career_keywords || null,
-    mentor_career_path_display: row.mentor_career_path_display || null,
-    mentor_company: row.mentor_company || null,
-    retrievalScope: row.retrieval_scope || null,
-    actionSpecificity: row.action_specificity || "",
-    displayActionMode: row.display_action_mode || "",
-    generalizedAction: row.generalized_action || "",
-    activationRoleFamily: row.activation_role_family || "",
-    activationKeywords: row.activation_keywords || "",
-    groundingTerms: row.grounding_terms || "",
-    canonicalActionFamily: row.canonical_action_family || "",
-    actionDepth: row.action_depth || "",
-    actionReviewStatus: row.action_review_status || "",
+    rawActionSummary: displayRow.A_action || displayRow.action_summary || "",
+    mentorInsight: displayRow.humanized_mentor_insight || displayRow.I_insight || "",
+    example: displayRow.E_example || "",
+    hrPerspective: displayRow.humanized_hr_perspective || displayRow.HR_os || "",
+    topic: displayRow.topic_slug || displayRow.L2,
+    mentorName: displayRow.mentor_name,
+    unlockTier: displayRow.unlock_tier || "paid",
+    safeToShowFree: Number(displayRow.safe_to_show_free || 0) === 1,
+    roleFamily: displayRow.role_family || "",
+    targetRoles: displayRow.target_roles || "",
+    relatedProblemTags: splitCsv(displayRow.problem_tags),
+    keywords: displayRow.keywords || "",
+    atsDimensions: displayRow.ats_dimensions || "",
+    dbPriority: displayRow.priority,
+    confidence: displayRow.confidence || "",
+    mentorQualityScore: displayRow.mentor_quality_score,
+    feedbackScore: displayRow.feedback_score,
+    requiresAiRewrite: Number(displayRow.requires_ai_rewrite || 0) === 1,
+    retrieval_score: displayRow.retrieval_score,
+    matched_reasons: displayRow.matched_reasons || [],
+    roleMismatchPenalty: displayRow.roleMismatchPenalty || 0,
+    conflictingExamplePenalty: displayRow.conflictingExamplePenalty || 0,
+    adviceScope: displayRow.adviceScope || inferAdviceScope(displayRow),
+    adviceIntent: displayRow.adviceIntent || inferAdviceIntent(displayRow),
+    mentor_title: displayRow.mentor_title || null,
+    mentor_career_keywords: displayRow.mentor_career_keywords || null,
+    mentor_career_path_display: displayRow.mentor_career_path_display || null,
+    mentor_company: displayRow.mentor_company || null,
+    retrievalScope: displayRow.retrieval_scope || null,
+    actionSpecificity: displayRow.action_specificity || "",
+    displayActionMode: displayRow.display_action_mode || "",
+    generalizedAction: displayRow.generalized_action || "",
+    activationRoleFamily: displayRow.activation_role_family || "",
+    activationKeywords: displayRow.activation_keywords || "",
+    groundingTerms: displayRow.grounding_terms || "",
+    canonicalActionFamily: displayRow.canonical_action_family || "",
+    actionDepth: displayRow.action_depth || "",
+    actionReviewStatus: displayRow.action_review_status || "",
     actionDisplayModeUsed: preliminary.usedMode,
-    canonicalTitle: row.canonical_title || "",
-    titleReviewStatus: row.title_review_status || "",
-    titleSource: row.title_source || "",
-    titleConfidence: row.title_confidence || null,
-    humanizedMentorInsight: row.humanized_mentor_insight || "",
-    humanizedHrPerspective: row.humanized_hr_perspective || "",
-    humanizedMentorInsightRaw: row.humanized_mentor_insight_raw || "",
-    humanizedHrPerspectiveRaw: row.humanized_hr_perspective_raw || "",
-    humanizedMentorInsightGeneralized: row.humanized_mentor_insight_generalized || "",
-    humanizedHrPerspectiveGeneralized: row.humanized_hr_perspective_generalized || "",
-    perspectiveReviewStatus: row.perspective_review_status || "",
-    perspectiveSource: row.perspective_source || "",
-    perspectiveConfidence: row.perspective_confidence || null,
+    canonicalTitle: displayRow.canonical_title || "",
+    titleReviewStatus: displayRow.title_review_status || "",
+    titleSource: displayRow.title_source || "",
+    titleConfidence: displayRow.title_confidence || null,
+    humanizedMentorInsight: displayRow.humanized_mentor_insight || "",
+    humanizedHrPerspective: displayRow.humanized_hr_perspective || "",
+    humanizedMentorInsightRaw: displayRow.humanized_mentor_insight_raw || "",
+    humanizedHrPerspectiveRaw: displayRow.humanized_hr_perspective_raw || "",
+    humanizedMentorInsightGeneralized: displayRow.humanized_mentor_insight_generalized || "",
+    humanizedHrPerspectiveGeneralized: displayRow.humanized_hr_perspective_generalized || "",
+    perspectiveReviewStatus: displayRow.perspective_review_status || "",
+    perspectiveSource: displayRow.perspective_source || "",
+    perspectiveConfidence: displayRow.perspective_confidence || null,
+    locale,
+    translationFallback: isEnglishLocale(locale) && !usedEnglishFallback,
   };
 }
 
@@ -3455,6 +3484,9 @@ function baseSelectSql(where, limit = 500) {
       advice_type, mentor_name, role_family, target_roles, seniority, ats_dimensions,
       problem_tags, keywords, topic_slug, retrieval_text, priority, unlock_tier,
       advice_card_title, user_problem_summary, action_summary, safe_to_show_free,
+      to_jsonb(segments)->>'advice_card_title_en' AS advice_card_title_en,
+      to_jsonb(segments)->>'user_problem_summary_en' AS user_problem_summary_en,
+      to_jsonb(segments)->>'action_summary_en' AS action_summary_en,
       requires_ai_rewrite, mentor_quality_score, feedback_score,
       mentor_title, mentor_career_keywords, mentor_career_path_display, mentor_company,
       retrieval_scope,
@@ -3462,12 +3494,22 @@ function baseSelectSql(where, limit = 500) {
       activation_role_family, activation_keywords, grounding_terms,
       canonical_action_family, action_depth, action_review_status,
       canonical_title, title_review_status, title_source, title_confidence,
+      to_jsonb(segments)->>'canonical_title_en' AS canonical_title_en,
       to_jsonb(segments)->>'humanized_mentor_insight' AS humanized_mentor_insight,
       to_jsonb(segments)->>'humanized_hr_perspective' AS humanized_hr_perspective,
       to_jsonb(segments)->>'humanized_mentor_insight_raw' AS humanized_mentor_insight_raw,
       to_jsonb(segments)->>'humanized_hr_perspective_raw' AS humanized_hr_perspective_raw,
       to_jsonb(segments)->>'humanized_mentor_insight_generalized' AS humanized_mentor_insight_generalized,
       to_jsonb(segments)->>'humanized_hr_perspective_generalized' AS humanized_hr_perspective_generalized,
+      to_jsonb(segments)->>'humanized_mentor_insight_en' AS humanized_mentor_insight_en,
+      to_jsonb(segments)->>'humanized_hr_perspective_en' AS humanized_hr_perspective_en,
+      to_jsonb(segments)->>'humanized_mentor_insight_raw_en' AS humanized_mentor_insight_raw_en,
+      to_jsonb(segments)->>'humanized_hr_perspective_raw_en' AS humanized_hr_perspective_raw_en,
+      to_jsonb(segments)->>'humanized_mentor_insight_generalized_en' AS humanized_mentor_insight_generalized_en,
+      to_jsonb(segments)->>'humanized_hr_perspective_generalized_en' AS humanized_hr_perspective_generalized_en,
+      to_jsonb(segments)->>'translation_review_status' AS translation_review_status,
+      to_jsonb(segments)->>'translation_source' AS translation_source,
+      to_jsonb(segments)->>'translation_updated_at' AS translation_updated_at,
       to_jsonb(segments)->>'perspective_review_status' AS perspective_review_status,
       to_jsonb(segments)->>'perspective_source' AS perspective_source,
       NULLIF(to_jsonb(segments)->>'perspective_confidence', '')::numeric AS perspective_confidence
@@ -3546,8 +3588,26 @@ async function queryRows(pool, where, params, retrievalQuery, options = {}) {
         conflictingExamplePenalty: rowConflictPenalty,
         adviceScope: inferAdviceScope(row),
         adviceIntent: inferAdviceIntent(row),
-      }, retrievalQuery);
+      }, retrievalQuery, { locale: options.locale });
     });
+}
+
+async function retrieveAdviceCardsByIds(adviceIds = [], options = {}) {
+  const ids = [...new Set((adviceIds || [])
+    .map((id) => String(id || "").match(/^seg_(\d+)$/)?.[1] || id)
+    .map((id) => Number(id))
+    .filter((id) => Number.isInteger(id) && id > 0))];
+  if (!ids.length) return new Map();
+  const pool = options.pool || db.getPool();
+  const { rows } = await pool.query(baseSelectSql("id = ANY($1::int[])", Math.max(ids.length, 1)), [ids]);
+  const cards = rows.map((row) => formatAdviceCardForPublic({
+    ...row,
+    retrieval_score: row.retrieval_score || 0,
+    matched_reasons: [],
+    adviceScope: inferAdviceScope(row),
+    adviceIntent: inferAdviceIntent(row),
+  }, options.retrievalQuery || {}, { locale: options.locale }));
+  return new Map(cards.map((card) => [card.adviceId, card]));
 }
 
 function isHighRiskAtsGap(retrievalQuery = {}) {
@@ -8686,6 +8746,7 @@ module.exports = {
   retrieveFallbackCandidates,
   retrieveMentorAdvice,
   retrieveMentorAdviceWithStatus,
+  retrieveAdviceCardsByIds,
   retrieveInsiderTips,
   isDisplayableInsiderKnowledge,
   buildInsiderKnowledgeTip,

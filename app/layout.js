@@ -22,6 +22,7 @@ export default function RootLayout({ children }) {
         {children}
         <Script src="/assets/api-client.js" strategy="afterInteractive" />
         <Script src="/assets/app.js?v=report-advice-unified-20260609-4" strategy="afterInteractive" />
+        <Script src="/assets/i18n.js?v=bilingual-20260618-1" strategy="afterInteractive" />
       </body>
     </html>
   );

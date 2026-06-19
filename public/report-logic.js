@@ -15,7 +15,7 @@ if (s.reportId && s.reportAccessToken && (!s.premiumKeywordBreakdown || !s.premi
   fetch(`/api/v1/reports/${encodeURIComponent(s.reportId)}/unlock`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ reportAccessToken: s.reportAccessToken }),
+    body: JSON.stringify({ reportAccessToken: s.reportAccessToken, locale: s.locale || "zh-CN" }),
   })
     .then((res) => res.ok ? res.json() : null)
     .then((data) => {

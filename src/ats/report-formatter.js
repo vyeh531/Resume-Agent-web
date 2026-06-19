@@ -2,6 +2,7 @@
 
 const crypto = require("crypto");
 const { buildRoleProfileFromContext } = require("./role-profile");
+const { normalizeLocale, labelFor } = require("../i18n/locale");
 
 const SCORING_MODE = "external_ats_like";
 const REPORT_VERSION = "0.2.0";
@@ -1333,7 +1334,8 @@ function normalizeEvidenceForReport(item = {}) {
   return evidence;
 }
 
-function stripCuratedAdviceItemForPublic(item = {}) {
+function stripCuratedAdviceItemForPublic(item = {}, options = {}) {
+  const locale = normalizeLocale(options.locale);
   const stripMentorSource = (source) => source ? {
     mentorId: source.mentorId || null,
     mentorName: source.mentorName || "",
@@ -1354,6 +1356,7 @@ function stripCuratedAdviceItemForPublic(item = {}) {
     HR_os: item.HR_os || item.hrPerspective || "",
     targetSection: item.targetSection || "overall",
     priority: item.priority || "medium",
+    priorityLabel: item.priorityLabel || labelFor(locale, "priority", item.priority || "medium", item.priority || "medium"),
     topicCluster: item.topicCluster || item.displayAdviceType || "",
     displayAdviceType: item.displayAdviceType || item.topicCluster || "",
     actionSlot: item.actionSlot || "",
@@ -1376,7 +1379,8 @@ function stripCuratedAdviceItemForPublic(item = {}) {
   };
 }
 
-function formatPublicFreeReport(internalAtsResult, freeAdvice, lockedPreview, curatedAdvice = null) {
+function formatPublicFreeReport(internalAtsResult, freeAdvice, lockedPreview, curatedAdvice = null, options = {}) {
+  const locale = normalizeLocale(options.locale || internalAtsResult.locale);
   const riskBucket = riskToBucket(internalAtsResult.risk, internalAtsResult.total);
   const topProblems = riskBucket === "low" ? [] : internalAtsResult.topProblems.slice(0, 3);
   const topInsights = riskBucket === "high"
@@ -1393,6 +1397,8 @@ function formatPublicFreeReport(internalAtsResult, freeAdvice, lockedPreview, cu
     engine: internalAtsResult.engine,
     version: internalAtsResult.version,
     schemaVersion: "ats_response_v0.2.0",
+    locale,
+    translationFallback: Boolean(options.translationFallback),
     scoringMode: internalAtsResult.scoringMode,
     jobTitle: (internalAtsResult.jobTitle === "unknown" || !internalAtsResult.jobTitle) ? null : internalAtsResult.jobTitle,
     hasJD: internalAtsResult.hasJD,
@@ -1404,13 +1410,13 @@ function formatPublicFreeReport(internalAtsResult, freeAdvice, lockedPreview, cu
     diagnostics: stripDiagnostics(internalAtsResult.diagnostics),
     topInsights: topInsights.map(stripInsight),
     topProblems: topProblems.map(stripInsight),
-    freeMentorAdvice: freeAdvice ? stripFreeAdvice(freeAdvice) : null,
+    freeMentorAdvice: freeAdvice ? stripFreeAdvice(freeAdvice, { locale }) : null,
     lockedAdvicePreview: lockedPreview,
     keywordBreakdown: buildPublicKeywordBreakdown(internalAtsResult, 3),
     keywordMatchCount: buildKeywordMatchCount(internalAtsResult),
     topMissingKw: freeMissingKeywords,
     topMissingKeywords: freeMissingKeywords,
-    resultPageAdviceItems: asArray(curatedAdvice?.resultPageAdviceItems).slice(0, 3).map(stripCuratedAdviceItemForPublic),
+    resultPageAdviceItems: asArray(curatedAdvice?.resultPageAdviceItems).slice(0, 3).map((item) => stripCuratedAdviceItemForPublic(item, { locale })),
     problems: publicProblems,
     suggestions: freeSuggestions,
   };
@@ -1497,7 +1503,8 @@ function stripInsight(item) {
   };
 }
 
-function stripFreeAdvice(item) {
+function stripFreeAdvice(item, options = {}) {
+  const locale = normalizeLocale(options.locale);
   if (Array.isArray(item.adviceItems)) {
     return {
       mentorId: item.mentorId,
@@ -1527,7 +1534,7 @@ function stripFreeAdvice(item) {
         HR_os: advice.HR_os || advice.hrPerspective || "",
         targetSection: advice.targetSection || "overall",
         priority: advice.priority || "medium",
-        priorityLabel: advice.priorityLabel || (advice.priority === "high" ? "必改" : advice.priority === "medium" ? "建议改" : "补充"),
+        priorityLabel: advice.priorityLabel || labelFor(locale, "priority", advice.priority || "medium", advice.priority || "medium"),
         source: advice.source || "db",
         mentorSource: advice.mentorSource || null,
       })),
@@ -1542,7 +1549,8 @@ function stripFreeAdvice(item) {
   };
 }
 
-function formatPremiumUnlockedReport(internalAtsResult, paidAdviceOrMentorReport) {
+function formatPremiumUnlockedReport(internalAtsResult, paidAdviceOrMentorReport, options = {}) {
+  const locale = normalizeLocale(options.locale || internalAtsResult.locale);
   const checklist = internalAtsResult.priorityMissingKeywords.slice(0, 20).map((item) => ({
     term: item.term,
     priority: item.priority,
@@ -1559,7 +1567,7 @@ function formatPremiumUnlockedReport(internalAtsResult, paidAdviceOrMentorReport
     projects: internalAtsResult.structuredSuggestions.filter((item) => item.targetSection === "projects"),
     education: internalAtsResult.structuredSuggestions.filter((item) => item.targetSection === "education"),
   };
-  const premiumKeywordBreakdown = buildPremiumKeywordBreakdown(internalAtsResult);
+  const premiumKeywordBreakdown = buildPremiumKeywordBreakdown(internalAtsResult, { locale });
 
   const mentorReport = Array.isArray(paidAdviceOrMentorReport) && paidAdviceOrMentorReport.some((item) => Array.isArray(item.adviceItems))
     ? { mentors: paidAdviceOrMentorReport }
@@ -1598,6 +1606,7 @@ function formatPremiumUnlockedReport(internalAtsResult, paidAdviceOrMentorReport
       mentorFitType: item.mentorFitType || "",
       relatedProblemTags: asArray(item.relatedProblemTags).slice(0, 5),
       priority: item.priority || "medium",
+      priorityLabel: item.priorityLabel || labelFor(locale, "priority", item.priority || "medium", item.priority || "medium"),
       actionSlot: item.actionSlot || "",
       actionFamily: item.actionFamily || item.canonicalActionFamily || "",
       canonicalActionFamily: item.canonicalActionFamily || item.actionFamily || "",
@@ -1671,6 +1680,8 @@ function formatPremiumUnlockedReport(internalAtsResult, paidAdviceOrMentorReport
         coveredObligationIds: [],
         uncoveredObligationIds: [],
       },
+      locale,
+      translationFallback: Boolean(options.translationFallback),
       problemTags: internalAtsResult.problemTags.map(stripProblemTagForClient).filter(Boolean),
       detailedSuggestions: internalAtsResult.structuredSuggestions,
       keywordBreakdown: premiumKeywordBreakdown,
@@ -1696,21 +1707,17 @@ function formatPremiumUnlockedReport(internalAtsResult, paidAdviceOrMentorReport
     missingKeywordChecklist: checklist,
     keywordBreakdown: premiumKeywordBreakdown,
     sectionFixPlan,
+    locale,
+    translationFallback: Boolean(options.translationFallback),
     detailedSuggestions: internalAtsResult.structuredSuggestions,
     problemTags: internalAtsResult.problemTags.map(stripProblemTagForClient).filter(Boolean),
   };
 }
 
-function buildPremiumKeywordBreakdown(internalAtsResult) {
+function buildPremiumKeywordBreakdown(internalAtsResult, options = {}) {
+  const locale = normalizeLocale(options.locale || internalAtsResult.locale);
   const cats = internalAtsResult.keywordMatch?.categories || {};
   const order = ["core_skills", "tools", "domain_keywords", "action_verbs", "nice_to_have"];
-  const labels = {
-    core_skills: "\u6838\u5fc3\u6280\u80fd",
-    tools: "\u5de5\u5177 / \u6280\u672f",
-    domain_keywords: "\u9886\u57df\u8bcd",
-    action_verbs: "\u52a8\u4f5c\u8bcd",
-    nice_to_have: "\u52a0\u5206\u9879",
-  };
   return order
     .filter((key) => cats[key])
     .map((key) => {
@@ -1719,7 +1726,7 @@ function buildPremiumKeywordBreakdown(internalAtsResult) {
       const missing = (cat.missing || []).filter(Boolean);
       return {
         key,
-        label: labels[key] || key,
+        label: labelFor(locale, "keywordCategory", key, key),
         matched,
         missing,
         total: cat.total || matched.length + missing.length,

@@ -114,37 +114,53 @@ async function markAsPaid(id, isPaid = true) {
 async function saveAtsReport(reportData) {
   const pool = getPool();
   const now = reportData.createdAt || new Date().toISOString();
-  await pool.query(
-    `INSERT INTO ats_reports (
+  const values = [
+    reportData.reportId, now,
+    reportData.expiresAt || null,
+    reportData.jobTitle || null,
+    reportData.hasJD ? 1 : 0,
+    reportData.total ?? null,
+    reportData.risk || null,
+    reportData.locale || reportData.publicReport?.locale || "zh-CN",
+    JSON.stringify(reportData.publicReport || {}),
+    JSON.stringify(reportData.internalAtsResult || {}),
+    JSON.stringify(reportData.retrievalQuery || {}),
+    JSON.stringify(reportData.mentorCandidates || []),
+    JSON.stringify(reportData.freeAdvice || null),
+    JSON.stringify(reportData.paidAdvice || []),
+    reportData.premiumReport ? JSON.stringify(reportData.premiumReport) : null,
+    reportData.paymentStatus || "unpaid",
+    reportData.userId || null,
+    hashToken(reportData.reportAccessToken),
+    reportData.resumeText || null,
+    reportData.analysisId || null,
+    reportData.resumeBullets ? JSON.stringify(reportData.resumeBullets) : null,
+  ];
+  const insertWithLocale = `INSERT INTO ats_reports (
         report_id, created_at, expires_at, job_title, has_jd, total, risk,
+        locale,
         public_report_json, internal_ats_json, retrieval_query_json,
         mentor_candidates_json, free_advice_json, paid_advice_json,
         premium_report_json, payment_status, user_id, report_token_hash,
         resume_text, analysis_id, resume_bullets_json
-      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)
-      ON CONFLICT (report_id) DO NOTHING`,
-    [
-      reportData.reportId, now,
-      reportData.expiresAt || null,
-      reportData.jobTitle || null,
-      reportData.hasJD ? 1 : 0,
-      reportData.total ?? null,
-      reportData.risk || null,
-      JSON.stringify(reportData.publicReport || {}),
-      JSON.stringify(reportData.internalAtsResult || {}),
-      JSON.stringify(reportData.retrievalQuery || {}),
-      JSON.stringify(reportData.mentorCandidates || []),
-      JSON.stringify(reportData.freeAdvice || null),
-      JSON.stringify(reportData.paidAdvice || []),
-      reportData.premiumReport ? JSON.stringify(reportData.premiumReport) : null,
-      reportData.paymentStatus || "unpaid",
-      reportData.userId || null,
-      hashToken(reportData.reportAccessToken),
-      reportData.resumeText || null,
-      reportData.analysisId || null,
-      reportData.resumeBullets ? JSON.stringify(reportData.resumeBullets) : null,
-    ]
-  );
+      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)
+      ON CONFLICT (report_id) DO NOTHING`;
+  try {
+    await pool.query(insertWithLocale, values);
+  } catch (error) {
+    if (error?.code !== "42703") throw error;
+    await pool.query(
+      `INSERT INTO ats_reports (
+          report_id, created_at, expires_at, job_title, has_jd, total, risk,
+          public_report_json, internal_ats_json, retrieval_query_json,
+          mentor_candidates_json, free_advice_json, paid_advice_json,
+          premium_report_json, payment_status, user_id, report_token_hash,
+          resume_text, analysis_id, resume_bullets_json
+        ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)
+        ON CONFLICT (report_id) DO NOTHING`,
+      [values[0], values[1], values[2], values[3], values[4], values[5], values[6], ...values.slice(8)]
+    );
+  }
   console.log(`[DB] saved ats_report report_id=${reportData.reportId}`);
   return reportData.reportId;
 }
@@ -250,4 +266,5 @@ module.exports = {
   saveAiRewrites,
   extractBullets,
   hashToken,
+  closeDB,
 };

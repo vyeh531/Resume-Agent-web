@@ -8,6 +8,7 @@ const {
 const {
   buildInsiderKnowledgeTip,
   buildGeneralInsiderTips,
+  formatAdviceCardForPublic,
 } = require("../services/mentorAdviceRetrieval");
 
 function makeAdvice(id) {
@@ -175,6 +176,10 @@ function main() {
   assert.equal(Object.prototype.hasOwnProperty.call(publicReport.diagnostics || {}, "searchability"), false);
   assert.equal(Object.prototype.hasOwnProperty.call(publicReport.diagnostics || {}, "measurableResults"), false);
 
+  const publicReportEn = formatPublicFreeReport(internal, freeAdvice, lockedPreview, null, { locale: "en-US" });
+  assert.equal(publicReportEn.locale, "en-US");
+  assert.equal(publicReportEn.freeMentorAdvice.adviceItems[0].priorityLabel, "Must fix");
+
   const mentors = [0, 1, 2, 3].map((mentorIndex) => ({
     mentorId: `mentor_${mentorIndex + 1}`,
     mentorName: `Mentor ${mentorIndex + 1}`,
@@ -197,6 +202,32 @@ function main() {
   );
   assert.ok(premiumReport.mentors.every((mentor) => mentor.adviceItems.length <= 3));
 
+  const premiumReportEn = formatPremiumUnlockedReport(internal, {
+    mentors,
+    allAdviceItems: adviceItems,
+    mentorLogoPool: [{ company: "Example", companyLogo: "/logos/example.png" }],
+  }, { locale: "en-US" });
+  assert.equal(premiumReportEn.locale, "en-US");
+  assert.equal(premiumReportEn.keywordBreakdown[0].label, "Core skills");
+  assert.equal(premiumReportEn.allAdviceItems[0].priorityLabel, "Must fix");
+
+  const localizedCard = formatAdviceCardForPublic({
+    id: 9001,
+    chunk_id: "chunk_9001",
+    advice_card_title: "中文标题",
+    advice_card_title_en: "Use targeted resume positioning",
+    user_problem_summary: "中文问题",
+    user_problem_summary_en: "The resume is not positioned for the target role.",
+    action_summary: "中文动作",
+    action_summary_en: "Rewrite the summary and first experience bullet around the target JD.",
+    problem_tags: "weak_target_role_alignment",
+    unlock_tier: "free",
+    safe_to_show_free: 1,
+  }, { locale: "en-US" });
+  assert.equal(localizedCard.title, "Use targeted resume positioning");
+  assert.equal(localizedCard.problemSummary, "The resume is not positioned for the target role.");
+  assert.ok(localizedCard.actionSummary.includes("target JD"));
+
   const insiderTip = buildInsiderKnowledgeTip(
     {
       I_insight: "Recruiters for this team screen for React API ownership and production delivery evidence.",
@@ -215,7 +246,7 @@ function main() {
   assert.equal(generalInsiderTips.length, 2);
   assert.equal(generalInsiderTips[0].source, "fallback");
   assert.ok(generalInsiderTips[0].relevanceReason.includes("Financial Analyst"));
-  assert.equal(generalInsiderTips[0].sourceMentorName, "");
+  assert.ok(generalInsiderTips[0].sourceMentorName);
 
   console.log("public response boundary tests passed");
 }

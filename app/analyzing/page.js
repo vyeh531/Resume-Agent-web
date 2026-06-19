@@ -118,6 +118,7 @@ export default function AnalyzingPage() {
             ? formatATSResult({ ...publicReport, reportId: result.reportId, reportAccessToken: result.reportAccessToken })
             : publicReport;
           Store.set({
+            locale: result.locale || publicReport.locale || Store.get().locale || "zh-CN",
             reportId: result.reportId || publicReport.reportId || null,
             sessionId: result.reportId || publicReport.reportId || null,
             reportAccessToken: result.reportAccessToken || null,

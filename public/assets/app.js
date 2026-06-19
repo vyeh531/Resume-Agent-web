@@ -295,8 +295,10 @@ async function submitResume(form) {
     const resumeText = resumeTextInput || await readResumeFile(file);
     const resumeName = file?.name || "手动粘贴的简历";
     const targetJob = normalizeTargetJobTitle(job || extractTargetJobFromJD(jd));
+    const locale = (window.I18N && window.I18N.getLocale && window.I18N.getLocale()) || window.Store.get().locale || "zh-CN";
     const analysisJob = await startAnalysisJobAPI(resumeText, targetJob || null, jd, file?.name || "pasted-resume.txt");
     window.Store.set({
+      locale,
       resumeName,
       jobTitle: targetJob,
       targetLabel: targetJob,
@@ -381,6 +383,7 @@ function storeAnalysisJobResult(result) {
     ? formatATSResult({ ...publicReport, reportId: result?.reportId, reportAccessToken: result?.reportAccessToken })
     : publicReport;
   window.Store.set({
+    locale: result?.locale || publicReport.locale || window.Store.get().locale || "zh-CN",
     reportId: result?.reportId || publicReport.reportId || null,
     sessionId: result?.reportId || publicReport.reportId || null,
     reportAccessToken: result?.reportAccessToken || null,
@@ -449,7 +452,7 @@ function mockPayment(btn) {
       const markResponse = await fetch(`/api/v1/reports/${encodeURIComponent(s.reportId)}/mark-paid`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reportAccessToken: s.reportAccessToken }),
+        body: JSON.stringify({ reportAccessToken: s.reportAccessToken, locale: s.locale || "zh-CN" }),
       });
       if (!markResponse.ok) {
         const error = await markResponse.json().catch(() => ({}));
@@ -459,7 +462,7 @@ function mockPayment(btn) {
       const unlockResponse = await fetch(`/api/v1/reports/${encodeURIComponent(s.reportId)}/unlock`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reportAccessToken: s.reportAccessToken }),
+        body: JSON.stringify({ reportAccessToken: s.reportAccessToken, locale: s.locale || "zh-CN" }),
       });
       if (!unlockResponse.ok) {
         const error = await unlockResponse.json().catch(() => ({}));
@@ -469,6 +472,7 @@ function mockPayment(btn) {
       const unlocked = await unlockResponse.json();
       const premiumReport = unlocked.premiumReport || {};
       window.Store.set({
+        locale: unlocked.locale || premiumReport.locale || s.locale || "zh-CN",
         isPaid: true,
         paidAt: Date.now(),
         premiumMentors: premiumReport.mentors || null,

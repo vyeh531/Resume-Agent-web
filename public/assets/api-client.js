@@ -2,6 +2,15 @@
 
 const API_BASE = "";
 
+function getAppLocale() {
+  try {
+    const store = JSON.parse(localStorage.getItem("resumeFixMVP") || "{}");
+    return store.locale || "zh-CN";
+  } catch {
+    return "zh-CN";
+  }
+}
+
 // 检查 API 可用性
 async function checkAPIHealth() {
   try {
@@ -122,12 +131,14 @@ async function scoreResumeAPI(resumeText, jobTitle, jdText, resumeFile) {
     if (resumeText) requestBody.append("resumeText", resumeText);
     if (jobTitle) requestBody.append("jobTitle", jobTitle);
     if (jdText) requestBody.append("jdText", jdText);
+    requestBody.append("locale", getAppLocale());
   } else {
     requestHeaders = { "Content-Type": "application/json" };
     requestBody = JSON.stringify({
       resumeText: resumeText,
       jobTitle: jobTitle || null,
       jdText: jdText || null,
+      locale: getAppLocale(),
     });
   }
 
@@ -191,6 +202,7 @@ async function startAnalysisJobAPI(resumeText, jobTitle, jdText, fileName) {
       jobTitle: jobTitle || null,
       jdText: jdText || null,
       fileName: fileName || "",
+      locale: getAppLocale(),
     }),
   });
   const { ok, status, json } = await safeParseResponse(response);
@@ -229,7 +241,10 @@ async function loadAnalysisFromServer(sessionId) {
   try {
     const store = JSON.parse(localStorage.getItem("resumeFixMVP") || "{}");
     const token = store.reportAccessToken;
-    const query = token ? `?reportAccessToken=${encodeURIComponent(token)}` : "";
+    const locale = getAppLocale();
+    const query = token
+      ? `?reportAccessToken=${encodeURIComponent(token)}&locale=${encodeURIComponent(locale)}`
+      : `?locale=${encodeURIComponent(locale)}`;
     const response = await fetch(`${API_BASE}/api/v1/reports/${id}/public${query}`);
     if (!response.ok) {
       console.warn("[API] 載入失敗:", response.status);

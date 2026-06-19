@@ -1,6 +1,8 @@
 import db from '../../../../../../database';
 import { formatPremiumUnlockedReport } from '../../../../../../src/ats/report-formatter';
+import { normalizeLocale } from '../../../../../../src/i18n/locale';
 import { retrieveInsiderTips } from '../../../../../../services/mentorAdviceRetrieval';
+import { hydrateStoredReportJsonForLocale } from '../../../../../lib/localeReports';
 
 function reportTokenFromRequest(request) {
   return (
@@ -15,11 +17,13 @@ export async function POST(request, { params: paramsPromise }) {
     const params = await paramsPromise;
     // Also support token from request body
     let bodyToken = null;
+    let bodyLocale = null;
     try {
       const contentType = request.headers.get('content-type') || '';
       if (contentType.includes('application/json')) {
         const body = await request.json();
         bodyToken = body?.reportAccessToken || null;
+        bodyLocale = body?.locale || null;
       }
     } catch { /* ignore body parse errors */ }
 
@@ -35,12 +39,13 @@ export async function POST(request, { params: paramsPromise }) {
     if (!unlock.ok) {
       return Response.json({ success: false, error: unlock.error }, { status: unlock.status || 403 });
     }
+    const locale = normalizeLocale(bodyLocale || new URL(request.url).searchParams.get('locale') || unlock.report.locale || unlock.report.premiumReport?.locale);
     const premiumReport =
       unlock.report.premiumReport ||
-      formatPremiumUnlockedReport(unlock.report.internalAtsResult, unlock.report.paidAdvice);
+      formatPremiumUnlockedReport(unlock.report.internalAtsResult, unlock.report.paidAdvice, { locale });
     const fallbackPremiumReport = (premiumReport?.problemTags && premiumReport?.detailedSuggestions)
       ? null
-      : formatPremiumUnlockedReport(unlock.report.internalAtsResult, unlock.report.paidAdvice);
+      : formatPremiumUnlockedReport(unlock.report.internalAtsResult, unlock.report.paidAdvice, { locale });
     const hydratedPremiumReport = fallbackPremiumReport
       ? {
           ...fallbackPremiumReport,
@@ -56,6 +61,7 @@ export async function POST(request, { params: paramsPromise }) {
       const supplementalTips = await retrieveInsiderTips({
         internalAtsResult: unlock.report.internalAtsResult,
         limit: 6,
+        locale,
       });
       const seenTipIds = new Set(existingTips.map((tip) => String(tip?.sourceAdviceId || tip?.insight || '')));
       hydratedPremiumReport.companyInsiderTips = [
@@ -68,10 +74,16 @@ export async function POST(request, { params: paramsPromise }) {
         }),
       ].slice(0, 6);
     }
+    const storedLocale = normalizeLocale(hydratedPremiumReport?.locale || unlock.report.locale);
+    const localizedPremiumReport = locale === storedLocale
+      ? { ...hydratedPremiumReport, locale }
+      : await hydrateStoredReportJsonForLocale(hydratedPremiumReport, locale);
     return Response.json({
       success: true,
       reportId: params.reportId,
-      premiumReport: hydratedPremiumReport,
+      premiumReport: localizedPremiumReport,
+      locale,
+      translationFallback: Boolean(localizedPremiumReport.translationFallback),
     });
   } catch (err) {
     console.error('[ATS-Report] Unlock error:', err.message);

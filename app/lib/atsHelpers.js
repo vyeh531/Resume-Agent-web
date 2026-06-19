@@ -21,6 +21,7 @@ import {
 import { curateMentorAdvicePlan } from '../../services/adviceCurator';
 import { parsePDF, parseDocx } from '../../file-parser';
 import db from '../../database';
+import { normalizeLocale } from '../../src/i18n/locale';
 
 export async function resolveResumeText(file, bodyResumeText) {
   if (bodyResumeText) return bodyResumeText;
@@ -98,17 +99,20 @@ export function logPublicAtsResponseForTesting(label, payload) {
   console.log('[/ATS Public Response]\n');
 }
 
-export async function buildAtsReportPayload(rawScoreResult, input, userId = null) {
+export async function buildAtsReportPayload(rawScoreResult, input, userId = null, options = {}) {
   const startedAt = Date.now();
   const timings = [];
   const mark = (label) => timings.push([label, Date.now() - startedAt]);
+  const locale = normalizeLocale(options.locale || input?.locale);
   const internalAtsResult = formatInternalAtsResult(rawScoreResult, input);
+  internalAtsResult.locale = locale;
   mark('format_internal_ats');
   const retrievalQuery = internalAtsResult.retrievalQuery;
+  retrievalQuery.locale = locale;
   const {
     candidates: mentorCandidates,
     status: retrievalStatus,
-  } = await retrieveMentorAdviceWithStatus(retrievalQuery);
+  } = await retrieveMentorAdviceWithStatus(retrievalQuery, { locale });
   internalAtsResult.retrievalStatus = retrievalStatus;
   mark('retrieve_mentor_advice');
   const freeMentorPlan = selectFreeMentorPlan(mentorCandidates, internalAtsResult);
@@ -147,7 +151,7 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
     excludedInterviewAdvice: mentorCandidates.debug?.excludedInterviewAdvice ?? 0,
   });
   const lockedPreview = buildLockedAdvicePreview(premiumMentorPlan, internalAtsResult);
-  const publicReport = formatPublicFreeReport(internalAtsResult, freeAdvice, lockedPreview, curatedAdvice);
+  const publicReport = formatPublicFreeReport(internalAtsResult, freeAdvice, lockedPreview, curatedAdvice, { locale });
   publicReport.retrievalStatus = retrievalStatus;
   const premiumReport = {
     ...formatPremiumUnlockedReport(internalAtsResult, {
@@ -159,9 +163,10 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
         ...(premiumMentorReport.coverageSummary || {}),
         ...(curatedAdvice.coverageSummary || {}),
       },
-    }),
+    }, { locale }),
     companyInsiderTips,
     retrievalStatus,
+    locale,
   };
   mark('format_public_premium');
   logAdvicePlan(freeMentorPlan, premiumMentorPlan, premiumReport.coverageSummary);
@@ -180,6 +185,7 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
     hasJD: internalAtsResult.hasJD,
     total: internalAtsResult.total,
     risk: internalAtsResult.risk,
+    locale,
     publicReport,
     internalAtsResult,
     retrievalQuery,

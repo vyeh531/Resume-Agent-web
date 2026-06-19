@@ -1,4 +1,5 @@
 import { resolveResumeText, buildAtsReportPayload, logPublicAtsResponseForTesting, scoreWithHostedFirst } from '../../../lib/atsHelpers';
+import { requestLocaleFromParts } from '../../../../src/i18n/locale';
 
 export async function POST(request) {
   const startedAt = Date.now();
@@ -13,11 +14,13 @@ export async function POST(request) {
       jobTitle = formData.get('jobTitle') || '';
       jdText = formData.get('jdText') || '';
       resumeText = formData.get('resumeText') || '';
+      var locale = requestLocaleFromParts({ formData, request, url: new URL(request.url) });
     } else {
       const body = await request.json();
       jobTitle = body.jobTitle || '';
       jdText = body.jdText || '';
       resumeText = body.resumeText || '';
+      var locale = requestLocaleFromParts({ body, request, url: new URL(request.url) });
     }
     mark('parse_request');
 
@@ -39,7 +42,7 @@ export async function POST(request) {
     });
     mark('hosted_ats');
     const rawScoreResult = scoreResult.rawScoreResult;
-    const report = await buildAtsReportPayload(rawScoreResult, { resumeText: resolvedText, jobTitle, jdText }, userId);
+    const report = await buildAtsReportPayload(rawScoreResult, { resumeText: resolvedText, jobTitle, jdText, locale }, userId, { locale });
     mark('build_report');
 
     const payload = {
@@ -48,6 +51,7 @@ export async function POST(request) {
       reportId: report.reportId,
       reportAccessToken: report.reportAccessToken,
       publicReport: report.publicReport,
+      locale,
       warning: scoreResult.warning || undefined,
       timestamp: new Date().toISOString(),
     };

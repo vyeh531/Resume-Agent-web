@@ -1,4 +1,6 @@
 import db from '../../../../../../database';
+import { normalizeLocale } from '../../../../../../src/i18n/locale';
+import { hydrateStoredReportJsonForLocale } from '../../../../../lib/localeReports';
 
 function reportTokenFromRequest(request) {
   return (
@@ -18,10 +20,17 @@ export async function GET(request, { params: paramsPromise }) {
     if (!access.ok) {
       return Response.json({ success: false, error: access.error }, { status: access.status || 403 });
     }
+    const locale = normalizeLocale(new URL(request.url).searchParams.get('locale') || access.report.locale || access.report.publicReport?.locale);
+    const storedLocale = normalizeLocale(access.report.publicReport?.locale || access.report.locale);
+    const publicReport = locale === storedLocale
+      ? { ...(access.report.publicReport || {}), locale }
+      : await hydrateStoredReportJsonForLocale(access.report.publicReport, locale);
     return Response.json({
       success: true,
       reportId: params.reportId,
-      publicReport: access.report.publicReport,
+      publicReport,
+      locale,
+      translationFallback: Boolean(publicReport.translationFallback),
       timestamp: new Date().toISOString(),
     });
   } catch (err) {
