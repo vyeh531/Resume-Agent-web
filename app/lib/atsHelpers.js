@@ -102,7 +102,12 @@ export function logPublicAtsResponseForTesting(label, payload) {
 export async function buildAtsReportPayload(rawScoreResult, input, userId = null, options = {}) {
   const startedAt = Date.now();
   const timings = [];
-  const mark = (label) => timings.push([label, Date.now() - startedAt]);
+  const mark = (label) => {
+    timings.push([label, Date.now() - startedAt]);
+    if (typeof options.onProgress === 'function') {
+      options.onProgress(label);
+    }
+  };
   const locale = normalizeLocale(options.locale || input?.locale);
   const internalAtsResult = formatInternalAtsResult(rawScoreResult, input);
   internalAtsResult.locale = locale;

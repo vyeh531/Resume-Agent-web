@@ -12,6 +12,9 @@ function getPool() {
       connectionString: process.env.DATABASE_URL,
       ssl: { rejectUnauthorized: false },
       max: 10,
+      connectionTimeoutMillis: Number(process.env.DB_CONNECTION_TIMEOUT_MS || 10000),
+      query_timeout: Number(process.env.DB_QUERY_TIMEOUT_MS || 20000),
+      statement_timeout: Number(process.env.DB_STATEMENT_TIMEOUT_MS || 20000),
       options: "-c search_path=vibe_offer",
     });
     _pool.on("error", (err) => console.error("[DB] pool error:", err.message));

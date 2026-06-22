@@ -6,11 +6,12 @@ function normalizeUrl(url) {
 }
 
 export function getHostedAtsConfig(env = process.env) {
+  const timeoutMs = Number(env.ATS_API_TIMEOUT_MS || DEFAULT_TIMEOUT_MS);
   return {
     source: env.ATS_SOURCE || 'local',
     apiUrl: normalizeUrl(env.ATS_API_URL || DEFAULT_ATS_API_URL),
     apiKey: env.ATS_API_KEY || '',
-    timeoutMs: Number(env.ATS_API_TIMEOUT_MS || DEFAULT_TIMEOUT_MS),
+    timeoutMs: Number.isFinite(timeoutMs) && timeoutMs > 0 ? timeoutMs : DEFAULT_TIMEOUT_MS,
   };
 }
 
@@ -117,12 +118,20 @@ export async function callHostedAtsSystem({ resumeText, jobTitle, jdText, fileNa
   }
 
   try {
-    const response = await fetch(config.apiUrl, {
-      method: 'POST',
-      headers,
-      body,
-      signal: controller.signal,
-    });
+    let response;
+    try {
+      response = await fetch(config.apiUrl, {
+        method: 'POST',
+        headers,
+        body,
+        signal: controller.signal,
+      });
+    } catch (error) {
+      if (error?.name === 'AbortError') {
+        throw new Error(`ATS API timed out after ${config.timeoutMs}ms`);
+      }
+      throw error;
+    }
     const text = await response.text();
     let payload = {};
     try {

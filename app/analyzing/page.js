@@ -158,7 +158,7 @@ export default function AnalyzingPage() {
               Store.set({ analysisJobError: job.error || "analysis failed" });
               return;
             }
-            visualPct = Math.max(visualPct, Math.min(94, Number(job.progress || 10)));
+            visualPct = Math.max(visualPct, Math.min(98, Number(job.progress || 10)));
             applyProgress(Math.floor(visualPct));
             setTimeout(pollJob, 1200);
           } catch (error) {

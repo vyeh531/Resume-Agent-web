@@ -237,12 +237,18 @@ export default function LoginPage() {
               markAnalysisFailed(job.error ? "分析失败：" + job.error : "分析失败，请返回首页重新提交，或改用简历文本粘贴方式。");
               return;
             }
-            const stageText = job.stage === "scoring"
-              ? "正在对照目标岗位 JD。"
-              : job.stage === "retrieving_advice"
-                ? "正在匹配大厂导师经验。"
-                : "正在扫描你的履历亮点。";
-            setLoginProgress(Math.min(94, job.progress || 12), stageText);
+            const stageTextMap = {
+              scoring: "正在对照目标岗位 JD。",
+              building_report: "正在生成报告结构。",
+              format_internal_ats: "正在整理 ATS 诊断。",
+              retrieve_mentor_advice: "正在匹配大厂导师经验。",
+              select_mentor_plan: "正在筛选最适合你的建议。",
+              format_reports: "正在生成诊断内容。",
+              format_public_premium: "正在整理可视化报告。",
+              save_report: "正在保存报告。",
+            };
+            const stageText = stageTextMap[job.stage] || "正在扫描你的履历亮点。";
+            setLoginProgress(Math.min(98, job.progress || 12), stageText);
             setTimeout(pollLoginAnalysis, 1200);
           } catch (error) {
             const message = error && (error.code === "JOB_NOT_FOUND" || error.message === "JOB_NOT_FOUND")

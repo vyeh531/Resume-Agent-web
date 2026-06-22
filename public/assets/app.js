@@ -91,7 +91,7 @@ function showLoader(text, subtext, rotate, options = {}) {
       if (isPayment) {
         progress = Math.min(97, progress + Math.max(2, Math.round((98 - progress) * 0.18)));
       } else {
-        progress = Math.min(92, progress + Math.max(1, Math.round((92 - progress) * 0.08)));
+        progress = Math.min(98, progress + Math.max(1, Math.round((98 - progress) * 0.08)));
       }
       if (progressEl) progressEl.style.width = progress + "%";
       if (progressLabelEl) progressLabelEl.textContent = progress + "%";
