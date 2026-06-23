@@ -7877,8 +7877,9 @@ function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan =
       }) : null;
       // 找最合適的導師（優先選和這個 card 同一個 mentorName 的，或最後一個導師）
       const targetMentor = (coverCandidate && mentors.find((m) => m.mentorName === coverCandidate.mentorName)) || mentors[mentors.length - 1];
-      if (!targetMentor || !targetMentor.adviceItems) continue;
-      if (targetMentor.adviceItems.length === 0) {
+      if (!targetMentor || !Array.isArray(targetMentor.adviceItems)) continue;
+      const replaceableAdviceItems = targetMentor.adviceItems.filter(Boolean);
+      if (replaceableAdviceItems.length === 0) {
         const newItem = coverCandidate
           ? toAdviceItem(coverCandidate, targetProblemTags, 0, true, internalAtsResult, new Set())
           : fallbackItem;
@@ -7891,8 +7892,9 @@ function selectPremiumMentorPlan(candidates, internalAtsResult, freeMentorPlan =
         continue;
       }
       // 把這個 mentor 的最低優先級建議換掉
-      const toReplace = targetMentor.adviceItems.reduce((a, b) =>
-        (severityWeight(a.priority) < severityWeight(b.priority) ? a : b)
+      const toReplace = replaceableAdviceItems.reduce(
+        (lowest, item) => (severityWeight(lowest.priority) < severityWeight(item.priority) ? lowest : item),
+        replaceableAdviceItems[0]
       );
       const newItem = coverCandidate
         ? toAdviceItem(coverCandidate, targetProblemTags, targetMentor.adviceItems.indexOf(toReplace), true, internalAtsResult, new Set())

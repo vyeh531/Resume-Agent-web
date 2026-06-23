@@ -152,7 +152,12 @@ export function startAnalysisJob({ resumeText, jobTitle, jdText, fileName, userI
       progress: Math.max(job.progress || 0, 20),
       error: error.message || 'analysis failed',
     });
-    console.error('[Analysis Job] failed', jobId, error.message);
+    console.error('[Analysis Job] failed', jobId, {
+      stage: job.stage,
+      progress: job.progress,
+      message: error.message,
+      stack: error.stack,
+    });
   });
 
   return publicJob(job);
