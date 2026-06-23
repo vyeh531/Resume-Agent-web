@@ -210,6 +210,30 @@ export default function LoginPage() {
           });
         }
 
+        async function completeWithScoreFallback(reason) {
+          const s = Store.get();
+          if (s.analysisFallbackStarted || !s.resumeText || typeof scoreResumeAPI !== "function") return false;
+          Store.set({
+            analysisFallbackStarted: true,
+            analysisFallbackReason: reason || "job_unavailable",
+            analysisJobStatus: "fallback_running",
+          });
+          setLoginProgress(92, "æ­£åœ¨ç”¨å¤‡ç”¨é€šé“å®ŒæˆæŠ¥å‘Šã€‚");
+          if (typeof window.updateLoaderProgress === "function") {
+            window.updateLoaderProgress(92, "æ­£åœ¨ç”¨å¤‡ç”¨é€šé“å®ŒæˆæŠ¥å‘Šã€‚", "æŠ¥å‘Šå®ŒæˆåŽå°†è‡ªåŠ¨è·³è½¬ã€‚");
+          }
+          const publicReport = await scoreResumeAPI(s.resumeText, s.jobTitle || null, s.jdText || null, null);
+          storeCompletedReport({
+            success: true,
+            publicReport,
+            reportId: publicReport.reportId || null,
+            reportAccessToken: publicReport.reportAccessToken || null,
+            locale: s.locale || publicReport.locale || "zh-CN",
+          });
+          markReportReady(null);
+          return true;
+        }
+
         function markReportReady(result) {
           if (result) storeCompletedReport(result);
           loginAnalysisReady = true;
@@ -251,6 +275,7 @@ export default function LoginPage() {
             return;
           }
           if (!s.analysisJobId) {
+            if (await completeWithScoreFallback("missing_job_id")) return;
             setLoginProgress(12, "等待分析任务启动。");
             if (typeof window.updateLoaderProgress === "function") {
               window.updateLoaderProgress(12, "等待分析任务启动。", "报告完成后将自动跳转。");
@@ -271,6 +296,9 @@ export default function LoginPage() {
             syncAnalysisProgress(job);
             setTimeout(pollLoginAnalysis, 1200);
           } catch (error) {
+            if (error && (error.code === "JOB_NOT_FOUND" || error.message === "JOB_NOT_FOUND")) {
+              if (await completeWithScoreFallback("job_not_found")) return;
+            }
             const message = error && (error.code === "JOB_NOT_FOUND" || error.message === "JOB_NOT_FOUND")
               ? "分析任务已中断，请返回首页重新提交。"
               : "无法确认分析状态，请返回首页重新提交，或改用简历文本粘贴方式。";

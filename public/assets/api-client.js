@@ -224,7 +224,10 @@ async function startAnalysisJobAPI(resumeText, jobTitle, jdText, fileName, resum
   if (!ok || !json?.success) {
     throw new Error(json?.error || `Analysis job failed to start (${status})`);
   }
-  return json.job;
+  return {
+    ...json.job,
+    resolvedResumeText: json.resumeText || "",
+  };
 }
 
 async function getAnalysisJobAPI(jobId) {

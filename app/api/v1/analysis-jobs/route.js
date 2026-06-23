@@ -44,7 +44,7 @@ export async function POST(request) {
     }
 
     const job = startAnalysisJob({ resumeText: resolvedText, jobTitle, jdText, fileName, userId, locale });
-    return Response.json({ success: true, job }, { status: 202 });
+    return Response.json({ success: true, job, resumeText: resolvedText }, { status: 202 });
   } catch (error) {
     return Response.json({ success: false, error: error.message }, { status: 400 });
   }

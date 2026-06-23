@@ -367,7 +367,7 @@ async function submitResume(form) {
       jobTitle: scoringJobTitle,
       targetLabel: targetJob,
       jdText: jd,
-      resumeText,
+      resumeText: resumeText || analysisJob.resolvedResumeText || "",
       analysisJobId: analysisJob.jobId,
       analysisJobStatus: analysisJob.status,
       analysisJobStartedAt: Date.now(),
@@ -463,6 +463,36 @@ function storeAnalysisJobResult(result) {
   });
 }
 
+async function completeAnalysisWithScoreFallback(reason) {
+  const current = window.Store.get();
+  if (current.analysisFallbackStarted || !current.resumeText || typeof scoreResumeAPI !== "function") return false;
+  window.Store.set({
+    analysisFallbackStarted: true,
+    analysisFallbackReason: reason || "job_unavailable",
+    analysisJobStatus: "fallback_running",
+  });
+  showLoader("正在完成分析…", "分析任务连接中断，正在用备用通道生成报告。", false);
+  if (typeof window.updateLoaderProgress === "function") {
+    window.updateLoaderProgress(92, "正在用备用通道完成报告。", "报告完成后将自动跳转。");
+  }
+  const publicReport = await scoreResumeAPI(
+    current.resumeText,
+    current.jobTitle || null,
+    current.jdText || null,
+    null
+  );
+  storeAnalysisJobResult({
+    success: true,
+    publicReport,
+    reportId: publicReport.reportId || null,
+    reportAccessToken: publicReport.reportAccessToken || null,
+    locale: current.locale || publicReport.locale || "zh-CN",
+  });
+  showLoader("诊断完成！", "报告已生成，正在进入结果页…");
+  setTimeout(() => { window.location.href = "/result"; }, 500);
+  return true;
+}
+
 async function waitForAnalysisJobAndRedirect(btn) {
   const current = window.Store.get();
   if (current.reportId && current.atsResult) {
@@ -471,6 +501,7 @@ async function waitForAnalysisJobAndRedirect(btn) {
     return;
   }
   if (!current.analysisJobId || typeof getAnalysisJobAPI !== "function") {
+    if (await completeAnalysisWithScoreFallback("missing_job_api")) return;
     showLoaderError("分析任务未启动", "请返回首页重新提交，或改用简历文本粘贴方式。");
     if (btn) btn.disabled = false;
     return;
@@ -494,6 +525,9 @@ async function waitForAnalysisJobAndRedirect(btn) {
     updateLoaderProgress(job.progress || 0, analysisJobStageText(job.stage), "报告完成后将自动跳转。");
     setTimeout(() => waitForAnalysisJobAndRedirect(btn), 1200);
   } catch (err) {
+    if (err?.code === "JOB_NOT_FOUND" || err?.message === "JOB_NOT_FOUND") {
+      if (await completeAnalysisWithScoreFallback("job_not_found")) return;
+    }
     if (btn) btn.disabled = false;
     const message = err?.code === "JOB_NOT_FOUND"
       ? "分析任务已中断，请返回首页重新提交。"

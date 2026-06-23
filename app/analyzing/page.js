@@ -149,6 +149,33 @@ export default function AnalyzingPage() {
             analysisDebugSummary: result.debugSummary || null,
           });
         }
+
+        async function completeWithScoreFallback(reason) {
+          if (typeof Store === "undefined" || typeof scoreResumeAPI !== "function") return false;
+          const store = Store.get();
+          if (store.analysisFallbackStarted || !store.resumeText) return false;
+          Store.set({
+            analysisFallbackStarted: true,
+            analysisFallbackReason: reason || "job_unavailable",
+            analysisJobStatus: "fallback_running",
+          });
+          currentStageText = "æ­£åœ¨ç”¨å¤‡ç”¨é€šé“å®ŒæˆæŠ¥å‘Šã€‚";
+          targetPct = Math.max(targetPct, 92);
+          const publicReport = await scoreResumeAPI(store.resumeText, store.jobTitle || null, store.jdText || null, null);
+          storeCompletedReport({
+            success: true,
+            publicReport,
+            reportId: publicReport.reportId || null,
+            reportAccessToken: publicReport.reportAccessToken || null,
+            locale: store.locale || publicReport.locale || "zh-CN",
+          });
+          currentStageText = "è¯Šæ–­å®Œæˆï¼";
+          targetPct = 100;
+          visualPct = 100;
+          applyProgress(visualPct);
+          setTimeout(() => { window.location.href = "/result"; }, 500);
+          return true;
+        }
         async function pollJob() {
           if (typeof Store === "undefined" || typeof getAnalysisJobAPI !== "function") {
             setTimeout(pollJob, 300);
@@ -156,6 +183,7 @@ export default function AnalyzingPage() {
           }
           const store = Store.get();
           if (!store.analysisJobId) {
+            if (await completeWithScoreFallback("missing_job_id")) return;
             if (store.reportId && store.atsResult) window.location.href = "/result";
             return;
           }
@@ -184,6 +212,7 @@ export default function AnalyzingPage() {
           } catch (error) {
             console.warn("[Analysis Job] poll failed", error.message);
             if (error.code === "JOB_NOT_FOUND" || error.message === "JOB_NOT_FOUND") {
+              if (await completeWithScoreFallback("job_not_found")) return;
               analysisStopped = true;
               Store.set({
                 analysisJobId: null,
