@@ -7083,6 +7083,107 @@ function normalizedBundleVisibleText(value = "") {
     .trim();
 }
 
+function titleKeyForDisplayBundle(value = "") {
+  return normalizedBundleVisibleText(value).replace(/[0-9]+$/g, "");
+}
+
+function specificTitleForDuplicateAdvice(item = {}, occurrence = 1) {
+  const family = canonicalActionFamilyOf(item);
+  const intent = visibleAdviceIntent(item);
+  const section = normalizeTerm(item.targetSection || "");
+  const tags = new Set(item.relatedProblemTags || []);
+  const text = visibleAdviceText(item).toLowerCase();
+  const candidates = [];
+
+  if (intent === "summary_creation" || family === "summary_creation") candidates.push("补上 Summary 段落");
+  if (intent === "summary_positioning" || family === "summary_positioning") candidates.push("让 Summary 对准目标岗位");
+  if (tags.has("missing_exact_job_title") || /exact.*title|job title|岗位原词|目标岗位原词/.test(text)) candidates.push("补上目标岗位原词");
+  if (intent === "jd_keywords" || family === "jd_keyword_alignment") candidates.push(section === "skills" ? "补上 JD 里缺的技能词" : "把关键词写进真实经历");
+  if (intent === "skills_order" || family === "skills_section" || section === "skills") candidates.push("重排 Skills 关键词");
+  if (intent === "quantified_result" || family === "quantified_impact") candidates.push("强化 bullet 的结果表达");
+  if (intent === "experience_evidence" || family === "experience_evidence") candidates.push("补强经历里的动作和交付");
+  if (family === "business_reporting") candidates.push("把分析经历写成报告产出");
+  if (family === "process_improvement") candidates.push("补出流程改进视角");
+  if (family === "manager_assist_evidence") candidates.push("把协助经理任务写具体");
+  if (family === "cross_functional_delivery") candidates.push("突出跨部门协作交付");
+  if (family === "transferable_framing") candidates.push("把原经历翻译成岗位语言");
+  if (intent === "education_training" || family === "education_signal" || section === "education") candidates.push("补强教育背景相关信号");
+  if (intent === "profile_links" || family === "profile_links" || section === "header") candidates.push("补齐可验证入口");
+  if (family === "format_cleanup") candidates.push("稳定简历提交格式");
+  if (family === "section_structure") candidates.push("调整 section 顺序");
+  if (family === "short_tenure_risk" || tags.has("short_tenure_unclear")) candidates.push("把短期经历说清楚");
+  if (family === "rotation_readiness") candidates.push("写出轮岗适应能力");
+
+  const fallbackBySection = {
+    summary: "优化 Summary 定位",
+    skills: "整理 Skills 关键词",
+    experience: "重写核心经历 bullet",
+    projects: "补强项目经历证据",
+    education: "补强教育背景相关信号",
+    header: "补齐简历头部入口",
+    overall: "明确下一步修改动作",
+  };
+  candidates.push(fallbackBySection[section] || "明确下一步修改动作");
+
+  return candidates[Math.min(Math.max(occurrence - 1, 0), candidates.length - 1)];
+}
+
+function diversifyDuplicateAdviceTitles(adviceItems = []) {
+  const counts = new Map();
+  const firstByKey = new Map();
+  const nextItems = adviceItems.map((item) => {
+    if (!item || typeof item !== "object") return item;
+    const key = titleKeyForDisplayBundle(item.title || item.canonicalTitle || item.canonical_title || "");
+    if (!key) return item;
+    const count = (counts.get(key) || 0) + 1;
+    counts.set(key, count);
+    if (count === 1) {
+      firstByKey.set(key, item);
+      return item;
+    }
+    return {
+      ...item,
+      title: specificTitleForDuplicateAdvice(item, count),
+      titleSource: item.titleSource || "bundle_duplicate_diversifier",
+    };
+  });
+
+  for (const [key, total] of counts.entries()) {
+    if (total <= 1) continue;
+    const first = firstByKey.get(key);
+    const firstIndex = nextItems.indexOf(first);
+    if (firstIndex !== -1) {
+      nextItems[firstIndex] = {
+        ...first,
+        title: specificTitleForDuplicateAdvice(first, 1),
+        titleSource: first.titleSource || "bundle_duplicate_diversifier",
+      };
+    }
+  }
+
+  const used = new Set();
+  return nextItems.map((item) => {
+    if (!item || typeof item !== "object") return item;
+    const key = titleKeyForDisplayBundle(item.title || "");
+    if (!key || !used.has(key)) {
+      if (key) used.add(key);
+      return item;
+    }
+    for (let occurrence = 2; occurrence <= 8; occurrence += 1) {
+      const candidate = specificTitleForDuplicateAdvice(item, occurrence);
+      const candidateKey = titleKeyForDisplayBundle(candidate);
+      if (candidateKey && !used.has(candidateKey)) {
+        used.add(candidateKey);
+        return { ...item, title: candidate, titleSource: item.titleSource || "bundle_duplicate_diversifier" };
+      }
+    }
+    const fallbackTitle = `${item.title || "建议"} ${used.size + 1}`;
+    const fallbackKey = titleKeyForDisplayBundle(fallbackTitle);
+    if (fallbackKey) used.add(fallbackKey);
+    return { ...item, title: fallbackTitle, titleSource: item.titleSource || "bundle_duplicate_diversifier" };
+  });
+}
+
 function canAddToTwelveAdviceBundle(item = {}, existingItems = []) {
   const family = canonicalActionFamilyOf(item);
   const depth = actionDepthOf(item);
@@ -7386,6 +7487,10 @@ function rewriteSummaryActionForMissingSummary(item = {}, internalAtsResult = {}
 
 function sanitizeAdviceItemForDisplay(item = {}, internalAtsResult = {}) {
   const patched = rewriteSummaryActionForMissingSummary(item, internalAtsResult);
+  if ((patched.relatedProblemTags || []).includes("missing_summary") && visibleAdviceIntent(patched) === "summary_creation") {
+    patched.canonicalActionFamily = "summary_creation";
+    patched.actionFamily = "summary_creation";
+  }
   const example = cleanDisplayExample(patched.example || patched.E_example || "");
   // Prefer approved humanized_mentor_insight; only fall through to family-match sanitize if absent.
   const approvedDbMentor = resolvedApprovedDbMentorInsight(patched);
@@ -7473,7 +7578,7 @@ function normalizeAdviceBundleForDisplay(items = [], internalAtsResult = {}, opt
     if (selected.length >= limit) break;
     add(item);
   }
-  return selected.slice(0, limit).map((item, index) => {
+  return diversifyDuplicateAdviceTitles(selected.slice(0, limit)).map((item, index) => {
     if (index === 0 && hasMissingSummary && visibleAdviceIntent(item) === "summary_creation") {
       return forceAdvicePriority(item, "high");
     }

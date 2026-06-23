@@ -193,17 +193,32 @@ async function scoreResumeAPI(resumeText, jobTitle, jdText, resumeFile) {
   }
 }
 
-async function startAnalysisJobAPI(resumeText, jobTitle, jdText, fileName) {
-  const response = await fetch(`${API_BASE}/api/v1/analysis-jobs`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
+async function startAnalysisJobAPI(resumeText, jobTitle, jdText, fileName, resumeFile) {
+  let headers;
+  let body;
+  if (resumeFile) {
+    body = new FormData();
+    body.append("file", resumeFile);
+    if (resumeText) body.append("resumeText", resumeText);
+    if (jobTitle) body.append("jobTitle", jobTitle);
+    if (jdText) body.append("jdText", jdText);
+    if (fileName) body.append("fileName", fileName);
+    body.append("locale", getAppLocale());
+  } else {
+    headers = { "Content-Type": "application/json" };
+    body = JSON.stringify({
       resumeText,
       jobTitle: jobTitle || null,
       jdText: jdText || null,
       fileName: fileName || "",
       locale: getAppLocale(),
-    }),
+    });
+  }
+
+  const response = await fetch(`${API_BASE}/api/v1/analysis-jobs`, {
+    method: "POST",
+    headers,
+    body,
   });
   const { ok, status, json } = await safeParseResponse(response);
   if (!ok || !json?.success) {
@@ -299,7 +314,7 @@ function formatATSResult(atsData) {
   return {
     atsScore: atsData.total ?? atsData.basicScore ?? 60,
     riskLevel: atsData.risk || atsData.riskLevel || "中",
-    scoringBasis: atsData.scoringBasis || (atsData.source === "local-fallback" ? "ATS System 本地备援评分（无 Claude/OpenAI）" : "ATS System API 评分（无 Claude/OpenAI）"),
+    scoringBasis: atsData.scoringBasis || "ATS System 本地评分（无 Claude/OpenAI）",
     itemScores: atsData.itemScores || Object.fromEntries(
       Object.entries(dimensions).map(([key, value]) => [key, value.score])
     ),
@@ -313,7 +328,7 @@ function formatATSResult(atsData) {
     topMissingKw: atsData.topMissingKw || atsData.topMissingKeywords || [],
     keywordMatchCount: atsData.keywordMatchCount || null,
     engine: atsData.engine || "ats-system-api",
-    source: atsData.source || "hosted-api",
+    source: atsData.source || "local",
     jobTitle: atsData.jobTitle || null,
     hasJD: Boolean(atsData.hasJD),
     metrics: atsData.metrics || { keywordMatch },

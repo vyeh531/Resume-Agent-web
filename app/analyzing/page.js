@@ -93,9 +93,25 @@ export default function AnalyzingPage() {
           { from: 92, text: "正在生成你的初步诊断…" }
         ];
         const stepBoundaries = [25, 55, 80, 100];
-        let visualPct = 8;
+        let visualPct = 0;
+        let targetPct = 0;
+        let currentStageText = "";
         let lastKnownJob = null;
         let analysisStopped = false;
+        function analysisStageText(stage) {
+          const stageTextMap = {
+            queued: "正在排队准备分析。",
+            scoring: "正在对照目标岗位 JD。",
+            building_report: "正在生成报告结构。",
+            format_internal_ats: "正在整理 ATS 诊断。",
+            retrieve_mentor_advice: "正在匹配导师建议。",
+            select_mentor_plan: "正在筛选最适合你的建议。",
+            format_reports: "正在生成诊断内容。",
+            format_public_premium: "正在整理可视化报告。",
+            save_report: "正在保存报告。",
+          };
+          return stageTextMap[stage] || "正在分析你的履历。";
+        }
         function applyProgress(pct) {
           pctEl.textContent = pct;
           fillEl.style.width = pct + "%";
@@ -103,6 +119,7 @@ export default function AnalyzingPage() {
           for (let i = subStatuses.length - 1; i >= 0; i--){
             if (pct >= subStatuses[i].from){ subStatusEl.textContent = subStatuses[i].text; break; }
           }
+          if (currentStageText) subStatusEl.textContent = currentStageText;
           stepEls.forEach((li, idx) => {
             const myEnd = stepBoundaries[idx];
             const prevEnd = idx === 0 ? 0 : stepBoundaries[idx - 1];
@@ -129,6 +146,7 @@ export default function AnalyzingPage() {
             mentorLogoPool: publicReport.lockedAdvicePreview?.mentorLogoPool || publicReport.freeMentorAdvice?.mentorLogoPool || null,
             analysisJobStatus: "completed",
             analysisCompletedAt: Date.now(),
+            analysisDebugSummary: result.debugSummary || null,
           });
         }
         async function pollJob() {
@@ -146,6 +164,8 @@ export default function AnalyzingPage() {
             lastKnownJob = job;
             Store.set({ analysisJobStatus: job.status, analysisJobStage: job.stage });
             if (job.status === "completed" && job.result) {
+              currentStageText = "诊断完成！";
+              targetPct = 100;
               visualPct = 100;
               applyProgress(visualPct);
               storeCompletedReport(job.result);
@@ -158,8 +178,8 @@ export default function AnalyzingPage() {
               Store.set({ analysisJobError: job.error || "analysis failed" });
               return;
             }
-            visualPct = Math.max(visualPct, Math.min(98, Number(job.progress || 10)));
-            applyProgress(Math.floor(visualPct));
+            currentStageText = analysisStageText(job.stage);
+            targetPct = Math.max(0, Math.min(100, Number(job.progress || 0)));
             setTimeout(pollJob, 1200);
           } catch (error) {
             console.warn("[Analysis Job] poll failed", error.message);
@@ -191,25 +211,10 @@ export default function AnalyzingPage() {
             return;
           }
           const elapsed = (Date.now() - startedAt) / 1000;
-          const cap = lastKnownJob?.status === "completed" ? 100 : 94;
-          const pct = Math.min(cap, Math.max(visualPct, Math.floor(12 + elapsed * 3)));
-          visualPct = pct;
-          pctEl.textContent = pct;
-          fillEl.style.width = pct + "%";
+          if (visualPct < targetPct) visualPct = Math.min(targetPct, visualPct + 1);
           elapsedEl.textContent = Math.floor(elapsed);
-          for (let i = subStatuses.length - 1; i >= 0; i--){
-            if (pct >= subStatuses[i].from){ subStatusEl.textContent = subStatuses[i].text; break; }
-          }
-          stepEls.forEach((li, idx) => {
-            const myEnd = stepBoundaries[idx];
-            const prevEnd = idx === 0 ? 0 : stepBoundaries[idx - 1];
-            const status = li.querySelector(".step-status");
-            if (pct >= myEnd){ li.dataset.state = "done"; status.textContent = "完成"; }
-            else if (pct >= prevEnd){ li.dataset.state = "active"; status.textContent = "进行中…"; }
-            else { li.dataset.state = "pending"; status.textContent = "等待"; }
-          });
-          if (pct >= 100){ clearInterval(tick); setTimeout(() => { window.location.href = "/result"; }, 700); }
-        }, 500);
+          applyProgress(Math.floor(visualPct));
+        }, 60);
         pollJob();
       `}</Script>
     </>

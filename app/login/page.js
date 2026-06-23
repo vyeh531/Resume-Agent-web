@@ -155,13 +155,37 @@ export default function LoginPage() {
         }
 
         function setLoginProgress(pct, status) {
-          loginVisualPct = Math.max(loginVisualPct, Math.min(100, Math.floor(pct)));
+          loginVisualPct = Math.max(0, Math.min(100, Math.floor(pct)));
           const pctEl = document.getElementById("loginPct");
           const fillEl = document.getElementById("loginProgressFill");
           const statusEl = document.getElementById("loginProgressStatus");
           if (pctEl) pctEl.textContent = loginVisualPct;
           if (fillEl) fillEl.style.width = loginVisualPct + "%";
           if (statusEl && status) statusEl.textContent = status;
+        }
+
+        function analysisStageText(stage) {
+          const stageTextMap = {
+            queued: "正在排队准备分析。",
+            scoring: "正在对照目标岗位 JD。",
+            building_report: "正在生成报告结构。",
+            format_internal_ats: "正在整理 ATS 诊断。",
+            retrieve_mentor_advice: "正在匹配导师建议。",
+            select_mentor_plan: "正在筛选最适合你的建议。",
+            format_reports: "正在生成诊断内容。",
+            format_public_premium: "正在整理可视化报告。",
+            save_report: "正在保存报告。",
+          };
+          return stageTextMap[stage] || "正在分析你的履历。";
+        }
+
+        function syncAnalysisProgress(job) {
+          const pct = Math.max(0, Math.min(100, Math.floor(Number(job?.progress || 0))));
+          const stageText = analysisStageText(job?.stage);
+          setLoginProgress(pct, stageText);
+          if (typeof window.updateLoaderProgress === "function") {
+            window.updateLoaderProgress(pct, stageText, "报告完成后将自动跳转。");
+          }
         }
 
         function storeCompletedReport(result) {
@@ -182,6 +206,7 @@ export default function LoginPage() {
             mentorLogoPool: publicReport.lockedAdvicePreview?.mentorLogoPool || publicReport.freeMentorAdvice?.mentorLogoPool || null,
             analysisJobStatus: "completed",
             analysisCompletedAt: Date.now(),
+            analysisDebugSummary: result.debugSummary || null,
           });
         }
 
@@ -197,6 +222,9 @@ export default function LoginPage() {
           }
           if (loginClicked) {
             showLoginLoader("诊断完成！", "报告已生成，正在进入结果页…");
+            if (typeof window.updateLoaderProgress === "function") {
+              window.updateLoaderProgress(100, "诊断完成！", "报告已生成，正在进入结果页…", { instant: true });
+            }
             setTimeout(function(){ window.location.href = "/result"; }, 500);
           }
         }
@@ -224,6 +252,9 @@ export default function LoginPage() {
           }
           if (!s.analysisJobId) {
             setLoginProgress(12, "等待分析任务启动。");
+            if (typeof window.updateLoaderProgress === "function") {
+              window.updateLoaderProgress(12, "等待分析任务启动。", "报告完成后将自动跳转。");
+            }
             return;
           }
           try {
@@ -237,18 +268,7 @@ export default function LoginPage() {
               markAnalysisFailed(job.error ? "分析失败：" + job.error : "分析失败，请返回首页重新提交，或改用简历文本粘贴方式。");
               return;
             }
-            const stageTextMap = {
-              scoring: "正在对照目标岗位 JD。",
-              building_report: "正在生成报告结构。",
-              format_internal_ats: "正在整理 ATS 诊断。",
-              retrieve_mentor_advice: "正在匹配大厂导师经验。",
-              select_mentor_plan: "正在筛选最适合你的建议。",
-              format_reports: "正在生成诊断内容。",
-              format_public_premium: "正在整理可视化报告。",
-              save_report: "正在保存报告。",
-            };
-            const stageText = stageTextMap[job.stage] || "正在扫描你的履历亮点。";
-            setLoginProgress(Math.min(98, job.progress || 12), stageText);
+            syncAnalysisProgress(job);
             setTimeout(pollLoginAnalysis, 1200);
           } catch (error) {
             const message = error && (error.code === "JOB_NOT_FOUND" || error.message === "JOB_NOT_FOUND")
@@ -277,7 +297,10 @@ export default function LoginPage() {
           loginButton = btn;
           loginClicked = true;
           btn.disabled = true;
-          showLoginLoader("正在扫描你的履历亮点…", "先找出最能打动 HR 的经历、技能和项目证据", true);
+          showLoginLoader("正在读取分析进度…", "报告完成后将自动跳转。", false);
+          if (typeof window.updateLoaderProgress === "function") {
+            window.updateLoaderProgress(loginVisualPct, "正在读取分析进度…", "报告完成后将自动跳转。");
+          }
           setStorePatch({ userId: "mock_" + Date.now(), loginAt: Date.now() });
           const snapshot = readStoreSnapshot();
           if (loginAnalysisReady || (snapshot.reportId && snapshot.atsResult)) {
@@ -286,7 +309,7 @@ export default function LoginPage() {
             return;
           }
           btn.textContent = "报告生成中...";
-          setLoginProgress(loginVisualPct, "已登录，报告完成后将自动跳转。");
+          setLoginProgress(loginVisualPct, "正在读取分析进度。");
           pollLoginAnalysis();
         }
 

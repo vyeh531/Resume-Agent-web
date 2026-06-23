@@ -1,4 +1,3 @@
-import { scoreWithHostedAtsSystem } from './hostedAtsSystem.mjs';
 import { scoreResumeATS as scoreResumeSystem } from '../../src/ats/ats-scorer.js';
 import {
   createReportAccessToken,
@@ -22,6 +21,41 @@ import { curateMentorAdvicePlan } from '../../services/adviceCurator';
 import { parsePDF, parseDocx } from '../../file-parser';
 import db from '../../database';
 import { normalizeLocale } from '../../src/i18n/locale';
+
+export function normalizeScoringJobTitle(value = '') {
+  const raw = String(value || '')
+    .replace(/^\s*(?:job\s*title|position\s*title|position|role\s*title|role|title|opening|target\s*(?:role|position)|目标岗位|岗位|职位|职称|职务|招聘岗位|应聘岗位)\s*[:：\-–]\s*/i, '')
+    .replace(/\s*[（(](?:junior|senior|entry[-\s]?level|full[-\s]?time|part[-\s]?time|internship|intern|co-?op|new\s*grad|全职|兼职|实习|校招)[^）)]*[）)]\s*$/i, '')
+    .replace(/[|;；].*$/, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!raw) return '';
+
+  const asciiRoleMatches = raw.match(/[A-Za-z][A-Za-z0-9+.#/&' -]{2,80}/g) || [];
+  const roleNoun = /\b(operator|engineer|developer|scientist|analyst|manager|designer|consultant|researcher|architect|specialist|associate|intern|coordinator|assistant|support|officer|accountant|administrator|technician)\b/i;
+  const asciiRole = asciiRoleMatches
+    .map((item) => item.replace(/\s*[（(].*$/, '').replace(/\s+/g, ' ').trim())
+    .find((item) => roleNoun.test(item));
+  if (asciiRole && /[\u4e00-\u9fff]/.test(raw)) return asciiRole;
+
+  return raw;
+}
+
+export function inferScoringJobTitleFromJd(jdText = '') {
+  const text = String(jdText || '').replace(/\r/g, '\n');
+  if (!text.trim()) return '';
+  const patterns = [
+    /^\s*(?:job\s*title|position\s*title|position|role\s*title|role|title|opening|target\s*(?:role|position)|目标岗位|岗位|职位|职称|职务|招聘岗位|应聘岗位)\s*[:：\-–]\s*([^\n|;；]+)/gim,
+    /^\s*([^\n]{2,100}(?:operator|engineer|developer|scientist|analyst|manager|designer|consultant|researcher|architect|specialist|associate|intern|coordinator|assistant|support|officer|accountant|administrator|technician)[^\n]{0,40})\s*$/gim,
+  ];
+  for (const pattern of patterns) {
+    for (const match of text.matchAll(pattern)) {
+      const title = normalizeScoringJobTitle(match?.[1] || '');
+      if (title) return title;
+    }
+  }
+  return '';
+}
 
 export async function resolveResumeText(file, bodyResumeText) {
   if (bodyResumeText) return bodyResumeText;
@@ -111,6 +145,7 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
   const locale = normalizeLocale(options.locale || input?.locale);
   const internalAtsResult = formatInternalAtsResult(rawScoreResult, input);
   internalAtsResult.locale = locale;
+  internalAtsResult.fileName = input?.fileName || '';
   mark('format_internal_ats');
   const retrievalQuery = internalAtsResult.retrievalQuery;
   retrievalQuery.locale = locale;
@@ -225,27 +260,17 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
   };
 }
 
-export async function scoreWithHostedFirst(input = {}) {
-  try {
-    const hosted = await scoreWithHostedAtsSystem(input);
-    return {
-      rawScoreResult: hosted.rawScoreResult,
-      source: 'hosted-api',
-      warning: null,
-    };
-  } catch (error) {
-    const warning = error?.message || 'Hosted ATS API unavailable';
-    console.warn('[ATS-System] Hosted API unavailable, using local fallback:', warning);
-    const local = scoreResumeSystem(input.resumeText || '', input.jobTitle || '', input.jdText || '');
-    return {
-      rawScoreResult: {
-        ...local,
-        engine: local.engine || 'ats-system-local-fallback',
-        source: 'local-fallback',
-        fallbackReason: warning,
-      },
-      source: 'local-fallback',
-      warning,
-    };
-  }
+export async function scoreWithLocalAts(input = {}) {
+  const local = scoreResumeSystem(input.resumeText || '', input.jobTitle || '', input.jdText || '', {
+    fileName: input.fileName || '',
+  });
+  return {
+    rawScoreResult: {
+      ...local,
+      engine: local.engine || 'ats-system-local',
+      source: 'local',
+    },
+    source: 'local',
+    warning: null,
+  };
 }

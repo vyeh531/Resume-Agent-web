@@ -1,4 +1,4 @@
-import { resolveResumeText, buildAtsReportPayload, logPublicAtsResponseForTesting, scoreWithHostedFirst } from '../../../lib/atsHelpers';
+import { resolveResumeText, buildAtsReportPayload, logPublicAtsResponseForTesting, scoreWithLocalAts } from '../../../lib/atsHelpers';
 import { requestLocaleFromParts } from '../../../../src/i18n/locale';
 
 export async function POST(request) {
@@ -7,25 +7,28 @@ export async function POST(request) {
   const mark = (label) => timings.push([label, Date.now() - startedAt]);
   try {
     const contentType = request.headers.get('content-type') || '';
-    let file = null, jobTitle = '', jdText = '', resumeText = '';
+    let file = null, jobTitle = '', jdText = '', resumeText = '', fileName = '';
     if (contentType.includes('multipart/form-data')) {
       const formData = await request.formData();
       file = formData.get('file');
       jobTitle = formData.get('jobTitle') || '';
       jdText = formData.get('jdText') || '';
       resumeText = formData.get('resumeText') || '';
+      fileName = formData.get('fileName') || file?.name || '';
       var locale = requestLocaleFromParts({ formData, request, url: new URL(request.url) });
     } else {
       const body = await request.json();
       jobTitle = body.jobTitle || '';
       jdText = body.jdText || '';
       resumeText = body.resumeText || '';
+      fileName = body.fileName || '';
       var locale = requestLocaleFromParts({ body, request, url: new URL(request.url) });
     }
     mark('parse_request');
 
     const userId = request.headers.get('x-user-id') || null;
 
+    jobTitle = String(jobTitle || '').trim();
     if (!jobTitle && !jdText) {
       return Response.json({ success: false, error: 'jobTitle or jdText is required' }, { status: 400 });
     }
@@ -33,14 +36,14 @@ export async function POST(request) {
     const hostedFileBuffer = file ? Buffer.from(await file.arrayBuffer()) : null;
     const resolvedText = await resolveResumeText(file, resumeText);
     mark('resolve_resume_text');
-    const scoreResult = await scoreWithHostedFirst({
+    const scoreResult = await scoreWithLocalAts({
       resumeText: resolvedText,
       jobTitle,
       jdText,
-      fileName: file?.name || '',
+      fileName,
       fileBuffer: hostedFileBuffer,
     });
-    mark('hosted_ats');
+    mark('local_ats');
     const rawScoreResult = scoreResult.rawScoreResult;
     const report = await buildAtsReportPayload(rawScoreResult, { resumeText: resolvedText, jobTitle, jdText, locale }, userId, { locale });
     mark('build_report');
@@ -70,11 +73,10 @@ export async function POST(request) {
       error: err.message,
     }));
     console.error('[ATS-Report] Error:', err.message);
-    const isHostedAtsError = /hosted|ats api|ats_api|ATS system/i.test(err.message || '');
     return Response.json({
       success: false,
-      source: 'hosted-api',
+      source: 'local',
       error: err.message,
-    }, { status: isHostedAtsError ? 502 : 400 });
+    }, { status: 400 });
   }
 }

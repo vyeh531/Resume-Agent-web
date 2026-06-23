@@ -1298,6 +1298,91 @@ function reportAdviceText(item = {}) {
   ].filter(Boolean).join(" ").toLowerCase();
 }
 
+function displayTitleKey(value = "") {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/\s+/g, "")
+    .replace(/[，。；、,.!?;:："'“”‘’（）()\[\]{}<>]/g, "")
+    .replace(/[0-9]+$/g, "")
+    .trim();
+}
+
+function duplicateTitleAlternative(item = {}, occurrence = 1) {
+  const family = String(item.canonicalActionFamily || item.actionFamily || item.coverageFamily || "").toLowerCase();
+  const section = String(item.targetSection || "").toLowerCase();
+  const tags = asArray(item.relatedProblemTags).join(" ").toLowerCase();
+  const text = reportAdviceText(item);
+  const candidates = [];
+
+  if (/summary_creation|missing_summary/.test(`${family} ${tags} ${text}`)) candidates.push("补上 Summary 段落");
+  if (/summary|positioning|role_alignment|target_role/.test(`${family} ${tags} ${text}`)) candidates.push("让 Summary 对准目标岗位");
+  if (/missing_exact_job_title|exact.*title|job title|岗位原词/.test(`${tags} ${text}`)) candidates.push("补上目标岗位原词");
+  if (/keyword|jd_keyword|hard_skill/.test(`${family} ${tags} ${text}`)) candidates.push(section === "skills" ? "补上 JD 里缺的技能词" : "把关键词写进真实经历");
+  if (/skills/.test(`${family} ${section}`)) candidates.push("整理 Skills 关键词");
+  if (/quantified|impact|measurable|result/.test(`${family} ${tags} ${text}`)) candidates.push("强化 bullet 的结果表达");
+  if (/experience|evidence|bullet/.test(`${family} ${section} ${tags} ${text}`)) candidates.push("补强经历里的动作和交付");
+  if (/education|course|certificate/.test(`${family} ${section} ${tags} ${text}`)) candidates.push("补强教育背景相关信号");
+  if (/profile_links|linkedin|github|portfolio|header/.test(`${family} ${section} ${tags} ${text}`)) candidates.push("补齐可验证入口");
+  if (/format|parse|layout/.test(`${family} ${tags} ${text}`)) candidates.push("稳定简历提交格式");
+  if (/section_structure|section_order/.test(`${family} ${tags} ${text}`)) candidates.push("调整 section 顺序");
+  if (/short_tenure|internship|intern\b/.test(`${family} ${tags} ${text}`)) candidates.push("把短期经历说清楚");
+
+  const fallbackBySection = {
+    summary: "优化 Summary 定位",
+    skills: "整理 Skills 关键词",
+    experience: "重写核心经历 bullet",
+    projects: "补强项目经历证据",
+    education: "补强教育背景相关信号",
+    header: "补齐简历头部入口",
+  };
+  candidates.push(fallbackBySection[section] || "明确下一步修改动作");
+  return candidates[Math.min(Math.max(occurrence - 1, 0), candidates.length - 1)];
+}
+
+function diversifyAdviceTitlesForDisplay(items = []) {
+  const counts = new Map();
+  const firstByKey = new Map();
+  const next = items.map((item) => {
+    if (!item || typeof item !== "object") return item;
+    const key = displayTitleKey(item.title);
+    if (!key) return item;
+    const count = (counts.get(key) || 0) + 1;
+    counts.set(key, count);
+    if (count === 1) {
+      firstByKey.set(key, item);
+      return item;
+    }
+    return { ...item, title: duplicateTitleAlternative(item, count) };
+  });
+  for (const [key, total] of counts.entries()) {
+    if (total <= 1) continue;
+    const first = firstByKey.get(key);
+    const index = next.indexOf(first);
+    if (index !== -1) next[index] = { ...first, title: duplicateTitleAlternative(first, 1) };
+  }
+  const used = new Set();
+  return next.map((item) => {
+    if (!item || typeof item !== "object") return item;
+    const key = displayTitleKey(item.title);
+    if (!key || !used.has(key)) {
+      if (key) used.add(key);
+      return item;
+    }
+    for (let occurrence = 2; occurrence <= 8; occurrence += 1) {
+      const candidate = duplicateTitleAlternative(item, occurrence);
+      const candidateKey = displayTitleKey(candidate);
+      if (candidateKey && !used.has(candidateKey)) {
+        used.add(candidateKey);
+        return { ...item, title: candidate };
+      }
+    }
+    const fallback = `${item.title || "建议"} ${used.size + 1}`;
+    const fallbackKey = displayTitleKey(fallback);
+    if (fallbackKey) used.add(fallbackKey);
+    return { ...item, title: fallback };
+  });
+}
+
 function normalizeEvidenceForReport(item = {}) {
   const text = reportAdviceText(item);
   const familyEvidence = {
@@ -1627,6 +1712,7 @@ function formatPremiumUnlockedReport(internalAtsResult, paidAdviceOrMentorReport
       displayMentorScore: item.displayMentorScore || 0,
       adviceSkillClusters: item.adviceSkillClusters || [],
     });
+    const strippedAllAdviceItems = diversifyAdviceTitlesForDisplay(allAdviceItems.map(stripAdviceItem));
     return {
       mentors: mentorReport.mentors.slice(0, 4).map((mentor) => ({
         mentorId: mentor.mentorId,
@@ -1662,9 +1748,9 @@ function formatPremiumUnlockedReport(internalAtsResult, paidAdviceOrMentorReport
       })),
       curatedAdviceItems: asArray(mentorReport.curatedAdviceItems).map(stripAdviceItem),
       resultPageAdviceItems: asArray(mentorReport.resultPageAdviceItems).slice(0, 3).map(stripAdviceItem),
-      allAdviceItems: allAdviceItems.map(stripAdviceItem),
-      freeAdviceItems: allAdviceItems.slice(0, 3).map(stripAdviceItem),
-      paidAdviceItems: allAdviceItems.slice(3).map(stripAdviceItem),
+      allAdviceItems: strippedAllAdviceItems,
+      freeAdviceItems: strippedAllAdviceItems.slice(0, 3),
+      paidAdviceItems: strippedAllAdviceItems.slice(3),
       mentorLogoPool: asArray(mentorReport.mentorLogoPool).slice(0, 16).map((mentor) => ({
         company: mentor.company,
         companyLogo: mentor.companyLogo || null,

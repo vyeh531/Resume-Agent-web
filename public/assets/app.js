@@ -1,6 +1,8 @@
 const STORE_KEY = "resumeFixMVP";
 // NOTE: API_BASE is declared in api-client.js (loaded before this file)
 window.__resumeAppState = window.__resumeAppState || { isSubmitting: false, loaderRotateTimer: null, loaderProgressTimer: null };
+window.__resumeAppState.loaderDisplayedProgress = window.__resumeAppState.loaderDisplayedProgress || 0;
+window.__resumeAppState.loaderProgressTarget = window.__resumeAppState.loaderProgressTarget || 0;
 
 window.Store = window.Store || {
   get() {
@@ -68,35 +70,79 @@ function showLoader(text, subtext, rotate, options = {}) {
   const shouldRotate = Boolean(rotate);
   const isPayment = mode === "payment";
   if (badgeEl) badgeEl.style.display = isPayment ? "inline-flex" : "none";
-  let progress = isPayment ? 35 : (shouldRotate ? 8 : (text && text.includes("完成") ? 100 : 18));
+  let progress = Number.isFinite(Number(options.initialProgress))
+    ? Math.max(0, Math.min(100, Math.floor(Number(options.initialProgress))))
+    : (isPayment ? 35 : 0);
+  window.__resumeAppState.loaderDisplayedProgress = progress;
+  window.__resumeAppState.loaderProgressTarget = progress;
   if (progressEl) progressEl.style.width = progress + "%";
   if (progressLabelEl) progressLabelEl.textContent = progress + "%";
 
   if (shouldRotate) {
     const messages = isPayment ? PAYMENT_MESSAGES : ANALYSIS_MESSAGES;
     let idx = 0;
-    window.__resumeAppState.loaderRotateTimer = setInterval(() => {
-      idx = (idx + 1) % messages.length;
-      // Fade out → update → fade in
-      textEl.style.opacity = "0";
-      subtextEl.style.opacity = "0";
-      setTimeout(() => {
-        textEl.textContent    = messages[idx][0];
-        subtextEl.textContent = messages[idx][1];
-        textEl.style.opacity = "1";
-        subtextEl.style.opacity = "0.7";
-      }, 300);
-    }, isPayment ? 1800 : 3200);
-    window.__resumeAppState.loaderProgressTimer = setInterval(() => {
-      if (isPayment) {
+    if (isPayment) {
+      window.__resumeAppState.loaderRotateTimer = setInterval(() => {
+        idx = (idx + 1) % messages.length;
+        textEl.style.opacity = "0";
+        subtextEl.style.opacity = "0";
+        setTimeout(() => {
+          textEl.textContent    = messages[idx][0];
+          subtextEl.textContent = messages[idx][1];
+          textEl.style.opacity = "1";
+          subtextEl.style.opacity = "0.7";
+        }, 300);
+      }, 1800);
+      window.__resumeAppState.loaderProgressTimer = setInterval(() => {
         progress = Math.min(97, progress + Math.max(2, Math.round((98 - progress) * 0.18)));
-      } else {
-        progress = Math.min(98, progress + Math.max(1, Math.round((98 - progress) * 0.08)));
-      }
-      if (progressEl) progressEl.style.width = progress + "%";
-      if (progressLabelEl) progressLabelEl.textContent = progress + "%";
-    }, isPayment ? 280 : 900);
+        if (progressEl) progressEl.style.width = progress + "%";
+        if (progressLabelEl) progressLabelEl.textContent = progress + "%";
+      }, 280);
+    }
   }
+}
+
+function updateLoaderProgress(pct, text, subtext, options = {}) {
+  const o = document.querySelector(".loader-overlay");
+  if (!o) return;
+  const number = Number(pct);
+  const safePct = Number.isFinite(number) ? Math.max(0, Math.min(100, Math.floor(number))) : null;
+  const textEl = o.querySelector(".loader-text");
+  const subtextEl = o.querySelector(".loader-subtext");
+  const progressEl = o.querySelector(".loader-progress-fill");
+  const progressLabelEl = o.querySelector(".loader-progress-label");
+  if (textEl && text) textEl.textContent = text;
+  if (subtextEl && subtext) subtextEl.textContent = subtext;
+  if (safePct === null) return;
+
+  const setDisplayedProgress = (value) => {
+    window.__resumeAppState.loaderDisplayedProgress = value;
+    if (progressEl) progressEl.style.width = value + "%";
+    if (progressLabelEl) progressLabelEl.textContent = value + "%";
+  };
+
+  window.__resumeAppState.loaderProgressTarget = safePct;
+  const current = Math.max(0, Math.min(100, Number(window.__resumeAppState.loaderDisplayedProgress || 0)));
+  if (options.instant || safePct <= current) {
+    if (window.__resumeAppState.loaderProgressTimer) {
+      clearInterval(window.__resumeAppState.loaderProgressTimer);
+      window.__resumeAppState.loaderProgressTimer = null;
+    }
+    setDisplayedProgress(safePct);
+    return;
+  }
+
+  if (window.__resumeAppState.loaderProgressTimer) return;
+  window.__resumeAppState.loaderProgressTimer = setInterval(() => {
+    const target = Number(window.__resumeAppState.loaderProgressTarget || 0);
+    const shown = Math.max(0, Math.min(100, Number(window.__resumeAppState.loaderDisplayedProgress || 0)));
+    if (shown >= target) {
+      clearInterval(window.__resumeAppState.loaderProgressTimer);
+      window.__resumeAppState.loaderProgressTimer = null;
+      return;
+    }
+    setDisplayedProgress(Math.min(target, shown + 1));
+  }, 60);
 }
 function completeLoader(text, subtext) {
   if (window.__resumeAppState.loaderRotateTimer) {
@@ -115,6 +161,8 @@ function completeLoader(text, subtext) {
   const progressLabelEl = o.querySelector(".loader-progress-label");
   if (textEl) textEl.textContent = text || "已完成";
   if (subtextEl) subtextEl.textContent = subtext || "";
+  window.__resumeAppState.loaderDisplayedProgress = 100;
+  window.__resumeAppState.loaderProgressTarget = 100;
   if (progressEl) progressEl.style.width = "100%";
   if (progressLabelEl) progressLabelEl.textContent = "100%";
 }
@@ -152,6 +200,21 @@ function showLoaderError(text, subtext) {
   }
   if (progressLabelEl) progressLabelEl.textContent = "ERROR";
   if (dotsEl) dotsEl.style.display = "none";
+}
+
+function analysisJobStageText(stage) {
+  const stageTextMap = {
+    queued: "正在排队准备分析。",
+    scoring: "正在对照目标岗位 JD。",
+    building_report: "正在生成报告结构。",
+    format_internal_ats: "正在整理 ATS 诊断。",
+    retrieve_mentor_advice: "正在匹配导师建议。",
+    select_mentor_plan: "正在筛选最适合你的建议。",
+    format_reports: "正在生成诊断内容。",
+    format_public_premium: "正在整理可视化报告。",
+    save_report: "正在保存报告。",
+  };
+  return stageTextMap[stage] || "正在分析你的履历。";
 }
 
 function inferTargetJobFromJD(jdText) {
@@ -292,15 +355,16 @@ async function submitResume(form) {
   window.__resumeAppState.isSubmitting = true;
   if (btn) btn.disabled = true;
   try {
-    const resumeText = resumeTextInput || await readResumeFile(file);
+    const resumeText = resumeTextInput;
     const resumeName = file?.name || "手动粘贴的简历";
+    const scoringJobTitle = String(job || "").trim();
     const targetJob = normalizeTargetJobTitle(job || extractTargetJobFromJD(jd));
     const locale = (window.I18N && window.I18N.getLocale && window.I18N.getLocale()) || window.Store.get().locale || "zh-CN";
-    const analysisJob = await startAnalysisJobAPI(resumeText, targetJob || null, jd, file?.name || "pasted-resume.txt");
+    const analysisJob = await startAnalysisJobAPI(resumeText, scoringJobTitle || null, jd, file?.name || "", file);
     window.Store.set({
       locale,
       resumeName,
-      jobTitle: targetJob,
+      jobTitle: scoringJobTitle,
       targetLabel: targetJob,
       jdText: jd,
       resumeText,
@@ -395,6 +459,7 @@ function storeAnalysisJobResult(result) {
     mentorLogoPool: publicReport.lockedAdvicePreview?.mentorLogoPool || publicReport.freeMentorAdvice?.mentorLogoPool || null,
     analysisJobStatus: "completed",
     analysisCompletedAt: Date.now(),
+    analysisDebugSummary: result?.debugSummary || null,
   });
 }
 
@@ -411,7 +476,7 @@ async function waitForAnalysisJobAndRedirect(btn) {
     return;
   }
 
-  showLoader("正在扫描你的履历亮点…", "先找出最能打动 HR 的经历、技能和项目证据", true);
+  showLoader("正在读取分析进度…", "报告完成后将自动跳转。", false);
   try {
     const job = await getAnalysisJobAPI(current.analysisJobId);
     window.Store.set({ analysisJobStatus: job.status, analysisJobStage: job.stage });
@@ -426,6 +491,7 @@ async function waitForAnalysisJobAndRedirect(btn) {
       showLoaderError("分析失败", job.error ? "原因：" + job.error : "请返回首页重新提交，或改用简历文本粘贴方式。");
       return;
     }
+    updateLoaderProgress(job.progress || 0, analysisJobStageText(job.stage), "报告完成后将自动跳转。");
     setTimeout(() => waitForAnalysisJobAndRedirect(btn), 1200);
   } catch (err) {
     if (btn) btn.disabled = false;
@@ -566,6 +632,7 @@ if (document.readyState === "loading") {
 
 window.submitResume = submitResume;
 window.showLoader = showLoader;
+window.updateLoaderProgress = updateLoaderProgress;
 window.showLoaderError = showLoaderError;
 window.hideLoader = hideLoader;
 window.mockLogin = window.mockLogin || mockLogin;

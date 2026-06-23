@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { buildAtsReportPayload, scoreWithHostedFirst } from './atsHelpers';
+import { buildAtsReportPayload, scoreWithLocalAts } from './atsHelpers';
 
 const JOB_TTL_MS = 1000 * 60 * 60;
 const DEFAULT_JOB_TIMEOUT_MS = 90000;
@@ -13,6 +13,7 @@ function getJobTimeoutMs() {
 
 function publicJob(job) {
   if (!job) return null;
+  const result = job.status === 'completed' ? job.result : null;
   return {
     jobId: job.jobId,
     status: job.status,
@@ -22,7 +23,8 @@ function publicJob(job) {
     updatedAt: job.updatedAt,
     completedAt: job.completedAt || null,
     error: job.error || null,
-    result: job.status === 'completed' ? job.result : null,
+    result,
+    debugSummary: result?.debugSummary || null,
   };
 }
 
@@ -80,7 +82,7 @@ export function startAnalysisJob({ resumeText, jobTitle, jdText, fileName, userI
   Promise.resolve().then(async () => {
     const runJob = async () => {
       updateJob(job, { status: 'running', stage: 'scoring', progress: 25 });
-      const scoreResult = await scoreWithHostedFirst({
+      const scoreResult = await scoreWithLocalAts({
         resumeText,
         jobTitle,
         jdText,
@@ -91,7 +93,7 @@ export function startAnalysisJob({ resumeText, jobTitle, jdText, fileName, userI
       updateJob(job, { stage: 'building_report', progress: 65 });
       const report = await buildAtsReportPayload(
         scoreResult.rawScoreResult,
-        { resumeText, jobTitle, jdText, locale },
+        { resumeText, jobTitle, jdText, fileName: fileName || '', locale },
         userId,
         {
           locale,
@@ -115,6 +117,26 @@ export function startAnalysisJob({ resumeText, jobTitle, jdText, fileName, userI
           reportId: report.reportId,
           reportAccessToken: report.reportAccessToken,
           publicReport: report.publicReport,
+          debugSummary: {
+            scorerInput: {
+              resumeTextLength: String(resumeText || '').length,
+              resumeTextHash: crypto.createHash('sha256').update(String(resumeText || '')).digest('hex'),
+              jobTitle: jobTitle || '',
+              jdTextLength: String(jdText || '').length,
+              jdTextHash: crypto.createHash('sha256').update(String(jdText || '')).digest('hex'),
+              fileName: fileName || '',
+            },
+            rawAts: {
+              total: scoreResult.rawScoreResult.total,
+              dimensions: scoreResult.rawScoreResult.dimensions,
+              jobTitle: scoreResult.rawScoreResult.jobTitle || null,
+              hasJD: Boolean(scoreResult.rawScoreResult.hasJD),
+            },
+            publicReport: {
+              total: report.publicReport?.total,
+              dimensions: report.publicReport?.dimensions,
+            },
+          },
           locale,
           warning: scoreResult.warning || undefined,
           timestamp: new Date().toISOString(),

@@ -224,6 +224,51 @@ test("premium report preserves rewriteExample and legacy beforeAfter fields", ()
   });
 });
 
+test("premium report diversifies duplicate visible advice titles", () => {
+  const internal = {
+    priorityMissingKeywords: [],
+    structuredSuggestions: [],
+    keywordMatch: { categories: {} },
+    problemTags: [],
+  };
+  const duplicateItems = [
+    {
+      adviceId: "dup_exp",
+      title: "工作经历描述",
+      action: "Rewrite one experience bullet with action, method, and deliverable.",
+      targetSection: "experience",
+      canonicalActionFamily: "experience_evidence",
+      relatedProblemTags: ["weak_experience_keyword_evidence"],
+    },
+    {
+      adviceId: "dup_keyword",
+      title: "工作经历描述",
+      action: "Add JD keywords into one real project or work bullet.",
+      targetSection: "experience",
+      canonicalActionFamily: "jd_keyword_alignment",
+      relatedProblemTags: ["low_jd_keyword_match"],
+    },
+    {
+      adviceId: "dup_impact",
+      title: "工作经历描述",
+      action: "Add measurable scope, frequency, or result to the strongest bullet.",
+      targetSection: "experience",
+      canonicalActionFamily: "quantified_impact",
+      relatedProblemTags: ["low_measurable_results"],
+    },
+  ];
+  const report = formatPremiumUnlockedReport(internal, {
+    mentors: [{
+      mentorId: "m_dup",
+      mentorName: "Duplicate mentor",
+      adviceItems: duplicateItems,
+    }],
+    allAdviceItems: duplicateItems,
+  });
+  const titles = report.allAdviceItems.map((item) => item.title);
+  assert.strictEqual(new Set(titles).size, titles.length, titles.join(", "));
+});
+
 test("report logic renders example as rewrite-after fallback", () => {
   const source = fs.readFileSync(path.join(__dirname, "..", "public", "report-logic.js"), "utf8");
   assert.ok(/function buildRewriteExample/.test(source), "buildRewriteExample should exist");
