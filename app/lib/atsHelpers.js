@@ -269,7 +269,7 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
     reportAccessToken,
     publicReport,
     internalAtsResult,
-    mentorCandidates,
+    mentorCandidateSummary: reportData.mentorCandidates,
     freeAdvice: freeMentorPlan,
     paidAdvice,
     premiumReport,
