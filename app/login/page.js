@@ -243,7 +243,7 @@ export default function LoginPage() {
           if (typeof window.updateLoaderProgress === "function") {
             window.updateLoaderProgress(92, "æ­£åœ¨ç”¨å¤‡ç”¨é€šé“å®ŒæˆæŠ¥å‘Šã€‚", "æŠ¥å‘Šå®ŒæˆåŽå°†è‡ªåŠ¨è·³è½¬ã€‚");
           }
-          const publicReport = await scoreResumeAPI(s.resumeText, s.jobTitle || null, s.jdText || null, null);
+          const publicReport = await scoreResumeAPI(s.resumeText, s.jobTitle || null, s.jdText || null, null, s.resumeName || "");
           storeCompletedReport({
             success: true,
             publicReport,

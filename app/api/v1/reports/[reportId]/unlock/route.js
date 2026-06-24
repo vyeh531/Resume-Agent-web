@@ -3,6 +3,7 @@ import { formatPremiumUnlockedReport } from '../../../../../../src/ats/report-fo
 import { normalizeLocale } from '../../../../../../src/i18n/locale';
 import { retrieveInsiderTips } from '../../../../../../services/mentorAdviceRetrieval';
 import { hydrateStoredReportJsonForLocale } from '../../../../../lib/localeReports';
+import { ensurePendingReportSaved } from '../../../../../lib/pendingReports';
 
 function reportTokenFromRequest(request) {
   return (
@@ -32,10 +33,16 @@ export async function POST(request, { params: paramsPromise }) {
       bodyToken ||
       null;
 
-    const unlock = await db.validateReportUnlock(params.reportId, {
+    let unlock = await db.validateReportUnlock(params.reportId, {
       token,
       userId: request.headers.get('x-user-id') || null,
     });
+    if (!unlock.ok && unlock.error === 'REPORT_NOT_FOUND' && await ensurePendingReportSaved(params.reportId)) {
+      unlock = await db.validateReportUnlock(params.reportId, {
+        token,
+        userId: request.headers.get('x-user-id') || null,
+      });
+    }
     if (!unlock.ok) {
       return Response.json({ success: false, error: unlock.error }, { status: unlock.status || 403 });
     }

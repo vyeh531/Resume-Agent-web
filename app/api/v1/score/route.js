@@ -45,7 +45,7 @@ export async function POST(request) {
     });
     mark('local_ats');
     const rawScoreResult = scoreResult.rawScoreResult;
-    const report = await buildAtsReportPayload(rawScoreResult, { resumeText: resolvedText, jobTitle, jdText, locale }, userId, { locale });
+    const report = await buildAtsReportPayload(rawScoreResult, { resumeText: resolvedText, jobTitle, jdText, fileName, locale }, userId, { locale });
     mark('build_report');
 
     const payload = {

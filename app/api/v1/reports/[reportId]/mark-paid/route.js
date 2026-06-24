@@ -1,4 +1,5 @@
 import db from '../../../../../../database';
+import { ensurePendingReportSaved } from '../../../../../lib/pendingReports';
 
 function tokenFromRequest(request) {
   return (
@@ -24,10 +25,16 @@ export async function POST(request, { params: paramsPromise }) {
       }
     } catch { /* ignore body parse errors */ }
 
-    const access = await db.validateReportAccess(params.reportId, {
+    let access = await db.validateReportAccess(params.reportId, {
       token: tokenFromRequest(request) || bodyToken,
       userId: request.headers.get('x-user-id') || null,
     });
+    if (!access.ok && access.error === 'REPORT_NOT_FOUND' && await ensurePendingReportSaved(params.reportId)) {
+      access = await db.validateReportAccess(params.reportId, {
+        token: tokenFromRequest(request) || bodyToken,
+        userId: request.headers.get('x-user-id') || null,
+      });
+    }
     if (!access.ok) {
       return Response.json({ success: false, error: access.error }, { status: access.status || 403 });
     }

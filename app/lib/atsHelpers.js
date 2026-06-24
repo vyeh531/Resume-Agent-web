@@ -21,6 +21,7 @@ import { curateMentorAdvicePlan } from '../../services/adviceCurator';
 import { parsePDF, parseDocx } from '../../file-parser';
 import db from '../../database';
 import { normalizeLocale } from '../../src/i18n/locale';
+import { savePendingReportInBackground, stashPendingReport } from './pendingReports';
 
 export function normalizeScoringJobTitle(value = '') {
   const raw = String(value || '')
@@ -120,12 +121,6 @@ function logAdvicePlan(freeMentorPlan, premiumMentorPlan = [], coverageSummary =
     coveredProblemTags: coverageSummary.coveredProblemTags || [],
     uncoveredProblemTags: coverageSummary.uncoveredProblemTags || [],
   }));
-}
-
-async function saveAtsReportMeasured(reportData) {
-  const startedAt = Date.now();
-  await db.saveAtsReport(reportData);
-  return { status: 'saved', ms: Date.now() - startedAt };
 }
 
 export function logPublicAtsResponseForTesting(label, payload) {
@@ -253,7 +248,9 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
     resumeBullets,
   };
 
-  const persistence = await saveAtsReportMeasured(reportData);
+  stashPendingReport(reportData);
+  savePendingReportInBackground(reportId);
+  const persistence = { status: 'pending_background' };
   publicReport.persistenceStatus = persistence.status;
 
   console.log('[ATS Report Build Timing]', JSON.stringify({

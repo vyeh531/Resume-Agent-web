@@ -479,7 +479,8 @@ async function completeAnalysisWithScoreFallback(reason) {
     current.resumeText,
     current.jobTitle || null,
     current.jdText || null,
-    null
+    null,
+    current.resumeName || ""
   );
   storeAnalysisJobResult({
     success: true,

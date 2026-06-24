@@ -161,7 +161,7 @@ export default function AnalyzingPage() {
           });
           currentStageText = "æ­£åœ¨ç”¨å¤‡ç”¨é€šé“å®ŒæˆæŠ¥å‘Šã€‚";
           targetPct = Math.max(targetPct, 92);
-          const publicReport = await scoreResumeAPI(store.resumeText, store.jobTitle || null, store.jdText || null, null);
+          const publicReport = await scoreResumeAPI(store.resumeText, store.jobTitle || null, store.jdText || null, null, store.resumeName || "");
           storeCompletedReport({
             success: true,
             publicReport,

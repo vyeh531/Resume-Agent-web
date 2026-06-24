@@ -120,7 +120,7 @@ async function uploadAndParseDocx(file) {
 }
 
 // 调用 ATS 评分 API
-async function scoreResumeAPI(resumeText, jobTitle, jdText, resumeFile) {
+async function scoreResumeAPI(resumeText, jobTitle, jdText, resumeFile, fileName = "") {
   const useMultipart = Boolean(resumeFile);
   let requestBody;
   let requestHeaders;
@@ -131,6 +131,7 @@ async function scoreResumeAPI(resumeText, jobTitle, jdText, resumeFile) {
     if (resumeText) requestBody.append("resumeText", resumeText);
     if (jobTitle) requestBody.append("jobTitle", jobTitle);
     if (jdText) requestBody.append("jdText", jdText);
+    requestBody.append("fileName", fileName || resumeFile?.name || "");
     requestBody.append("locale", getAppLocale());
   } else {
     requestHeaders = { "Content-Type": "application/json" };
@@ -138,6 +139,7 @@ async function scoreResumeAPI(resumeText, jobTitle, jdText, resumeFile) {
       resumeText: resumeText,
       jobTitle: jobTitle || null,
       jdText: jdText || null,
+      fileName: fileName || "",
       locale: getAppLocale(),
     });
   }

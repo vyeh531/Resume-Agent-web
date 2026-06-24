@@ -1,6 +1,7 @@
 import db from '../../../../../../database';
 import { normalizeLocale } from '../../../../../../src/i18n/locale';
 import { hydrateStoredReportJsonForLocale } from '../../../../../lib/localeReports';
+import { ensurePendingReportSaved } from '../../../../../lib/pendingReports';
 
 function reportTokenFromRequest(request) {
   return (
@@ -13,10 +14,16 @@ function reportTokenFromRequest(request) {
 export async function GET(request, { params: paramsPromise }) {
   try {
     const params = await paramsPromise;
-    const access = await db.validateReportAccess(params.reportId, {
+    let access = await db.validateReportAccess(params.reportId, {
       token: reportTokenFromRequest(request),
       userId: request.headers.get('x-user-id') || null,
     });
+    if (!access.ok && access.error === 'REPORT_NOT_FOUND' && await ensurePendingReportSaved(params.reportId)) {
+      access = await db.validateReportAccess(params.reportId, {
+        token: reportTokenFromRequest(request),
+        userId: request.headers.get('x-user-id') || null,
+      });
+    }
     if (!access.ok) {
       return Response.json({ success: false, error: access.error }, { status: access.status || 403 });
     }
