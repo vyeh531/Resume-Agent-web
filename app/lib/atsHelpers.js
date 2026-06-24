@@ -250,7 +250,10 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
     publicReport,
     internalAtsResult,
     retrievalQuery,
-    mentorCandidates,
+    mentorCandidates: {
+      count: mentorCandidates.length,
+      debug: mentorCandidates.debug || {},
+    },
     freeAdvice: freeMentorPlan,
     paidAdvice,
     premiumReport,

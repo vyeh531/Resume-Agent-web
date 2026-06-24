@@ -541,6 +541,17 @@ function mockLogin(btn) {
   window.Store.set({ userId: "mock_" + Date.now(), loginAt: Date.now() });
   waitForAnalysisJobAndRedirect(btn);
 }
+async function waitForReportPersistence(reportId, reportAccessToken, locale) {
+  const maxAttempts = 16;
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const response = await fetch(`/api/v1/reports/${encodeURIComponent(reportId)}/public?reportAccessToken=${encodeURIComponent(reportAccessToken)}&locale=${encodeURIComponent(locale || "zh-CN")}`);
+    if (response.ok) return true;
+    const error = await response.json().catch(() => ({}));
+    if (error.error && error.error !== "REPORT_NOT_FOUND") throw new Error(error.error);
+    await new Promise((resolve) => setTimeout(resolve, attempt < 4 ? 500 : 1000));
+  }
+  return false;
+}
 function mockPayment(btn) {
   btn.disabled = true;
   showLoader("正在确认支付…", "正在校验支付状态与报告权限", true, { mode: "payment" });
@@ -548,6 +559,10 @@ function mockPayment(btn) {
     try {
       const s = window.Store.get();
       if (!s.reportId || !s.reportAccessToken) throw new Error("缺少报告解锁凭证");
+
+      updateLoaderProgress(72, "正在确认报告状态…", "如果报告刚生成，系统会先完成保存再解锁。");
+      const persisted = await waitForReportPersistence(s.reportId, s.reportAccessToken, s.locale || "zh-CN");
+      if (!persisted) throw new Error("报告还在保存中，请稍等几秒后重试。");
 
       const markResponse = await fetch(`/api/v1/reports/${encodeURIComponent(s.reportId)}/mark-paid`, {
         method: "POST",

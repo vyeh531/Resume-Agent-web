@@ -102,6 +102,8 @@ export default function LoginPage() {
         let loginClicked = false;
         let loginButton = null;
         let loginVisualPct = 8;
+        const loginStartedAt = Date.now();
+        let loginProgressTicker = null;
 
         function showLoginLoader(text, subtext, rotate) {
           if (typeof window.showLoader === "function") {
@@ -162,6 +164,25 @@ export default function LoginPage() {
           if (pctEl) pctEl.textContent = loginVisualPct;
           if (fillEl) fillEl.style.width = loginVisualPct + "%";
           if (statusEl && status) statusEl.textContent = status;
+        }
+
+        function startLoginProgressCreep() {
+          if (loginProgressTicker) return;
+          loginProgressTicker = setInterval(function(){
+            if (loginAnalysisReady || loginVisualPct >= 100) {
+              clearInterval(loginProgressTicker);
+              loginProgressTicker = null;
+              return;
+            }
+            const elapsed = (Date.now() - loginStartedAt) / 1000;
+            const creepTarget = Math.min(91, Math.floor(10 + elapsed * 2.2));
+            if (loginVisualPct < creepTarget) {
+              setLoginProgress(loginVisualPct + 1);
+              if (typeof window.updateLoaderProgress === "function") {
+                window.updateLoaderProgress(loginVisualPct, null, null);
+              }
+            }
+          }, 450);
         }
 
         function analysisStageText(stage) {
@@ -265,6 +286,7 @@ export default function LoginPage() {
         }
 
         async function pollLoginAnalysis() {
+          startLoginProgressCreep();
           if (typeof Store === "undefined" || typeof getAnalysisJobAPI !== "function") {
             setTimeout(pollLoginAnalysis, 300);
             return;

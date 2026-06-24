@@ -240,7 +240,9 @@ export default function AnalyzingPage() {
             return;
           }
           const elapsed = (Date.now() - startedAt) / 1000;
-          if (visualPct < targetPct) visualPct = Math.min(targetPct, visualPct + 1);
+          const creepTarget = Math.min(91, Math.floor(10 + elapsed * 2.2));
+          const smoothTarget = Math.max(targetPct, creepTarget);
+          if (visualPct < smoothTarget) visualPct = Math.min(smoothTarget, visualPct + 0.35);
           elapsedEl.textContent = Math.floor(elapsed);
           applyProgress(Math.floor(visualPct));
         }, 60);
