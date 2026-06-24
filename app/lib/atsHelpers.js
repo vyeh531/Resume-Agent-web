@@ -122,20 +122,10 @@ function logAdvicePlan(freeMentorPlan, premiumMentorPlan = [], coverageSummary =
   }));
 }
 
-function saveAtsReportDeferred(reportData) {
-  setTimeout(() => {
-    db.saveAtsReport(reportData)
-      .then(() => {
-        console.log('[ATS Report Save] completed in background', JSON.stringify({ reportId: reportData.reportId }));
-      })
-      .catch((error) => {
-        console.warn('[ATS Report Save] background failed', JSON.stringify({
-          reportId: reportData.reportId,
-          error: error.message,
-        }));
-      });
-  }, 0);
-  return { status: 'deferred' };
+async function saveAtsReportMeasured(reportData) {
+  const startedAt = Date.now();
+  await db.saveAtsReport(reportData);
+  return { status: 'saved', ms: Date.now() - startedAt };
 }
 
 export function logPublicAtsResponseForTesting(label, payload) {
@@ -263,9 +253,8 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
     resumeBullets,
   };
 
-  const persistence = saveAtsReportDeferred(reportData);
+  const persistence = await saveAtsReportMeasured(reportData);
   publicReport.persistenceStatus = persistence.status;
-  publicReport.persistenceWarning = 'Report persistence is running in the background.';
 
   console.log('[ATS Report Build Timing]', JSON.stringify({
     totalMs: Date.now() - startedAt,
