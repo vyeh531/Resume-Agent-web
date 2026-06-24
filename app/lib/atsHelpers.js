@@ -122,6 +122,22 @@ function logAdvicePlan(freeMentorPlan, premiumMentorPlan = [], coverageSummary =
   }));
 }
 
+function saveAtsReportDeferred(reportData) {
+  setTimeout(() => {
+    db.saveAtsReport(reportData)
+      .then(() => {
+        console.log('[ATS Report Save] completed in background', JSON.stringify({ reportId: reportData.reportId }));
+      })
+      .catch((error) => {
+        console.warn('[ATS Report Save] background failed', JSON.stringify({
+          reportId: reportData.reportId,
+          error: error.message,
+        }));
+      });
+  }, 0);
+  return { status: 'deferred' };
+}
+
 export function logPublicAtsResponseForTesting(label, payload) {
   if (process.env.LOG_ATS_PUBLIC_RESPONSE === 'false') return;
   const loggedPayload = {
@@ -209,7 +225,12 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
     locale,
   };
   mark('format_public_premium');
-  logAdvicePlan(freeMentorPlan, premiumMentorPlan, premiumReport.coverageSummary);
+  mark('save_report');
+  try {
+    logAdvicePlan(freeMentorPlan, premiumMentorPlan, premiumReport.coverageSummary);
+  } catch (error) {
+    console.warn('[Advice Plan] log failed', error.message);
+  }
   const reportId = createReportId();
   const reportAccessToken = createReportAccessToken();
   const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 14).toISOString();
@@ -217,7 +238,7 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
   const resumeText = input?.resumeText || null;
   const resumeBullets = resumeText ? db.extractBullets(resumeText) : [];
 
-  await db.saveAtsReport({
+  const reportData = {
     reportId,
     reportAccessToken,
     expiresAt,
@@ -237,14 +258,18 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
     userId,
     resumeText,
     resumeBullets,
-  });
-  mark('save_report');
+  };
+
+  const persistence = saveAtsReportDeferred(reportData);
+  publicReport.persistenceStatus = persistence.status;
+  publicReport.persistenceWarning = 'Report persistence is running in the background.';
 
   console.log('[ATS Report Build Timing]', JSON.stringify({
     totalMs: Date.now() - startedAt,
     timings: Object.fromEntries(timings),
     candidateCount: mentorCandidates.length,
     reportContext: input?.jobTitle || rawScoreResult.jobTitle || 'unknown',
+    persistence,
   }));
 
   return {
@@ -257,6 +282,7 @@ export async function buildAtsReportPayload(rawScoreResult, input, userId = null
     paidAdvice,
     premiumReport,
     retrievalStatus,
+    persistence,
   };
 }
 
