@@ -1610,7 +1610,28 @@ button{ font-family: inherit; }
   padding: 28px 20px;
   text-align: center;
 }
-.fu-icon { font-size: 28px; margin-bottom: 8px; }
+.fu-icon,
+.fu-icon-done{
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(180,126,219,.18);
+  color: var(--jade);
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.fu-icon{ margin-bottom: 8px; }
+.fu-icon::before,
+.fu-icon-done::before{
+  content: "";
+  width: 17px;
+  height: 20px;
+  display: block;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 28'><path d='M5 2h9l5 5v19H5z'/><path d='M14 2v6h5' fill='none' stroke='white' stroke-width='2'/><path d='M8 14h8M8 18h8M8 22h5' fill='none' stroke='white' stroke-width='1.7' stroke-linecap='round'/></svg>") center / contain no-repeat;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 28'><path d='M5 2h9l5 5v19H5z'/><path d='M14 2v6h5' fill='none' stroke='white' stroke-width='2'/><path d='M8 14h8M8 18h8M8 22h5' fill='none' stroke='white' stroke-width='1.7' stroke-linecap='round'/></svg>") center / contain no-repeat;
+}
 .fu-main { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
 .fu-sub  { font-size: 12px; color: var(--ink-mute); }
 

@@ -216,7 +216,7 @@ function DesktopReportLayout() {
       <div className="page report-page">
         <div className="brandbar">
           <div className="brand">
-            <img src="/logo/logo%20banner_no_bg.png" alt="MentorX 蔓藤教育" className="brand-img" />
+            <img src="/logo/logo%20banner_no_bg.png" alt="EdAIX" className="brand-img" />
           </div>
           <div className="brand-meta" style={{fontSize:'10px',letterSpacing:'.08em'}}>完整报告</div>
         </div>
@@ -434,7 +434,7 @@ function DesktopReportLayout() {
         <hr className="divider" />
 
         <div className="footnote">
-          报告由 MentorX × AI 联合生成 · 内容仅供参考，不构成 Offer 承诺<br/>
+          报告由 EdAIX 导师 + AI 联合生成 · 内容仅供参考，不构成 Offer 承诺<br/>
           Powered by <span>Vibe ID</span> · 蔓藤教育 · 2015 至今 · 1,300+ 大厂导师
         </div>
       </div>
@@ -571,7 +571,7 @@ function MobileReportLayout() {
       <div className="page mobile-report-page">
         <div className="brandbar">
           <div className="brand">
-            <img src="/logo/logo%20banner_no_bg.png" alt="MentorX 蔓藤教育" className="brand-img" />
+            <img src="/logo/logo%20banner_no_bg.png" alt="EdAIX" className="brand-img" />
           </div>
           <div className="brand-meta" style={{fontSize:'10px',letterSpacing:'.08em'}}>完整报告</div>
         </div>
@@ -724,7 +724,7 @@ function MobileReportLayout() {
         </section>
 
         <div className="footnote">
-          报告由 MentorX × AI 联合生成 · 内容仅供参考，不构成 Offer 承诺<br/>
+          报告由 EdAIX 导师 + AI 联合生成 · 内容仅供参考，不构成 Offer 承诺<br/>
           Powered by <span>Vibe ID</span> · 蔓藤教育 · 2015 至今 · 1,300+ 大厂导师
         </div>
       </div>
@@ -757,7 +757,7 @@ export default function ReportPage() {
     <>
       {isMobile ? <MobileReportLayout /> : <DesktopReportLayout />}
       <Script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" strategy="lazyOnload" />
-      <Script src="/report-logic.js?v=edaix-purple-20260612-1" strategy="afterInteractive" />
+      <Script src="/report-logic.js?v=report-bilingual-20260626-2" strategy="afterInteractive" />
     </>
   );
 }

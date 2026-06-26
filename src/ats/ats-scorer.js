@@ -2,6 +2,14 @@
 
 const { findRoleDictionaryEntry, inferCanonicalRoleFamily, roleToProfile } = require("./role-dictionary");
 const { analyzeMarketingResume } = require("./marketing-lens");
+const {
+  FULL_STACK_ROLE,
+  SOFTWARE_ROLE_FAMILY,
+  expandTargetRoles,
+  hasFullStackSignal,
+  normalizeTargetRole,
+  roleFamilyForTargetRole,
+} = require("./role-normalization");
 
 const STOP_WORDS = new Set([
   "the", "a", "an", "and", "or", "of", "in", "to", "for", "is", "are", "be",
@@ -198,6 +206,7 @@ const ROLE_FAMILIES = [
   { role: "machine_learning", terms: ["machine learning engineer", "ml engineer", "mle", "machine learning", "deep learning", "computer vision", "model training", "model deployment", "pytorch", "tensorflow"] },
   { role: "ai_engineer", terms: ["ai engineer", "artificial intelligence engineer", "llm engineer", "generative ai", "prompt engineering", "rag", "vector database", "langchain"] },
   { role: "design_creative", terms: ["graphic designer", "visual designer", "ui/ux designer", "ux designer", "ui designer", "product designer", "brand designer", "portfolio", "figma", "adobe"] },
+  { role: "full_stack_engineer", terms: ["full stack engineer", "full-stack engineer", "full stack developer", "full-stack developer", "full stack", "fullstack", "全栈", "全棧"] },
   { role: "software_engineer", terms: ["software engineer", "swe", "backend", "frontend", "full stack", "full-stack", "api", "microservice", "react", "node", "java", "python"] },
   { role: "data_analyst", terms: ["data analyst", "business analyst", "analytics", "sql", "tableau", "power bi", "excel", "dashboard"] },
   { role: "data_scientist", terms: ["data scientist", "machine learning", "ml", "modeling", "experiment", "statistics", "python", "pandas"] },
@@ -1320,6 +1329,9 @@ function countWeakPhrases(text) {
 
 function detectRoleFamily(text) {
   const lower = normalizeText(text).toLowerCase();
+  if (hasFullStackSignal(text)) {
+    return { role: FULL_STACK_ROLE, hits: 1, terms: ["full_stack"], targetRoleFamily: SOFTWARE_ROLE_FAMILY };
+  }
   let best = { role: "general", hits: 0, terms: [] };
   for (const family of ROLE_FAMILIES) {
     const hits = family.terms.filter((term) => lower.includes(term));
@@ -1344,6 +1356,7 @@ function detectRoleFamilyFromExplicitTitle(candidate = "") {
 
 function inferExplicitTitleRoleFamily(title = "") {
   const lower = normalizeText(title).toLowerCase();
+  if (hasFullStackSignal(title)) return FULL_STACK_ROLE;
   if (/\bmanagement trainee\b/.test(lower) || /管培生/.test(title)) return "management_trainee";
   return null;
 }
@@ -2465,14 +2478,16 @@ function detectSeniority(expEntries) {
 
 function buildProfile({ expEntries, isRecentGraduate, targetRole, resumeRole, hasWillingToRelocate, allChina, hasAnyChinaExp }) {
   const seniority = detectSeniority(expEntries);
+  const normalizedTargetRole = normalizeTargetRole(targetRole.role) || targetRole.role;
+  const roleFamily = roleFamilyForTargetRole(normalizedTargetRole, targetRole.targetRoleFamily || targetRole.role);
   let candidateType;
   if (isRecentGraduate || seniority === "entry_level") candidateType = "early_career";
   else if (targetRole.role !== "general" && resumeRole.role !== targetRole.role) candidateType = "career_changer";
   else candidateType = "experienced";
   const market = allChina ? "china" : hasAnyChinaExp ? "mixed" : "us";
   return {
-    roleFamily: targetRole.role,
-    targetRole: targetRole.role,
+    roleFamily,
+    targetRole: normalizedTargetRole,
     seniority,
     candidateType,
     market,
@@ -2723,6 +2738,7 @@ function buildRetrievalQuery(profile, problemTags, priorityMissingKeywords) {
     queryText,
     filters: {
       roleFamily: [profile.roleFamily, "universal"],
+      targetRoles: expandTargetRoles(profile.targetRole, profile.roleFamily),
       seniority: seniorityExpansion[profile.seniority] || ["universal"]
     }
   };

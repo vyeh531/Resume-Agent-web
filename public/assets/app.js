@@ -20,17 +20,17 @@ window.Store = window.Store || {
 };
 
 const ANALYSIS_MESSAGES = [
-  ["正在扫描你的履历亮点…", "先找出最能打动 HR 的经历、技能和项目证据"],
-  ["正在对照目标岗位 JD…", "逐项比对关键词、职责语言和岗位匹配信号"],
-  ["正在匹配大厂导师经验…", "从真实辅导案例里筛选与你背景最接近的优化方向"],
-  ["正在定位高优先级问题…", "优先抓出最影响通过率的格式、关键词和表达短板"],
-  ["正在生成你的初步诊断…", "把最关键的简历风险和提升机会整理成清晰报告"],
+  ["Scanning your resume highlights...", "Finding the experience, skills, and project evidence most likely to matter to recruiters."],
+  ["Comparing your resume with the target JD...", "Checking keywords, responsibility language, and role-match signals line by line."],
+  ["Matching relevant mentor experience...", "Selecting practical improvement patterns from real coaching cases close to your background."],
+  ["Prioritizing the highest-impact issues...", "Finding the formatting, keyword, and phrasing gaps most likely to affect screening."],
+  ["Generating your initial diagnosis...", "Turning the key resume risks and opportunities into a clear report."],
 ];
 const PAYMENT_MESSAGES = [
-  ["正在为你匹配知名大厂导师…", "优先筛选与你目标岗位最相关的真实辅导经验"],
-  ["正在解锁大厂级简历视角…", "从 HR 初筛、ATS 命中和导师建议里抓出最该改的地方"],
-  ["正在生成你的高分改写路线…", "把关键词、经历亮点和岗位语言整理成更像 offer 简历的版本"],
-  ["正在点亮完整报告…", "完整诊断马上就绪，准备查看你的专属提升方案"],
+  ["Matching your full mentor plan...", "Prioritizing real coaching experience most relevant to your target role."],
+  ["Unlocking senior resume review angles...", "Combining recruiter screening, ATS coverage, and mentor recommendations."],
+  ["Generating your high-score rewrite route...", "Organizing keywords, proof points, and role language into a stronger resume plan."],
+  ["Preparing the full report...", "Your complete diagnosis is almost ready."],
 ];
 
 function showLoader(text, subtext, rotate, options = {}) {
@@ -38,7 +38,7 @@ function showLoader(text, subtext, rotate, options = {}) {
   if (!o) {
     o = document.createElement("div");
     o.className = "loader-overlay";
-    o.innerHTML = '<div class="loader-container"><div class="loader-badge">MentorX premium matching</div><div class="loader-dots"><span></span><span></span><span></span></div><div class="loader-text"></div><div class="loader-subtext"></div><div class="loader-progress"><div class="loader-progress-fill"></div></div><div class="loader-progress-label">0%</div></div>';
+    o.innerHTML = '<div class="loader-container"><div class="loader-badge">EdAIX premium matching</div><div class="loader-dots"><span></span><span></span><span></span></div><div class="loader-text"></div><div class="loader-subtext"></div><div class="loader-progress"><div class="loader-progress-fill"></div></div><div class="loader-progress-label">0%</div></div>';
     document.body.appendChild(o);
     const s = document.createElement("style");
     s.textContent = ".loader-overlay{position:fixed;inset:0;background:radial-gradient(circle at 50% 38%,rgba(180,126,219,.24),transparent 34%),rgba(31,23,68,.88);backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;z-index:9999;opacity:0;pointer-events:none;transition:opacity .3s}.loader-overlay.show{opacity:1;pointer-events:auto}.loader-container{text-align:center;color:#f8fafc;padding:30px 32px 28px;max-width:380px;width:min(380px,calc(100% - 40px));border:1px solid rgba(255,255,255,.13);border-radius:24px;background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.045));box-shadow:0 30px 80px -34px rgba(0,0,0,.85)}.loader-badge{display:inline-flex;align-items:center;justify-content:center;margin:0 auto 18px;padding:6px 10px;border-radius:999px;background:rgba(180,126,219,.18);border:1px solid rgba(180,126,219,.42);color:#B47EDB;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-family:ui-monospace,Menlo,Consolas,monospace}.loader-dots{display:flex;gap:10px;justify-content:center;margin-bottom:22px}.loader-dots span{width:11px;height:11px;border-radius:50%;background:#B47EDB;box-shadow:0 0 18px rgba(180,126,219,.45);animation:ldBounce 1.4s infinite ease-in-out both}.loader-dots span:nth-child(1){animation-delay:-.32s}.loader-dots span:nth-child(2){animation-delay:-.16s}@keyframes ldBounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}.loader-text{font-size:20px;font-weight:800;margin-bottom:10px;transition:opacity .35s;color:#FFFFFF;letter-spacing:0;line-height:1.25}.loader-subtext{font-size:14px;color:#D9D1EA;line-height:1.6;transition:opacity .35s;min-height:44px}.loader-progress{height:8px;border-radius:999px;background:rgba(255,255,255,.14);overflow:hidden;margin:22px auto 8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}.loader-progress-fill{height:100%;width:0%;border-radius:inherit;background:linear-gradient(90deg,#5333A6,#7A52C5,#B47EDB);transition:width .45s ease;position:relative}.loader-progress-fill::after{content:\"\";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);animation:ldShimmer 1.35s linear infinite}@keyframes ldShimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}.loader-progress-label{font-size:11px;color:#D9D1EA;font-family:ui-monospace,Menlo,Consolas,monospace}";
@@ -159,7 +159,7 @@ function completeLoader(text, subtext) {
   const subtextEl = o.querySelector(".loader-subtext");
   const progressEl = o.querySelector(".loader-progress-fill");
   const progressLabelEl = o.querySelector(".loader-progress-label");
-  if (textEl) textEl.textContent = text || "已完成";
+  if (textEl) textEl.textContent = text || "Complete";
   if (subtextEl) subtextEl.textContent = subtext || "";
   window.__resumeAppState.loaderDisplayedProgress = 100;
   window.__resumeAppState.loaderProgressTarget = 100;
@@ -180,7 +180,7 @@ function hideLoader() {
 }
 
 function showLoaderError(text, subtext) {
-  showLoader(text || "分析失败", subtext || "请返回首页重新提交，或改用简历文本粘贴方式。", false);
+  showLoader(text || "Analysis failed", subtext || "Please return to the home page and submit again, or paste your resume text instead.", false);
   if (window.__resumeAppState.loaderRotateTimer) {
     clearInterval(window.__resumeAppState.loaderRotateTimer);
     window.__resumeAppState.loaderRotateTimer = null;
@@ -204,17 +204,34 @@ function showLoaderError(text, subtext) {
 
 function analysisJobStageText(stage) {
   const stageTextMap = {
-    queued: "正在排队准备分析。",
-    scoring: "正在对照目标岗位 JD。",
-    building_report: "正在生成报告结构。",
-    format_internal_ats: "正在整理 ATS 诊断。",
-    retrieve_mentor_advice: "正在匹配导师建议。",
-    select_mentor_plan: "正在筛选最适合你的建议。",
-    format_reports: "正在生成诊断内容。",
-    format_public_premium: "正在整理可视化报告。",
-    save_report: "正在保存报告。",
+    queued: "Queueing your analysis.",
+    scoring: "Comparing your resume with the target JD.",
+    building_report: "Building the report structure.",
+    format_internal_ats: "Preparing the ATS diagnosis.",
+    retrieve_mentor_advice: "Matching mentor recommendations.",
+    select_mentor_plan: "Selecting the most relevant recommendations.",
+    format_reports: "Generating diagnosis content.",
+    format_public_premium: "Preparing the visual report.",
+    save_report: "Saving the report.",
   };
-  return stageTextMap[stage] || "正在分析你的履历。";
+  return stageTextMap[stage] || "Analyzing your resume.";
+}
+
+function displayAnalysisProgress(startedAt, backendPct) {
+  const elapsed = Math.max(0, (Date.now() - Number(startedAt || Date.now())) / 1000);
+  const points = [[0,3], [6,14], [14,30], [24,52], [36,72], [50,88], [70,94]];
+  let timeTarget = 94;
+  for (let i = 1; i < points.length; i++) {
+    const prev = points[i - 1];
+    const next = points[i];
+    if (elapsed <= next[0]) {
+      const ratio = Math.max(0, Math.min(1, (elapsed - prev[0]) / (next[0] - prev[0])));
+      timeTarget = prev[1] + (next[1] - prev[1]) * ratio;
+      break;
+    }
+  }
+  const safeBackend = Math.max(0, Math.min(100, Number(backendPct || 0)));
+  return safeBackend >= 96 ? safeBackend : Math.max(timeTarget, Math.min(safeBackend, timeTarget + 8));
 }
 
 function inferTargetJobFromJD(jdText) {
@@ -347,16 +364,16 @@ async function submitResume(form) {
   const jd       = form.elements["jd"].value.trim();
   const errorBox = form.querySelector(".form-error");
   const btn      = form.querySelector('button[type="submit"]');
-  if (inputMode === "text" && !resumeTextInput) { errorBox.textContent = "请先粘贴简历文本"; errorBox.classList.add("show"); return false; }
-  if (inputMode !== "text" && !file) { errorBox.textContent = "请先上传简历文件，或切换为文字输入简历"; errorBox.classList.add("show"); return false; }
-  if (!file && !pastedResumeText) { errorBox.textContent = "请先上传简历文件，或直接粘贴简历文本"; errorBox.classList.add("show"); return false; }
-  if (!job && !jd) { errorBox.textContent = "请填写目标岗位或粘贴目标岗位 JD，二选一即可"; errorBox.classList.add("show"); return false; }
+  if (inputMode === "text" && !resumeTextInput) { errorBox.textContent = "Please paste your resume text first."; errorBox.classList.add("show"); return false; }
+  if (inputMode !== "text" && !file) { errorBox.textContent = "Please upload a resume file, or switch to paste resume text."; errorBox.classList.add("show"); return false; }
+  if (!file && !pastedResumeText) { errorBox.textContent = "Please upload a resume file or paste your resume text."; errorBox.classList.add("show"); return false; }
+  if (!job && !jd) { errorBox.textContent = "Please select a target role or paste a target job description."; errorBox.classList.add("show"); return false; }
   errorBox.classList.remove("show");
   window.__resumeAppState.isSubmitting = true;
   if (btn) btn.disabled = true;
   try {
     const resumeText = resumeTextInput;
-    const resumeName = file?.name || "手动粘贴的简历";
+    const resumeName = file?.name || "Pasted resume text";
     const scoringJobTitle = String(job || "").trim();
     const targetJob = normalizeTargetJobTitle(job || extractTargetJobFromJD(jd));
     const locale = (window.I18N && window.I18N.getLocale && window.I18N.getLocale()) || window.Store.get().locale || "zh-CN";
@@ -471,9 +488,9 @@ async function completeAnalysisWithScoreFallback(reason) {
     analysisFallbackReason: reason || "job_unavailable",
     analysisJobStatus: "fallback_running",
   });
-  showLoader("正在完成分析…", "分析任务连接中断，正在用备用通道生成报告。", false);
+  showLoader("Completing the analysis...", "The analysis job was interrupted, so we are generating the report through the fallback path.", false);
   if (typeof window.updateLoaderProgress === "function") {
-    window.updateLoaderProgress(92, "正在用备用通道完成报告。", "报告完成后将自动跳转。");
+    window.updateLoaderProgress(92, "Completing the report through the fallback path.", "You will be redirected when the report is ready.");
   }
   const publicReport = await scoreResumeAPI(
     current.resumeText,
@@ -489,7 +506,7 @@ async function completeAnalysisWithScoreFallback(reason) {
     reportAccessToken: publicReport.reportAccessToken || null,
     locale: current.locale || publicReport.locale || "zh-CN",
   });
-  showLoader("诊断完成！", "报告已生成，正在进入结果页…");
+  showLoader("Diagnosis complete!", "The report is ready. Redirecting to results...");
   setTimeout(() => { window.location.href = "/result"; }, 500);
   return true;
 }
@@ -497,33 +514,33 @@ async function completeAnalysisWithScoreFallback(reason) {
 async function waitForAnalysisJobAndRedirect(btn) {
   const current = window.Store.get();
   if (current.reportId && current.atsResult) {
-    showLoader("诊断完成！", "报告已生成，正在进入结果页…");
+    showLoader("Diagnosis complete!", "The report is ready. Redirecting to results...");
     setTimeout(() => { window.location.href = "/result"; }, 500);
     return;
   }
   if (!current.analysisJobId || typeof getAnalysisJobAPI !== "function") {
     if (await completeAnalysisWithScoreFallback("missing_job_api")) return;
-    showLoaderError("分析任务未启动", "请返回首页重新提交，或改用简历文本粘贴方式。");
+    showLoaderError("Analysis did not start", "Please return to the home page and submit again, or paste your resume text instead.");
     if (btn) btn.disabled = false;
     return;
   }
 
-  showLoader("正在读取分析进度…", "报告完成后将自动跳转。", false);
+  showLoader("Reading analysis progress...", "You will be redirected when the report is ready.", false);
   try {
     const job = await getAnalysisJobAPI(current.analysisJobId);
     window.Store.set({ analysisJobStatus: job.status, analysisJobStage: job.stage });
     if (job.status === "completed" && job.result) {
       storeAnalysisJobResult(job.result);
-      showLoader("诊断完成！", "报告已生成，正在进入结果页…");
+      showLoader("Diagnosis complete!", "The report is ready. Redirecting to results...");
       setTimeout(() => { window.location.href = "/result"; }, 500);
       return;
     }
     if (job.status === "failed") {
       if (btn) btn.disabled = false;
-      showLoaderError("分析失败", job.error ? "原因：" + job.error : "请返回首页重新提交，或改用简历文本粘贴方式。");
+      showLoaderError("Analysis failed", job.error ? "Reason: " + job.error : "Please return to the home page and submit again, or paste your resume text instead.");
       return;
     }
-    updateLoaderProgress(job.progress || 0, analysisJobStageText(job.stage), "报告完成后将自动跳转。");
+    updateLoaderProgress(displayAnalysisProgress(current.analysisJobStartedAt, job.progress), analysisJobStageText(job.stage), "You will be redirected when the report is ready.");
     setTimeout(() => waitForAnalysisJobAndRedirect(btn), 1200);
   } catch (err) {
     if (err?.code === "JOB_NOT_FOUND" || err?.message === "JOB_NOT_FOUND") {
@@ -531,9 +548,9 @@ async function waitForAnalysisJobAndRedirect(btn) {
     }
     if (btn) btn.disabled = false;
     const message = err?.code === "JOB_NOT_FOUND"
-      ? "分析任务已中断，请返回首页重新提交。"
-      : (err?.message || "无法确认分析状态，请返回首页重新提交。");
-    showLoaderError("无法确认分析状态", message);
+      ? "The analysis job was interrupted. Please return to the home page and submit again."
+      : (err?.message || "Could not confirm analysis status. Please return to the home page and submit again.");
+    showLoaderError("Could not confirm analysis status", message);
   }
 }
 
@@ -555,15 +572,15 @@ async function waitForReportPersistence(reportId, reportAccessToken, locale) {
 }
 function mockPayment(btn) {
   btn.disabled = true;
-  showLoader("正在确认支付…", "正在校验支付状态与报告权限", true, { mode: "payment" });
+  showLoader("Confirming payment...", "Checking payment status and report access.", true, { mode: "payment" });
   setTimeout(async () => {
     try {
       const s = window.Store.get();
-      if (!s.reportId || !s.reportAccessToken) throw new Error("缺少报告解锁凭证");
+      if (!s.reportId || !s.reportAccessToken) throw new Error("Missing report unlock credentials.");
 
-      updateLoaderProgress(72, "正在确认报告状态…", "如果报告刚生成，系统会先完成保存再解锁。");
+      updateLoaderProgress(72, "Confirming report status...", "If the report was just generated, we will finish saving it before unlocking.");
       const persisted = await waitForReportPersistence(s.reportId, s.reportAccessToken, s.locale || "zh-CN");
-      if (!persisted) throw new Error("报告还在保存中，请稍等几秒后重试。");
+      if (!persisted) throw new Error("The report is still being saved. Please wait a few seconds and try again.");
 
       const markResponse = await fetch(`/api/v1/reports/${encodeURIComponent(s.reportId)}/mark-paid`, {
         method: "POST",
@@ -572,7 +589,7 @@ function mockPayment(btn) {
       });
       if (!markResponse.ok) {
         const error = await markResponse.json().catch(() => ({}));
-        throw new Error(error.error || "支付状态更新失败");
+        throw new Error(error.error || "Payment status update failed.");
       }
 
       const unlockResponse = await fetch(`/api/v1/reports/${encodeURIComponent(s.reportId)}/unlock`, {
@@ -582,7 +599,7 @@ function mockPayment(btn) {
       });
       if (!unlockResponse.ok) {
         const error = await unlockResponse.json().catch(() => ({}));
-        throw new Error(error.error || "完整报告解锁失败");
+        throw new Error(error.error || "Full report unlock failed.");
       }
 
       const unlocked = await unlockResponse.json();
@@ -602,12 +619,12 @@ function mockPayment(btn) {
         mentorLogoPool: premiumReport.mentorLogoPool || s.mentorLogoPool || null,
         companyInsiderTips: premiumReport.companyInsiderTips || [],
       });
-      completeLoader("解锁完成！", "完整报告已生成，正在进入报告页…");
+      completeLoader("Unlock complete!", "The full report is ready. Redirecting to report...");
       setTimeout(() => { window.location.href = "/report"; }, 350);
     } catch (err) {
       hideLoader();
       btn.disabled = false;
-      alert(err.message || "支付确认失败，请重试");
+      alert(err.message || "Payment confirmation failed. Please try again.");
     }
   }, 1800);
 }
@@ -629,7 +646,7 @@ function buildMarkdown() {
   const lines = [];
   lines.push("# " + (st.school || "Resume") + " Diagnosis");
   lines.push("> Target: **" + (s.jobTitle || "") + "**");
-  lines.push("> Source: MentorX x Vibe ID");
+  lines.push("> Source: EdAIX x Vibe ID");
   lines.push("");
   lines.push("## ATS Score");
   lines.push("- ATS: " + (sc.ats || "N/A") + "%");
@@ -644,7 +661,7 @@ function exportReport() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "MentorX-" + new Date().toISOString().slice(0,10) + ".md";
+  a.download = "EdAIX-" + new Date().toISOString().slice(0,10) + ".md";
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(() => URL.revokeObjectURL(url), 1000);
   toast("Report downloaded");

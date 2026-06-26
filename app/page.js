@@ -7,87 +7,91 @@ export default function HomePage() {
       <div className="page home-page">
         <div className="brandbar">
           <div className="brand">
-            <img src="/logo/logo%20banner_no_bg.png" alt="MentorX 蔓藤教育" className="brand-img" />
+            <img src="/logo/logo%20banner_no_bg.png" alt="EdAIX" className="brand-img" />
           </div>
           <div className="brand-meta" style={{fontSize:'10px',letterSpacing:'.08em'}}>Version: Beta</div>
         </div>
 
         <section className="hero fade-in">
-          <div className="seal"><div className="seal-inner">求职<br/>必胜</div></div>
-          <div className="hero-kicker"><span className="dot"></span> 留学求职专属 · 30 秒诊断</div>
-          <h1>简历石沉大海?<br/><em>大厂导师 × 智慧核心</em><br/>联合帮你<span className="underline">升级</span>简历。</h1>
-          <p className="lede">1,300+ 大厂导师实战经验 × AI 精准分析,30 秒拿到可落地的优化方案。</p>
+          <div className="seal"><div className="seal-inner">Offer<br/>Ready</div></div>
+          <div className="hero-kicker"><span className="dot"></span> International career search - 30-second diagnosis</div>
+          <h1>
+            <span className="hero-line">Resume getting ignored?</span>
+            <em className="hero-line">EdAIX mentors x AI</em>
+            <span className="hero-line">Make it <span className="underline">interview-ready</span>.</span>
+          </h1>
+          <p className="lede">1,300+ industry mentors and AI-powered analysis. Get a practical resume improvement plan in 30 seconds.</p>
           <div className="hero-proof">
-            <div><strong>1,300+</strong><span>大厂导师</span></div>
-            <div><strong>30,000+</strong><span>真实辅导样本</span></div>
-            <div><strong>30s</strong><span>初步诊断</span></div>
+            <div><strong>1,300+</strong><span>Industry mentors</span></div>
+            <div><strong>30,000+</strong><span>Real coaching cases</span></div>
+            <div><strong>30s</strong><span>Initial diagnosis</span></div>
           </div>
         </section>
 
         <section className="section upload-section">
           <div className="panel-kicker">START DIAGNOSIS</div>
-          <h2 className="section-title">把简历交给大厂导师</h2>
+          <h2 className="section-title">Let EdAIX mentors review your resume</h2>
           <form className="card" onSubmit={(e) => { e.preventDefault(); if (window.submitResume) window.submitResume(e.currentTarget); }} noValidate>
             <div className="input-group resume-source-group">
-              <label className="input-label">上传简历</label>
+              <label className="input-label">Resume</label>
               <div className="resume-source-toggle" role="radiogroup" aria-label="resume input mode">
                 <label className="resume-source-option">
                   <input type="radio" name="resumeInputMode" value="file" defaultChecked />
                   <span className="resume-source-radio" aria-hidden="true"></span>
-                  <span>上传档案</span>
+                  <span>Upload file</span>
                 </label>
                 <label className="resume-source-option">
                   <input type="radio" name="resumeInputMode" value="text" />
                   <span className="resume-source-radio" aria-hidden="true"></span>
-                  <span>文字输入简历</span>
+                  <span>Paste resume text</span>
                 </label>
               </div>
               <div className="resume-source-panel" data-resume-source-panel="file">
-              <label className="file-upload" id="fileUploadLabel">
-                <input type="file" name="resume" id="resumeFileInput" accept=".pdf,.doc,.docx,.txt,text/plain" />
-                <div className="fu-empty" id="fuEmpty">
-                  <div className="fu-icon">📄</div>
-                  <div className="fu-main">点击或拖拽上传简历</div>
-                  <div className="fu-sub">PDF · Word (.docx/.doc) · 纯文本 (.txt)</div>
-                </div>
-                <div className="fu-success" id="fuSuccess" style={{display:'none'}}>
-                  <div className="fu-icon-done" style={{width:36,height:36,borderRadius:10,background:'rgba(180,126,219,.18)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,fontSize:18}}>📄</div>
-                  <div className="fu-info" style={{flex:1,minWidth:0}}>
-                    <div className="fu-filename" id="fuFilename" style={{fontWeight:600,fontSize:13,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}></div>
-                    <div className="fu-meta" id="fuMeta" style={{fontSize:12,color:'var(--ink-soft)',marginTop:2}}></div>
+                <label className="file-upload" id="fileUploadLabel">
+                  <input type="file" name="resume" id="resumeFileInput" accept=".pdf,.doc,.docx,.txt,text/plain" />
+                  <div className="fu-empty" id="fuEmpty">
+                    <div className="fu-icon" aria-hidden="true"></div>
+                    <div className="fu-main">Click or drag to upload your resume</div>
+                    <div className="fu-sub">PDF - Word (.docx/.doc) - Plain text (.txt)</div>
                   </div>
-                  <div style={{display:'flex',alignItems:'center',gap:4,flexShrink:0,fontSize:12,fontWeight:600,color:'var(--jade)'}}>
-                    <span style={{width:6,height:6,borderRadius:'50%',background:'var(--jade)',display:'inline-block'}}></span>
-                    已上传
+                  <div className="fu-success" id="fuSuccess" style={{display:'none'}}>
+                    <div className="fu-icon-done" aria-hidden="true"></div>
+                    <div className="fu-info" style={{flex:1,minWidth:0}}>
+                      <div className="fu-filename" id="fuFilename" style={{fontWeight:600,fontSize:13,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}></div>
+                      <div className="fu-meta" id="fuMeta" style={{fontSize:12,color:'var(--ink-soft)',marginTop:2}}></div>
+                    </div>
+                    <div style={{display:'flex',alignItems:'center',gap:4,flexShrink:0,fontSize:12,fontWeight:600,color:'var(--jade)'}}>
+                      <span style={{width:6,height:6,borderRadius:'50%',background:'var(--jade)',display:'inline-block'}}></span>
+                      Uploaded
+                    </div>
                   </div>
-                </div>
-              </label>
+                </label>
               </div>
-              <span className="input-hint">如果 PDF 无法解析，也可以直接粘贴简历文本。</span>
+              <span className="input-hint">If the PDF cannot be parsed, paste the resume text directly.</span>
             </div>
 
             <div className="input-group" hidden>
-              <label className="input-label">简历文本 <span className="text-mute" style={{fontWeight:400}}>(上传失败时可用)</span></label>
-              <textarea className="textarea" name="resumeText" rows="6" placeholder="如果 PDF / Word 解析失败，可把简历内容粘贴到这里…"></textarea>
+              <label className="input-label">Resume text <span className="text-mute" style={{fontWeight:400}}>(use this if upload fails)</span></label>
+              <textarea className="textarea" name="resumeText" rows="6" placeholder="If PDF or Word parsing fails, paste your resume content here..."></textarea>
             </div>
 
             <div className="input-group">
-              <label className="input-label">目标岗位 <span className="text-mute" style={{fontWeight:400}}>(与 JD 二选一)</span></label>
+              <label className="input-label">Target role <span className="text-mute" style={{fontWeight:400}}>(or paste a JD below)</span></label>
               <select className="input" name="job" id="jobSelect" defaultValue="">
-                <option value="" disabled>-- 选择目标岗位 --</option>
+                <option value="" disabled>-- Select target role --</option>
               </select>
-              <span className="input-hint" id="jobSelectHint">加载岗位列表中…</span>
+              <span className="input-hint" id="jobSelectHint">Loading role list...</span>
             </div>
 
             <div className="input-group">
-              <label className="input-label">目标岗位 JD <span className="text-mute" style={{fontWeight:400}}>(与目标岗位二选一)</span></label>
-              <textarea className="textarea" name="jd" rows="5" placeholder="贴 JD 越完整,诊断越精准…"></textarea>
-              <span className="input-hint">支持 LinkedIn / Indeed / Glassdoor / Handshake 等海外 JD</span>
+              <label className="input-label">Target job description <span className="text-mute" style={{fontWeight:400}}>(or select a role above)</span></label>
+              <textarea className="textarea" name="jd" rows="5" placeholder="Paste the full JD for a more precise diagnosis..."></textarea>
+              <span className="input-hint">Supports LinkedIn / Indeed / Glassdoor / Handshake and other global job descriptions.</span>
             </div>
 
             <div className="form-error input-error mb-12"></div>
             <button className="btn btn-jade btn-block" type="submit">
-              30 秒生成诊断报告 <span className="btn-icon">→</span>
+              Generate diagnosis in 30 seconds <span className="btn-icon">-&gt;</span>
             </button>
           </form>
         </section>
@@ -95,33 +99,33 @@ export default function HomePage() {
         <hr className="divider" />
 
         <section className="section credibility-section">
-          <h2 className="section-title" style={{whiteSpace:'nowrap',fontSize:'clamp(20px,5.6vw,28px)'}}>10 年真实辅导数据,全球独家。</h2>
-          <p className="section-desc">蔓藤教育(MentorX)自 2015 年深耕留学求职——<b style={{color:'var(--ink)',fontWeight:700}}>1,300+</b> 大厂导师、<b style={{color:'var(--ink)',fontWeight:700}}>30,000+</b> 场真实辅导。每条建议都从实战中提炼,不是通用模板。</p>
+          <h2 className="section-title" style={{whiteSpace:'nowrap',fontSize:'clamp(20px,5.6vw,28px)'}}>10 years of real coaching data, built for global careers.</h2>
+          <p className="section-desc">EdAIX has supported international career coaching since 2015, with <b style={{color:'var(--ink)',fontWeight:700}}>1,300+</b> industry mentors and <b style={{color:'var(--ink)',fontWeight:700}}>30,000+</b> real coaching cases. Every recommendation is grounded in practical hiring patterns, not generic templates.</p>
           <div className="philo">
             <article className="philo-card">
-              <span className="tag">名企导师</span>
+              <span className="tag">Industry mentors</span>
               <div className="num">01</div>
-              <h3>导师来自顶级企业</h3>
-              <p>Google、Amazon、Goldman Sachs、McKinsey 等全球名企在职导师,覆盖北美、欧洲、中国。</p>
+              <h3>Mentors from top companies</h3>
+              <p>Current and former mentors from Google, Amazon, Goldman Sachs, McKinsey, and other global firms across North America, Europe, and Asia.</p>
             </article>
             <article className="philo-card">
-              <span className="tag">十年数据</span>
+              <span className="tag">10-year dataset</span>
               <div className="num">02</div>
-              <h3>真实辅导数据驱动</h3>
-              <p>每条建议背后是 30,000+ 场真实辅导积累的成功模式,不是 AI 凭空生成。</p>
+              <h3>Driven by real coaching data</h3>
+              <p>Each recommendation reflects patterns from 30,000+ coaching cases, so the guidance is practical instead of purely AI-generated.</p>
             </article>
             <article className="philo-card">
-              <span className="tag">定制诊断</span>
+              <span className="tag">Custom diagnosis</span>
               <div className="num">03</div>
-              <h3>精准匹配你的背景</h3>
-              <p>按行业、岗位、背景智能匹配最相关的导师经验,覆盖 CPT/OPT、H-1B 等留学生场景。</p>
+              <h3>Matched to your background</h3>
+              <p>The system matches your industry, target role, and background to relevant mentor experience, including CPT/OPT and H-1B scenarios.</p>
             </article>
           </div>
         </section>
 
         <div className="footnote">
-          Powered by <span>Vibe ID</span> · MentorX × 蔓藤教育<br/>
-          © 2026 · 不会公开你的简历内容,仅本次诊断使用
+          Powered by <span>Vibe ID</span> - EdAIX<br/>
+          (c) 2026 - Your resume is private and used only for this diagnosis.
         </div>
       </div>
 
@@ -140,14 +144,14 @@ export default function HomePage() {
         opt.textContent = title;
         sel.appendChild(opt);
       });
-      if (hint) hint.textContent = "已加载 " + data.length + " 个岗位";
+      if (hint) hint.textContent = "Loaded " + data.length + " roles";
       if (sel) sel.value = "";
     } catch (e) {
-      if (hint) hint.textContent = "无法连接服务器";
+      if (hint) hint.textContent = "Could not connect to the server";
       if (sel) {
         const txt = document.createElement("input");
         txt.type = "text"; txt.name = "job"; txt.id = "jobSelect"; txt.className = "input";
-        txt.placeholder = "例如：Product Manager / Data Analyst";
+        txt.placeholder = "For example: Product Manager / Data Analyst";
         sel.parentNode.replaceChild(txt, sel);
       }
     }

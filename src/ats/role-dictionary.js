@@ -3,6 +3,8 @@
 
 let cachedDictionary = null;
 
+const { hasFullStackSignal } = require("./role-normalization");
+
 function loadRoleDictionary() {
   if (cachedDictionary) return cachedDictionary;
 
@@ -85,7 +87,7 @@ function inferCanonicalRoleFamily(jobTitle = "", jdText = "") {
     { family: "data_scientist", pattern: /\b(data scientist|decision scientist|applied scientist)\b/ },
     { family: "data_engineer", pattern: /\b(data engineer|etl developer|analytics engineer)\b/ },
     { family: "data_analyst", pattern: /\b(data analyst|business intelligence analyst|bi analyst|analytics analyst)\b/ },
-    { family: "software_engineer", pattern: /\b(software development engineer|software engineer|software developer|sde|swe|backend engineer|frontend engineer|full stack engineer|full-stack engineer|web developer)\b/ },
+    { family: "software_engineer", pattern: /\b(software development engineer|software engineer|software developer|sde|swe|backend engineer|frontend engineer|full stack engineer|full-stack engineer|full stack developer|full-stack developer|web developer)\b/ },
     { family: "design_creative", pattern: /\b(graphic designer|visual designer|ui\/ux designer|ux designer|ui designer|product designer|brand designer|motion designer|creative designer)\b/ },
     { family: "product_manager", pattern: /\b(product manager|associate product manager|technical product manager|program manager)\b/ },
     { family: "accounting", pattern: /\b(accountant|accounting|bookkeeper|bookkeeping|audit associate|tax associate|controller|cpa|accounts payable|accounts receivable)\b/ },
@@ -93,6 +95,7 @@ function inferCanonicalRoleFamily(jobTitle = "", jdText = "") {
     { family: "marketing", pattern: /\b(marketing|growth marketer|campaign manager|seo specialist|content strategist|brand manager)\b/ },
   ];
 
+  if (hasFullStackSignal(`${jobTitle} ${jdText}`)) return "software_engineer";
   return (rules.find((rule) => rule.pattern.test(text)) || {}).family || null;
 }
 

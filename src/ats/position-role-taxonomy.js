@@ -1,5 +1,7 @@
 "use strict";
 
+const { hasFullStackSignal } = require("./role-normalization");
+
 const ROLE_GROUP_BY_FAMILY = {
   accounting: "finance_accounting",
   actuarial: "finance_accounting",
@@ -214,6 +216,7 @@ function normalizeTitle(title) {
 
 function classifyPositionTitle(title) {
   const normalized = normalizeTitle(title);
+  if (hasFullStackSignal(title)) return makeResult("software_engineer", "rule", ["software_engineer"]);
   const exact = EXACT_FAMILY.get(normalized);
   if (exact) return makeResult(exact, "exact", []);
 

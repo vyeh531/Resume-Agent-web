@@ -85,4 +85,33 @@ assert.ok(
   "Graphic Designer public problems should show portfolio-specific copy"
 );
 
+const fullStackEn = formatInternalAtsResult(makeBaseRaw([
+  { tag: "keyword_gap_critical", severity: "high", dimension: "D", topic: "keyword_alignment", retrievalWeight: 0.9 },
+], {
+  jobTitle: "Full Stack Engineer",
+  roleFamily: "software_engineer",
+  targetRole: "full_stack_engineer",
+}), { jobTitle: "Full Stack Engineer" });
+
+assert.equal(fullStackEn.profile.roleFamily, "software_engineer");
+assert.equal(fullStackEn.profile.targetRole, "full_stack_engineer");
+assert.deepEqual(
+  fullStackEn.retrievalQuery.filters.targetRoles,
+  ["full_stack_engineer", "software_engineer", "universal"],
+  "Full Stack Engineer retrieval should include exact target role and software family"
+);
+
+const fullStackZh = formatInternalAtsResult(makeBaseRaw([
+  { tag: "keyword_gap_critical", severity: "high", dimension: "D", topic: "keyword_alignment", retrievalWeight: 0.9 },
+], {
+  jobTitle: "全栈工程师",
+  roleFamily: "software_engineer",
+  targetRole: "full_stack_engineer",
+}), { jobTitle: "全棧工程師" });
+
+assert.equal(fullStackZh.profile.roleFamily, "software_engineer");
+assert.equal(fullStackZh.profile.targetRole, "full_stack_engineer");
+assert.ok(fullStackZh.retrievalQuery.filters.targetRoles.includes("full_stack_engineer"));
+assert.ok(fullStackZh.retrievalQuery.filters.targetRoles.includes("software_engineer"));
+
 console.log("report formatter role tag tests passed");

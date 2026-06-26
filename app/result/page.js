@@ -6,9 +6,9 @@ function ResultHeader() {
   return (
     <header className="brandbar result-header">
       <div className="brand">
-        <img src="/logo/logo%20banner_no_bg.png" alt="MentorX 蔓藤教育" className="brand-img" />
+        <img src="/logo/logo%20banner_no_bg.png" alt="EdAIX" className="brand-img" />
       </div>
-      <div className="brand-meta result-stepper">1 / 2 · 诊断完成</div>
+      <div className="brand-meta result-stepper">1 / 2 - Diagnosis complete</div>
     </header>
   );
 }
@@ -17,7 +17,7 @@ function DiagnosisStatusBar() {
   return (
     <div className="banner result-status-banner fade-in">
       <div className="banner-check">✓</div>
-      <div>诊断完成 · 4 位导师已读完你的简历</div>
+      <div>Diagnosis complete - 4 mentors reviewed your resume</div>
     </div>
   );
 }
@@ -33,33 +33,33 @@ function ScoreHeroCard() {
         </div>
         <div className="result-score-badges">
           <span className="result-risk-badge">Needs Improvement</span>
-          <span className="result-risk-badge result-risk-badge-warn">高风险</span>
+          <span className="result-risk-badge result-risk-badge-warn">High risk</span>
         </div>
         <p className="result-score-conclusion">
-          距离目标岗位仍有明显差距，优先补齐岗位关键词、技能证据和量化成果。
+          You still have a clear gap from the target role. Prioritize JD keywords, skill evidence, and measurable outcomes.
         </p>
       </div>
 
       <div className="result-summary-copy">
         <div className="student-row">
-          <span className="who" id="studentInfo">正在读取简历信息…</span>
-          <span className="pill pill-mute" id="targetJob">目标:读取中</span>
+          <span className="who" id="studentInfo">Reading resume information...</span>
+          <span className="pill pill-mute" id="targetJob">Target: loading</span>
         </div>
         <h2 className="summary-headline" id="headline">
-          离顶级 Offer 线 <span className="gap" id="headlineSalaryTop">--</span> 仍有差距。
+          You still have a gap before reaching the top offer line.
         </h2>
         <p className="summary-issue" id="coreIssue"></p>
         <div className="result-issue-list" aria-label="Top 3 Issues">
           <span>Top issues</span>
           <ol>
-            <li>JD 关键词覆盖不足</li>
-            <li>技能匹配与目标岗位不够直接</li>
-            <li>经历中的量化结果偏少</li>
+            <li>JD keyword coverage is too low</li>
+            <li>Skill match is not direct enough</li>
+            <li>Experience bullets need more measurable impact</li>
           </ol>
         </div>
         <div className="result-hero-actions">
-          <a className="btn btn-jade" href="#mentor-advice">查看优化建议</a>
-          <a className="btn result-secondary-btn" href="#score-breakdown">查看评分细节</a>
+          <a className="btn btn-jade" href="#mentor-advice">View recommendations</a>
+          <a className="btn result-secondary-btn" href="#score-breakdown">View score details</a>
         </div>
       </div>
     </section>
@@ -70,37 +70,37 @@ function MetricOverviewCards() {
   const cards = [
     {
       key: 'jd',
-      label: 'JD 匹配度',
+      label: 'JD match',
       value: <span id="rankPct">--</span>,
-      caption: '关键词覆盖偏低',
+      caption: 'Keyword coverage is low',
       detailId: 'rankDetail',
       tone: 'purple',
     },
     {
       key: 'ats',
-      label: 'ATS 可读性',
+      label: 'ATS readability',
       value: (
         <span>
           <span id="atsScore">--</span><span className="tile-percent">%</span>
         </span>
       ),
-      caption: <span id="atsRiskCaption">主流系统识别</span>,
+      caption: <span id="atsRiskCaption">Mainstream ATS parsing</span>,
       detailId: 'atsDetail',
       tone: 'red',
     },
     {
       key: 'salary',
-      label: 'Salary · 薪资成长',
+      label: 'Salary growth',
       value: <span id="salaryRange">--</span>,
-      caption: <>5年上限 <span id="salaryTop">--</span></>,
+      caption: <>5-year upside <span id="salaryTop">--</span></>,
       detailId: 'salaryDetail',
       tone: 'blue',
     },
     {
       key: 'ai',
-      label: 'AI 影响趋势',
+      label: 'AI impact trend',
       value: <span id="compCount">--</span>,
-      caption: <span id="admitRate">待校准</span>,
+      caption: <span id="admitRate">Calibrating</span>,
       detailId: 'compDetail',
       tone: 'orange',
     },
@@ -110,12 +110,12 @@ function MetricOverviewCards() {
     <section className="section result-metrics-panel" id="score-breakdown">
       <div className="result-section-head">
         <div>
-          <div className="section-num">数据维度</div>
-          <h3 className="section-title">从 4 个角度看你的位置</h3>
+          <div className="section-num">Data dimensions</div>
+          <h3 className="section-title">See your position from 4 angles</h3>
         </div>
-        <p className="section-desc">四个维度直接展开，看摘要和风险，不需要再切换。</p>
+        <p className="section-desc">Each dimension expands directly so you can scan the summary and risk.</p>
       </div>
-      <div className="result-dimension-grid" id="tilesArea" aria-label="数据维度">
+      <div className="result-dimension-grid" id="tilesArea" aria-label="Data dimensions">
         {cards.map((card) => (
           <article className={`result-dimension-card result-dimension-card--${card.tone}`} key={card.key}>
             <header className="result-dimension-card-head">
@@ -140,28 +140,28 @@ function AtsSystemCard() {
     <section className="section result-ats-panel" id="atsDetailSection" hidden>
       <div className="result-section-head">
         <div>
-          <div className="section-num">ATS 诊断</div>
-          <h3 className="section-title">ATS System 评分</h3>
+          <div className="section-num">ATS diagnosis</div>
+          <h3 className="section-title">ATS system score</h3>
         </div>
       </div>
       <div className="card result-ats-card">
         <div className="result-ats-visual">
           <div id="atsRiskBadge"></div>
           <div id="atsTotalScore"></div>
-          <svg id="atsRadarChart" width="360" height="320" viewBox="0 0 360 320"></svg>
+          <svg id="atsRadarChart" width="100%" height="340" viewBox="-58 0 476 340"></svg>
         </div>
         <div className="result-ats-copy">
           <div id="atsSystemSummary"></div>
           <div id="atsDimensionProblems"></div>
           <details id="atsProblemsDetails" className="ats-preview-details" open>
             <summary>
-              <span>关键问题</span><span id="atsProblemsChev">▾</span>
+              <span>Key issues</span><span id="atsProblemsChev">▾</span>
             </summary>
             <ul id="atsProblems"></ul>
           </details>
           <details id="atsSuggestionsDetails" className="ats-preview-details" open hidden>
             <summary>
-              <span>优先建议</span><span id="atsSuggestionsChev">▾</span>
+              <span>Priority recommendations</span><span id="atsSuggestionsChev">▾</span>
             </summary>
             <ul id="atsSuggestions"></ul>
           </details>
@@ -177,25 +177,25 @@ function JdKeywordCard() {
       <div className="result-keyword-aside">
         <div className="section-num">JD KEYWORDS</div>
         <div className="row-between mb-12">
-          <h3 className="section-title" id="skillSectionTitle">JD Keyword 清单</h3>
-          <div className="skill-score"><small>已覆盖 </small><span id="skillHave">0</span><small> / <span id="skillTotal">--</span></small></div>
+          <h3 className="section-title" id="skillSectionTitle">JD keyword checklist</h3>
+          <div className="skill-score"><small>Covered </small><span id="skillHave">0</span><small> / <span id="skillTotal">--</span></small></div>
         </div>
-        <p className="skill-section-desc" id="skillSectionDesc">这些是系统从 JD 中识别出的关键词。优先把待补强项写进 Summary、Skills 或 Experience。</p>
+        <p className="skill-section-desc" id="skillSectionDesc">These are keywords detected from the JD. Prioritize missing items in Summary, Skills, or Experience.</p>
         <div className="skill-summary" id="skillSummary"></div>
         <div className="skill-legend">
-          <span><i style={{background:'var(--good)'}}></i>已具备</span>
-          <span><i style={{background:'var(--warn)'}}></i>待补强</span>
+          <span><i style={{background:'var(--good)'}}></i>Covered</span>
+          <span><i style={{background:'var(--warn)'}}></i>Needs work</span>
         </div>
       </div>
       <div className="card card-tight result-keyword-table-card">
         <ul className="skill-list" id="skillListTop3"></ul>
-        <button className="skill-expand-toggle" id="skillExpandToggle" type="button">查看更多 ↓</button>
+        <button className="skill-expand-toggle" id="skillExpandToggle" type="button">View more ↓</button>
         <div className="skill-paywall" id="skillPaywall" hidden>
           <ul className="skill-list skill-paywall-list" id="skillPaywallList"></ul>
           <div className="skill-paywall-overlay">
-            <div className="lock">🔒</div>
-            <div className="text">完整 JD Keyword 清单会随下方完整诊断一起解锁<br/><span style={{color:'var(--ink-soft)',fontWeight:500}}>包含关键词放置建议和改写报告</span></div>
-            <a className="result-lock-cta-button" href="/payment">解锁更多内容</a>
+            <div className="lock" aria-hidden="true"></div>
+            <div className="text">The full JD keyword checklist unlocks with the complete diagnosis<br/><span style={{color:'var(--ink-soft)',fontWeight:500}}>Includes keyword placement guidance and rewrite report</span></div>
+            <a className="result-lock-cta-button" href="/payment">Unlock more</a>
           </div>
         </div>
       </div>
@@ -206,9 +206,9 @@ function JdKeywordCard() {
 function MentorAdvicePreview() {
   return (
     <section className="section result-mentor-free-panel" id="mentor-advice">
-      <div className="section-num">免费试读 · 3 条建议</div>
-      <h3 className="section-title">导师建议预览</h3>
-      <p className="section-desc">由 MentorX 导师知识库中的真实大厂经验交叉匹配，系统会优先挑出最贴合你简历问题的建议。</p>
+      <div className="section-num">Free preview - 3 recommendations</div>
+      <h3 className="section-title">Mentor advice preview</h3>
+      <p className="section-desc">Matched from EdAIX's mentor knowledge base and prioritized for your resume risks.</p>
       <article className="mentor-detail" id="mentorFree"></article>
     </section>
   );
@@ -219,24 +219,24 @@ function UnlockSidebarCard() {
     <aside className="section result-mentor-locked-panel result-mentor-unlock-card">
       <div className="result-unlock-copy">
         <div>
-          <div className="section-num">付费解锁 · 9 条深度建议</div>
-          <h3 className="section-title">更多导师建议 <span className="text-mute">(付费解锁)</span></h3>
-          <p className="section-desc">融合 4 位导师完整建议、JD Keyword 放置建议和可导出的改写报告，不再分散成多个解锁入口。</p>
+          <div className="section-num">Unlock - 9 deeper recommendations</div>
+          <h3 className="section-title">More mentor recommendations <span className="text-mute">(paid unlock)</span></h3>
+          <p className="section-desc">Unlock the full mentor plan, JD keyword placement guidance, and exportable rewrite report.</p>
         </div>
-        <div className="result-unlock-price" aria-label="解锁价格">
+        <div className="result-unlock-price" aria-label="Unlock price">
           <span><b>¥</b>49</span>
-          <small>原价 ¥199</small>
+          <small>Was ¥199</small>
         </div>
       </div>
       <div className="result-unlock-body">
         <div className="result-unlock-preview">
           <div className="stack-12" id="lockedMentorsArea"></div>
           <ul className="result-unlock-perks">
-            <li>4 位大厂导师完整建议</li>
-            <li>完整 JD Keyword 清单 + 放置建议</li>
-            <li>报告导出 .md，可直接给 ChatGPT / Claude 改简历</li>
+            <li>Full recommendations from 4 industry mentors</li>
+            <li>Full JD keyword checklist + placement guidance</li>
+            <li>Exportable .md report for ChatGPT / Claude resume rewriting</li>
           </ul>
-          <a href="/payment" className="btn btn-jade result-unlock-button">¥ 49 立即解锁 →</a>
+          <a href="/payment" className="btn btn-jade result-unlock-button">¥49 Unlock now →</a>
         </div>
       </div>
     </aside>
@@ -331,6 +331,7 @@ function DesktopResultLayout() {
         .paywall-more-overlay,.locked-preview-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(180deg,rgba(247,243,252,.54) 0%,rgba(247,243,252,.96) 56%);backdrop-filter:blur(1px);padding:14px 18px 18px;text-align:center;box-sizing:border-box}
         .result-lock-cta{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;color:var(--ink);width:fit-content;max-width:100%;margin:auto;box-sizing:border-box}
         .result-lock-cta .lock{width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--paper-warm);display:grid;place-items:center;font-size:15px;box-shadow:0 8px 20px -8px rgba(24,24,22,.4)}
+        .result-lock-cta .lock::before{content:"";width:15px;height:15px;display:block;background:currentColor;-webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='5' y='10' width='14' height='10' rx='2'/><path d='M8 10V7a4 4 0 0 1 8 0v3h-2V7a2 2 0 0 0-4 0v3z'/></svg>") center/contain no-repeat;mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='5' y='10' width='14' height='10' rx='2'/><path d='M8 10V7a4 4 0 0 1 8 0v3h-2V7a2 2 0 0 0-4 0v3z'/></svg>") center/contain no-repeat}
         .result-lock-cta .text{font-size:12.5px;font-weight:600;line-height:1.45;color:var(--ink)}
         .result-lock-cta .text b{color:var(--jade)}
         .result-lock-cta .text span{color:var(--ink-soft);font-weight:500}
@@ -354,8 +355,8 @@ function DesktopResultLayout() {
         </div>
 
         <div className="footnote">
-          诊断由 4 位真实导师 + AI 联合产出 · 不构成 Offer 承诺<br/>
-          Powered by <span>Vibe ID</span> · MentorX
+          Diagnosis produced by real mentors + AI. Not an offer guarantee.<br/>
+          Powered by <span>Vibe ID</span> - EdAIX
         </div>
       </div>
 
@@ -438,6 +439,7 @@ function MobileResultLayout() {
         .paywall-more-overlay,.locked-preview-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;background:linear-gradient(180deg,rgba(247,243,252,.54) 0%,rgba(247,243,252,.96) 56%);backdrop-filter:blur(1px);padding:14px 18px 18px;text-align:center;box-sizing:border-box}
         .result-lock-cta{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;color:var(--ink);width:fit-content;max-width:100%;margin:0 auto;box-sizing:border-box}
         .result-lock-cta .lock{width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--paper-warm);display:grid;place-items:center;font-size:15px;box-shadow:0 8px 20px -8px rgba(24,24,22,.4)}
+        .result-lock-cta .lock::before{content:"";width:15px;height:15px;display:block;background:currentColor;-webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='5' y='10' width='14' height='10' rx='2'/><path d='M8 10V7a4 4 0 0 1 8 0v3h-2V7a2 2 0 0 0-4 0v3z'/></svg>") center/contain no-repeat;mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='5' y='10' width='14' height='10' rx='2'/><path d='M8 10V7a4 4 0 0 1 8 0v3h-2V7a2 2 0 0 0-4 0v3z'/></svg>") center/contain no-repeat}
         .result-lock-cta .text{font-size:12.5px;font-weight:600;line-height:1.45;color:var(--ink)}
         .result-lock-cta .text b{color:var(--jade)}
         .result-lock-cta .text span{color:var(--ink-soft);font-weight:500}
@@ -450,61 +452,61 @@ function MobileResultLayout() {
       <div className="page mobile-result-page">
         <div className="brandbar">
           <div className="brand">
-            <img src="/logo/logo%20banner_no_bg.png" alt="MentorX 蔓藤教育" className="brand-img" />
+            <img src="/logo/logo%20banner_no_bg.png" alt="EdAIX" className="brand-img" />
           </div>
-          <div className="brand-meta" style={{fontSize:'10px',letterSpacing:'.08em'}}>1 / 2 · 诊断完成</div>
+          <div className="brand-meta" style={{fontSize:'10px',letterSpacing:'.08em'}}>1 / 2 - Diagnosis complete</div>
         </div>
 
         <div className="banner fade-in">
           <div className="banner-check">✓</div>
-          <div>诊断完成 · 4 位导师已读完你的简历</div>
+          <div>Diagnosis complete - 4 mentors reviewed your resume</div>
         </div>
 
         <section className="section" style={{marginTop:0}}>
           <div className="student-row">
-            <span className="who" id="studentInfo">正在读取简历信息…</span>
-            <span className="pill pill-mute" id="targetJob">目标:读取中</span>
+            <span className="who" id="studentInfo">Reading resume information...</span>
+            <span className="pill pill-mute" id="targetJob">Target: loading</span>
           </div>
           <h2 className="summary-headline" id="headline">
-            你的当前简历综合评分 <span className="num" id="atsHeadlineScore">--</span> 分,<br/>
-            离顶级 Offer 线 <span className="gap" id="headlineSalaryTop">--</span> 仍有差距。
+            Your current resume score is <span className="num" id="atsHeadlineScore">--</span> /100.<br/>
+            You still have a gap before the top offer line.
           </h2>
           <p className="summary-issue" id="coreIssue"></p>
         </section>
 
         <section className="section">
-          <div className="section-num">数据维度</div>
-          <h3 className="section-title" style={{fontSize:'18px'}}>从 4 个角度看你的位置</h3>
-          <p className="section-desc">点击展开看详细拆解 →</p>
+          <div className="section-num">Data dimensions</div>
+          <h3 className="section-title" style={{fontSize:'18px'}}>See your position from 4 angles</h3>
+          <p className="section-desc">Tap to expand the detailed breakdown →</p>
           <div className="tiles" id="tilesArea">
             <details className="tile">
               <summary className="tile-summary">
-                <div className="tile-label"><span>JD 匹配度</span><span className="chev">▼</span></div>
+                <div className="tile-label"><span>JD match</span><span className="chev">▼</span></div>
                 <div className="tile-value"><span id="rankPct">--</span></div>
-                <div className="tile-caption">基于 JD 关键词覆盖</div>
+                <div className="tile-caption">Based on JD keyword coverage</div>
               </summary>
               <div className="tile-detail" id="rankDetail"></div>
             </details>
             <details className="tile">
               <summary className="tile-summary">
-                <div className="tile-label"><span>ATS 可读性</span><span className="chev">▼</span></div>
-                <div className="tile-value tile-value-split tile-value-ats"><span><span id="atsScore">--</span><span className="tile-percent">%</span></span><span className="tile-risk-value" id="atsRiskCaption">主流系统识别</span></div>
+                <div className="tile-label"><span>ATS readability</span><span className="chev">▼</span></div>
+                <div className="tile-value tile-value-split tile-value-ats"><span><span id="atsScore">--</span><span className="tile-percent">%</span></span><span className="tile-risk-value" id="atsRiskCaption">Mainstream ATS parsing</span></div>
               </summary>
               <div className="tile-detail" id="atsDetail"></div>
             </details>
             <details className="tile">
               <summary className="tile-summary">
-                <div className="tile-label"><span>SALARY · 薪资成长</span><span className="chev">▼</span></div>
+                <div className="tile-label"><span>Salary growth</span><span className="chev">▼</span></div>
                 <div className="tile-value" style={{fontSize:'22px'}} id="salaryRange">--</div>
-                <div className="tile-caption">5年上限 <span id="salaryTop">--</span></div>
+                <div className="tile-caption">5-year upside <span id="salaryTop">--</span></div>
               </summary>
               <div className="tile-detail" id="salaryDetail"></div>
             </details>
             <details className="tile">
               <summary className="tile-summary">
-                <div className="tile-label"><span>AI 影响趋势</span><span className="chev">▼</span></div>
+                <div className="tile-label"><span>AI impact trend</span><span className="chev">▼</span></div>
                 <div className="tile-value" style={{fontSize:'22px'}}><span id="compCount">--</span></div>
-                <div className="tile-caption"><span id="admitRate">待校准</span></div>
+                <div className="tile-caption"><span id="admitRate">Calibrating</span></div>
               </summary>
               <div className="tile-detail" id="compDetail"></div>
             </details>
@@ -512,25 +514,25 @@ function MobileResultLayout() {
         </section>
 
         <section className="section" id="atsDetailSection" hidden>
-          <div className="section-num">ATS 诊断</div>
-          <h3 className="section-title" style={{fontSize:'18px'}}>ATS System 评分</h3>
+          <div className="section-num">ATS diagnosis</div>
+          <h3 className="section-title" style={{fontSize:'18px'}}>ATS system score</h3>
           <div className="card" style={{background:'linear-gradient(135deg,rgba(247,243,252,.92) 0%,rgba(255,255,255,.96) 100%)',border:'1px solid var(--line)'}}>
             <div style={{display:'flex',flexDirection:'column',alignItems:'center',marginBottom:'16px',position:'relative'}}>
               <div id="atsRiskBadge" style={{position:'absolute',top:0,right:0,padding:'4px 10px',borderRadius:'99px',fontSize:'12px',fontWeight:700,fontFamily:'var(--mono)',letterSpacing:'.04em'}}></div>
               <div id="atsTotalScore" style={{position:'absolute',top:0,left:0,fontSize:'22px',fontWeight:800,fontFamily:'var(--mono)',lineHeight:1}}></div>
-              <svg id="atsRadarChart" width="240" height="220" viewBox="0 0 240 220" style={{overflow:'visible',marginTop:'28px'}}></svg>
+              <svg id="atsRadarChart" width="100%" height="340" viewBox="-58 0 476 340" style={{overflow:'visible',marginTop:'28px'}}></svg>
             </div>
             <div id="atsSystemSummary" style={{fontSize:'13px',color:'var(--ink-soft)',lineHeight:1.6,marginBottom:'14px'}}></div>
             <div id="atsDimensionProblems" style={{marginTop:'12px'}}></div>
             <details id="atsProblemsDetails" className="ats-preview-details" style={{marginTop:'16px'}} open>
               <summary style={{cursor:'pointer',fontSize:'13px',fontWeight:700,color:'var(--rose)',listStyle:'none',display:'flex',alignItems:'center',gap:'6px',padding:'4px 0'}}>
-                <span>🔍 关键问题</span><span id="atsProblemsChev" style={{fontSize:'11px',transition:'transform .2s'}}>▾</span>
+                <span>Key issues</span><span id="atsProblemsChev" style={{fontSize:'11px',transition:'transform .2s'}}>▾</span>
               </summary>
               <ul id="atsProblems" style={{listStyle:'none',padding:0,margin:'8px 0 0',fontSize:'13px'}}></ul>
             </details>
             <details id="atsSuggestionsDetails" className="ats-preview-details" style={{marginTop:'12px'}} open hidden>
               <summary style={{cursor:'pointer',fontSize:'13px',fontWeight:700,color:'var(--jade)',listStyle:'none',display:'flex',alignItems:'center',gap:'6px',padding:'4px 0'}}>
-                <span>✨ 优先建议</span><span id="atsSuggestionsChev" style={{fontSize:'11px',transition:'transform .2s'}}>▾</span>
+                <span>Priority recommendations</span><span id="atsSuggestionsChev" style={{fontSize:'11px',transition:'transform .2s'}}>▾</span>
               </summary>
               <ul id="atsSuggestions" style={{listStyle:'none',padding:0,margin:'8px 0 0',fontSize:'13px'}}></ul>
             </details>
@@ -542,24 +544,24 @@ function MobileResultLayout() {
         <section className="section">
           <div className="section-num">JD KEYWORDS</div>
           <div className="row-between mb-12" style={{marginTop:'4px'}}>
-            <h3 className="section-title" id="skillSectionTitle" style={{fontSize:'18px',margin:0}}>JD Keyword 清单</h3>
-            <div className="skill-score"><small>已覆盖 </small><span id="skillHave">0</span><small> / <span id="skillTotal">--</span></small></div>
+            <h3 className="section-title" id="skillSectionTitle" style={{fontSize:'18px',margin:0}}>JD keyword checklist</h3>
+            <div className="skill-score"><small>Covered </small><span id="skillHave">0</span><small> / <span id="skillTotal">--</span></small></div>
           </div>
-          <p className="skill-section-desc" id="skillSectionDesc">这些是系统从 JD 中识别出的关键词。优先把待补强项写进 Summary、Skills 或 Experience。</p>
+          <p className="skill-section-desc" id="skillSectionDesc">These are keywords detected from the JD. Prioritize missing items in Summary, Skills, or Experience.</p>
           <div className="skill-summary" id="skillSummary"></div>
           <div className="skill-legend">
-            <span><i style={{background:'var(--good)'}}></i>已具备</span>
-            <span><i style={{background:'var(--warn)'}}></i>待补强</span>
+            <span><i style={{background:'var(--good)'}}></i>Covered</span>
+            <span><i style={{background:'var(--warn)'}}></i>Needs work</span>
           </div>
           <div className="card card-tight">
             <ul className="skill-list" id="skillListTop3"></ul>
-            <button className="skill-expand-toggle" id="skillExpandToggle" type="button">查看更多 ↓</button>
+            <button className="skill-expand-toggle" id="skillExpandToggle" type="button">View more ↓</button>
             <div className="skill-paywall" id="skillPaywall" hidden>
               <ul className="skill-list skill-paywall-list" id="skillPaywallList"></ul>
               <div className="skill-paywall-overlay">
-                <div className="lock">🔒</div>
-                <div className="text">解锁<b style={{color:'var(--jade)'}}>全部 4 位导师</b> + <b style={{color:'var(--jade)'}}>完整改写报告</b><br/><span style={{color:'var(--ink-soft)',fontWeight:500}}>含完整 JD Keyword 清单</span></div>
-                <a className="btn btn-jade" href="/payment">¥ 49 解锁完整诊断</a>
+                <div className="lock" aria-hidden="true"></div>
+                <div className="text">Unlock <b style={{color:'var(--jade)'}}>all 4 mentors</b> + <b style={{color:'var(--jade)'}}>the full rewrite report</b><br/><span style={{color:'var(--ink-soft)',fontWeight:500}}>Includes full JD keyword checklist</span></div>
+                <a className="btn btn-jade" href="/payment">¥49 Unlock full diagnosis</a>
               </div>
             </div>
           </div>
@@ -568,32 +570,32 @@ function MobileResultLayout() {
         <hr className="divider" />
 
         <section className="section">
-          <div className="section-num">导师 1 / 4 · 免费试读</div>
-          <h3 className="section-title" style={{fontSize:'20px'}}>导师建议预览</h3>
+          <div className="section-num">Mentor 1 / 4 - Free preview</div>
+          <h3 className="section-title" style={{fontSize:'20px'}}>Mentor advice preview</h3>
           <article className="mentor-detail" id="mentorFree"></article>
         </section>
 
         <section className="section">
-          <div className="section-num">导师 2-4 / 4</div>
-          <h3 className="section-title" style={{fontSize:'20px'}}>更多导师建议 <span className="text-mute" style={{fontSize:'14px',fontFamily:'var(--sans)',fontWeight:400}}>(付费解锁)</span></h3>
-          <p className="section-desc">每位导师从不同角度给出必改、建议改、补充建议。</p>
+          <div className="section-num">Mentors 2-4 / 4</div>
+          <h3 className="section-title" style={{fontSize:'20px'}}>More mentor recommendations <span className="text-mute" style={{fontSize:'14px',fontFamily:'var(--sans)',fontWeight:400}}>(paid unlock)</span></h3>
+          <p className="section-desc">Each mentor gives must-fix, recommended, and supplemental advice from a different angle.</p>
           <div className="stack-12" id="lockedMentorsArea"></div>
           <div className="unlock-cta">
-            <p className="unlock-cta-title">解锁全部 4 位导师 + 完整改写报告</p>
-            <div className="unlock-cta-price"><span className="now"><b>¥</b>49</span><span className="was">原价 ¥199</span></div>
+            <p className="unlock-cta-title">Unlock all 4 mentors + full rewrite report</p>
+            <div className="unlock-cta-price"><span className="now"><b>¥</b>49</span><span className="was">Was ¥199</span></div>
             <ul className="unlock-cta-perks">
-              <li>4 位大厂导师完整建议(必改 / 建议改 / 补充)</li>
-              <li>完整 JD Keyword 清单 + 放置建议</li>
-              <li>报告导出 .md,直接喂给 ChatGPT / Claude 改简历</li>
+              <li>Full recommendations from 4 industry mentors</li>
+              <li>Full JD keyword checklist + placement guidance</li>
+              <li>Exportable .md report for ChatGPT / Claude resume rewriting</li>
             </ul>
-            <a href="/payment" className="btn btn-jade btn-block">¥ 49 立即解锁 →</a>
-            <div className="unlock-cta-foot">秋招特价 · 仅限本次</div>
+            <a href="/payment" className="btn btn-jade btn-block">¥49 Unlock now →</a>
+            <div className="unlock-cta-foot">Limited offer - this diagnosis only</div>
           </div>
         </section>
 
         <div className="footnote">
-          诊断由 4 位真实导师 + AI 联合产出 · 不构成 Offer 承诺<br/>
-          Powered by <span>Vibe ID</span> · MentorX
+          Diagnosis produced by real mentors + AI. Not an offer guarantee.<br/>
+          Powered by <span>Vibe ID</span> - EdAIX
         </div>
       </div>
     </>
@@ -624,7 +626,7 @@ export default function ResultPage() {
   return (
     <>
       {isMobile ? <MobileResultLayout /> : <DesktopResultLayout />}
-      <Script src="/result-logic.js?v=edaix-purple-20260612-1" strategy="afterInteractive" />
+      <Script src="/result-logic.js?v=edaix-result-i18n-20260626-3" strategy="afterInteractive" />
     </>
   );
 }

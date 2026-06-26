@@ -423,9 +423,10 @@ test("audit review flags overactive mentor voice", () => {
   assert.ok(auditScript.includes("MENTOR_OVERACTIVE_PATTERNS"));
 });
 
-test("HR perspective uses approved DB display field before runtime fallback", () => {
+test("HR perspective uses approved split raw field before runtime fallback", () => {
   const text = humanizeHrPerspective({
-    humanized_hr_perspective: "我会先看这条经历有没有结果；如果只有协助和参与，筛选时会被当成弱信号。",
+    humanized_hr_perspective: "Legacy HR text should no longer be read.",
+    humanized_hr_perspective_raw: "我会先看这条经历有没有结果；如果只有协助和参与，筛选时会被当成弱信号。",
     perspective_review_status: "approved",
     HR_os: "旧 HR 文案",
   });
@@ -458,7 +459,7 @@ test("approved HR perspective is still sanitized when it conflicts with game des
     },
   };
   const hr = humanizeHrPerspective({
-    humanized_hr_perspective: "硬件或医疗器械岗位我会找 test、debug、prototype 证据；只有理论分析时，匹配判断会保守。",
+    humanized_hr_perspective_raw: "硬件或医疗器械岗位我会找 test、debug、prototype 证据；只有理论分析时，匹配判断会保守。",
     perspective_review_status: "approved",
     HR_os: "old HR copy",
   }, context);

@@ -3,6 +3,12 @@
 const crypto = require("crypto");
 const { buildRoleProfileFromContext } = require("./role-profile");
 const { normalizeLocale, labelFor } = require("../i18n/locale");
+const {
+  expandTargetRoles,
+  hasFullStackSignal,
+  normalizeTargetRole,
+  roleFamilyForTargetRole,
+} = require("./role-normalization");
 
 const SCORING_MODE = "external_ats_like";
 const REPORT_VERSION = "0.2.0";
@@ -190,12 +196,14 @@ function extractTitleFromJD(jdText) {
 function inferCanonicalTargetRole(rawScoreResult, input = {}) {
   // Priority 1: user-typed jobTitle (most explicit)
   if (input.jobTitle && !isPlaceholderTitle(input.jobTitle)) {
+    if (hasFullStackSignal(input.jobTitle)) return { role: "full_stack_engineer", display: "Full Stack Engineer" };
     return { role: snakeCase(input.jobTitle), display: input.jobTitle };
   }
 
   // Priority 2: extract directly from JD label (Position:, 【岗位】: etc.) — exact beats generic patterns
   const labelExtracted = extractTitleFromJD(input.jdText);
   if (labelExtracted) {
+    if (hasFullStackSignal(labelExtracted)) return { role: "full_stack_engineer", display: "Full Stack Engineer" };
     return { role: snakeCase(labelExtracted), display: labelExtracted };
   }
 
@@ -210,6 +218,7 @@ function inferCanonicalTargetRole(rawScoreResult, input = {}) {
   // Priority 3: candidates from score result
   const firstCandidate = candidates.find((value) => snakeCase(value) !== "general");
   if (firstCandidate) {
+    if (hasFullStackSignal(firstCandidate)) return { role: "full_stack_engineer", display: "Full Stack Engineer" };
     return { role: snakeCase(firstCandidate), display: titleCaseRole(firstCandidate) };
   }
 
@@ -218,7 +227,7 @@ function inferCanonicalTargetRole(rawScoreResult, input = {}) {
   const rolePatterns = [
     { role: "software_development_engineer", display: "Software Development Engineer", pattern: /\bsoftware development engineer\b|\bsde\b/ },
     { role: "software_engineer", display: "Software Engineer", pattern: /\bsoftware engineer\b|\bswe\b|\bsoftware developer\b/ },
-    { role: "full_stack_engineer", display: "Full Stack Engineer", pattern: /\bfull[-\s]?stack\b/ },
+    { role: "full_stack_engineer", display: "Full Stack Engineer", pattern: /\bfull[-\s]?stack\b|\bfullstack\b|全[栈棧]/ },
     { role: "frontend_engineer", display: "Frontend Engineer", pattern: /\bfront[-\s]?end\b/ },
     { role: "backend_engineer", display: "Backend Engineer", pattern: /\bback[-\s]?end\b/ },
     { role: "data_engineer", display: "Data Engineer", pattern: /\bdata engineer\b/ },
@@ -384,6 +393,7 @@ function buildProfile(rawScoreResult, input = {}) {
   const targetRole = canonicalRole.role && canonicalRole.role !== "unknown"
     ? canonicalRole.role
     : (canonicalRole.display || rawProfile.targetRole || snakeCase(title));
+  const normalizedTargetRole = normalizeTargetRole(targetRole) || targetRole;
   const roleText = `${title} ${input.jdText || ""}`.toLowerCase();
   const roleProfile = buildRoleProfileFromContext({
     targetRole: canonicalRole.display || title || rawProfile.targetRole || "",
@@ -412,7 +422,7 @@ function buildProfile(rawScoreResult, input = {}) {
   const roleProfileFamily = roleProfile.canonicalRoleFamily && roleProfile.canonicalRoleFamily !== "other"
     ? roleProfile.canonicalRoleFamily
     : "";
-  const roleFamily = roleProfileFamily || roleFamilyByTarget[targetRole]
+  const roleFamily = roleFamilyForTargetRole(normalizedTargetRole, roleProfileFamily || roleFamilyByTarget[normalizedTargetRole])
     || (/\b(management trainee|graduate trainee|leadership development program|rotational program)\b/.test(roleText) || /管培/.test(roleText)
       ? "management_trainee"
       : /\b(machine learning engineer|ml engineer|mle|deep learning engineer)\b/.test(roleText)
@@ -429,11 +439,11 @@ function buildProfile(rawScoreResult, input = {}) {
                 ? "finance"
                 : /software|swe|sde|full.?stack|backend|frontend/.test(roleText)
                   ? "software_engineer"
-                  : rawProfile.roleFamily || targetRole || "unknown");
+                  : rawProfile.roleFamily || normalizedTargetRole || "unknown");
 
   return {
     roleFamily,
-    targetRole: targetRole === "general" ? "unknown" : targetRole,
+    targetRole: normalizedTargetRole === "general" ? "unknown" : normalizedTargetRole,
     seniority: rawProfile.seniority || inferSeniority(roleText),
     candidateType: rawProfile.candidateType || inferCandidateType(roleText, rawProfile.seniority),
     yearsOfExperience: rawProfile.yearsOfExperience ?? null,
@@ -1158,7 +1168,7 @@ function buildRetrievalQuery(internalAtsResult) {
     .map((item) => item.term)
     .slice(0, 6);
   const profile = internalAtsResult.profile;
-  const targetRoles = [...new Set([profile.targetRole, profile.roleFamily, "universal"].filter(Boolean))];
+  const targetRoles = expandTargetRoles(profile.targetRole, profile.roleFamily);
   const seniority = [...new Set([profile.seniority, profile.candidateType, "universal"].filter(Boolean))];
 
   return {
@@ -1431,19 +1441,30 @@ function stripCuratedAdviceItemForPublic(item = {}, options = {}) {
   return {
     adviceId: item.adviceId,
     title: item.title,
+    title_en: item.title_en || item.titleEn || item.advice_card_title_en || item.adviceCardTitleEn || "",
     currentDiagnosis: item.currentDiagnosis || item.problemSummary,
+    currentDiagnosis_en: item.currentDiagnosis_en || item.currentDiagnosisEn || item.problemSummary_en || item.problemSummaryEn || item.user_problem_summary_en || "",
     problemSummary: item.problemSummary || item.currentDiagnosis,
+    problemSummary_en: item.problemSummary_en || item.problemSummaryEn || item.currentDiagnosis_en || item.currentDiagnosisEn || item.user_problem_summary_en || "",
     action: item.action || item.actionSummary,
+    action_en: item.action_en || item.actionEn || item.actionSummary_en || item.actionSummaryEn || item.action_summary_en || "",
     actionSummary: item.actionSummary || item.action,
+    actionSummary_en: item.actionSummary_en || item.actionSummaryEn || item.action_en || item.actionEn || item.action_summary_en || "",
     mentorLens: item.mentorLens || item.mentorInsight || item.reason || "",
+    mentorLens_en: item.mentorLens_en || item.mentorLensEn || item.mentorInsight_en || item.mentorInsightEn || item.humanized_mentor_insight_en || "",
     mentorInsight: item.mentorInsight || item.mentorLens || item.reason || "",
+    mentorInsight_en: item.mentorInsight_en || item.mentorInsightEn || item.mentorLens_en || item.mentorLensEn || item.humanized_mentor_insight_en || "",
     hrPerspective: item.hrPerspective || item.HR_os || "",
+    hrPerspective_en: item.hrPerspective_en || item.hrPerspectiveEn || item.HR_os_en || item.humanized_hr_perspective_en || item.humanized_hr_perspective_raw_en || item.humanized_hr_perspective_generalized_en || "",
     HR_os: item.HR_os || item.hrPerspective || "",
+    HR_os_en: item.HR_os_en || item.hrPerspective_en || item.hrPerspectiveEn || item.humanized_hr_perspective_en || item.humanized_hr_perspective_raw_en || item.humanized_hr_perspective_generalized_en || "",
     targetSection: item.targetSection || "overall",
     priority: item.priority || "medium",
     priorityLabel: item.priorityLabel || labelFor(locale, "priority", item.priority || "medium", item.priority || "medium"),
     topicCluster: item.topicCluster || item.displayAdviceType || "",
+    topicCluster_en: item.topicCluster_en || item.topicClusterEn || item.displayAdviceType_en || item.displayAdviceTypeEn || "",
     displayAdviceType: item.displayAdviceType || item.topicCluster || "",
+    displayAdviceType_en: item.displayAdviceType_en || item.displayAdviceTypeEn || item.topicCluster_en || item.topicClusterEn || "",
     actionSlot: item.actionSlot || "",
     actionFamily: item.actionFamily || item.canonicalActionFamily || "",
     canonicalActionFamily: item.canonicalActionFamily || item.actionFamily || "",
@@ -1607,16 +1628,31 @@ function stripFreeAdvice(item, options = {}) {
       adviceItems: item.adviceItems.slice(0, 3).map((advice) => ({
         adviceId: advice.adviceId,
         title: advice.title,
+        title_en: advice.title_en || advice.titleEn || advice.advice_card_title_en || advice.adviceCardTitleEn || "",
         currentDiagnosis: advice.currentDiagnosis || advice.problemSummary,
+        currentDiagnosis_en: advice.currentDiagnosis_en || advice.currentDiagnosisEn || advice.problemSummary_en || advice.problemSummaryEn || advice.user_problem_summary_en || "",
+        problemSummary: advice.problemSummary || advice.currentDiagnosis,
+        problemSummary_en: advice.problemSummary_en || advice.problemSummaryEn || advice.currentDiagnosis_en || advice.currentDiagnosisEn || advice.user_problem_summary_en || "",
         action: advice.action || advice.actionSummary,
+        action_en: advice.action_en || advice.actionEn || advice.actionSummary_en || advice.actionSummaryEn || advice.action_summary_en || "",
+        actionSummary: advice.actionSummary || advice.action,
+        actionSummary_en: advice.actionSummary_en || advice.actionSummaryEn || advice.action_en || advice.actionEn || advice.action_summary_en || "",
         mentorLens: advice.mentorLens || advice.P_mentor || "",
+        mentorLens_en: advice.mentorLens_en || advice.mentorLensEn || advice.mentorInsight_en || advice.mentorInsightEn || advice.humanized_mentor_insight_en || "",
         reason: advice.reason || advice.I_insight || "",
         mentorInsight: advice.mentorInsight || advice.I_insight || advice.mentorLens || advice.P_mentor || "",
+        mentorInsight_en: advice.mentorInsight_en || advice.mentorInsightEn || advice.mentorLens_en || advice.mentorLensEn || advice.humanized_mentor_insight_en || "",
         example: advice.example || "",
         rewriteExample: advice.rewriteExample || null,
         beforeAfter: advice.beforeAfter || null,
         hrPerspective: advice.hrPerspective || advice.HR_os || "",
+        hrPerspective_en: advice.hrPerspective_en || advice.hrPerspectiveEn || advice.HR_os_en || advice.humanized_hr_perspective_en || advice.humanized_hr_perspective_raw_en || advice.humanized_hr_perspective_generalized_en || "",
         HR_os: advice.HR_os || advice.hrPerspective || "",
+        HR_os_en: advice.HR_os_en || advice.hrPerspective_en || advice.hrPerspectiveEn || advice.humanized_hr_perspective_en || advice.humanized_hr_perspective_raw_en || advice.humanized_hr_perspective_generalized_en || "",
+        topicCluster: advice.topicCluster || advice.displayAdviceType || "",
+        topicCluster_en: advice.topicCluster_en || advice.topicClusterEn || advice.displayAdviceType_en || advice.displayAdviceTypeEn || "",
+        displayAdviceType: advice.displayAdviceType || advice.topicCluster || "",
+        displayAdviceType_en: advice.displayAdviceType_en || advice.displayAdviceTypeEn || advice.topicCluster_en || advice.topicClusterEn || "",
         targetSection: advice.targetSection || "overall",
         priority: advice.priority || "medium",
         priorityLabel: advice.priorityLabel || labelFor(locale, "priority", advice.priority || "medium", advice.priority || "medium"),

@@ -1,14 +1,15 @@
 import Script from 'next/script';
 import './globals.css';
+import I18nBootstrap from './I18nBootstrap';
 
 export const metadata = {
-  title: 'MentorX · 简历石沉大海?大厂导师智慧核心联合帮你升级',
-  description: '1,300+ 大厂导师实战经验 × AI 精准分析,30 秒拿到可落地的优化方案。',
+  title: 'EdAIX - AI resume diagnosis for global careers',
+  description: '1,300+ industry mentors and AI-powered analysis. Get a practical resume improvement plan in 30 seconds.',
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="zh-CN">
+    <html lang="en-US">
       <head>
         <meta name="theme-color" content="#F7F3FC" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -20,9 +21,9 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         {children}
+        <I18nBootstrap />
         <Script src="/assets/api-client.js" strategy="afterInteractive" />
         <Script src="/assets/app.js?v=analysis-fallback-20260623-1" strategy="afterInteractive" />
-        <Script src="/assets/i18n.js?v=bilingual-20260618-1" strategy="afterInteractive" />
       </body>
     </html>
   );

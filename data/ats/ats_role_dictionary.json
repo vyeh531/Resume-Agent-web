@@ -29544,7 +29544,13 @@
       "role_family": "software_engineer",
       "role_group": "tech",
       "target_role_aliases": [
-        "full stack developer"
+        "full stack developer",
+        "full-stack developer",
+        "fullstack developer",
+        "全栈开发工程师",
+        "全棧開發工程師",
+        "全栈工程师",
+        "全棧工程師"
       ],
       "core_skills_required": [
         "Javascript",
@@ -29626,7 +29632,13 @@
       "role_group": "tech",
       "target_role_aliases": [
         "full stack engineer",
-        "full stack"
+        "full-stack engineer",
+        "full stack",
+        "fullstack",
+        "全栈工程师",
+        "全棧工程師",
+        "全栈开发",
+        "全棧開發"
       ],
       "core_skills_required": [
         "frontend development",
@@ -36520,7 +36532,11 @@
       "role_family": "software_engineer",
       "role_group": "tech",
       "target_role_aliases": [
-        "java full stack developer"
+        "java full stack developer",
+        "java full-stack developer",
+        "java fullstack developer",
+        "Java全栈开发工程师",
+        "Java全棧開發工程師"
       ],
       "core_skills_required": [
         "Java",

@@ -302,6 +302,12 @@ function formatJdKeywordMatchValue(ats) {
   return `${count.matched}/${count.total}`;
 }
 function atsRiskText(risk) {
+  if (isEnglishReport()) {
+    if (/高|high|severe|red/i.test(String(risk || ""))) return "High risk";
+    if (/中|medium|mid|moderate|orange|yellow/i.test(String(risk || ""))) return "Medium risk";
+    if (/低|low|green/i.test(String(risk || ""))) return "Low risk";
+    return risk || "Not rated";
+  }
   if (risk === "低") return "低风险";
   if (risk === "中") return "中风险";
   if (risk === "高") return "高风险";
@@ -317,17 +323,17 @@ function riskToneClass(risk) {
 function renderRows(arr) {
   return (arr || []).map(r => `
     <div class="detail-card">
-      <div class="detail-row"><span class="k">${escapeHtml(r.k)}</span><span class="v">${escapeHtml(r.v)}</span></div>
-      <div class="detail-note">${escapeHtml(r.note)}</div>
+      <div class="detail-row"><span class="k">${escapeHtml(reportText(r.k, "label"))}</span><span class="v">${escapeHtml(reportText(r.v, "value"))}</span></div>
+      <div class="detail-note">${escapeHtml(reportText(r.note, "note"))}</div>
     </div>
   `).join("");
 }
 function renderStackedRows(arr) {
   return (arr || []).map(r => `
     <div class="detail-row detail-row-stacked">
-      <span class="k">${escapeHtml(r.k)}</span>
-      <span class="v">${escapeHtml(r.v)}</span>
-      <span class="detail-note">${escapeHtml(r.note)}</span>
+      <span class="k">${escapeHtml(reportText(r.k, "label"))}</span>
+      <span class="v">${escapeHtml(reportText(r.v, "value"))}</span>
+      <span class="detail-note">${escapeHtml(reportText(r.note, "note"))}</span>
     </div>
   `).join("");
 }
@@ -651,7 +657,7 @@ function normalizeProblemList() {
   return dedupeAtsList(items, { topicDedupe: true });
 }
 function renderAtsProblemItem(text) {
-  return `<li style="margin-bottom:10px;padding-left:20px;position:relative;line-height:1.5;"><span style="position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--bad);"></span>${escapeHtml(text)}</li>`;
+  return `<li style="margin-bottom:10px;padding-left:20px;position:relative;line-height:1.5;"><span style="position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--bad);"></span>${escapeHtml(reportText(text, "diagnosis"))}</li>`;
 }
 function renderExpandableAtsProblems(sectionEl, problems, visibleCount = 5) {
   if (!sectionEl) return;
@@ -666,10 +672,10 @@ function renderExpandableAtsProblems(sectionEl, problems, visibleCount = 5) {
     return item.replace("<li ", '<li class="ats-problem-extra" hidden ');
   }).join("");
   const toggle = hiddenCount
-    ? `<button type="button" class="skill-expand-toggle ats-problem-toggle" style="margin-top:2px;">&#26597;&#30475;&#20840;&#37096;</button>`
+    ? `<button type="button" class="skill-expand-toggle ats-problem-toggle" style="margin-top:2px;">${isEnglishReport() ? "View all" : "&#26597;&#30475;&#20840;&#37096;"}</button>`
     : "";
   sectionEl.innerHTML = `
-    <div style="font-size:13px;font-weight:600;color:var(--bad);margin-bottom:8px;">&#128269; &#20851;&#38190;&#38382;&#39064;</div>
+    <div style="font-size:13px;font-weight:600;color:var(--bad);margin-bottom:8px;">&#128269; ${isEnglishReport() ? "Key issues" : "&#20851;&#38190;&#38382;&#39064;"}</div>
     <ul style="list-style:none;padding:0;margin:0;font-size:13px;">${items}</ul>
     ${toggle}`;
   const toggleBtn = sectionEl.querySelector(".ats-problem-toggle");
@@ -681,8 +687,8 @@ function renderExpandableAtsProblems(sectionEl, problems, visibleCount = 5) {
       el.hidden = !open;
     });
     toggleBtn.innerHTML = open
-      ? "&#25910;&#36215; &#8593;"
-      : "&#26597;&#30475;&#20840;&#37096;";
+      ? (isEnglishReport() ? "Collapse ↑" : "&#25910;&#36215; &#8593;")
+      : (isEnglishReport() ? "View all" : "&#26597;&#30475;&#20840;&#37096;");
   };
 }
 function renderAtsSuggestionItem(text) {
@@ -736,21 +742,21 @@ function categoryGroupForTerm(term, sourceKey = "", sourceLabel = "") {
 function placementForKeyword(term, group, sourceKey = "") {
   const text = String(term || "").toLowerCase();
   if (sourceKey === "summary" || (/(title|岗位|职位|summary|定位|目标)/i.test(term) && !/(工具|系统|数据)/i.test(term))) {
-    return { label: "放 Summary", className: "keyword-use--summary" };
+    return { label: isEnglishReport() ? "Add to Summary" : "放 Summary", className: "keyword-use--summary" };
   }
   if (group === "skill_tool" || ["core_skills", "tools"].includes(sourceKey)) {
-    return { label: "放 Skills", className: "keyword-use--skills" };
+    return { label: isEnglishReport() ? "Add to Skills" : "放 Skills", className: "keyword-use--skills" };
   }
   if (group === "responsibility_scene" || /(负责|创建|指派|调度|监控|优化|协同|值班|应急|support|manage|analyze|coordinate|report|track)/i.test(term)) {
-    return { label: "写进经历要点", className: "keyword-use--experience" };
+    return { label: isEnglishReport() ? "Add to Experience" : "写进经历要点", className: "keyword-use--experience" };
   }
   if (group === "soft_collab") {
-    return { label: "写进经历要点", className: "keyword-use--experience" };
+    return { label: isEnglishReport() ? "Add to Experience" : "写进经历要点", className: "keyword-use--experience" };
   }
   if (/(公司|福利|地点|城市|全职|兼职|remote|onsite)/i.test(text)) {
-    return { label: "只作参考，不建议硬塞", className: "keyword-use--reference" };
+    return { label: isEnglishReport() ? "Reference only" : "只作参考，不建议硬塞", className: "keyword-use--reference" };
   }
-  return { label: "只作参考，不建议硬塞", className: "keyword-use--reference" };
+  return { label: isEnglishReport() ? "Reference only" : "只作参考，不建议硬塞", className: "keyword-use--reference" };
 }
 function keywordItemKey(item) {
   return String(item?.name || "").trim().toLowerCase();
@@ -818,7 +824,7 @@ function renderMentorLogoMarquee(pool) {
 function renderMentorLogoIntro(pool) {
   return `
     <div class="mentor-logo-intro" id="mentorLogoIntro">
-      <p class="mentor-logo-copy">由 MentorX 导师知识库中的真实大厂经验交叉匹配，系统会优先挑出最贴合你简历问题的建议。</p>
+      <p class="mentor-logo-copy">${isEnglishReport() ? "Matched from EdAIX's mentor knowledge base and prioritized for your resume risks." : "由 EdAIX 导师知识库中的真实大厂经验交叉匹配，系统会优先挑出最贴合你简历问题的建议。"}</p>
     </div>`;
 }
 
@@ -1059,7 +1065,7 @@ const issueText = issueProblems.length
     ? `ATS ${atsRiskText(atsResult.riskLevel)}（${atsScore}/100），请优先查看 ATS 诊断中的分项得分和修改建议。`
     : "";
 const coreIssueEl = document.getElementById("coreIssue");
-if (coreIssueEl) coreIssueEl.textContent = issueText;
+if (coreIssueEl) coreIssueEl.textContent = reportText(issueText, "diagnosis");
 
 const headlineEl = document.getElementById("reportHeadlineScore") || document.querySelector(".report-headline .num");
 if (headlineEl) headlineEl.textContent = atsScore || "--";
@@ -1103,12 +1109,12 @@ if (headlineEl) headlineEl.textContent = atsScore || "--";
   const aiCaptionEl = document.getElementById("reportAiImpactCaption");
   const aiDetailEl = document.getElementById("reportAiImpactDetail");
   if (aiLevelEl) {
-    aiLevelEl.textContent = aiTrend.level;
+    aiLevelEl.textContent = reportText(aiTrend.level, "value");
     aiLevelEl.classList.remove("ai-impact-low", "ai-impact-medium", "ai-impact-high", "ai-impact-pending");
     const levelText = String(aiTrend.level || "");
     aiLevelEl.classList.add(/高/.test(levelText) ? "ai-impact-high" : /低/.test(levelText) ? "ai-impact-low" : /中/.test(levelText) ? "ai-impact-medium" : "ai-impact-pending");
   }
-  if (aiCaptionEl) aiCaptionEl.textContent = aiTrend.caption;
+  if (aiCaptionEl) aiCaptionEl.textContent = reportText(aiTrend.caption, "note");
   if (aiDetailEl) aiDetailEl.innerHTML = renderStackedRows(aiTrend.rows);
 
   (function syncTileRowHeights() {
@@ -1269,7 +1275,7 @@ if (headlineEl) headlineEl.textContent = atsScore || "--";
       const anchor = lx < cx - 4 ? "end" : lx > cx + 4 ? "start" : "middle";
       const color = d.pct >= 70 ? "var(--good,#1F7A4D)" : d.pct >= 45 ? "var(--warn,#B25E00)" : "var(--bad,#B3261E)";
       svg += `<circle cx="${dx}" cy="${dy}" r="4" fill="${color}"/>`;
-      svg += `<text x="${lx}" y="${ly}" text-anchor="${anchor}" font-size="11" font-weight="600" fill="var(--ink-soft)" font-family="var(--sans)">${dimLabels[dimKeys[i]]}</text>`;
+      svg += `<text x="${lx}" y="${ly}" text-anchor="${anchor}" font-size="11" font-weight="600" fill="var(--ink-soft)" font-family="var(--sans)">${reportText(dimLabels[dimKeys[i]], "label")}</text>`;
       svg += `<text x="${lx}" y="${ly + 13}" text-anchor="${anchor}" font-size="12" font-weight="800" fill="${color}" font-family="var(--sans)">${d.score}/${d.max}</text>`;
     });
     svgEl.innerHTML = svg;
@@ -1317,13 +1323,17 @@ const labelMap = {
   have: `<span class="pill pill-good"><span class="dot"></span>已具备</span>`,
   weak: `<span class="pill pill-warn"><span class="dot"></span>待补强</span>`
 };
+const labelMapEn = {
+  have: `<span class="pill pill-good"><span class="dot"></span>Covered</span>`,
+  weak: `<span class="pill pill-warn"><span class="dot"></span>Needs work</span>`
+};
 function renderSkillRow(sk) {
   const placement = sk.placement || placementForKeyword(sk.name, sk.group, sk.sourceKey);
   return `<li class="skill-row">
     <div class="skill-name"><span class="priority">#${sk.priority}</span>${escapeHtml(sk.name)}</div>
     <div class="skill-meta">
       <span class="keyword-use ${placement.className}">${escapeHtml(placement.label)}</span>
-      ${labelMap[sk.status] || ""}
+      ${(isEnglishReport() ? labelMapEn : labelMap)[sk.status] || ""}
     </div>
   </li>`;
 }
@@ -1354,14 +1364,14 @@ function renderSkillList(skills){
   const expandBtn = document.getElementById("reportSkillExpandToggle");
   if (expandBtn) {
     expandBtn.hidden = hiddenSkills.length === 0;
-    expandBtn.textContent = "查看更多 ↓";
+    expandBtn.textContent = isEnglishReport() ? "View more ↓" : "查看更多 ↓";
     let open = false;
     expandBtn.onclick = () => {
       open = !open;
       skillListEl.querySelectorAll(".report-skill-extra").forEach((el) => {
         el.hidden = !open;
       });
-      expandBtn.textContent = open ? "收起 ↑" : "查看更多 ↓";
+      expandBtn.textContent = open ? (isEnglishReport() ? "Collapse ↑" : "收起 ↑") : (isEnglishReport() ? "View more ↓" : "查看更多 ↓");
     };
   }
   const displayCounts = getDisplayJdKeywordCount();
@@ -1373,7 +1383,9 @@ function renderSkillList(skills){
   if (haveEl) haveEl.textContent = String(have);
   if (totalEl) totalEl.textContent = String(total || "--");
   const insightEl = document.querySelector(".ai-insight-diagnosis");
-  if (insightEl) insightEl.innerHTML = `<span class="ico">💡</span>你已掌握 <b>${have}/${total}</b> 项岗位描述关键词，还有 <b>${weak} 项</b>待补强。${weak > 0 ? "优先处理可放进技能栏、个人简介和经历要点的技能/工具/能力词，避免把所有关键词平铺硬塞。" : "关键词覆盖良好，建议进一步量化成果。"}`;
+  if (insightEl) insightEl.innerHTML = isEnglishReport()
+    ? `<span class="ico">💡</span>You have covered <b>${have}/${total}</b> JD keywords, with <b>${weak}</b> still needing work. ${weak > 0 ? "Prioritize terms that fit into Skills, Summary, and Experience instead of stuffing every keyword flatly." : "Keyword coverage is solid. Next, quantify outcomes further."}`
+    : `<span class="ico">💡</span>你已掌握 <b>${have}/${total}</b> 项岗位描述关键词，还有 <b>${weak} 项</b>待补强。${weak > 0 ? "优先处理可放进技能栏、个人简介和经历要点的技能/工具/能力词，避免把所有关键词平铺硬塞。" : "关键词覆盖良好，建议进一步量化成果。"}`;
 }
 function renderKeywordCategories(items) {
   const detailsEl = document.getElementById("jdKeywordDetails");
@@ -1397,14 +1409,14 @@ function renderKeywordCategories(items) {
   if (expandBtn) {
     const hiddenCount = Math.max(0, items.length - VISIBLE);
     expandBtn.hidden = hiddenCount === 0;
-    expandBtn.textContent = "查看更多 ↓";
+    expandBtn.textContent = isEnglishReport() ? "View more ↓" : "查看更多 ↓";
     let open = false;
     expandBtn.onclick = () => {
       open = !open;
       listEl.querySelectorAll(".jd-keyword-chip").forEach((el, i) => {
         el.hidden = !open && i >= VISIBLE;
       });
-      expandBtn.textContent = open ? "收起 ↑" : "查看更多 ↓";
+      expandBtn.textContent = open ? (isEnglishReport() ? "Collapse ↑" : "收起 ↑") : (isEnglishReport() ? "View more ↓" : "查看更多 ↓");
     };
   }
 }
@@ -1414,9 +1426,11 @@ function renderKeywordCategories(items) {
   const displayItems = keywordItems.map((sk, i) => ({ ...sk, priority: i + 1 }));
   const titleEl = document.getElementById("reportSkillSectionTitle");
   const descEl = document.getElementById("reportSkillSectionDesc");
-  if (titleEl) titleEl.textContent = "JD Keyword 清单";
+  if (titleEl) titleEl.textContent = isEnglishReport() ? "JD keyword checklist" : "JD Keyword 清单";
   if (descEl) {
-    descEl.textContent = "这些是系统从 JD 中识别出的关键词。优先把待补强项写进 Summary、Skills 或 Experience。";
+    descEl.textContent = isEnglishReport()
+      ? "These are keywords detected from the JD. Prioritize missing items in Summary, Skills, or Experience."
+      : "这些是系统从 JD 中识别出的关键词。优先把待补强项写进 Summary、Skills 或 Experience。";
   }
   renderKeywordCategories(keywordItems);
   if (displayItems.length > 0 || getJdKeywordCount(atsResult)) {
@@ -1425,7 +1439,9 @@ function renderKeywordCategories(items) {
     const skillListEl = document.getElementById("skillList");
     const insightEl = document.querySelector(".ai-insight-diagnosis");
     if (skillListEl) skillListEl.innerHTML = "";
-    if (insightEl) insightEl.innerHTML = `<span class="ico">💡</span>暂未识别到稳定的 JD 关键词。建议先确认 JD 文本是否包含岗位职责、任职要求和工具/技能信息。`;
+    if (insightEl) insightEl.innerHTML = isEnglishReport()
+      ? `<span class="ico">💡</span>No stable JD keywords were detected yet. Confirm that the JD includes responsibilities, requirements, and tools/skills.`
+      : `<span class="ico">💡</span>暂未识别到稳定的 JD 关键词。建议先确认 JD 文本是否包含岗位职责、任职要求和工具/技能信息。`;
   }
 })();
 
@@ -1500,7 +1516,7 @@ function priorityBadge(p){
     low:    { dot:"#8B82A8", bg:"#F7F3FC", color:"#5F567A", border:"#E6DEF2", label:"补充" },
   };
   const c = cfg[lv] || cfg.medium;
-  return `<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:${c.bg};color:${c.color};border:1px solid ${c.border};"><span style="width:6px;height:6px;border-radius:50%;background:${c.dot};flex-shrink:0;"></span>${c.label}</span>`;
+  return `<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:${c.bg};color:${c.color};border:1px solid ${c.border};"><span style="width:6px;height:6px;border-radius:50%;background:${c.dot};flex-shrink:0;"></span>${reportText(c.label, "chip")}</span>`;
 }
 
 function renderAdviceItem(item, idx) {
@@ -1572,30 +1588,31 @@ function renderAdviceBundle(items, logoPool) {
 function getCompanyLogo(company) {
   if (!company) return "";
   const lower = company.toLowerCase();
-  if (lower === "mentorx") return "/logo/MentorX.png";
+  if (lower === "mentorx" || lower === "edaix") return "/logo/logo__no_bg.png";
   const match = STATIC_MENTOR_COMPANY_LOGOS.find(item => item.company && item.company.toLowerCase() === lower);
   return match ? match.companyLogo : "";
 }
 
 function renderMentorGroupHeader(mentor, groupIdx, totalGroups) {
   const logoUrl = mentor.companyLogo || getCompanyLogo(mentor.company);
-  const mentorDisplayName = mentor.mentorName || "X导师";
+  const mentorDisplayName = reportText(localField(mentor, "mentorName", mentor.mentorName || "X导师"), "chip");
+  const mentorTitle = reportText(localField(mentor, "mentorTitle", mentor.mentorTitle || ""), "chip");
   const logoHtml = logoUrl
     ? `<div style="width:56px;height:56px;border-radius:10px;background:#fff;border:1px solid #E6DEF2;display:flex;align-items:center;justify-content:center;padding:7px;flex-shrink:0;"><img src="${escapeAttr(logoUrl)}" alt="${escapeAttr(mentor.company||"")}" style="max-width:100%;max-height:100%;object-fit:contain;"></div>`
     : avatarCircle(mentor.company || mentorDisplayName, 56);
-  const lens = mentor.mentorGroupLens || "";
-  const lensReason = mentor.mentorGroupReason || "";
+  const lens = reportText(localField(mentor, "mentorGroupLens", mentor.mentorGroupLens || ""), "chip");
+  const lensReason = reportText(localField(mentor, "mentorGroupReason", mentor.mentorGroupReason || ""), "insight");
   return `
     <div style="display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid #E6DEF2;margin-bottom:20px;">
       ${logoHtml}
       <div style="flex:1;min-width:0;">
         <div style="font-weight:700;font-size:17px;color:#111827;line-height:1.2;">${escapeHtml(mentorDisplayName)}</div>
         ${mentor.company ? `<div style="font-size:12px;color:#6B7280;margin-top:3px;">${escapeHtml(mentor.company)}</div>` : ""}
-        ${mentor.mentorTitle ? `<div style="font-size:11px;color:#9CA3AF;margin-top:2px;">${escapeHtml(mentor.mentorTitle)}</div>` : ""}
-        ${lens ? `<div style="display:inline-flex;align-items:center;margin-top:8px;font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:99px;background:#F0E8FA;color:#5333A6;border:1px solid #E6DEF2;">本次视角：${escapeHtml(lens)}</div>` : ""}
+        ${mentorTitle ? `<div style="font-size:11px;color:#9CA3AF;margin-top:2px;">${escapeHtml(mentorTitle)}</div>` : ""}
+        ${lens ? `<div style="display:inline-flex;align-items:center;margin-top:8px;font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:99px;background:#F0E8FA;color:#5333A6;border:1px solid #E6DEF2;">${isEnglishReport() ? "Focus: " : "本次视角："}${escapeHtml(lens)}</div>` : ""}
         ${lensReason ? `<p style="margin:7px 0 0;font-size:12px;line-height:1.55;color:#6B7280;">${escapeHtml(lensReason)}</p>` : ""}
       </div>
-      <span style="font-size:11px;color:#9CA3AF;font-weight:500;flex-shrink:0;">导师 ${groupIdx+1} / ${totalGroups}</span>
+      <span style="font-size:11px;color:#9CA3AF;font-weight:500;flex-shrink:0;">${isEnglishReport() ? "Mentor" : "导师"} ${groupIdx+1} / ${totalGroups}</span>
     </div>`;
 }
 
@@ -1669,7 +1686,7 @@ function renderMentorGroupedFromAdviceItems() {
   const items = flattenAllAdviceItems();
   const { mentorGroups, fallback } = groupAdviceItemsByMentor(items);
   const allGroups = fallback.length
-    ? [{ mentorName: "MentorX 导师", company: "MentorX", companyLogo: "/logo/MentorX.png", mentorTitle: "简历修改导师", adviceItems: fallback }, ...mentorGroups]
+    ? [{ mentorName: isEnglishReport() ? "EdAIX mentor" : "EdAIX 导师", company: "EdAIX", companyLogo: "/logo/logo__no_bg.png", mentorTitle: isEnglishReport() ? "Resume mentor" : "简历修改导师", adviceItems: fallback }, ...mentorGroups]
     : mentorGroups;
   if (!allGroups.length) return `<p style="color:var(--ink-soft);font-size:14px;padding:16px 0;">导师建议加载失败，请返回首页重新提交简历。</p>`;
   return allGroups.map((g, i) => renderMentorGroup(g, i, allGroups.length)).join("");
@@ -1806,8 +1823,154 @@ function actionMatchedHumanTitle(item = {}) {
   return "";
 }
 
+function reportLocale() {
+  const value = s.locale || atsResult.locale || document.documentElement.lang || "zh-CN";
+  return /^en/i.test(String(value)) ? "en-US" : "zh-CN";
+}
+function isEnglishReport() {
+  return reportLocale() === "en-US";
+}
+function reportText(value = "", context = "general") {
+  const raw = String(value || "").trim();
+  if (!raw || !isEnglishReport()) return raw;
+  const exact = new Map([
+    ["核心硬技能覆盖不足，需要把有真实经验支撑的工具、技能和场景写进经历证据里。", "Core hard-skill coverage is not strong enough. Add tools, skills, and scenarios that are backed by real experience."],
+    ["JD 关键词覆盖不足", "JD keyword coverage is too low"],
+    ["技能匹配与目标岗位不够直接", "Skill match is not direct enough"],
+    ["经历中的量化结果偏少", "Experience bullets need more measurable impact"],
+    ["核心硬技能覆盖不足，需要把有真实经验支撑的工具、技能和场景写进经历证据里。", "Core hard-skill coverage is not strong enough. Add tools, skills, and scenarios that are backed by real experience."],
+    ["简历整体还没有围绕目标岗位重新组织，相关技能、经历和成果之间的主线不够清楚。", "The resume is not yet organized around the target role, so the throughline between skills, experience, and outcomes is not clear enough."],
+    ["经历中的结果证据偏少，建议提升百分比、规模、效率等量化表达。", "Experience bullets have too little outcome evidence. Add quantified impact such as percentages, scale, or efficiency gains."],
+    ["简历中有时长较短的经历，如果不标注 Intern / Internship 或说明项目周期，招聘方可能会对稳定性产生疑虑。", "Some short experiences may raise stability concerns unless they are clearly marked as Intern / Internship or explained as project-based work."],
+    ["目标岗位的关键词在经历里缺少对应证据，只看技能栏很难判断你是否真的做过相关工作。", "Target-role keywords need supporting evidence in Experience; a Skills section alone may not prove you have done the work."],
+    ["岗位描述关键词匹配仍有提升空间。", "JD keyword matching still has room to improve."],
+    ["简历定位需要更贴近目标岗位。", "Resume positioning needs to align more closely with the target role."],
+    ["经历证据需要更清楚地支撑核心技能。", "Experience evidence needs to support core skills more clearly."],
+    ["格式规范", "Format"],
+    ["基本资料", "Profile"],
+    ["内容质量", "Content quality"],
+    ["技能匹配", "Skill match"],
+    ["市场适配", "Market fit"],
+    ["经验匹配", "Experience match"],
+    ["关键问题", "Key issues"],
+    ["你的现状", "Current state"],
+    ["建议你做", "Recommended action"],
+    ["补充视角", "Additional perspective"],
+    ["导师", "Mentor"],
+    ["必改", "Must fix"],
+    ["建议改", "Recommended"],
+    ["补充", "Supplemental"],
+    ["技能区块", "Skills block"],
+    ["JD 关键词", "JD keyword"],
+    ["经历证据", "Experience evidence"],
+    ["量化结果", "Quantified impact"],
+    ["岗位定位", "Positioning"],
+    ["岗位定位视角", "Positioning lens"],
+    ["同职能导师", "Same-function mentor"],
+    ["相邻职能视角", "Adjacent-function lens"],
+    ["问题视角匹配", "Problem-lens match"],
+    ["同职位导师", "Same-role mentor"],
+    ["同产业导师", "Same-industry mentor"],
+    ["跨领域高相关", "Cross-domain relevance"],
+    ["公司偏好", "Company preference"],
+    ["行业规律", "Industry pattern"],
+    ["人才画像", "Talent profile"],
+    ["面试标准", "Interview standard"],
+    ["背景门槛", "Credential expectation"],
+    ["小知识", "Insight"],
+    ["当前赛道参考", "Current track benchmark"],
+    ["3 年成长区间", "3-year growth range"],
+    ["5 年成长区间", "5-year growth range"],
+    ["同赛道高分位", "High percentile in this track"],
+    ["JD 标注薪资", "JD stated salary"],
+    ["基于此方向与全美市场估算。", "Estimated from this track and the U.S. market."],
+    ["若持续积累目标岗位相关经验和可验证成果，3 年内可参考这个区间。", "If you keep building relevant experience and verifiable outcomes, this is a reasonable 3-year reference range."],
+    ["代表同类岗位中经验更成熟、职责更完整时的市场参考。", "This reflects a market reference for more mature experience and fuller responsibilities in this track."],
+    ["数据来源：美国官方职业薪资资料（BLS/O*NET），按相近岗位赛道估算。", "Source: U.S. occupational salary references (BLS/O*NET), estimated from the closest role track."],
+    ["这是 JD 中写明的薪资，不等同于长期成长上限。", "This is the salary stated in the JD, not the long-term growth ceiling."],
+    ["资料整理、初稿生成、基础分析", "Data organization, first drafts, basic analysis"],
+    ["AI 会提升执行速度，但不直接替代完整判断。", "AI can improve execution speed, but it does not replace complete judgment."],
+    ["复杂决策、产品/业务判断、跨团队影响", "Complex decisions, product/business judgment, cross-team influence"],
+    ["能定义问题和推动结果的人更有优势。", "People who can define problems and drive outcomes have an advantage."],
+    ["决策依据、业务影响、规模化成果", "Decision rationale, business impact, scalable outcomes"],
+    ["突出你如何用工具和数据做出更好的判断。", "Show how you use tools and data to make better decisions."],
+    ["普通版本会变得很快，简历里要写你怎么把初稿变成有效结果。", "Basic versions move quickly; the resume should show how you turn first drafts into effective outcomes."],
+    ["系统设计、评估方法、安全边界、业务落地", "System design, evaluation methods, safety boundaries, business execution"],
+    ["能把数字翻成业务动作的人，会比只会整理数据更有竞争力。", "People who turn numbers into business actions are more competitive than those who only organize data."],
+    ["评估指标、上线效果、成本控制、用户影响", "Evaluation metrics, launch results, cost control, user impact"],
+    ["取数、分析初稿、固定指标解释", "Data pulls, analysis drafts, fixed metric explanations"],
+    ["基础分析会越来越快，真正拉开差距的是你能不能解释业务问题。", "Basic analysis will get faster; the differentiator is whether you can explain the business problem."],
+    ["指标判断、业务解释、实验分析、建议落地", "Metric judgment, business interpretation, experiment analysis, recommendations that land"],
+    ["不要只写做分析，要写你怎么把分析变成决策或行动。", "Do not only say you analyzed data; show how analysis turned into decisions or action."],
+    ["业务洞察、指标提升、决策支持、自动化效率", "Business insight, metric improvement, decision support, automation efficiency"],
+    ["把分析工作写成结果，会比只写工具和图表更有力。", "Writing analysis as outcomes is stronger than only listing tools and charts."],
+    ["把经历改成可衡量结果", "Rewrite experience into measurable outcomes"],
+    ["把职责写成项目证据", "Turn responsibilities into project evidence"],
+    ["让关键词出现在真实项目里", "Put keywords into real projects"],
+    ["补清经历边界", "Clarify experience boundaries"],
+    ["把 JD 关键词放到对的位置", "Place JD keywords in the right sections"],
+  ]);
+  let text = exact.get(raw) || raw;
+  text = text
+    .replace(/^离顶级 Offer 线\s*(.+?)\s*仍有差距。$/, "You still have a gap before the top offer line: $1.")
+    .replace(/^你已掌握\s*(.+?)\s*项岗位描述关键词，还有\s*(.+?)\s*项待补强。.*$/, "You have covered $1 JD keywords, with $2 still needing work. Prioritize terms that fit into Skills, Summary, and Experience instead of stuffing every keyword flatly.")
+    .replace(/^(.+?)\s*的候选人偏好$/, "$1 candidate preferences")
+    .replace(/^(.+?)\s*的面试考察重点$/, "$1 interview focus")
+    .replace(/^(.+?)\s*导师$/, "$1 mentor")
+    .replace(/^本次视角：\s*/, "Focus: ")
+    .replace(/^导师\s*(\d+)\s*\/\s*(\d+)$/, "Mentor $1 / $2")
+    .replace(/^完整\s*(\d+)\s*条导师建议$/, "$1 complete mentor recommendations")
+    .replace(/^围绕\s*(.+?)\s*重排 Summary、Skills 和最靠前的经历，把最相关的职责、关键词和结果证据放到前面，弱相关内容收住。$/, "Reorder Summary, Skills, and the earliest experience around $1. Move the most relevant responsibilities, keywords, and outcome evidence forward, and reduce weakly related content.")
+    .replace(/^在 Summary 第一或第二句自然写出\s*(.+?)，并紧接一句连接\s*(.+?)。$/, "In the first or second Summary sentence, state $1 naturally, then add one sentence connecting $2.")
+    .replace(/^把职责型 bullet 改成结果型表达：先写动作和方法，再补产出、影响或业务价值，让 HR 能判断你做出了什么。$/, "Rewrite responsibility-style bullets into outcome-oriented bullets: state the action and method first, then add output, impact, or business value so HR can judge what you delivered.")
+    .replace(/^如果这段经历是实习，请在 title 中明确标注 Intern \/ Internship；如果是项目制经历，在 bullet 中说明项目周期、职责边界和最终产出。$/, "If this was an internship, mark Intern / Internship in the title. If it was project-based, explain the project period, responsibility boundaries, and final output in the bullet.")
+    .replace(/^把最贴近\s*(.+?)\s*的经历或项目放到更靠前位置，并给它多\s*1-2\s*条 bullet；弱相关经历只保留能证明\s*(.+?)\s*的内容。$/, "Move the experience or project closest to $1 higher and give it 1-2 more bullets. Keep only weakly related content that proves $2.")
+    .replace(/^围绕\s*(.+?)\s*重排 Summary、Skills 和最靠前的经历.*$/, "Reorder Summary, Skills, and the earliest experience around $1. Move the strongest role evidence forward.")
+    .replace(/^(.+?)\s*类团队(.*)$/, "$1-style teams$2")
+    .replace(/^(.+?)\s*类职位(.*)$/, "$1-style roles$2");
+  if (/[\u4e00-\u9fff]/.test(text)) {
+    const generic = {
+      adviceTitle: "Strengthen resume evidence for the target role",
+      diagnosis: "This part of the resume does not yet show enough target-role evidence.",
+      action: "Move the strongest role evidence forward and make the result, method, and impact explicit.",
+      insight: "Mentors look for a clear throughline between the target role, skills, and proven outcomes.",
+      hr: "Recruiters need direct evidence that lowers screening effort and confirms role fit.",
+      insiderTitle: "Company hiring signal",
+      insiderInsight: "This company typically looks for clear role fit, concrete evidence, and measurable impact.",
+      chip: "Role fit",
+    };
+    return generic[context] || text.replace(/[\u4e00-\u9fff]+/g, "").replace(/\s+/g, " ").trim() || generic.general || "Additional detail";
+  }
+  return text;
+}
+function firstTextValueLoose(...values) {
+  for (const value of values.flat()) {
+    if (value !== null && value !== undefined && String(value).trim()) return String(value);
+  }
+  return "";
+}
+function localField(item = {}, key, fallback = "") {
+  const camel = key.replace(/_([a-z])/g, (_, ch) => ch.toUpperCase());
+  const snake = key.replace(/[A-Z]/g, (ch) => "_" + ch.toLowerCase());
+  const englishKeys = [`${camel}En`, `${camel}_en`, `${snake}_en`, `${key}En`, `${key}_en`];
+  const baseKeys = [key, camel, snake];
+  const english = englishKeys.map((field) => item?.[field]);
+  const base = baseKeys.map((field) => item?.[field]);
+  return isEnglishReport()
+    ? firstTextValueLoose(...english, ...base, fallback)
+    : firstTextValueLoose(...base, ...english, fallback);
+}
+
 function displayAdviceTitle(item = {}) {
-  const title = String(item.title || "").trim();
+  const englishTitle = firstTextValueLoose(
+    item.titleEn,
+    item.title_en,
+    item.advice_card_title_en,
+    item.canonical_title_en,
+    item.canonicalTitleEn
+  );
+  const title = String(isEnglishReport() ? (englishTitle || item.title || "") : (item.title || "")).trim();
+  if (isEnglishReport() && englishTitle) return englishTitle;
   const actionTitle = actionMatchedHumanTitle(item);
   if (!actionTitle) return title || "优化这条简历建议";
   const titleIntent = adviceTitleIntent(title);
@@ -1852,7 +2015,7 @@ const FIT_TYPE_CONFIG = {
   direct: { label:"同职能导师", bg:"#F0FDF4", color:"#166534", border:"#BBF7D0" },
   adjacent: { label:"相邻职能视角", bg:"#FFF7ED", color:"#92400E", border:"#FDE68A" },
   problem_lens: { label:"问题视角匹配", bg:"#EFF6FF", color:"#1D4ED8", border:"#BFDBFE" },
-  mentorx_strategy: { label:"MentorX 策略", bg:"#F3F4F6", color:"#4B5563", border:"#E5E7EB" },
+  mentorx_strategy: { label:"EdAIX strategy", bg:"#F3F4F6", color:"#4B5563", border:"#E5E7EB" },
   same_role: { label:"同职位导师", bg:"#F0E8FA", color:"#5333A6", border:"#E6DEF2" },
   same_industry: { label:"同产业导师", bg:"#F0FDF4", color:"#15803D", border:"#BBF7D0" },
   same_function: { label:"同职能导师", bg:"#F0FDF4", color:"#166534", border:"#BBF7D0" },
@@ -1910,21 +2073,32 @@ function normalizeEvidenceChipsForDisplay(item = {}) {
 }
 
 function renderAdviceItem(item, i) {
-  const title = displayAdviceTitle(item);
-  const diagnosis = item.currentDiagnosis || item.problemSummary || "";
-  const action = item.action || item.actionSummary || "";
-  const insight = item.mentorInsight || item.mentorLens || item.reason || item.I_insight || item.P_mentor || "";
-  const hrPov = item.hrPerspective || item.HR_os || item.hrPov || item.recruiterPerspective || HR_PERSPECTIVE_LOOKUP.get(String(item.adviceId || "")) || HR_PERSPECTIVE_LOOKUP.get(adviceIdentity(item)) || fallbackHrPerspective(item);
+  const title = reportText(displayAdviceTitle(item), "adviceTitle");
+  const diagnosis = reportText(isEnglishReport()
+    ? firstTextValueLoose(item.currentDiagnosisEn, item.currentDiagnosis_en, item.current_diagnosis_en, item.problemSummaryEn, item.problemSummary_en, item.problem_summary_en, item.user_problem_summary_en, item.currentDiagnosis, item.problemSummary)
+    : firstTextValueLoose(item.currentDiagnosis, item.problemSummary, item.currentDiagnosisEn, item.problemSummaryEn, item.user_problem_summary_en), "diagnosis");
+  const action = reportText(isEnglishReport()
+    ? firstTextValueLoose(item.actionEn, item.action_en, item.actionSummaryEn, item.actionSummary_en, item.action_summary_en, item.action, item.actionSummary)
+    : firstTextValueLoose(item.action, item.actionSummary, item.actionEn, item.actionSummaryEn, item.action_summary_en), "action");
+  const insight = reportText(isEnglishReport()
+    ? firstTextValueLoose(item.mentorInsightEn, item.mentorInsight_en, item.mentor_insight_en, item.mentorLensEn, item.mentorLens_en, item.mentor_lens_en, item.humanized_mentor_insight_en, item.humanizedMentorInsightEn, item.mentorInsight, item.mentorLens, item.reason, item.I_insight, item.P_mentor)
+    : firstTextValueLoose(item.mentorInsight, item.mentorLens, item.reason, item.I_insight, item.P_mentor, item.mentorInsightEn, item.humanized_mentor_insight_en), "insight");
+  const hrPov = reportText(isEnglishReport()
+    ? firstTextValueLoose(item.hrPerspectiveEn, item.hrPerspective_en, item.hr_perspective_en, item.HR_os_en, item.humanized_hr_perspective_en, item.humanizedHrPerspectiveEn, item.hrPerspective, item.HR_os, item.hrPov, item.recruiterPerspective)
+    : firstTextValueLoose(item.hrPerspective, item.HR_os, item.hrPov, item.recruiterPerspective, item.hrPerspectiveEn, item.HR_os_en)
+      || HR_PERSPECTIVE_LOOKUP.get(String(item.adviceId || ""))
+      || HR_PERSPECTIVE_LOOKUP.get(adviceIdentity(item))
+      || fallbackHrPerspective(item), "hr");
   const fitType = item.mentorDisplayFit || item.mentorFitType || "";
-  const rawTopicCluster = item.displayAdviceType || item.topicCluster || sectionLabel(item.targetSection);
-  const topicCluster = /ATS\s*通用建议/i.test(String(rawTopicCluster)) ? "" : rawTopicCluster;
+  const rawTopicCluster = localField(item, "displayAdviceType", localField(item, "topicCluster", sectionLabel(item.targetSection)));
+  const topicCluster = /ATS\s*通用建议/i.test(String(rawTopicCluster)) ? "" : reportText(rawTopicCluster, "chip");
   const fitCfg = FIT_TYPE_CONFIG[fitType];
   const fitChip = fitCfg
-    ? `<span style="display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:${fitCfg.bg};color:${fitCfg.color};border:1px solid ${fitCfg.border};">${fitCfg.label}</span>`
+    ? `<span style="display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:${fitCfg.bg};color:${fitCfg.color};border:1px solid ${fitCfg.border};">${reportText(fitCfg.label, "chip")}</span>`
     : "";
   const displayEvidence = normalizeEvidenceChipsForDisplay(item);
   const evidenceChips = displayEvidence.length
-    ? `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;">${displayEvidence.map(e => `<span style="font-size:11px;padding:2px 8px;border-radius:99px;background:#F3F4F6;color:#6B7280;border:1px solid #E5E7EB;">${escapeHtml(e)}</span>`).join("")}</div>`
+    ? `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;">${displayEvidence.map(e => `<span style="font-size:11px;padding:2px 8px;border-radius:99px;background:#F3F4F6;color:#6B7280;border:1px solid #E5E7EB;">${escapeHtml(reportText(e, "chip"))}</span>`).join("")}</div>`
     : "";
   const divider = i > 0
     ? `<div style="height:1px;background:linear-gradient(to right,transparent,rgba(0,0,0,0.07),transparent);margin:22px 0;"></div>`
@@ -1941,7 +2115,7 @@ function renderAdviceItem(item, i) {
       ${diagnosis ? `<div style="margin-bottom:11px;">
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
           <span style="width:3px;height:14px;background:#D4A574;border-radius:2px;flex-shrink:0;"></span>
-          <span style="font-size:11px;font-weight:700;color:#92400E;letter-spacing:.02em;">你的现状</span>
+          <span style="font-size:11px;font-weight:700;color:#92400E;letter-spacing:.02em;">${isEnglishReport() ? "Current state" : "你的现状"}</span>
         </div>
         <p style="margin:0 0 0 9px;font-size:13px;line-height:1.65;color:#44403C;">${escapeHtml(diagnosis)}</p>
         ${evidenceChips ? `<div style="margin-left:9px;">${evidenceChips}</div>` : ""}
@@ -1949,13 +2123,13 @@ function renderAdviceItem(item, i) {
       ${action ? `<div style="background:#F6FEF9;border:1px solid #D1FAE5;border-radius:12px;padding:12px 14px;margin-bottom:10px;">
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
           <span style="width:18px;height:18px;border-radius:50%;background:#059669;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;color:#fff;font-weight:700;">✓</span>
-          <span style="font-size:11px;font-weight:700;color:#065F46;letter-spacing:.02em;">建议你做</span>
+          <span style="font-size:11px;font-weight:700;color:#065F46;letter-spacing:.02em;">${isEnglishReport() ? "Recommended action" : "建议你做"}</span>
         </div>
         <p style="margin:0;font-size:13px;line-height:1.65;color:#065F46;font-weight:600;">${escapeHtml(action)}</p>
       </div>` : ""}
       ${(insight || hrPov) ? `<div style="background:#FAFAF9;border:1px solid rgba(0,0,0,0.05);border-radius:10px;padding:11px 13px;margin-top:8px;">
-        <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase;">补充视角</div>
-        ${insight ? `<div style="${hrPov ? "margin-bottom:8px;" : ""}"><span style="display:inline-flex;align-items:center;justify-content:center;min-width:34px;font-size:11px;font-weight:600;color:#6D28D9;background:#F5F3FF;padding:2px 7px;border-radius:99px;margin-right:6px;box-sizing:border-box;">导师</span><span style="font-size:12.5px;line-height:1.6;color:#374151;">${escapeHtml(insight)}</span></div>` : ""}
+        <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase;">${isEnglishReport() ? "Additional perspective" : "补充视角"}</div>
+        ${insight ? `<div style="${hrPov ? "margin-bottom:8px;" : ""}"><span style="display:inline-flex;align-items:center;justify-content:center;min-width:34px;font-size:11px;font-weight:600;color:#6D28D9;background:#F5F3FF;padding:2px 7px;border-radius:99px;margin-right:6px;box-sizing:border-box;">${isEnglishReport() ? "Mentor" : "导师"}</span><span style="font-size:12.5px;line-height:1.6;color:#374151;">${escapeHtml(insight)}</span></div>` : ""}
         ${hrPov ? `<div><span style="display:inline-flex;align-items:center;justify-content:center;min-width:34px;font-size:11px;font-weight:600;color:#B45309;background:#FFFBEB;padding:2px 7px;border-radius:99px;margin-right:6px;box-sizing:border-box;">HR</span><span style="font-size:12.5px;line-height:1.6;color:#374151;">${escapeHtml(hrPov)}</span></div>` : ""}
       </div>` : ""}
       ${renderRewriteExampleCard(item)}
@@ -1975,7 +2149,9 @@ if (mentorsSection) {
       sum + ((mentor.adviceItems || mentor.adviceList || []).length), 0);
     const curatedAdviceCount = hasCuratedGroupsForRender ? countVisibleMentorGroupAdvice(reportPageMentorGroupsForRender) : 0;
     const adviceCount = curatedAdviceCount || (premiumAdviceItems || []).length || legacyAdviceCount;
-    num.textContent = adviceCount ? `04 · 完整 ${adviceCount} 条导师建议` : "04 · 完整导师建议";
+    num.textContent = isEnglishReport()
+      ? (adviceCount ? `04 · ${adviceCount} complete mentor recommendations` : "04 · Full mentor recommendations")
+      : (adviceCount ? `04 · 完整 ${adviceCount} 条导师建议` : "04 · 完整导师建议");
   }
 }
 const mentorLogoIntroSlot = document.getElementById("mentorLogoIntroSlot");
@@ -1992,7 +2168,7 @@ if (mentorsListEl) {
   } else if (legacyMentors && legacyMentors.length > 0) {
     mentorsListEl.innerHTML = legacyMentors.map((m,i)=>renderPremiumMentorCard(m,i)).join("");
   } else {
-    mentorsListEl.innerHTML = `<p style="color:var(--ink-soft);font-size:14px;padding:16px 0;">导师建议加载失败，请返回首页重新提交简历。</p>`;
+    mentorsListEl.innerHTML = `<p style="color:var(--ink-soft);font-size:14px;padding:16px 0;">${isEnglishReport() ? "Mentor recommendations failed to load. Please return to the home page and submit again." : "导师建议加载失败，请返回首页重新提交简历。"}</p>`;
   }
 }
 
@@ -2052,12 +2228,16 @@ function renderInsiderTipsSection(tips) {
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
     ${logo}
     <div style="flex:1;min-width:0;">
-      <div style="font-weight:800;font-size:15px;line-height:1.25;color:var(--ink);">${escapeHtml(title)}</div>
-      <div style="font-size:12px;color:var(--ink-soft);margin-top:3px;">${escapeHtml(mentorLine)}</div>
+      <div style="font-weight:800;font-size:15px;line-height:1.25;color:var(--ink);">${escapeHtml(reportText(localField(rawTip, "knowledgeTitle", title), "insiderTitle"))}</div>
+      <div style="font-size:12px;color:var(--ink-soft);margin-top:3px;">${escapeHtml((() => {
+        const mentorNameEn = localField(rawTip, "sourceMentorName", "");
+        const mentorTitleEn = localField(rawTip, "sourceMentorTitle", "");
+        return reportText(mentorNameEn ? `${mentorNameEn}${mentorTitleEn ? " · " + mentorTitleEn : ""}` : mentorLine, "chip");
+      })())}</div>
     </div>
-    <span style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(83,51,166,0.10);color:var(--jade,#5333A6);white-space:nowrap;">${escapeHtml(typeLabel)}</span>
+    <span style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(83,51,166,0.10);color:var(--jade,#5333A6);white-space:nowrap;">${escapeHtml(reportText(typeLabel, "chip"))}</span>
   </div>
-  <p style="font-size:14px;line-height:1.65;color:var(--ink);margin:0 0 10px;">${escapeHtml(tip.insight)}</p>
+  <p style="font-size:14px;line-height:1.65;color:var(--ink);margin:0 0 10px;">${escapeHtml(reportText(localField(rawTip, "insight", tip.insight), "insiderInsight"))}</p>
 </div>`;
   }).join('');
 }
@@ -2635,10 +2815,10 @@ function buildAiRewritePdfElement() {
   el.className = "ai-rewrite-pdf";
   el.innerHTML = `
     <div class="ai-pdf-brand">
-      <img src="/logo/logo%20banner_no_bg.png" alt="MentorX">
+      <img src="/logo/logo%20banner_no_bg.png" alt="EdAIX">
       <div class="ai-pdf-kicker">AI RESUME REWRITE PROMPT PACK</div>
     </div>
-    <h1>MentorX AI 简历改写指令包</h1>
+    <h1>EdAIX AI 简历改写指令包</h1>
     <p>请把这份 PDF 和用户的原始简历一起上传给 ChatGPT / Claude / 豆包等 AI 工具。目标岗位：<strong>${escapeHtml(targetRole)}</strong>。</p>
 
     <section class="ai-pdf-card ai-pdf-prompt">
@@ -2795,7 +2975,7 @@ function buildDiagnosticReportPdfElement() {
   el.className = "ai-rewrite-pdf diagnostic-pdf";
   el.innerHTML = `
     <div class="ai-pdf-brand">
-      <img src="/logo/logo%20banner_no_bg.png" alt="MentorX">
+      <img src="/logo/logo%20banner_no_bg.png" alt="EdAIX">
       <div class="ai-pdf-kicker">RESUME DIAGNOSTIC REPORT</div>
     </div>
     <section class="diagnostic-pdf-cover">
@@ -2864,7 +3044,7 @@ function exportPDFLegacy(){
   document.body.classList.add('exporting');
   const opt = {
     margin: [10, 8, 10, 8],
-    filename: "MentorX-Resume-Diagnostic-Report.pdf",
+    filename: "EdAIX-Resume-Diagnostic-Report.pdf",
     image: { type: 'jpeg', quality: 0.95 },
     html2canvas: { scale: 2, useCORS: true, logging: false, backgroundColor: '#FFFFFF', windowWidth: 480 },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
@@ -2964,7 +3144,7 @@ async function exportPDF(){
     const exportWidth = 794;
     const opt = {
       margin: [0, 0, 0, 0],
-      filename: "MentorX-Resume-Diagnostic-Report.pdf",
+      filename: "EdAIX-Resume-Diagnostic-Report.pdf",
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: {
         scale: 2,
@@ -3000,7 +3180,7 @@ async function exportAiRewritePDF(){
     const exportWidth = 794;
     const opt = {
       margin: [0, 0, 0, 0],
-      filename: "MentorX-AI-Resume-Rewrite-Prompt-Pack.pdf",
+      filename: "EdAIX-AI-Resume-Rewrite-Prompt-Pack.pdf",
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: {
         scale: 2,
@@ -3030,7 +3210,7 @@ function collectPrintStyles() {
     .map((node) => node.outerHTML)
     .join("\n");
 }
-function printDocumentFromHtml(html, title = "MentorX PDF") {
+function printDocumentFromHtml(html, title = "EdAIX PDF") {
   const iframe = document.createElement("iframe");
   iframe.setAttribute("aria-hidden", "true");
   iframe.style.cssText = [
@@ -3167,11 +3347,12 @@ function printDocumentFromHtml(html, title = "MentorX PDF") {
 }
 function exportPDFPrint(){
   const el = buildDiagnosticReportPdfElement();
-  printDocumentFromHtml(el.outerHTML, "MentorX-Resume-Diagnostic-Report");
+  printDocumentFromHtml(el.outerHTML, "EdAIX-Resume-Diagnostic-Report");
 }
 function exportAiRewritePDFPrint(){
   const el = buildAiRewritePdfElement();
-  printDocumentFromHtml(el.outerHTML, "MentorX-AI-Resume-Rewrite-Prompt-Pack");
+  printDocumentFromHtml(el.outerHTML, "EdAIX-AI-Resume-Rewrite-Prompt-Pack");
 }
 window.exportPDF = exportPDFPrint;
 window.exportAiRewritePDF = exportAiRewritePDFPrint;
+window.dispatchEvent(new Event("edaix:report-rendered"));

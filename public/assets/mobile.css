@@ -3048,7 +3048,7 @@
   }
 
   .payment-page > .pay-foot::after{
-    content: "✓ 4 位大厂导师完整建议   ✓ 完整 JD Keyword 清单   ✓ 可下载 PDF 报告   ✓ AI 改简历指令包";
+    content: "✓ 4 位大厂导师完整建议\A✓ 完整 JD Keyword 清单\A✓ 可下载 PDF 报告\A✓ AI 改简历指令包";
     display: block;
     margin-top: 14px;
     padding: 16px;
@@ -3058,7 +3058,62 @@
     color: var(--pay-ink);
     font-size: 13px;
     line-height: 1.8;
+    text-align: left;
+    white-space: pre-line;
     box-shadow: var(--pay-shadow);
+  }
+
+  html[lang="zh-CN"] .payment-page > .pay-foot::before{
+    content: "包含内容";
+  }
+
+  html[lang="en-US"] .payment-page > .pay-foot::before{
+    content: "Included";
+  }
+
+  html[lang="zh-CN"] .payment-page > .pay-foot::after{
+    content: "✓ 4 位行业导师完整建议\A✓ 完整 JD Keyword 清单\A✓ 可下载 PDF 报告\A✓ AI 改简历指令包";
+  }
+
+  html[lang="en-US"] .payment-page > .pay-foot::after{
+    content: "✓ Full recommendations from 4 industry mentors\A✓ Full JD keyword checklist\A✓ Downloadable PDF report\A✓ AI resume rewrite prompt pack";
+  }
+
+  html[lang="en-US"] .payment-page > .section-title{
+    font-size: clamp(34px, 3.2vw, 48px) !important;
+    line-height: 1.04;
+    max-width: 720px;
+    white-space: nowrap;
+  }
+
+  html[lang="en-US"] .payment-page > .section-desc{
+    font-size: 14px;
+    line-height: 1.55;
+    max-width: 720px;
+  }
+
+  html[lang="en-US"] .payment-page > .pay-foot::before{
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  html[lang="en-US"] .payment-page > .pay-foot::after{
+    width: auto;
+    max-width: 100%;
+    white-space: pre-line;
+    font-size: 11.5px;
+    line-height: 1.65;
+    padding: 13px 14px;
+  }
+
+  html[lang="en-US"] .payment-page .pay-summary .item{
+    font-size: 12px;
+  }
+
+  html[lang="en-US"] .payment-page .pay-method .sub,
+  html[lang="en-US"] .payment-page .pay-trust,
+  html[lang="en-US"] .payment-page .pay-foot{
+    font-size: 11px;
   }
 }
 
@@ -4536,6 +4591,25 @@
 
   .home-page .btn{
     min-height: 40px;
+  }
+}
+
+@media (max-width: 899px){
+  html[lang="en-US"] .payment-page > .section-title{
+    font-size: clamp(28px, 8vw, 38px) !important;
+    line-height: 1.08;
+    white-space: normal;
+  }
+
+  html[lang="en-US"] .payment-page > .section-desc{
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  html[lang="en-US"] .payment-page > .pay-foot::after{
+    white-space: pre-line;
+    font-size: 11.5px;
+    line-height: 1.55;
   }
 }
 

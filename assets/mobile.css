@@ -538,6 +538,10 @@
     max-width: 680px;
   }
 
+  .hero h1 .hero-line{
+    white-space: nowrap;
+  }
+
   .hero p.lede{
     max-width: 560px;
     font-size: 15px;
@@ -608,9 +612,11 @@
   }
 
   .home-page > .upload-section .section-title{
-    font-size: clamp(24px, 2vw, 29px) !important;
+    font-size: 25px !important;
     line-height: 1.12;
     margin-bottom: 12px;
+    white-space: nowrap;
+    letter-spacing: 0;
   }
 
   .home-page > .upload-section .input-label{
@@ -745,7 +751,7 @@
   }
 
   .login-page .wechat-icon::before{
-    content: "微信安全登录";
+    content: attr(data-login-method);
     position: absolute;
     left: 72px;
     top: 8px;
@@ -773,7 +779,7 @@
   }
 
   .login-page .login-wrap::after{
-    content: "报告已开始生成\a登录后自动同步进度";
+    content: attr(data-login-side-title);
     white-space: pre-line;
     grid-column: 1;
     grid-row: 1;
@@ -931,10 +937,10 @@
 @media (min-width: 900px){
   .login-page .login-wrap{
     max-width: 1040px;
-    grid-template-columns: 300px minmax(0, 1fr);
-    gap: 0 38px;
+    grid-template-columns: 340px minmax(0, 1fr);
+    gap: 0 32px;
     background:
-      linear-gradient(90deg, rgba(247,243,252,.88) 0 300px, #fff 300px 100%);
+      linear-gradient(90deg, rgba(247,243,252,.88) 0 340px, #fff 340px 100%);
   }
 
   .login-page .login-wrap::before{
@@ -945,10 +951,25 @@
   }
 
   .login-page .login-wrap::after{
-    content: "报告已开始生成\a登录后自动同步进度";
+    content: attr(data-login-side-title);
     color: var(--ink);
     font-size: 25px;
+    line-height: 1.15;
     padding: 42px 34px 22px;
+    max-width: 300px;
+  }
+
+  html[lang="en-US"] .login-page .login-wrap::after{
+    font-size: 18px;
+    line-height: 1.18;
+    letter-spacing: 0;
+    max-width: 312px;
+  }
+
+  html[lang="zh-CN"] .login-page .login-wrap::after{
+    font-size: 25px;
+    line-height: 1.15;
+    max-width: 300px;
   }
 
   .login-page .wechat-icon{
@@ -962,29 +983,32 @@
   }
 
   .login-page .wechat-icon::before{
-    content: "微信安全登录";
+    content: attr(data-login-method);
     left: 68px;
-    top: 3px;
-    width: 170px;
+    top: 2px;
+    width: 205px;
     color: var(--ink);
     font-family: var(--sans);
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
-    line-height: 1.15;
+    line-height: 1.2;
     white-space: nowrap;
   }
 
   .login-page .wechat-icon::after{
-    content: "用于同步报告，不会公开简历";
+    content: attr(data-login-method-note);
     position: absolute;
     inset: auto auto auto 68px !important;
-    top: 32px;
-    width: 188px;
+    top: 34px !important;
+    bottom: auto !important;
+    right: auto !important;
+    width: 205px;
+    height: auto !important;
     border: 0 !important;
     color: var(--ink-mute);
     font-family: var(--sans);
-    font-size: 11.5px;
-    line-height: 1.25;
+    font-size: 11px;
+    line-height: 1.28;
     pointer-events: none;
   }
 
@@ -1004,6 +1028,13 @@
 
   .login-page .login-sub{
     margin-right: 48px;
+  }
+
+  html[lang="en-US"] .login-page .login-sub{
+    max-width: none;
+    white-space: nowrap;
+    font-size: 13px;
+    letter-spacing: 0;
   }
 
   .login-page .login-resume-mini,
@@ -1037,14 +1068,24 @@
 
   .login-page .login-tip{
     margin: 0 28px 34px 34px;
+    padding: 14px 14px;
     border-color: rgba(230,222,242,.9);
     background: rgba(255,255,255,.78);
     color: var(--ink-soft);
     box-shadow: 0 18px 42px -34px rgba(69,42,147,.36);
+    gap: 10px;
+    font-size: 12px;
   }
 
   .login-page .login-foot{
     margin-right: 48px;
+    line-height: 1.8;
+  }
+
+  .login-page .login-foot a{
+    text-decoration-style: solid;
+    text-underline-offset: 3px;
+    margin: 0 2px;
   }
 }
 
@@ -3048,7 +3089,7 @@
   }
 
   .payment-page > .pay-foot::after{
-    content: "✓ 4 位大厂导师完整建议   ✓ 完整 JD Keyword 清单   ✓ 可下载 PDF 报告   ✓ AI 改简历指令包";
+    content: "✓ 4 位大厂导师完整建议\A✓ 完整 JD Keyword 清单\A✓ 可下载 PDF 报告\A✓ AI 改简历指令包";
     display: block;
     margin-top: 14px;
     padding: 16px;
@@ -3058,7 +3099,62 @@
     color: var(--pay-ink);
     font-size: 13px;
     line-height: 1.8;
+    text-align: left;
+    white-space: pre-line;
     box-shadow: var(--pay-shadow);
+  }
+
+  html[lang="zh-CN"] .payment-page > .pay-foot::before{
+    content: "包含内容";
+  }
+
+  html[lang="en-US"] .payment-page > .pay-foot::before{
+    content: "Included";
+  }
+
+  html[lang="zh-CN"] .payment-page > .pay-foot::after{
+    content: "✓ 4 位行业导师完整建议\A✓ 完整 JD Keyword 清单\A✓ 可下载 PDF 报告\A✓ AI 改简历指令包";
+  }
+
+  html[lang="en-US"] .payment-page > .pay-foot::after{
+    content: "✓ Full recommendations from 4 industry mentors\A✓ Full JD keyword checklist\A✓ Downloadable PDF report\A✓ AI resume rewrite prompt pack";
+  }
+
+  html[lang="en-US"] .payment-page > .section-title{
+    font-size: clamp(34px, 3.2vw, 48px) !important;
+    line-height: 1.04;
+    max-width: 720px;
+    white-space: nowrap;
+  }
+
+  html[lang="en-US"] .payment-page > .section-desc{
+    font-size: 14px;
+    line-height: 1.55;
+    max-width: 720px;
+  }
+
+  html[lang="en-US"] .payment-page > .pay-foot::before{
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  html[lang="en-US"] .payment-page > .pay-foot::after{
+    width: auto;
+    max-width: 100%;
+    white-space: pre-line;
+    font-size: 11.5px;
+    line-height: 1.65;
+    padding: 13px 14px;
+  }
+
+  html[lang="en-US"] .payment-page .pay-summary .item{
+    font-size: 12px;
+  }
+
+  html[lang="en-US"] .payment-page .pay-method .sub,
+  html[lang="en-US"] .payment-page .pay-trust,
+  html[lang="en-US"] .payment-page .pay-foot{
+    font-size: 11px;
   }
 }
 
@@ -3699,6 +3795,47 @@
 
   .result-page .result-dimension-card .detail-row-stacked .detail-note{
     grid-column: 1 / -1;
+  }
+
+  html[lang="en-US"] .result-page .result-dimension-card .detail-row{
+    grid-template-columns: minmax(130px, .45fr) minmax(0, 1fr);
+    gap: 14px;
+    align-items: start;
+  }
+
+  html[lang="en-US"] .result-page .result-dimension-card .detail-row-stacked{
+    display: grid;
+    grid-template-columns: minmax(130px, .45fr) minmax(0, 1fr);
+    column-gap: 14px;
+    row-gap: 6px;
+  }
+
+  html[lang="en-US"] .result-page .result-dimension-card .detail-row-stacked .v{
+    text-align: left;
+  }
+
+  html[lang="en-US"] .result-page .result-dimension-card .detail-row-stacked .detail-note{
+    grid-column: 2;
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 899px){
+  html[lang="en-US"] .payment-page > .section-title{
+    font-size: clamp(28px, 8vw, 38px) !important;
+    line-height: 1.08;
+    white-space: normal;
+  }
+
+  html[lang="en-US"] .payment-page > .section-desc{
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  html[lang="en-US"] .payment-page > .pay-foot::after{
+    white-space: pre-line;
+    font-size: 11.5px;
+    line-height: 1.55;
   }
 }
 
@@ -4472,5 +4609,86 @@
 @media (min-width: 900px) and (max-width: 1180px){
   .result-page{
     gap: 24px !important;
+  }
+}
+
+/* Home English copy: keep the upload heading visually aligned with the CN layout. */
+.home-page > .upload-section .section-title{
+  white-space: nowrap;
+  letter-spacing: 0;
+}
+
+@media (min-width: 640px){
+  .home-page > .upload-section .section-title{
+    font-size: 23px !important;
+    line-height: 1.12;
+  }
+}
+
+@media (max-width: 639px){
+  .home-page > .upload-section .section-title{
+    font-size: 23px !important;
+    line-height: 1.12;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1199px){
+  .home-page{
+    display: block;
+  }
+
+  .home-page > .upload-section,
+  .home-page > .hero{
+    min-height: 0;
+    height: auto;
+    margin: 0 0 24px;
+  }
+
+  .home-page > .upload-section .section-title{
+    font-size: 23px !important;
+  }
+
+  .home-page > .hero h1{
+    font-size: 44px !important;
+    max-width: 760px;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 760px){
+  .home-page > .hero h1{
+    font-size: 40px !important;
+  }
+}
+
+
+@media (min-width: 1200px) and (max-width: 1279px){
+  .home-page > .upload-section .section-title{
+    font-size: 21px !important;
+  }
+}
+
+@media (max-width: 460px){
+  .home-page > .upload-section .section-title{
+    font-size: 20px !important;
+  }
+}
+
+@media (max-width: 390px){
+  .home-page > .upload-section .section-title{
+    font-size: 18px !important;
+  }
+
+  .home-page > .hero h1{
+    font-size: 24px !important;
+  }
+}
+
+@media (max-width: 370px){
+  .home-page > .upload-section .section-title{
+    font-size: 16px !important;
+  }
+
+  .home-page > .hero h1{
+    font-size: 22px !important;
   }
 }

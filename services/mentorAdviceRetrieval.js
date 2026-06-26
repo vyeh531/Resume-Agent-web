@@ -7,6 +7,12 @@ const actionGovernance = require("./actionGovernance");
 const titleGovernance = require("./titleGovernance");
 const { buildRoleProfileFromContext } = require("../src/ats/role-profile");
 const {
+  expandTargetRoles,
+  hasFullStackSignal,
+  normalizeTargetRole,
+  roleFamilyForTargetRole,
+} = require("../src/ats/role-normalization");
+const {
   buildRoleAwareFallbackAdvice,
   buildRoleLexicon,
   buildFallbackAdviceForSlot,
@@ -598,13 +604,35 @@ function normalizeTerm(term) {
     .replace(/^_+|_+$/g, "");
 }
 
+function normalizeRoleTerm(term) {
+  const raw = String(term || "");
+  if (hasFullStackSignal(raw)) return "full_stack_engineer";
+  return normalizeTerm(raw);
+}
+
 function splitCsv(value) {
-  if (Array.isArray(value)) return value.map(normalizeTerm).filter(Boolean);
+  if (Array.isArray(value)) return value.map(normalizeRoleTerm).filter(Boolean);
   if (!value) return [];
   return String(value)
     .split(/[,;|，、\n]+/)
-    .map(normalizeTerm)
+    .map(normalizeRoleTerm)
     .filter(Boolean);
+}
+
+function normalizeRetrievalQuery(retrievalQuery = {}) {
+  const filters = retrievalQuery.filters || {};
+  const targetRole = normalizeTargetRole(retrievalQuery.targetRole) || normalizeRoleTerm(retrievalQuery.targetRole);
+  const roleFamily = roleFamilyForTargetRole(targetRole, normalizeRoleTerm(retrievalQuery.roleFamily || (filters.roleFamily || [])[0]));
+  return {
+    ...retrievalQuery,
+    targetRole,
+    roleFamily,
+    filters: {
+      ...filters,
+      roleFamily: [...new Set([roleFamily, ...splitCsv(filters.roleFamily), "universal"].filter(Boolean))],
+      targetRoles: [...new Set([...expandTargetRoles(targetRole, roleFamily), ...splitCsv(filters.targetRoles)].filter(Boolean))],
+    },
+  };
 }
 
 const TARGET_ROLE_DISPLAY_LABELS = {
@@ -795,7 +823,7 @@ function rowText(row) {
     row.generalized_action, row.activation_keywords, row.grounding_terms, row.canonical_action_family,
     row.title, row.problemSummary, row.actionSummary, row.currentDiagnosis, row.action,
     row.mentorInsight, row.example, row.hrPerspective, row.roleFamily, row.targetRoles,
-    row.humanized_hr_perspective, row.humanizedHrPerspective, row.recruiterPerspective,
+    row.humanizedHrPerspective, row.recruiterPerspective,
     row.recruiter_perspective, row.hrPov, row.humanized_mentor_insight,
     row.humanized_mentor_insight_raw, row.humanizedMentorInsightRaw,
     row.humanized_hr_perspective_raw, row.humanizedHrPerspectiveRaw,
@@ -1171,6 +1199,10 @@ function hasCrossRoleUnsafeAdvice(row, userRoleFamily = "", userTargetRole = "")
   if (!userCareerGroup) return false;
 
   const text = rowText(row);
+  if (normalizeRoleTerm(userTargetRole) === "full_stack_engineer" &&
+    /(ai方向|ai\s+direction|ai版|ai\s+version|目标岗位.*ai|target.*ai|weak(en)?\s+full[-\s]?stack|删除或弱化.*full\s*stack|弱化.*full\s*stack|目标岗位无关的full\s*stack)/i.test(text)) {
+    return true;
+  }
   if (userFamily === "machine_learning" || /\b(machine learning|mle|ml engineer)\b/i.test(String(userTargetRole || ""))) {
     if (hasMlDaDirectionalAdvice(row)) return true;
   }
@@ -1225,6 +1257,15 @@ function isRoleSafeForUser(row, userRoleFamily, userTargetRole) {
   const userCareerGroup = careerGroupOf(userRoleFamily) || careerGroupOf(userTargetRole);
   if (hasCrossRoleUnsafeAdvice(row, userRoleFamily, userTargetRole)) return false;
   if (!userGroup && !userCareerGroup) return true; // can't classify the user → don't filter
+
+  const normalizedUserRole = normalizeRoleTerm(userTargetRole);
+  const normalizedUserFamily = normalizeRoleTerm(userRoleFamily);
+  const concreteTargets = splitCsv(row.target_roles || row.targetRoles).filter((term) => term !== "universal");
+  if (normalizedUserRole && concreteTargets.length &&
+    !concreteTargets.includes(normalizedUserRole) &&
+    !concreteTargets.includes(normalizedUserFamily)) {
+    return false;
+  }
 
   // Universal advice transfers across all roles
   if (String(row.generality || "").toLowerCase() === "universal" && !hasRoleSpecificSignal(row)) return true;
@@ -1734,7 +1775,6 @@ function isApprovedPerspectiveSafeForContext(text = "", item = {}, context = {})
     ...item,
     HR_os: value,
     hrPerspective: value,
-    humanized_hr_perspective: value,
   }, roleFamily, targetRole)) {
     return false;
   }
@@ -3164,7 +3204,6 @@ function isPerspectiveUnsafeForContext(text = "", item = {}, context = {}) {
     ...item,
     HR_os: text,
     hrPerspective: text,
-    humanized_hr_perspective: text,
   }, roleFamily, targetRole);
 }
 
@@ -3390,12 +3429,16 @@ function localizeSegmentRow(row, locale) {
     action_summary: pickLocalized(row.action_summary, row.action_summary_en, locale),
     canonical_title: pickLocalized(row.canonical_title, row.canonical_title_en, locale),
     humanized_mentor_insight: pickLocalized(row.humanized_mentor_insight, row.humanized_mentor_insight_en, locale),
-    humanized_hr_perspective: pickLocalized(row.humanized_hr_perspective, row.humanized_hr_perspective_en, locale),
     humanized_mentor_insight_raw: pickLocalized(row.humanized_mentor_insight_raw, row.humanized_mentor_insight_raw_en, locale),
+    humanized_hr_perspective: pickLocalized(row.humanized_hr_perspective, row.humanized_hr_perspective_en, locale),
     humanized_hr_perspective_raw: pickLocalized(row.humanized_hr_perspective_raw, row.humanized_hr_perspective_raw_en, locale),
     humanized_mentor_insight_generalized: pickLocalized(row.humanized_mentor_insight_generalized, row.humanized_mentor_insight_generalized_en, locale),
     humanized_hr_perspective_generalized: pickLocalized(row.humanized_hr_perspective_generalized, row.humanized_hr_perspective_generalized_en, locale),
   };
+}
+
+function hasCjkText(value = "") {
+  return /[\u3400-\u9fff]/.test(String(value || ""));
 }
 
 function formatAdviceCardForPublic(row, retrievalQuery = {}, options = {}) {
@@ -3403,23 +3446,40 @@ function formatAdviceCardForPublic(row, retrievalQuery = {}, options = {}) {
   const displayRow = localizeSegmentRow(row, locale);
   const preliminary = resolvedGovernedAction(displayRow, governanceContextFromRetrievalQuery(retrievalQuery), roleSafeActionSummary(displayRow, retrievalQuery));
   const resumeFacts = retrievalQuery.resumeFacts || null;
+  const localizedAction = isEnglishLocale(locale) && hasCjkText(preliminary.action) && !hasCjkText(displayRow.action_summary)
+    ? displayRow.action_summary
+    : preliminary.action;
   const usedEnglishFallback = isEnglishLocale(locale) && [
     "advice_card_title_en",
     "user_problem_summary_en",
     "action_summary_en",
     "humanized_mentor_insight_en",
     "humanized_hr_perspective_en",
+    "humanized_hr_perspective_raw_en",
+    "humanized_hr_perspective_generalized_en",
   ].some((field) => row[field] && String(row[field]).trim());
+  const hrPerspective = dbHumanizedPerspectiveForMode(displayRow, { useGeneralizedPerspective: false }, "hr") ||
+    displayRow.HR_os ||
+    "";
   return {
     adviceId: displayRow.id ? `seg_${displayRow.id}` : displayRow.chunk_id,
     chunkId: displayRow.chunk_id || null,
     title: buildCardTitle(displayRow),
+    title_en: row.advice_card_title_en || row.canonical_title_en || "",
     problemSummary: cleanAndTruncate(displayRow.user_problem_summary || displayRow.P_mentor, 180),
-    actionSummary: decontextualizeActionText(sanitizeCompoundAdviceText(preliminary.action, resumeFacts) || ""),
+    problemSummary_en: row.user_problem_summary_en || "",
+    currentDiagnosis_en: row.user_problem_summary_en || "",
+    actionSummary: decontextualizeActionText(sanitizeCompoundAdviceText(localizedAction, resumeFacts) || ""),
+    actionSummary_en: row.action_summary_en || "",
+    action_en: row.action_summary_en || "",
     rawActionSummary: displayRow.A_action || displayRow.action_summary || "",
     mentorInsight: displayRow.humanized_mentor_insight || displayRow.I_insight || "",
+    mentorInsight_en: row.humanized_mentor_insight_en || row.humanized_mentor_insight_raw_en || "",
+    mentorLens_en: row.humanized_mentor_insight_en || row.humanized_mentor_insight_raw_en || "",
     example: displayRow.E_example || "",
-    hrPerspective: displayRow.humanized_hr_perspective || displayRow.HR_os || "",
+    hrPerspective,
+    hrPerspective_en: row.humanized_hr_perspective_en || row.humanized_hr_perspective_raw_en || row.humanized_hr_perspective_generalized_en || "",
+    HR_os_en: row.humanized_hr_perspective_en || row.humanized_hr_perspective_raw_en || row.humanized_hr_perspective_generalized_en || "",
     topic: displayRow.topic_slug || displayRow.L2,
     mentorName: displayRow.mentor_name,
     unlockTier: displayRow.unlock_tier || "paid",
@@ -3456,15 +3516,22 @@ function formatAdviceCardForPublic(row, retrievalQuery = {}, options = {}) {
     actionReviewStatus: displayRow.action_review_status || "",
     actionDisplayModeUsed: preliminary.usedMode,
     canonicalTitle: displayRow.canonical_title || "",
+    canonicalTitle_en: row.canonical_title_en || "",
     titleReviewStatus: displayRow.title_review_status || "",
     titleSource: displayRow.title_source || "",
     titleConfidence: displayRow.title_confidence || null,
     humanizedMentorInsight: displayRow.humanized_mentor_insight || "",
-    humanizedHrPerspective: displayRow.humanized_hr_perspective || "",
+    humanizedMentorInsight_en: row.humanized_mentor_insight_en || "",
+    humanizedHrPerspective: hrPerspective,
+    humanizedHrPerspective_en: row.humanized_hr_perspective_en || row.humanized_hr_perspective_raw_en || row.humanized_hr_perspective_generalized_en || "",
     humanizedMentorInsightRaw: displayRow.humanized_mentor_insight_raw || "",
+    humanizedMentorInsightRaw_en: row.humanized_mentor_insight_raw_en || "",
     humanizedHrPerspectiveRaw: displayRow.humanized_hr_perspective_raw || "",
+    humanizedHrPerspectiveRaw_en: row.humanized_hr_perspective_raw_en || "",
     humanizedMentorInsightGeneralized: displayRow.humanized_mentor_insight_generalized || "",
+    humanizedMentorInsightGeneralized_en: row.humanized_mentor_insight_generalized_en || "",
     humanizedHrPerspectiveGeneralized: displayRow.humanized_hr_perspective_generalized || "",
+    humanizedHrPerspectiveGeneralized_en: row.humanized_hr_perspective_generalized_en || "",
     perspectiveReviewStatus: displayRow.perspective_review_status || "",
     perspectiveSource: displayRow.perspective_source || "",
     perspectiveConfidence: displayRow.perspective_confidence || null,
@@ -3649,6 +3716,15 @@ function targetProblemsFromRetrievalQuery(retrievalQuery = {}) {
 
 function rankCandidates(candidates, limit, retrievalQuery = {}) {
   const targetProblemTags = targetProblemsFromRetrievalQuery(retrievalQuery);
+  const exactTargetRoles = splitCsv(retrievalQuery.filters?.targetRoles || [])
+    .filter((term) => term && term !== "universal" && term !== retrievalQuery.roleFamily);
+  const exactTargetHit = (card) => exactTargetRoles.some((term) => splitCsv(card.targetRoles || card.target_roles).includes(term));
+  const roleFamilyHit = (card) => {
+    const family = normalizeTerm(retrievalQuery.roleFamily);
+    if (!family || family === "universal") return false;
+    return splitCsv(card.roleFamily || card.role_family).includes(family) ||
+      splitCsv(card.targetRoles || card.target_roles).includes(family);
+  };
   const scoredCandidates = candidates.filter((card) => card.retrieval_score > 0);
   const alignedCandidates = targetProblemTags.length
     ? scoredCandidates.filter((card) => isCardAlignedWithTargetProblems(card, targetProblemTags))
@@ -3656,11 +3732,16 @@ function rankCandidates(candidates, limit, retrievalQuery = {}) {
   const candidatePool = alignedCandidates.length ? alignedCandidates : scoredCandidates;
   const exactProblemTagHits = candidatePool.filter((card) => (card.matched_reasons || []).includes("problem_tags"));
   return (exactProblemTagHits.length ? exactProblemTagHits : candidatePool)
-    .sort((a, b) => compareCardsStable(a, b, targetProblemTags, new Set(), []))
+    .sort((a, b) =>
+      Number(exactTargetHit(b)) - Number(exactTargetHit(a)) ||
+      Number(roleFamilyHit(b)) - Number(roleFamilyHit(a)) ||
+      compareCardsStable(a, b, targetProblemTags, new Set(), [])
+    )
     .slice(0, limit);
 }
 
 async function retrieveStrictCandidates(retrievalQuery = {}, options = {}) {
+  retrievalQuery = normalizeRetrievalQuery(retrievalQuery);
   const pool = options.pool || db.getPool();
   const filters = retrievalQuery.filters || {};
   const roleTerms = [
@@ -3681,15 +3762,22 @@ async function retrieveStrictCandidates(retrievalQuery = {}, options = {}) {
     RETRIEVAL_MATCH_COLUMNS,
     roleTerms
   );
+  const exactTargetTerms = splitCsv(filters.targetRoles)
+    .filter((term) => term && term !== "unknown" && term !== "universal" && term !== retrievalQuery.roleFamily);
+  const { clause: targetRoleClause, params: targetRoleParams } = likeClauseForTerms(
+    ["target_roles"],
+    exactTargetTerms
+  );
   const { clause: problemTagClause, params: problemTagParams } = exactProblemTagClause(
     retrievalQuery.problemTags
   );
-  const [problemTagRows, broadRows, roleRows] = await Promise.all([
+  const [problemTagRows, broadRows, roleRows, targetRoleRows] = await Promise.all([
     queryRows(pool, problemTagClause, problemTagParams, retrievalQuery, { sqlLimit: options.problemTagSqlLimit || 200, label: "strict_problem_tags" }),
     queryRows(pool, clause, params, retrievalQuery, { sqlLimit: options.sqlLimit, label: "strict_broad" }),
     queryRows(pool, roleClause, roleParams, retrievalQuery, { sqlLimit: options.roleSqlLimit || options.sqlLimit, label: "strict_role" }),
+    queryRows(pool, targetRoleClause, targetRoleParams, retrievalQuery, { sqlLimit: options.targetRoleSqlLimit || 300, label: "strict_target_role" }),
   ]);
-  const rows = [...new Map([...problemTagRows, ...roleRows, ...broadRows].map((card) => [card.adviceId, card])).values()]
+  const rows = [...new Map([...problemTagRows, ...targetRoleRows, ...roleRows, ...broadRows].map((card) => [card.adviceId, card])).values()]
     .filter(hasStrictSignal)
     .filter((card) => !card.matched_reasons.includes("conflicting_role_examples"))
     .filter((card) => card.roleMismatchPenalty < 0.35);
@@ -3697,6 +3785,7 @@ async function retrieveStrictCandidates(retrievalQuery = {}, options = {}) {
 }
 
 async function retrieveFallbackCandidates(retrievalQuery = {}, options = {}) {
+  retrievalQuery = normalizeRetrievalQuery(retrievalQuery);
   const pool = options.pool || db.getPool();
   const terms = [
     ...normalizeProblemTagsForRetrieval(retrievalQuery.problemTags),
@@ -3715,6 +3804,7 @@ async function retrieveFallbackCandidates(retrievalQuery = {}, options = {}) {
 }
 
 async function retrieveMentorAdvice(retrievalQuery = {}, options = {}) {
+  retrievalQuery = normalizeRetrievalQuery(retrievalQuery);
   const limit = options.limit || 80;
   const pool = options.pool || db.getPool();
   const startedAt = Date.now();
@@ -3781,6 +3871,7 @@ async function retrieveMentorAdvice(retrievalQuery = {}, options = {}) {
 }
 
 async function retrieveMentorAdviceWithStatus(retrievalQuery = {}, options = {}) {
+  retrievalQuery = normalizeRetrievalQuery(retrievalQuery);
   const retrieveImpl = options.retrieveImpl || retrieveMentorAdvice;
   try {
     const candidates = await retrieveImpl(retrievalQuery, options);
@@ -5551,6 +5642,15 @@ function cardHasOwnDiagnosis(card) {
 
 function toAdviceItem(card = {}, targetProblemTags = [], index = 0, includePremiumFields = false, internalAtsResult = {}, usedDiagnosisTags = new Set()) {
   const relatedProblemTags = relatedTagsForCard(card, targetProblemTags);
+  const locale = normalizeLocale(internalAtsResult.locale || card.locale);
+  const preferEnglish = isEnglishLocale(locale);
+  const pickText = (...values) => values.find((value) => value != null && String(value).trim()) || "";
+  const englishTitle = pickText(card.title_en, card.titleEn, card.advice_card_title_en, card.canonicalTitle_en, card.canonicalTitleEn, card.canonical_title_en);
+  const englishDiagnosis = pickText(card.currentDiagnosis_en, card.currentDiagnosisEn, card.problemSummary_en, card.problemSummaryEn, card.user_problem_summary_en);
+  const englishAction = pickText(card.action_en, card.actionEn, card.actionSummary_en, card.actionSummaryEn, card.action_summary_en);
+  const englishMentor = pickText(card.mentorInsight_en, card.mentorInsightEn, card.mentorLens_en, card.mentorLensEn, card.humanizedMentorInsight_en, card.humanizedMentorInsightEn, card.humanized_mentor_insight_en, card.humanized_mentor_insight_raw_en);
+  const englishHr = pickText(card.hrPerspective_en, card.hrPerspectiveEn, card.HR_os_en, card.humanizedHrPerspective_en, card.humanizedHrPerspectiveEn, card.humanized_hr_perspective_en, card.humanized_hr_perspective_raw_en, card.humanized_hr_perspective_generalized_en);
+  const englishTopic = pickText(card.topicCluster_en, card.topicClusterEn, card.displayAdviceType_en, card.displayAdviceTypeEn);
   const defaultAction = "优先把目标岗位关键词、相关技能和经历证据放到 Summary、Skills 和 Experience 中。";
 
   const hasNativeNewSchema = !!(card.mentorLens || card.currentDiagnosis || card.action || card.reason);
@@ -5601,19 +5701,29 @@ function toAdviceItem(card = {}, targetProblemTags = [], index = 0, includePremi
   const titleBase = useGeneralizedPerspective
     ? titleFallbackForCard(card)
     : titleForCurrentProblem(relatedProblemTags, card);
-  const title = normalizeDisplayTitle(titleBase, card);
+  const title = preferEnglish && englishTitle ? englishTitle : normalizeDisplayTitle(titleBase, card);
+  const displayDiagnosis = preferEnglish && englishDiagnosis ? englishDiagnosis : normalizeDisplayDiagnosis(currentDiagnosis);
+  const displayAction = preferEnglish && englishAction ? englishAction : action;
+  const displayMentorPerspective = preferEnglish && englishMentor ? englishMentor : mentorPerspective;
+  const displayHrPerspective = preferEnglish && englishHr ? englishHr : hrPerspective;
 
   let item = {
     adviceId: card.adviceId || `fallback_${index}`,
     title,
-    mentorLens: mentorPerspective,
-    currentDiagnosis: normalizeDisplayDiagnosis(currentDiagnosis),
-    action,
-    reason: mentorPerspective,
+    title_en: englishTitle,
+    mentorLens: displayMentorPerspective,
+    mentorLens_en: englishMentor,
+    currentDiagnosis: displayDiagnosis,
+    currentDiagnosis_en: englishDiagnosis,
+    action: displayAction,
+    action_en: englishAction,
+    reason: displayMentorPerspective,
     evidence,
     // backward compat aliases
-    problemSummary: normalizeDisplayDiagnosis(currentDiagnosis),
-    actionSummary: action,
+    problemSummary: displayDiagnosis,
+    problemSummary_en: englishDiagnosis,
+    actionSummary: displayAction,
+    actionSummary_en: englishAction,
     targetSection: card.targetSection || (sectionForMissingDates ? sectionForMissingDates.toLowerCase() : targetSectionFromCard(card)),
     relatedProblemTags,
     priority: card.priority || priorityFromTags(relatedProblemTags, targetProblemTags),
@@ -5625,15 +5735,22 @@ function toAdviceItem(card = {}, targetProblemTags = [], index = 0, includePremi
     canonicalActionFamily: card.canonicalActionFamily || card.canonical_action_family || inferAdviceActionFamily(card),
     actionDepth: card.actionDepth || card.action_depth || actionGovernance.inferActionDepth(card),
     canonicalTitle: card.canonicalTitle || card.canonical_title || titleFallbackForCard(card),
+    canonicalTitle_en: card.canonicalTitle_en || card.canonicalTitleEn || card.canonical_title_en || "",
     titleReviewStatus: card.titleReviewStatus || card.title_review_status || "",
     titleSource: card.titleSource || card.title_source || "",
     titleConfidence: card.titleConfidence || card.title_confidence || null,
     humanizedMentorInsight: card.humanizedMentorInsight || card.humanized_mentor_insight || "",
-    humanizedHrPerspective: card.humanizedHrPerspective || card.humanized_hr_perspective || "",
+    humanizedMentorInsight_en: card.humanizedMentorInsight_en || card.humanizedMentorInsightEn || card.humanized_mentor_insight_en || "",
+    humanizedHrPerspective: card.humanizedHrPerspective || card.humanizedHrPerspectiveRaw || card.humanized_hr_perspective_raw || "",
+    humanizedHrPerspective_en: card.humanizedHrPerspective_en || card.humanizedHrPerspectiveEn || card.humanized_hr_perspective_en || "",
     humanizedMentorInsightRaw: card.humanizedMentorInsightRaw || card.humanized_mentor_insight_raw || "",
+    humanizedMentorInsightRaw_en: card.humanizedMentorInsightRaw_en || card.humanizedMentorInsightRawEn || card.humanized_mentor_insight_raw_en || "",
     humanizedHrPerspectiveRaw: card.humanizedHrPerspectiveRaw || card.humanized_hr_perspective_raw || "",
+    humanizedHrPerspectiveRaw_en: card.humanizedHrPerspectiveRaw_en || card.humanizedHrPerspectiveRawEn || card.humanized_hr_perspective_raw_en || "",
     humanizedMentorInsightGeneralized: card.humanizedMentorInsightGeneralized || card.humanized_mentor_insight_generalized || "",
+    humanizedMentorInsightGeneralized_en: card.humanizedMentorInsightGeneralized_en || card.humanizedMentorInsightGeneralizedEn || card.humanized_mentor_insight_generalized_en || "",
     humanizedHrPerspectiveGeneralized: card.humanizedHrPerspectiveGeneralized || card.humanized_hr_perspective_generalized || "",
+    humanizedHrPerspectiveGeneralized_en: card.humanizedHrPerspectiveGeneralized_en || card.humanizedHrPerspectiveGeneralizedEn || card.humanized_hr_perspective_generalized_en || "",
     perspectiveReviewStatus: card.perspectiveReviewStatus || card.perspective_review_status || "",
     perspectiveSource: card.perspectiveSource || card.perspective_source || "",
     perspectiveConfidence: card.perspectiveConfidence || card.perspective_confidence || null,
@@ -5643,14 +5760,20 @@ function toAdviceItem(card = {}, targetProblemTags = [], index = 0, includePremi
       companyLogo: resolveCompanyLogo(inferCompanyFromMentor(card)),
       mentorTitle: inferMentorTitle(card),
     },
-    hrPerspective,
-    HR_os: hrPerspective,
+    mentorInsight: displayMentorPerspective,
+    mentorInsight_en: englishMentor,
+    topicCluster_en: englishTopic,
+    displayAdviceType_en: englishTopic,
+    hrPerspective: displayHrPerspective,
+    hrPerspective_en: englishHr,
+    HR_os: displayHrPerspective,
+    HR_os_en: englishHr,
   };
   if (includePremiumFields) {
     const suppressContext = useGeneralizedPerspective || hasMismatchedCaseStudyAdvice(card, targetProblemTags);
-    item.mentorInsight = suppressContext ? mentorPerspective : mentorPerspective;
+    item.mentorInsight = suppressContext ? displayMentorPerspective : displayMentorPerspective;
     item.example = suppressContext ? "" : decontextualizeAdviceText(card.example || card.E_example || "", "");
-    item.hrPerspective = hrPerspective;
+    item.hrPerspective = displayHrPerspective;
     item.HR_os = item.hrPerspective;
   }
   item = applyProblemCoherencePatch(item, internalAtsResult);

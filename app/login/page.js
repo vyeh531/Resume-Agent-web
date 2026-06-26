@@ -14,7 +14,8 @@ export default function LoginPage() {
         .login-progress span{width:24px;height:4px;border-radius:2px;background:var(--paper-deep)}
         .login-progress span.active{background:var(--jade)}
         .login-resume-mini{background:var(--paper-warm);border:1px solid var(--line);border-radius:var(--r-md);padding:14px 16px;margin-bottom:22px;display:flex;align-items:center;gap:12px}
-        .login-resume-mini .icon{width:36px;height:36px;border-radius:8px;background:var(--jade-soft);color:var(--jade);display:grid;place-items:center;font-size:16px;flex-shrink:0}
+        .login-resume-mini .icon{width:36px;height:36px;border-radius:8px;background:var(--jade-soft);color:var(--jade);display:grid;place-items:center;flex-shrink:0}
+        .login-resume-mini .icon::before{content:"";width:17px;height:20px;display:block;background:currentColor;-webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 28'><path d='M5 2h9l5 5v19H5z'/><path d='M14 2v6h5' fill='none' stroke='white' stroke-width='2'/><path d='M8 14h8M8 18h8M8 22h5' fill='none' stroke='white' stroke-width='1.7' stroke-linecap='round'/></svg>") center/contain no-repeat;mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 28'><path d='M5 2h9l5 5v19H5z'/><path d='M14 2v6h5' fill='none' stroke='white' stroke-width='2'/><path d='M8 14h8M8 18h8M8 22h5' fill='none' stroke='white' stroke-width='1.7' stroke-linecap='round'/></svg>") center/contain no-repeat}
         .login-resume-mini .info{flex:1;min-width:0}
         .login-resume-mini .name{font-weight:600;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
         .login-resume-mini .meta{font-size:11px;color:var(--ink-mute);margin-top:2px}
@@ -28,17 +29,22 @@ export default function LoginPage() {
         .login-foot{text-align:center;margin-top:18px;font-size:11px;color:var(--ink-mute);line-height:1.7}
         .login-foot a{color:var(--ink-soft);text-decoration:underline;text-decoration-style:dotted}
         .login-tip{background:var(--jade-soft);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 14px;font-size:13px;color:var(--jade);margin-top:22px;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+        .login-tip-lock{width:16px;height:16px;display:inline-grid;place-items:center;flex-shrink:0;margin-top:2px;color:var(--jade)}
+        .login-tip-lock::before{content:"";width:14px;height:14px;display:block;background:currentColor;-webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='5' y='10' width='14' height='10' rx='2'/><path d='M8 10V7a4 4 0 0 1 8 0v3h-2V7a2 2 0 0 0-4 0v3z'/></svg>") center/contain no-repeat;mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='5' y='10' width='14' height='10' rx='2'/><path d='M8 10V7a4 4 0 0 1 8 0v3h-2V7a2 2 0 0 0-4 0v3z'/></svg>") center/contain no-repeat}
       `}</style>
 
       <div className="page login-page">
         <div className="brandbar">
           <div className="brand">
-            <img src="/logo/logo%20banner_no_bg.png" alt="MentorX 蔓藤教育" className="brand-img" />
+            <img src="/logo/logo%20banner_no_bg.png" alt="EdAIX" className="brand-img" />
           </div>
           <div className="brand-meta" style={{fontSize:'10px',letterSpacing:'.08em'}}>2 / 5</div>
         </div>
 
-        <div className="login-wrap fade-in">
+        <div
+          className="login-wrap fade-in"
+          data-login-side-title={"Report generation started\nProgress syncs after sign-in"}
+        >
           <div className="login-progress">
             <span className="active"></span>
             <span className="active"></span>
@@ -46,33 +52,38 @@ export default function LoginPage() {
             <span></span>
             <span></span>
           </div>
-          <div className="wechat-icon" aria-hidden="true">
+          <div
+            className="wechat-icon"
+            aria-hidden="true"
+            data-login-method="Secure WeChat sign-in"
+            data-login-method-note="Used to sync your report. Your resume stays private."
+          >
             <svg className="wechat-mark" viewBox="0 0 64 56" focusable="false">
               <path d="M27.3 6C14.8 6 4.7 14.1 4.7 24.1c0 5.7 3.3 10.8 8.4 14.1L10.9 45l7.7-4c2.6.8 5.5 1.2 8.6 1.2 12.5 0 22.6-8.1 22.6-18.1C49.9 14.1 39.8 6 27.3 6Zm-7.8 12.9c-1.5 0-2.7-1.1-2.7-2.4s1.2-2.4 2.7-2.4 2.7 1.1 2.7 2.4-1.2 2.4-2.7 2.4Zm15.7 0c-1.5 0-2.7-1.1-2.7-2.4s1.2-2.4 2.7-2.4 2.7 1.1 2.7 2.4-1.2 2.4-2.7 2.4Z" fill="currentColor"/>
               <path d="M60 34.1c0-8.6-8.7-15.6-19.5-15.6S21 25.5 21 34.1s8.7 15.6 19.5 15.6c2.6 0 5.1-.4 7.4-1.1l6.6 3.4-1.9-5.8c4.5-2.8 7.4-7.2 7.4-12.1Zm-26.1-4.6c-1.2 0-2.2-.9-2.2-2s1-2 2.2-2 2.2.9 2.2 2-1 2-2.2 2Zm13.4 0c-1.2 0-2.2-.9-2.2-2s1-2 2.2-2 2.2.9 2.2 2-1 2-2.2 2Z" fill="currentColor" opacity=".92"/>
             </svg>
           </div>
-          <h1 className="login-title">登录领取报告</h1>
-          <p className="login-sub">分析已在后台开始，登录后即可查看结果</p>
+          <h1 className="login-title">Sign in to view your report</h1>
+          <p className="login-sub">Your analysis has started in the background. Sign in to view the result when it is ready.</p>
 
           <div className="login-resume-mini" id="resumeMini">
-            <div className="icon">📄</div>
+            <div className="icon" aria-hidden="true"></div>
             <div className="info">
-              <div className="name" id="resumeFileName">简历加载中...</div>
-              <div className="meta" id="resumeJobTitle">目标岗位</div>
+              <div className="name" id="resumeFileName">Loading resume...</div>
+              <div className="meta" id="resumeJobTitle">Target role</div>
             </div>
-            <span className="pill pill-jade" id="analysisPill"><span className="dot"></span>分析中</span>
+            <span className="pill pill-jade" id="analysisPill"><span className="dot"></span>Analyzing</span>
           </div>
 
           <div className="login-analysis" id="loginAnalysisProgress">
             <div className="login-analysis-row">
-              <strong>报告生成进度</strong>
+              <strong>Report generation progress</strong>
               <span className="login-analysis-pct"><span id="loginPct">8</span>%</span>
             </div>
             <div className="login-analysis-bar">
               <div className="login-analysis-fill" id="loginProgressFill"></div>
             </div>
-            <div className="login-analysis-status" id="loginProgressStatus">正在扫描你的履历亮点，登录时会继续处理。</div>
+            <div className="login-analysis-status" id="loginProgressStatus">Scanning your resume highlights. Processing will continue after sign-in.</div>
           </div>
 
           <button className="btn btn-jade btn-block" id="wechatLoginButton" type="button">
@@ -82,17 +93,17 @@ export default function LoginPage() {
                 <path d="M60 34.1c0-8.6-8.7-15.6-19.5-15.6S21 25.5 21 34.1s8.7 15.6 19.5 15.6c2.6 0 5.1-.4 7.4-1.1l6.6 3.4-1.9-5.8c4.5-2.8 7.4-7.2 7.4-12.1Zm-26.1-4.6c-1.2 0-2.2-.9-2.2-2s1-2 2.2-2 2.2.9 2.2 2-1 2-2.2 2Zm13.4 0c-1.2 0-2.2-.9-2.2-2s1-2 2.2-2 2.2.9 2.2 2-1 2-2.2 2Z" fill="currentColor" opacity=".92"/>
               </svg>
             </span>
-            微信一键登录
+            Continue with WeChat
           </button>
 
           <div className="login-tip">
-            <span style={{flexShrink:0}}>🔒</span>
-            <span>我们不会公开你的简历，所有内容仅用于本次诊断。</span>
+            <span className="login-tip-lock" aria-hidden="true"></span>
+            <span>We will not publish your resume. All content is used only for this diagnosis.</span>
           </div>
 
           <div className="login-foot">
-            登录代表你同意 <a href="#">《用户协议》</a> 和 <a href="#">《隐私政策》</a><br/>
-            遇到问题？联系客服 <span style={{color:'var(--rose)'}}>mentorx-zhushou</span>
+            By signing in, you agree to the <a href="#">User Agreement</a> and <a href="#">Privacy Policy</a><br/>
+            Need help? Contact support <span style={{color:'var(--rose)'}}>edaix-support</span>
           </div>
         </div>
       </div>
@@ -141,9 +152,80 @@ export default function LoginPage() {
           return JSON.parse(localStorage.getItem("resumeFixMVP") || "{}");
         }
 
+        function getLoginLocale() {
+          if (window.I18N && typeof window.I18N.getLocale === "function") return window.I18N.getLocale();
+          try {
+            const s = JSON.parse(localStorage.getItem("resumeFixMVP") || "{}");
+            return String(s.locale || document.documentElement.lang || "zh-CN").toLowerCase().startsWith("en") ? "en-US" : "zh-CN";
+          } catch (_) {
+            return "zh-CN";
+          }
+        }
+
+        function loginText() {
+          const en = getLoginLocale() === "en-US";
+          return en ? {
+            queued: "Queueing your analysis.",
+            scoring: "Comparing your resume with the target JD.",
+            building_report: "Building the report structure.",
+            format_internal_ats: "Preparing the ATS diagnosis.",
+            retrieve_mentor_advice: "Matching mentor recommendations.",
+            select_mentor_plan: "Selecting the most relevant recommendations.",
+            format_reports: "Generating diagnosis content.",
+            format_public_premium: "Preparing the visual report.",
+            save_report: "Saving the report.",
+            analyzing: "Analyzing your resume.",
+            redirect: "You will be redirected when the report is ready.",
+            reading: "Reading analysis progress...",
+            readingStatus: "Reading analysis progress.",
+            completeTitle: "Diagnosis complete!",
+            completeSub: "The report is ready. Redirecting to results...",
+            readyStatus: "The report is ready. Sign in to view your result.",
+            readyButton: "Continue with WeChat - View report",
+            generatingButton: "Generating report...",
+            targetPrefix: "Target role: ",
+            targetFromJd: "Target role: analyzing from JD",
+            failed: "Analysis failed. Please return to the home page and submit again, or paste your resume text instead.",
+            failedPrefix: "Analysis failed: ",
+            retryButton: "Return home and submit again",
+            waiting: "Waiting for the analysis job to start.",
+            interrupted: "The analysis job was interrupted. Please return to the home page and submit again.",
+            unknown: "Could not confirm analysis status. Please return to the home page and submit again, or paste your resume text instead.",
+            fallback: "Completing the report through the fallback path.",
+          } : {
+            queued: "正在排队准备分析。",
+            scoring: "正在对照目标岗位 JD。",
+            building_report: "正在生成报告结构。",
+            format_internal_ats: "正在整理 ATS 诊断。",
+            retrieve_mentor_advice: "正在匹配导师建议。",
+            select_mentor_plan: "正在筛选最适合你的建议。",
+            format_reports: "正在生成诊断内容。",
+            format_public_premium: "正在整理可视化报告。",
+            save_report: "正在保存报告。",
+            analyzing: "正在分析你的履历。",
+            redirect: "报告完成后将自动跳转。",
+            reading: "正在读取分析进度...",
+            readingStatus: "正在读取分析进度。",
+            completeTitle: "诊断完成！",
+            completeSub: "报告已生成，正在进入结果页...",
+            readyStatus: "报告已生成，登录后即可查看结果。",
+            readyButton: "微信一键登录 - 查看报告",
+            generatingButton: "报告生成中...",
+            targetPrefix: "目标岗位：",
+            targetFromJd: "目标岗位：根据 JD 分析",
+            failed: "分析失败，请返回首页重新提交，或改用简历文本粘贴方式。",
+            failedPrefix: "分析失败：",
+            retryButton: "返回首页重新提交",
+            waiting: "等待分析任务启动。",
+            interrupted: "分析任务已中断，请返回首页重新提交。",
+            unknown: "无法确认分析状态，请返回首页重新提交，或改用简历文本粘贴方式。",
+            fallback: "正在用备用通道完成报告。",
+          };
+        }
+
         function normalizeDisplayTargetJob(value) {
           return String(value || "")
-            .replace(/^\\s*【(?:岗位|职位|职称|职务|招聘岗位|应聘岗位)】\\s*[：:]\\s*/i, "")
+            .replace(/^\\s*【(?:目标岗位|岗位|职位|职称|职务|招聘岗位|应聘岗位)】\\s*[：:]\\s*/i, "")
             .replace(/^\\s*(?:目标岗位|岗位|职位|职称|职务|招聘岗位|应聘岗位)\\s*[：:\\-–]\\s*/i, "")
             .replace(/\\s*\\((?:junior|senior|entry[-\\s]?level|full[-\\s]?time|part[-\\s]?time|internship|intern|co-?op|new\\s*grad)[^)]*\\)\\s*$/i, "")
             .replace(/\\s+/g, " ")
@@ -166,6 +248,22 @@ export default function LoginPage() {
           if (statusEl && status) statusEl.textContent = status;
         }
 
+        function displayProgressForElapsed(seconds) {
+          const points = [
+            [0, 3], [6, 14], [14, 30], [24, 52],
+            [36, 72], [50, 88], [70, 94],
+          ];
+          for (let i = 1; i < points.length; i++) {
+            const prev = points[i - 1];
+            const next = points[i];
+            if (seconds <= next[0]) {
+              const ratio = Math.max(0, Math.min(1, (seconds - prev[0]) / (next[0] - prev[0])));
+              return prev[1] + (next[1] - prev[1]) * ratio;
+            }
+          }
+          return 94;
+        }
+
         function startLoginProgressCreep() {
           if (loginProgressTicker) return;
           loginProgressTicker = setInterval(function(){
@@ -175,7 +273,7 @@ export default function LoginPage() {
               return;
             }
             const elapsed = (Date.now() - loginStartedAt) / 1000;
-            const creepTarget = Math.min(91, Math.floor(10 + elapsed * 2.2));
+            const creepTarget = displayProgressForElapsed(elapsed);
             if (loginVisualPct < creepTarget) {
               setLoginProgress(loginVisualPct + 1);
               if (typeof window.updateLoaderProgress === "function") {
@@ -186,26 +284,19 @@ export default function LoginPage() {
         }
 
         function analysisStageText(stage) {
-          const stageTextMap = {
-            queued: "正在排队准备分析。",
-            scoring: "正在对照目标岗位 JD。",
-            building_report: "正在生成报告结构。",
-            format_internal_ats: "正在整理 ATS 诊断。",
-            retrieve_mentor_advice: "正在匹配导师建议。",
-            select_mentor_plan: "正在筛选最适合你的建议。",
-            format_reports: "正在生成诊断内容。",
-            format_public_premium: "正在整理可视化报告。",
-            save_report: "正在保存报告。",
-          };
-          return stageTextMap[stage] || "正在分析你的履历。";
+          const text = loginText();
+          return text[stage] || text.analyzing;
         }
 
         function syncAnalysisProgress(job) {
-          const pct = Math.max(0, Math.min(100, Math.floor(Number(job?.progress || 0))));
+          const backendPct = Math.max(0, Math.min(100, Math.floor(Number(job?.progress || 0))));
+          const elapsed = (Date.now() - loginStartedAt) / 1000;
+          const timeTarget = displayProgressForElapsed(elapsed);
+          const pct = backendPct >= 96 ? backendPct : Math.max(timeTarget, Math.min(backendPct, timeTarget + 8));
           const stageText = analysisStageText(job?.stage);
           setLoginProgress(pct, stageText);
           if (typeof window.updateLoaderProgress === "function") {
-            window.updateLoaderProgress(pct, stageText, "报告完成后将自动跳转。");
+            window.updateLoaderProgress(pct, stageText, loginText().redirect);
           }
         }
 
@@ -239,9 +330,9 @@ export default function LoginPage() {
             analysisFallbackReason: reason || "job_unavailable",
             analysisJobStatus: "fallback_running",
           });
-          setLoginProgress(92, "æ­£åœ¨ç”¨å¤‡ç”¨é€šé“å®ŒæˆæŠ¥å‘Šã€‚");
+          setLoginProgress(92, loginText().fallback);
           if (typeof window.updateLoaderProgress === "function") {
-            window.updateLoaderProgress(92, "æ­£åœ¨ç”¨å¤‡ç”¨é€šé“å®ŒæˆæŠ¥å‘Šã€‚", "æŠ¥å‘Šå®ŒæˆåŽå°†è‡ªåŠ¨è·³è½¬ã€‚");
+            window.updateLoaderProgress(92, loginText().fallback, loginText().redirect);
           }
           const publicReport = await scoreResumeAPI(s.resumeText, s.jobTitle || null, s.jdText || null, null, s.resumeName || "");
           storeCompletedReport({
@@ -258,29 +349,29 @@ export default function LoginPage() {
         function markReportReady(result) {
           if (result) storeCompletedReport(result);
           loginAnalysisReady = true;
-          setLoginProgress(100, "报告已生成，登录后即可查看结果。");
+          setLoginProgress(100, loginText().readyStatus);
           const pill = document.getElementById("analysisPill");
-          if (pill) pill.innerHTML = '<span class="dot"></span>已完成';
+          if (pill) pill.innerHTML = '<span class="dot"></span>' + (getLoginLocale() === "en-US" ? "Ready" : "已完成");
           if (loginButton && !loginClicked) {
             loginButton.disabled = false;
-            loginButton.textContent = "微信一键登录 · 查看报告";
+            loginButton.textContent = loginText().readyButton;
           }
           if (loginClicked) {
-            showLoginLoader("诊断完成！", "报告已生成，正在进入结果页…");
+            showLoginLoader(loginText().completeTitle, loginText().completeSub);
             if (typeof window.updateLoaderProgress === "function") {
-              window.updateLoaderProgress(100, "诊断完成！", "报告已生成，正在进入结果页…", { instant: true });
+              window.updateLoaderProgress(100, loginText().completeTitle, loginText().completeSub, { instant: true });
             }
             setTimeout(function(){ window.location.href = "/result"; }, 500);
           }
         }
 
         function markAnalysisFailed(message) {
-          setLoginProgress(100, message || "分析失败，请返回首页重新提交，或改用简历文本粘贴方式。");
+          setLoginProgress(100, message || loginText().failed);
           const pill = document.getElementById("analysisPill");
-          if (pill) pill.innerHTML = '<span class="dot"></span>失败';
+          if (pill) pill.innerHTML = '<span class="dot"></span>' + (getLoginLocale() === "en-US" ? "Failed" : "失败");
           if (loginButton) {
             loginButton.disabled = false;
-            loginButton.textContent = "返回首页重新提交";
+            loginButton.textContent = loginText().retryButton;
             loginButton.onclick = function(){ window.location.href = "/"; };
           }
         }
@@ -298,9 +389,9 @@ export default function LoginPage() {
           }
           if (!s.analysisJobId) {
             if (await completeWithScoreFallback("missing_job_id")) return;
-            setLoginProgress(12, "等待分析任务启动。");
+            setLoginProgress(12, loginText().waiting);
             if (typeof window.updateLoaderProgress === "function") {
-              window.updateLoaderProgress(12, "等待分析任务启动。", "报告完成后将自动跳转。");
+              window.updateLoaderProgress(12, loginText().waiting, loginText().redirect);
             }
             return;
           }
@@ -312,7 +403,7 @@ export default function LoginPage() {
               return;
             }
             if (job.status === "failed") {
-              markAnalysisFailed(job.error ? "分析失败：" + job.error : "分析失败，请返回首页重新提交，或改用简历文本粘贴方式。");
+              markAnalysisFailed(job.error ? loginText().failedPrefix + job.error : loginText().failed);
               return;
             }
             syncAnalysisProgress(job);
@@ -322,8 +413,8 @@ export default function LoginPage() {
               if (await completeWithScoreFallback("job_not_found")) return;
             }
             const message = error && (error.code === "JOB_NOT_FOUND" || error.message === "JOB_NOT_FOUND")
-              ? "分析任务已中断，请返回首页重新提交。"
-              : "无法确认分析状态，请返回首页重新提交，或改用简历文本粘贴方式。";
+              ? loginText().interrupted
+              : loginText().unknown;
             markAnalysisFailed(message);
           }
         }
@@ -331,14 +422,26 @@ export default function LoginPage() {
         (function(){
           const s = JSON.parse(localStorage.getItem("resumeFixMVP") || "{}");
           const nameEl = document.getElementById("resumeFileName");
-          if (nameEl) nameEl.textContent = s.resumeName || "未检测到简历，请返回首页上传";
+          if (nameEl) nameEl.textContent = s.resumeName || (getLoginLocale() === "en-US" ? "No resume detected. Please return to the home page and upload one." : "未检测到简历，请返回首页上传");
           const atsR = s.atsResult || {};
           function isPlaceholder(v) {
-            return !v || /依\\s*JD|自动识别|根据\\s*JD|unknown|^目标岗位$/i.test(String(v));
+            return !v || /依\\s*JD|自动识别|根据\\s*JD|unknown|select\\s+target\\s+role|target\\s+role|^目标岗位$|选择目标岗位|请选择/i.test(String(v));
           }
-          const jobT = normalizeDisplayTargetJobStrict([s.targetLabel, s.jobTitle, atsR.jobTitle, atsR.raw && atsR.raw.jobTitle].find(function(v){ return v && !isPlaceholder(v); }) || "");
+          const jobT = normalizeDisplayTargetJobStrict([
+            s.targetLabel,
+            s.targetRole,
+            s.selectedTargetRole,
+            s.selectedRole,
+            s.jobTitle,
+            atsR.targetLabel,
+            atsR.targetRole,
+            atsR.profile && atsR.profile.targetRole,
+            atsR.raw && atsR.raw.profile && atsR.raw.profile.targetRole,
+            atsR.jobTitle,
+            atsR.raw && atsR.raw.jobTitle
+          ].find(function(v){ return v && !isPlaceholder(v); }) || "");
           const jobEl = document.getElementById("resumeJobTitle");
-          if (jobEl) jobEl.textContent = jobT ? "目标岗位：" + jobT : "目标岗位：根据 JD 分析";
+          if (jobEl) jobEl.textContent = jobT ? loginText().targetPrefix + jobT : loginText().targetFromJd;
         })();
 
         function handleWechatLogin(btn){
@@ -347,19 +450,19 @@ export default function LoginPage() {
           loginButton = btn;
           loginClicked = true;
           btn.disabled = true;
-          showLoginLoader("正在读取分析进度…", "报告完成后将自动跳转。", false);
+          showLoginLoader(loginText().reading, loginText().redirect, false);
           if (typeof window.updateLoaderProgress === "function") {
-            window.updateLoaderProgress(loginVisualPct, "正在读取分析进度…", "报告完成后将自动跳转。");
+            window.updateLoaderProgress(loginVisualPct, loginText().reading, loginText().redirect);
           }
           setStorePatch({ userId: "mock_" + Date.now(), loginAt: Date.now() });
           const snapshot = readStoreSnapshot();
           if (loginAnalysisReady || (snapshot.reportId && snapshot.atsResult)) {
-            showLoginLoader("诊断完成！", "报告已生成，正在进入结果页…");
+            showLoginLoader(loginText().completeTitle, loginText().completeSub);
             setTimeout(function(){ window.location.href = "/result"; }, 500);
             return;
           }
-          btn.textContent = "报告生成中...";
-          setLoginProgress(loginVisualPct, "正在读取分析进度。");
+          btn.textContent = loginText().generatingButton;
+          setLoginProgress(loginVisualPct, loginText().readingStatus);
           pollLoginAnalysis();
         }
 

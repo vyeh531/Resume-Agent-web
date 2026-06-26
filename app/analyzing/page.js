@@ -98,6 +98,21 @@ export default function AnalyzingPage() {
         let currentStageText = "";
         let lastKnownJob = null;
         let analysisStopped = false;
+        function displayProgressForElapsed(seconds) {
+          const points = [
+            [0, 3], [6, 14], [14, 30], [24, 52],
+            [36, 72], [50, 88], [70, 94],
+          ];
+          for (let i = 1; i < points.length; i++) {
+            const [prevSec, prevPct] = points[i - 1];
+            const [nextSec, nextPct] = points[i];
+            if (seconds <= nextSec) {
+              const ratio = Math.max(0, Math.min(1, (seconds - prevSec) / (nextSec - prevSec)));
+              return prevPct + (nextPct - prevPct) * ratio;
+            }
+          }
+          return 94;
+        }
         function analysisStageText(stage) {
           const stageTextMap = {
             queued: "正在排队准备分析。",
@@ -240,9 +255,10 @@ export default function AnalyzingPage() {
             return;
           }
           const elapsed = (Date.now() - startedAt) / 1000;
-          const creepTarget = Math.min(91, Math.floor(10 + elapsed * 2.2));
-          const smoothTarget = Math.max(targetPct, creepTarget);
-          if (visualPct < smoothTarget) visualPct = Math.min(smoothTarget, visualPct + 0.35);
+          const timeTarget = displayProgressForElapsed(elapsed);
+          const backendLimitedTarget = targetPct >= 96 ? targetPct : Math.min(targetPct, timeTarget + 8);
+          const smoothTarget = Math.max(timeTarget, backendLimitedTarget);
+          if (visualPct < smoothTarget) visualPct = Math.min(smoothTarget, visualPct + 0.22);
           elapsedEl.textContent = Math.floor(elapsed);
           applyProgress(Math.floor(visualPct));
         }, 60);

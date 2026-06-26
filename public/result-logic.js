@@ -14,20 +14,182 @@ if (!s.atsResult) {
   window.location.href = s.resumeName ? "/login" : "/";
 }
 const atsResult = s.atsResult || {};
+function resultLocale() {
+  const value = s.locale || atsResult.locale || document.documentElement.lang || "zh-CN";
+  return /^en/i.test(String(value)) ? "en-US" : "zh-CN";
+}
+function isEnglishResult() {
+  return resultLocale() === "en-US";
+}
+function t(zh, en) {
+  return isEnglishResult() ? en : zh;
+}
+function firstText(...values) {
+  for (const value of values) {
+    if (value !== null && value !== undefined && String(value).trim()) return String(value);
+  }
+  return "";
+}
+function localField(item = {}, key, fallback = "") {
+  const camel = key.replace(/_([a-z])/g, (_, ch) => ch.toUpperCase());
+  const snake = key.replace(/[A-Z]/g, (ch) => "_" + ch.toLowerCase());
+  const englishKeys = [
+    `${camel}En`, `${camel}_en`, `${snake}_en`,
+    `${key}En`, `${key}_en`,
+  ];
+  const baseKeys = [key, camel, snake];
+  const english = englishKeys.map((field) => item?.[field]);
+  const base = baseKeys.map((field) => item?.[field]);
+  return isEnglishResult()
+    ? firstText(...english, ...base, fallback)
+    : firstText(...base, ...english, fallback);
+}
+function hasCjk(text = "") {
+  return /[\u4e00-\u9fff]/.test(String(text || ""));
+}
+function englishFallbackText(text = "") {
+  const value = String(text || "").trim();
+  if (!value || !hasCjk(value)) return value;
+  const replacements = new Map([
+    ["开头定位", "Opening positioning"],
+    ["補上結果數字", "Add outcome metrics"],
+    ["补上结果数字", "Add outcome metrics"],
+    ["这块可以先把经历讲完整。现在像是在说你参与过，但还没说明你具体推进了什么、产出了什么。", "First make this experience complete. Right now it says you participated, but it does not show what you drove or produced."],
+    ["你不是没有材料，是一份简历同时想服务太多方向。建议先拆成 1-2 个版本，让每一版都能一眼看出目标岗位。", "You do have usable material, but this resume is trying to serve too many directions at once. Split it into one or two versions so each version makes the target role obvious."],
+    ["把职责型 bullet 改成结果型表达：先写动作和方法，再补产出、影响或业务价值，让 HR 能判断你做出了什么。", "Rewrite responsibility-style bullets into outcome-oriented bullets: state the action and method first, then add output, impact, or business value so HR can judge what you delivered."],
+    ["这条要把 impact 放到经历里，用数量、频率、规模或效率说明贡献，避免只写负责和参与。", "Put impact into the experience section. Use quantity, frequency, scale, or efficiency to show contribution instead of only saying responsible for or participated in."],
+    ["结果表达会直接影响可信度；没有规模或变化，我只能按普通执行经历来理解。", "Outcome language directly affects credibility. Without scale or change, I can only read it as routine execution experience."],
+    ["补上结果数字", "Add outcome metrics"],
+    ["用指标说明实际贡献", "Use metrics to show real contribution"],
+    ["把经历改成可衡量结果", "Rewrite experience into measurable outcomes"],
+    ["强化 bullet 的结果表达", "Strengthen outcome language in bullets"],
+    ["补上规模、频率和效率", "Add scale, frequency, and efficiency"],
+    ["说明处理量与影响范围", "Clarify volume and impact scope"],
+    ["把工作量写成可比较指标", "Turn workload into comparable metrics"],
+    ["补上成果数字和规模", "Add outcome numbers and scale"],
+    ["把职责写成项目证据", "Turn responsibilities into project evidence"],
+    ["把职责与成果项目证据", "Turn responsibilities and outcomes into project evidence"],
+    ["补强经历里的动作和交付", "Strengthen actions and deliverables in experience"],
+    ["重写核心经历 bullet", "Rewrite core experience bullets"],
+    ["补齐项目产出证据", "Add project output evidence"],
+    ["统一简历结构与信息层级", "Unify resume structure and information hierarchy"],
+    ["把技能词写成项目证据", "Turn skill terms into project evidence"],
+    ["让关键词出现在真实项目里", "Show keywords in real projects"],
+    ["补齐经历里的关键词证据", "Add keyword evidence in experience"],
+    ["把 JD 关键词放回经历", "Put JD keywords back into experience"],
+    ["补齐关键词匹配信号", "Strengthen keyword match signals"],
+    ["校准 ATS 关键词", "Calibrate ATS keywords"],
+    ["信息层级", "Information hierarchy"],
+    ["Section 顺序", "Section order"],
+    ["可读性", "Readability"],
+    ["核心硬技能覆盖不足，需要把有真实经验支撑的工具、技能和场景写进经历证据里。", "Core hard-skill coverage is not strong enough. Add tools, skills, and scenarios that are backed by real experience."],
+    ["简历和目标岗位描述的语言匹配还不够，系统可能无法快速识别你和这个岗位的直接关联。", "The resume language does not match the target JD closely enough, so the system may not quickly identify your direct fit for this role."],
+    ["简历和目标 JD 的语言匹配还不够，ATS 可能无法快速识别你和这个岗位的直接关联。", "The resume language does not match the target JD closely enough, so ATS may not quickly identify your direct fit for this role."],
+    ["经历中的结果证据偏少，建议提升百分比、规模、效率等量化表达。", "Experience bullets have too little outcome evidence. Add quantified impact such as percentages, scale, or efficiency gains."],
+    ["经历描述里可量化结果不足，HR 很难判断你具体带来了什么影响或产出。", "Experience bullets do not include enough measurable outcomes, so HR cannot easily judge your impact or output."],
+    ["这条要把 impact 放到经历里，用数量、频率、规模或效率说明贡献。", "Put impact into the experience section using quantity, frequency, scale, or efficiency to show contribution."],
+    ["我会看你是不是把事情做到有结果；数字不用夸张，但要让我知道规模、效率或影响边界。", "I check whether the work led to results. The numbers do not need to be inflated, but they should clarify scale, efficiency, or impact boundaries."],
+    ["简历整体对 AI Scientist in Pharma / ML Scientist 的主线还不够集中。", "The resume is not yet focused enough on the AI Scientist in Pharma / ML Scientist storyline."],
+    ["目标岗位的核心技能词（如 sql、tableau、excel）在简历中出现不足，ATS 难以确认你的技能匹配度。", "Core skill terms for the target role, such as SQL, Tableau, and Excel, do not appear enough in the resume, so ATS may not confirm your skill match."],
+    ["围绕 Business Insights Analyst 重排 Summary、Skills 和最靠前的经历，把最相关的职责、关键词和结果证据放到前面，弱相关内容收住。", "Reorder Summary, Skills, and the earliest experience around Business Insights Analyst. Move the most relevant responsibilities, keywords, and outcome evidence forward, and reduce weakly related content."],
+    ["岗位定位要先收束主线，让开头、技能和最靠前经历都指向同一个目标岗位。", "The positioning needs a tighter main storyline so the opening, skills, and first experience all point to the same target role."],
+    ["我会看标题、Summary、技能排序和前几条经历是不是指向同一岗位。", "I check whether the title, Summary, skill order, and first few experience bullets point to the same role."],
+    ["岗位描述关键词匹配仍有提升空间。", "JD keyword matching still has room to improve."],
+    ["经历中的量化结果偏少，建议补充百分比或规模数据。", "Experience bullets need more quantified results. Add percentages or scale where possible."],
+    ["简历整体结构可以进一步围绕目标岗位强化。", "The resume structure can be aligned more tightly around the target role."],
+    ["简历缺少个人简介段落，岗位定位线索不够清晰。", "The resume is missing a Summary section, so the target-role positioning is not clear enough."],
+    ["把目标岗位关键词写进经历证据", "Put target-role keywords into experience evidence"],
+    ["把成果写成可判断的业务影响", "Write outcomes as clear business impact"],
+    ["重排首屏信息，让岗位定位更快被读到", "Reorder the opening section so the target role is clear faster"],
+    ["现在的经历描述容易停留在职责层，和目标岗位 JD 的关键词连接不够明确。", "Current experience bullets stay too close to responsibilities and do not clearly connect to target JD keywords."],
+    ["部分 bullet 目前能看出你做了什么，但还不够容易判断影响范围、质量或结果。", "Some bullets show what you did, but the scope, quality, or result is still hard to judge."],
+    ["简历开头需要更快说明你是谁、投什么岗位、最强的匹配证据是什么。", "The resume opening should state who you are, what role you are targeting, and your strongest matching evidence faster."],
+    ["把 Summary、核心技能和最近一段最相关经历放在前半页，并删除和目标岗位弱相关的低信号内容。", "Move Summary, core skills, and the most relevant recent experience into the first half page, and remove low-signal content weakly related to the target role."],
+    ["这条修改建议", "this recommendation"],
+    ["免费试读", "Free preview"],
+    ["职业路径", "Career path"],
+    ["暂无导师建议，请返回首页重新提交简历。", "No mentor recommendations yet. Please return to the home page and submit again."],
+    ["资料链接", "Source links"],
+    ["量化成果", "Quantified impact"],
+    ["补上 Summary 段落", "Add a Summary section"],
+    ["把 Summary 语气改专业", "Make the Summary tone professional"],
+    ["把 JD 关键词放到对的位置", "Place JD keywords in the right sections"],
+    ["让 Summary 对准目标岗位", "Align the Summary with the target role"],
+    ["补上 JD 里缺的技能词", "Add missing JD skill terms"],
+    ["把关键词写进真实经历", "Put keywords into real experience"],
+    ["把关键词写进真实经历", "Put keywords into real experience"],
+    ["补上 JD 里的关键证据", "Add key JD evidence"],
+    ["优化简历开头定位", "Improve the resume opening positioning"],
+    ["把短期经历说清楚", "Clarify short-term experience"],
+    ["把经历改成动作和结果", "Rewrite experience into actions and outcomes"],
+    ["把成果写得更可衡量", "Make outcomes more measurable"],
+    ["把经历证据写清楚", "Make experience evidence clearer"],
+    ["把提交格式整理稳", "Clean up the submission format"],
+    ["补上 LinkedIn 链接", "Add a LinkedIn link"],
+    ["补上项目代码入口", "Add a project code link"],
+    ["补上作品集入口", "Add a portfolio link"],
+    ["把教育背景信号补清楚", "Clarify education signals"],
+    ["让关键词出现在真实项目里", "Show keywords in real projects"],
+    ["補清经历边界", "Clarify experience boundaries"],
+    ["补清经历边界", "Clarify experience boundaries"],
+    ["技能区块", "Skills block"],
+    ["JD 关键词", "JD keywords"],
+    ["经历证据", "Experience evidence"],
+    ["經歷證據", "Experience evidence"],
+    ["对照这6个核心技能检查自己的简历和项目，找出哪些已覆盖、哪些缺失；为缺失项制定学习计划或在项目中补充体现。", "Compare your resume and projects against these six core skills. Identify what is covered and what is missing, then create a learning plan or add project evidence for the gaps."],
+    ["关键词不只是写给系统看的摆设；如果经历里没有对应证据，我会怀疑你只是照着 JD 填词。", "Keywords are not just filler for the system. If the experience section has no matching evidence, I will suspect they were copied from the JD."],
+    ["简历中有时长较短的经历，如果不标注 Intern / Internship 或说明项目周期，HR 可能会对稳定性产生疑虑。", "Short experiences can raise stability concerns if they are not marked as Intern / Internship or explained as project-based work."],
+    ["如果这段经历是实习，请在 title 中明确标注 Intern / Internship；如果是项目制经历，在 bullet 中说明项目周期、职责边界和最终产出。", "If this was an internship, mark Intern / Internship in the title. If it was project-based, explain the project period, responsibility boundaries, and final output in the bullet."],
+    ["你的材料其实可以用，只是需要从“做了什么”改成“解决了什么”。这样读起来会更像真实工作成果。", "Your material is usable, but it needs to shift from what you did to what you solved. That makes it read more like real work output."],
+    ["我会看这条修改能不能直接降低筛选成本，而不是只让文字更好看。", "I check whether this change directly lowers screening effort, not just whether the wording looks better."],
+    ["必改", "Must fix"],
+    ["建议改", "Recommended"],
+    ["补充", "Bonus"],
+  ]);
+  if (replacements.has(value)) return replacements.get(value);
+  return value
+    .replace(/核心硬技能覆盖不足，需要把有真实经验支撑的工具、技能和场景写进经历证据里。/g, "Core hard-skill coverage is not strong enough. Add tools, skills, and scenarios that are backed by real experience.")
+    .replace(/HR 会把这里当作快速筛选信号；建议优先处理「(.+)」。/g, 'HR treats this as a fast screening signal. Prioritize "$1".')
+    .replace(/HR 会先看简历开头是否说明投递方向；缺少 Summary 时，后面的技能和经历更容易被读散。/g, "HR first checks whether the resume opening states the target direction. Without a Summary, later skills and experience are easier to miss.")
+    .replace(/HR 会用 JD 技能词快速确认候选人是否匹配；关键词缺少经历证据时，可信度会下降。/g, "HR uses JD skill terms to quickly confirm fit. Keywords are less credible when they are not backed by experience evidence.")
+    .replace(/把(.+?)写进真实经历/g, "Put $1 into real experience")
+    .replace(/把(.+?)改成动作和结果/g, "Rewrite $1 into actions and outcomes")
+    .replace(/把(.+?)写得更可衡量/g, "Make $1 more measurable")
+    .replace(/对照这\s*6\s*个核心技能检查自己的简历和项目，找出哪些已覆盖、哪些缺失；为缺失项制定学习计划或在项目中补充体现。/g, "Compare your resume and projects against these six core skills. Identify what is covered and what is missing, then create a learning plan or add project evidence for the gaps.")
+    .replace(/关键词不只是写给系统看的摆设；如果经历里没有对应证据，我会怀疑你只是照着 JD 填词。/g, "Keywords are not just filler for the system. If the experience section has no matching evidence, I will suspect they were copied from the JD.")
+    .replace(/如果这段经历是实习，请在 title 中明确标注 Intern \/ Internship；如果是项目制经历，在 bullet 中说明项目周期、职责边界和最终产出。/g, "If this was an internship, mark Intern / Internship in the title. If it was project-based, explain the project period, responsibility boundaries, and final output in the bullet.")
+    .replace(/简历整体对\s*(.+?)\s*的主线还不够集中，ATS 和 HR 可能需要额外判断你的目标方向。/g, "The resume storyline is not focused enough on $1, so ATS and HR may need extra effort to infer your target direction.")
+    .replace(/在 Summary 第一或第二句自然写出\s*(.+?)\s*，并紧接一句连接\s*(.+?)\s*或最相关项目证据。/g, "Naturally state $1 in the first or second Summary sentence, then add one sentence connecting $2 or the most relevant project evidence.")
+    .replace(/在 Summary 第一或第二句自然加入\s*(.+?)\s*，并紧接一句说明你和该岗位核心职责相关的经历或项目证据。/g, "Naturally add $1 in the first or second Summary sentence, then follow with one sentence showing experience or project evidence tied to the role's core responsibilities.")
+    .replace(/围绕\s*(.+?)\s*重排 Summary、Skills 和最靠前的经历，把最相关的职责、关键词和结果证据放到前面，弱相关内容收住。/g, "Reorder Summary, Skills, and the earliest experience around $1. Move the most relevant responsibilities, keywords, and outcome evidence forward, and reduce weakly related content.")
+    .replace(/把最贴近\s*(.+?)\s*的经历、项目和技能放到更靠前位置；弱相关内容只保留能证明协作、交付或基础职业能力的部分。/g, "Move the experience, projects, and skills closest to $1 into a more prominent position. Keep weakly related content only when it proves collaboration, delivery, or basic professional ability.")
+    .replace(/把最贴近\s*(.+?)\s*的经历或项目放到更靠前位置，并给它多\s*1-2\s*条 bullet；弱相关经历只保留能证明\s*(.+?)\s*、协作或基础职业能力的内容。/g, "Move the experience or project closest to $1 into a more prominent position and give it 1-2 more bullets. Keep weakly related experience only when it proves $2, collaboration, or basic professional ability.")
+    .replace(/简历里不同经历的重要性还没有拉开，读者可能会把弱相关内容和核心经历看成同等重要。/g, "The resume does not clearly separate the importance of different experiences, so readers may treat weakly related content and core experience as equally important.")
+    .replace(/简历还有部分结构性优化空间，重要信息和弱相关内容的层级不够分明。/g, "The resume still has structural room to improve; important information and weakly related content are not clearly prioritized.")
+    .replace(/这里先做减法会很有效。把最相关的内容往前放，弱相关内容收住，整份简历会更像在服务同一个目标岗位。/g, "Reducing clutter here will help. Move the most relevant content forward and tighten weakly related content so the whole resume serves one target role.")
+    .replace(/完整报告不只改关键词，也要让读者第一眼看到最相关证据。/g, "The full report is not only about keywords; it should also make the most relevant evidence visible at first glance.")
+    .replace(/完整报告里除了改关键词，也要处理信息权重。越靠前、越详细的经历，越会影响第一判断。/g, "Beyond keywords, the full report should also fix information hierarchy. Earlier and more detailed experience has the strongest impact on the first impression.")
+    .replace(/我不会平均阅读每个 section；越靠前、越清楚的内容越影响第一判断。/g, "I do not read every section equally; earlier and clearer content has the strongest impact on my first impression.")
+    .replace(/我不会平均阅读每个 section；越靠前的内容越决定我怎么理解你。/g, "I do not read every section equally; earlier content largely determines how I understand your profile.")
+    .replace(/我不会平均阅读每段经历；最前面的经历如果不够相关，后面的亮点很可能来不及被看到。/g, "I do not read every experience equally; if the first experience is not relevant enough, later strengths may never get noticed.");
+}
+function displayText(text = "") {
+  return isEnglishResult() ? englishFallbackText(text) : String(text || "");
+}
 const mentorSections = document.querySelectorAll(".section");
 if (mentorSections.length) {
   const freeNum = document.querySelector("#mentorFree")?.closest(".section")?.querySelector(".section-num");
-  if (freeNum) freeNum.textContent = "免费试读 · 3 条建议";
+  if (freeNum) freeNum.textContent = t("免费试读 · 3 条建议", "Free preview - 3 recommendations");
   const lockedNum = document.querySelector("#lockedMentorsArea")?.closest(".section")?.querySelector(".section-num");
-  if (lockedNum) lockedNum.textContent = "付费解锁 · 9 条深度建议";
+  if (lockedNum) lockedNum.textContent = t("付费解锁 · 9 条深度建议", "Unlock - 9 deeper recommendations");
 }
 
 // ── helpers ──────────────────────────────────────────────────────
 function atsRiskText(risk) {
-  if (risk === "低") return "低风险";
-  if (risk === "中") return "中风险";
-  if (risk === "高") return "高风险";
-  return risk || "未评级";
+  if (risk === "低" || /low/i.test(String(risk))) return t("低风险", "Low risk");
+  if (risk === "中" || /medium|moderate/i.test(String(risk))) return t("中风险", "Medium risk");
+  if (risk === "高" || /high/i.test(String(risk))) return t("高风险", "High risk");
+  return risk || t("未评级", "Not rated");
 }
 function riskToneClass(risk) {
   const text = String(risk || "");
@@ -46,11 +208,12 @@ function renderUnlockMiniCta(options = {}) {
   const showButton = options.showButton !== false;
   return `
     <div class="result-lock-cta">
-      <div class="lock">🔒</div>
-      <div class="text">解锁<b>全部 4 位导师</b> + <b>完整改写报告</b><br><span>含完整 JD Keyword 清单</span></div>
-      ${showButton ? `<a class="result-lock-cta-button" href="/payment">解锁更多内容</a>` : ""}
+      <div class="lock" aria-hidden="true"></div>
+      <div class="text">${t("解锁", "Unlock ")}<b>${t("全部 4 位导师", "all 4 mentors")}</b> + <b>${t("完整改写报告", "the full rewrite report")}</b><br><span>${t("含完整 JD Keyword 清单", "Includes full JD keyword checklist")}</span></div>
+      ${showButton ? `<a class="result-lock-cta-button" href="/payment">${t("解锁更多内容", "Unlock more")}</a>` : ""}
     </div>`;
 }
+
 const STATIC_MENTOR_COMPANY_LOGOS = [
   { company: "Amazon", companyLogo: "/logos/Amazon.png" },
   { company: "Amazon Web Services", companyLogo: "/logos/Amazon Web Services, Inc.png" },
@@ -231,7 +394,7 @@ function formatTargetJobForProblem(jobTitle) {
     .replace(/\s+/g, " ")
     .trim();
   if (/\bmachine learning engineer\b/i.test(cleaned)) return "Machine Learning Engineer";
-  return cleaned || "目标岗位";
+  return cleaned || t("目标岗位", "target role");
 }
 function repairTargetRoleProblem(text) {
   const target = formatTargetJobForProblem(getTargetJobTitle());
@@ -253,14 +416,14 @@ function renderMentorLogoMarquee(pool) {
 function renderMentorLogoIntro() {
   return `
     <div class="mentor-logo-intro" id="mentorLogoIntro">
-      <p class="mentor-logo-copy">由 MentorX 导师知识库中的真实大厂经验交叉匹配，系统会优先挑出最贴合你简历问题的建议。</p>
+      <p class="mentor-logo-copy">${t("由 EdAIX 导师知识库中的真实大厂经验交叉匹配，系统会优先挑出最贴合你简历问题的建议。", "Matched from EdAIX's mentor knowledge base and prioritized for your resume risks.")}</p>
       ${renderMentorLogoMarquee(STATIC_MENTOR_COMPANY_LOGOS)}
     </div>`;
 }
 function renderPaywallMoreBlock(kind) {
   const rows = kind === "suggestions"
-    ? ["更多优先修改动作", "分段改写路径", "可直接套用的优化方向"]
-    : ["更多岗位匹配风险", "更多 ATS 细分问题", "完整问题优先级排序"];
+    ? [t("更多优先修改动作", "More priority actions"), t("分段改写路径", "Section-by-section rewrite path"), t("可直接套用的优化方向", "Optimization directions you can apply directly")]
+    : [t("更多岗位匹配风险", "More role-match risks"), t("更多 ATS 细分问题", "More ATS detail issues"), t("完整问题优先级排序", "Full prioritized issue list")];
   return `
     <li class="paywall-more" style="list-style:none;padding:0;margin:10px 0 0;">
       <div class="paywall-more-list">
@@ -272,7 +435,7 @@ function renderPaywallMoreBlock(kind) {
 function renderAtsPreviewMoreButton(kind) {
   return `
     <li class="ats-preview-more-item">
-      <button type="button" class="ats-preview-more" data-ats-preview-more="${escapeAttr(kind)}">查看更多</button>
+      <button type="button" class="ats-preview-more" data-ats-preview-more="${escapeAttr(kind)}">${t("查看更多", "View more")}</button>
     </li>`;
 }
 function normalizeProblemListLegacy() {
@@ -316,6 +479,14 @@ function buildRoleAwareSuggestions() {
     ...(atsResult.raw?.topMissingKeywords || []),
   ].filter(Boolean).slice(0, 5);
   const kwText = missing.length ? `，优先补齐 ${missing.join("、")} 等 JD 高频词` : "";
+  if (isEnglishResult()) {
+    const missingText = missing.length ? `, prioritizing high-frequency JD terms such as ${missing.join(", ")}` : "";
+    return [
+      `Rewrite the first Summary line around a Machine Learning Engineer positioning${missingText}.`,
+      "List the ML stack clearly in Skills, such as Python, PyTorch/TensorFlow, scikit-learn, model training, evaluation, and data pipelines.",
+      "Rewrite the most relevant projects or experience into an MLE evidence chain: data scale, model/feature methods, evaluation metrics, deployment, or business impact.",
+    ];
+  }
   return [
     `把 Summary 第一行改成 Machine Learning Engineer 定位${kwText}。`,
     "在 Skills 中单独列出 ML 技术栈，例如 Python、PyTorch/TensorFlow、scikit-learn、model training、evaluation、data pipeline。",
@@ -342,25 +513,35 @@ function isMostlyEnglishProblem(text = "") {
   return latin > 20 && cjk === 0;
 }
 function resultSummarySuggestionFallback() {
-  return "添加个人简介段落：用 2-3 句话说明你的背景、核心技能和目标岗位，这是系统和招聘方第一眼读到的内容，也有助于提升关键词覆盖。";
+  return t(
+    "添加个人简介段落：用 2-3 句话说明你的背景、核心技能和目标岗位，这是系统和招聘方第一眼读到的内容，也有助于提升关键词覆盖。",
+    "Add a Summary section: use 2-3 sentences to state your background, core skills, and target role. This is the first thing ATS and recruiters read, and it also improves keyword coverage."
+  );
 }
 function resultKeywordSuggestionFallback() {
-  return "优先补齐岗位描述匹配缺口：只补真实经历能支撑的工具、领域词和动作词，分别放进技能栏和最相关的经历要点。";
+  return t(
+    "优先补齐岗位描述匹配缺口：只补真实经历能支撑的工具、领域词和动作词，分别放进技能栏和最相关的经历要点。",
+    "Close the JD-match gaps first: add only tools, domain terms, and action verbs that real experience can support, then place them in Skills and the most relevant experience bullets."
+  );
 }
 function resultBulletSuggestionFallback() {
-  return "将每段核心经历改成「动作 + 方法/工具 + 量化结果」结构，让系统和招聘方都能看到岗位证据。";
+  return t(
+    "将每段核心经历改成「动作 + 方法/工具 + 量化结果」结构，让系统和招聘方都能看到岗位证据。",
+    "Rewrite each core experience bullet as action + method/tool + measurable result so ATS and recruiters can see role evidence."
+  );
 }
 function resultSuggestionFallbacks() {
   return [
     ...(hasConfirmedMissingSummary() ? [resultSummarySuggestionFallback()] : []),
     resultKeywordSuggestionFallback(),
     resultBulletSuggestionFallback(),
-    "调整开头定位和经历顺序，让目标岗位的主线更容易被读到。",
+    t("调整开头定位和经历顺序，让目标岗位的主线更容易被读到。", "Adjust the opening positioning and experience order so the target-role story is easier to read."),
   ];
 }
 function simplifySuggestionText(text) {
   const value = String(text || "").trim();
   if (!value) return "";
+  if (isEnglishResult()) return englishFallbackText(value);
   if (/Add a 2-3 line Summary section first/i.test(value)) return hasConfirmedMissingSummary() ? resultSummarySuggestionFallback() : "";
   if (/Prioritize missing role keywords/i.test(value)) return resultKeywordSuggestionFallback();
   if (/Rewrite top bullets/i.test(value)) return resultBulletSuggestionFallback();
@@ -412,7 +593,7 @@ function normalizeSuggestionList() {
     .filter(Boolean);
   const items = [];
   for (const item of raw) {
-    if (isMostlyEnglishProblem(item)) continue;
+    if (!isEnglishResult() && isMostlyEnglishProblem(item)) continue;
     const nextItems = dedupeAtsList([...items, item], { max: 3 });
     if (nextItems.length > items.length) items.push(item);
     if (items.length === 3) break;
@@ -431,10 +612,10 @@ function normalizeSuggestionList() {
 }
 function resultProblemFallbacks() {
   return [
-    ...(hasConfirmedMissingSummary() ? ["简历缺少个人简介段落，岗位定位线索不够清晰。"] : []),
-    "岗位描述关键词匹配仍有提升空间。",
-    "经历中的量化结果偏少，建议补充百分比或规模数据。",
-    "简历整体结构可以进一步围绕目标岗位强化。",
+    ...(hasConfirmedMissingSummary() ? [t("简历缺少个人简介段落，岗位定位线索不够清晰。", "The resume is missing a Summary section, so the target-role positioning is not clear enough.")] : []),
+    t("岗位描述关键词匹配仍有提升空间。", "JD keyword matching still has room to improve."),
+    t("经历中的量化结果偏少，建议补充百分比或规模数据。", "Experience bullets need more quantified results. Add percentages or scale where possible."),
+    t("简历整体结构可以进一步围绕目标岗位强化。", "The resume structure can be aligned more tightly around the target role."),
   ];
 }
 function normalizeProblemList() {
@@ -443,14 +624,16 @@ function normalizeProblemList() {
     ...(atsResult.keyProblems || []),
     ...(atsResult.problems || []),
     ...(atsResult.raw?.problems || []),
-    ...((atsResult.topProblems || []).map(item => item.message || item.title).filter(Boolean)),
+    ...((atsResult.topProblems || []).map(item => localField(item, "message", localField(item, "title"))).filter(Boolean)),
+    ...((atsResult.raw?.topProblems || []).map(item => localField(item, "message", localField(item, "title"))).filter(Boolean)),
   ]
     .map(repairTargetRoleProblem)
     .map(simplifySuggestionText)
+    .map(displayText)
     .filter(Boolean);
   const items = [];
   for (const item of raw) {
-    if (isMostlyEnglishProblem(item)) continue;
+    if (!isEnglishResult() && isMostlyEnglishProblem(item)) continue;
     const nextItems = dedupeAtsList([...items, item], { max: 3 });
     if (nextItems.length > items.length) items.push(item);
     if (items.length === 3) break;
@@ -1315,6 +1498,61 @@ function humanizeAiImpactNote(key, value, note, context = "general") {
 
 function humanizeAiImpactTrend(trend) {
   if (!trend || !Array.isArray(trend.rows)) return trend;
+  if (isEnglishResult()) {
+    const map = new Map([
+      ["待校准", "Calibrating"],
+      ["高影响", "High impact"],
+      ["中等影响", "Medium impact"],
+      ["低-中等影响", "Low-to-medium impact"],
+      ["需要更多岗位信息", "More role information needed"],
+      ["日常事务会被工具接手", "Routine work will be handled by tools"],
+      ["标准排查会被工具接手", "Standard troubleshooting will be handled by tools"],
+      ["基础报表会被工具接手", "Basic reporting will be handled by tools"],
+      ["基础内容生产会越来越工具化", "Basic content production will become more tool-driven"],
+      ["样板代码会被工具接手", "Boilerplate code will be handled by tools"],
+      ["策略判断会更重要", "Strategic judgment becomes more important"],
+      ["基础分析会被工具接手", "Basic analysis will be handled by tools"],
+      ["基础分析会越来越快，真正拉开差距的是你能不能解释业务问题。", "Basic analysis will get faster; the real differentiator is whether you can explain the business problem."],
+      ["取数、分析初稿、固定指标解释", "Data extraction, analysis drafts, fixed-metric explanations"],
+      ["指标判断、业务解释、实验分析、建议落地", "Metric judgment, business interpretation, experiment analysis, recommendation execution"],
+      ["不要只写做分析，要写你怎么把分析变成决策或行动。", "Do not only say you performed analysis; show how your analysis became decisions or action."],
+      ["业务洞察、指标提升、决策支持、自动化效率", "Business insights, metric improvement, decision support, automation efficiency"],
+      ["把分析工作写成结果，会比只写工具和图表更有力。", "Framing analytics work as outcomes is stronger than only listing tools and dashboards."],
+      ["原型搭建会更快", "Prototype building gets faster"],
+      ["代码生成会帮你提速", "Code generation helps you move faster"],
+      ["文献与记录会提速", "Literature review and documentation get faster"],
+      ["容易被自动化", "Easier to automate"],
+      ["更有价值的能力", "More valuable abilities"],
+      ["简历应强化", "Resume should emphasize"],
+      ["prompt 初稿、agent demo、RAG 样板流程", "Prompt drafts, agent demos, RAG template workflows"],
+      ["系统设计、评估方法、安全边界、业务落地", "System design, evaluation methods, safety boundaries, business deployment"],
+      ["评估指标、上线效果、成本控制、用户影响", "Evaluation metrics, launch outcomes, cost control, user impact"],
+      ["普通版本会变得很快，简历里要写你怎么把初稿变成有效结果。", "Basic versions get faster; your resume should show how you turn drafts into effective outcomes."],
+      ["AI 工具会让原型更快，但稳定性和产品化仍然要人把关。", "AI tools make prototypes faster, but stability and productization still need human judgment."],
+      ["AI 岗位不要只写会调模型，要写你怎么让它可靠可用。", "For AI roles, do not only say you can tune models; show how you make them reliable and usable."],
+      ["写清楚你怎么验证效果，而不是只展示 demo。", "Explain how you validated effectiveness instead of only showing a demo."],
+      ["能把数字翻成业务动作的人，会比只会整理数据更有竞争力。", "People who turn numbers into business actions are more competitive than people who only organize data."],
+      ["这些内容最好带数字，哪怕是区间，也会比空泛描述更有力。", "These points work best with numbers, even ranges, because they are stronger than vague descriptions."],
+    ]);
+    const convert = (value) => {
+      const text = String(value || "");
+      if (!hasCjk(text)) return text;
+      const fallback = englishFallbackText(text);
+      if (fallback && !hasCjk(fallback)) return fallback;
+      return map.get(text) || "Role-specific impact evidence";
+    };
+    return {
+      ...trend,
+      level: convert(trend.level),
+      caption: convert(trend.caption),
+      rows: trend.rows.map(row => ({
+        ...row,
+        k: convert(row.k),
+        v: convert(row.v),
+        note: convert(row.note),
+      })),
+    };
+  }
   const context = detectAiImpactContext(trend);
   return {
     ...trend,
@@ -1330,12 +1568,12 @@ function buildAiImpactTrend() {
   const text = getRoleSignalText();
   if (!text.trim()) {
     return {
-      level: "待校准",
-      caption: "需要更多岗位信息",
+      level: t("待校准", "Calibrating"),
+      caption: t("需要更多岗位信息", "More role information needed"),
       rows: [
-        { k:"容易被自动化", v:"待判断", note:"需要更明确的岗位职责后再判断。" },
-        { k:"更有价值的能力", v:"判断力与协作", note:"优先写出你如何处理复杂问题，而不是只列日常任务。" },
-        { k:"简历应强化", v:"成果证据", note:"补充能体现判断、协作、优化结果的经历。" },
+        { k:t("容易被自动化", "Easier to automate"), v:t("待判断", "To be assessed"), note:t("需要更明确的岗位职责后再判断。", "Needs clearer role responsibilities before assessment.") },
+        { k:t("更有价值的能力", "More valuable abilities"), v:t("判断力与协作", "Judgment and collaboration"), note:t("优先写出你如何处理复杂问题，而不是只列日常任务。", "Show how you handle complex problems instead of only listing routine tasks.") },
+        { k:t("简历应强化", "Resume should emphasize"), v:t("成果证据", "Outcome evidence"), note:t("补充能体现判断、协作、优化结果的经历。", "Add experience that shows judgment, collaboration, and improved outcomes.") },
       ],
     };
   }
@@ -1358,44 +1596,44 @@ function buildAiImpactTrend() {
 
   if (opsSignal) {
     return {
-      level: "中等影响",
-      caption: "重复任务会被自动化",
+      level: t("中等影响", "Medium impact"),
+      caption: t("重复任务会被自动化", "Repetitive tasks will be automated"),
       rows: [
-        { k:"容易被自动化", v:"重复报表、基础数据整理、标准流程提醒", note:"AI 会先压缩低判断、可模板化的日常工作。" },
-        { k:"更有价值的能力", v:"异常判断、跨团队协同、流程优化、数据决策", note:"越能处理例外情况和协调现场资源，越不容易被工具替代。" },
-        { k:"简历应强化", v:"数据发现问题、优化调度、降低成本、提升完结率", note:"把工作写成判断和改进，而不是只写执行任务。" },
+        { k:t("容易被自动化", "Easier to automate"), v:t("重复报表、基础数据整理、标准流程提醒", "Repeated reports, basic data organization, standard process reminders"), note:t("AI 会先压缩低判断、可模板化的日常工作。", "AI will first compress routine work that is low-judgment and easy to template.") },
+        { k:t("更有价值的能力", "More valuable abilities"), v:t("异常判断、跨团队协同、流程优化、数据决策", "Exception handling, cross-team coordination, process improvement, data decisions"), note:t("越能处理例外情况和协调现场资源，越不容易被工具替代。", "The more you handle exceptions and coordinate resources, the less replaceable your work becomes.") },
+        { k:t("简历应强化", "Resume should emphasize"), v:t("数据发现问题、优化调度、降低成本、提升完结率", "Finding problems with data, optimizing scheduling, lowering cost, improving completion rate"), note:t("把工作写成判断和改进，而不是只写执行任务。", "Frame the work as judgment and improvement, not only task execution.") },
       ],
     };
   }
   if (highAutomation && !judgmentSignal) {
     return {
-      level: "高影响",
-      caption: "标准化任务会被自动化",
+      level: t("高影响", "High impact"),
+      caption: t("标准化任务会被自动化", "Standardized tasks will be automated"),
       rows: [
-        { k:"容易被自动化", v:"基础录入、重复整理、模板化沟通", note:"这类任务更容易被工具接管或压缩。" },
-        { k:"更有价值的能力", v:"问题判断、流程改进、跨团队沟通", note:"需要证明你不只是执行流程，也能优化流程。" },
-        { k:"简历应强化", v:"效率提升、错误率下降、流程优化结果", note:"用数字写出你带来的改进。" },
+        { k:t("容易被自动化", "Easier to automate"), v:t("基础录入、重复整理、模板化沟通", "Basic entry, repeated organization, templated communication"), note:t("这类任务更容易被工具接管或压缩。", "These tasks are easier for tools to take over or compress.") },
+        { k:t("更有价值的能力", "More valuable abilities"), v:t("问题判断、流程改进、跨团队沟通", "Problem judgment, process improvement, cross-team communication"), note:t("需要证明你不只是执行流程，也能优化流程。", "Show that you can improve processes, not only execute them.") },
+        { k:t("简历应强化", "Resume should emphasize"), v:t("效率提升、错误率下降、流程优化结果", "Efficiency gains, lower error rates, process improvement results"), note:t("用数字写出你带来的改进。", "Use numbers to show the improvements you created.") },
       ],
     };
   }
   if (judgmentSignal || techSignal) {
     return {
-      level: "低-中等影响",
-      caption: "AI 更像效率工具",
+      level: t("低-中等影响", "Low-to-medium impact"),
+      caption: t("AI 更像效率工具", "AI is more of an efficiency tool"),
       rows: [
-        { k:"容易被自动化", v:"资料整理、初稿生成、基础分析", note:"AI 会提升执行速度，但不直接替代完整判断。" },
-        { k:"更有价值的能力", v:"复杂决策、产品/业务判断、跨团队影响", note:"能定义问题和推动结果的人更有优势。" },
-        { k:"简历应强化", v:"决策依据、业务影响、规模化成果", note:"突出你如何用工具和数据做出更好的判断。" },
+        { k:t("容易被自动化", "Easier to automate"), v:t("资料整理、初稿生成、基础分析", "Research organization, first drafts, basic analysis"), note:t("AI 会提升执行速度，但不直接替代完整判断。", "AI improves execution speed, but does not replace complete judgment.") },
+        { k:t("更有价值的能力", "More valuable abilities"), v:t("复杂决策、产品/业务判断、跨团队影响", "Complex decisions, product/business judgment, cross-team influence"), note:t("能定义问题和推动结果的人更有优势。", "People who define problems and drive outcomes have an advantage.") },
+        { k:t("简历应强化", "Resume should emphasize"), v:t("决策依据、业务影响、规模化成果", "Decision rationale, business impact, scaled outcomes"), note:t("突出你如何用工具和数据做出更好的判断。", "Show how you used tools and data to make better decisions.") },
       ],
     };
   }
   return {
-    level: "中等影响",
-    caption: "部分流程会被自动化",
+    level: t("中等影响", "Medium impact"),
+    caption: t("部分流程会被自动化", "Some workflows will be automated"),
     rows: [
-      { k:"容易被自动化", v:"重复整理、标准沟通、基础分析", note:"AI 会优先影响低判断、重复性强的工作。" },
-      { k:"更有价值的能力", v:"业务判断、协作推进、结果负责", note:"未来更看重能把问题推进到结果的人。" },
-      { k:"简历应强化", v:"问题、行动、结果", note:"用清楚的证据说明你解决了什么问题。" },
+      { k:t("容易被自动化", "Easier to automate"), v:t("重复整理、标准沟通、基础分析", "Repeated organization, standard communication, basic analysis"), note:t("AI 会优先影响低判断、重复性强的工作。", "AI will first affect repetitive, low-judgment work.") },
+      { k:t("更有价值的能力", "More valuable abilities"), v:t("业务判断、协作推进、结果负责", "Business judgment, collaboration, ownership of outcomes"), note:t("未来更看重能把问题推进到结果的人。", "The future rewards people who can move problems to outcomes.") },
+      { k:t("简历应强化", "Resume should emphasize"), v:t("问题、行动、结果", "Problem, action, result"), note:t("用清楚的证据说明你解决了什么问题。", "Use clear evidence to show what problem you solved.") },
     ],
   };
 }
@@ -1436,14 +1674,14 @@ function buildAiImpactTrend() {
   }
 
   // 3. 取 endYear 最大的條目（最新學歷）
-  if (!entries.length) {
-    if (el) el.textContent = s.resumeName || "已上传简历";
+if (!entries.length) {
+    if (el) el.textContent = s.resumeName || t("已上传简历", "Resume uploaded");
     return;
   }
   const best = entries.reduce((a, b) => b.endYear > a.endYear ? b : a);
 
   const parts = [];
-  if (best.endYear) parts.push(best.endYear + "届");
+  if (best.endYear) parts.push(isEnglishResult() ? `Class of ${best.endYear}` : best.endYear + "届");
   if (best.school)  parts.push(best.school);
   if (best.degree)  parts.push(best.degree);
   if (el) el.textContent = parts.join(" · ");
@@ -1454,7 +1692,7 @@ const targetJobEl = document.getElementById("targetJob");
 if (targetJobEl) {
   function isPlaceholderTitle(v) { return !v || /依\s*JD|自动识别|unknown|^目标岗位$/i.test(String(v)); }
   const job = getTargetJobTitle();
-  targetJobEl.textContent = job ? "目标:" + job : "目标:根据 JD 分析";
+  targetJobEl.textContent = job ? `${t("目标:", "Target: ")}${job}` : t("目标:根据 JD 分析", "Target: based on JD analysis");
 }
 
 // ── 2. 标题分数 & core issue ─────────────────────────────────────
@@ -1470,6 +1708,9 @@ if (coreIssueEl) {
     : atsScore
       ? `ATS ${atsRiskText(atsResult.riskLevel)}（${atsScore}/100），请优先查看 ATS 诊断中的分项得分和修改建议。`
       : "";
+  if (isEnglishResult() && coreIssueEl.textContent) {
+    coreIssueEl.textContent = displayText(coreIssueEl.textContent);
+  }
 }
 
 // ── 3. 4 Tiles（用真實數據）─────────────────────────────────────
@@ -1486,8 +1727,8 @@ if (rankPctEl) rankPctEl.textContent = jdMatchValue;
 const salaryRangeEl = document.getElementById("salaryRange");
 const salaryTopEl   = document.getElementById("salaryTop");
 const headlineSalaryTopEl = document.getElementById("headlineSalaryTop");
-if (salaryRangeEl) salaryRangeEl.textContent = "成长潜力";
-if (salaryTopEl)   salaryTopEl.textContent   = "待校准";
+if (salaryRangeEl) salaryRangeEl.textContent = t("成长潜力", "Growth potential");
+if (salaryTopEl)   salaryTopEl.textContent   = t("待校准", "Calibrating");
 
 // AI impact trend：local rule-based signal, no AI/API call
 const compCountEl  = document.getElementById("compCount");
@@ -1497,11 +1738,11 @@ if (compCountEl) {
   compCountEl.textContent = aiTrend.level;
   compCountEl.classList.remove("ai-impact-low", "ai-impact-medium", "ai-impact-high", "ai-impact-pending");
   const levelText = String(aiTrend.level || "");
-  const impactClass = /高/.test(levelText)
+  const impactClass = /高|high/i.test(levelText)
     ? "ai-impact-high"
-    : /低/.test(levelText)
+    : /低|low/i.test(levelText)
       ? "ai-impact-low"
-      : /中/.test(levelText)
+      : /中|medium/i.test(levelText)
         ? "ai-impact-medium"
         : "ai-impact-pending";
   compCountEl.classList.add(impactClass);
@@ -1531,9 +1772,9 @@ function renderStackedRows(arr) {
 const atsDetailEl = document.getElementById("atsDetail");
 if (atsDetailEl && atsScore) {
   atsDetailEl.innerHTML = renderRows([
-    { k:"ATS 总分", v: atsScore + "/100", note: atsRiskText(atsResult.riskLevel) },
-    { k:"JD 关键词匹配", v: formatDisplayJdKeywordCount(), note:"已覆盖 / JD 关键词总数" },
-    { k:"简历质量", v: (atsResult.dimensions?.C?.score ?? "--") + "/" + (atsResult.dimensions?.C?.max ?? 12), note:"内容质量与成果表达" },
+    { k:t("ATS 总分", "ATS total score"), v: atsScore + "/100", note: atsRiskText(atsResult.riskLevel) },
+    { k:t("JD 关键词匹配", "JD keyword match"), v: formatDisplayJdKeywordCount(), note:t("已覆盖 / JD 关键词总数", "Covered / total JD keywords") },
+    { k:t("简历质量", "Resume quality"), v: (atsResult.dimensions?.C?.score ?? "--") + "/" + (atsResult.dimensions?.C?.max ?? 12), note:t("内容质量与成果表达", "Content quality and outcome expression") },
   ]);
 }
 const atsRiskCaptionEl = document.getElementById("atsRiskCaption");
@@ -1548,9 +1789,9 @@ if (atsRiskCaptionEl) {
 const rankDetailEl = document.getElementById("rankDetail");
 if (rankDetailEl) {
   rankDetailEl.innerHTML = renderRows([
-    { k:"JD 关键词匹配", v: formatDisplayJdKeywordCount(), note:"已覆盖 / JD 关键词总数。" },
+    { k:t("JD 关键词匹配", "JD keyword match"), v: formatDisplayJdKeywordCount(), note:t("已覆盖 / JD 关键词总数。", "Covered / total JD keywords.") },
   ]) + renderStackedRows([
-    { k:"主要缺口", v:"下方 JD Keyword 清单已整理关键词与放置建议。", note:"完整清单可付费解锁查看。" },
+    { k:t("主要缺口", "Main gap"), v:t("下方 JD Keyword 清单已整理关键词与放置建议。", "The JD keyword checklist below organizes keywords and placement guidance."), note:t("完整清单可付费解锁查看。", "Unlock the full checklist to view all details.") },
   ]);
 }
 const compDetailEl = document.getElementById("compDetail");
@@ -1660,25 +1901,25 @@ function getSalaryTargetRole() {
 }
 function formatConfidenceLabel(confidence) {
   const key = String(confidence || "").toLowerCase();
-  if (key === "high") return "高";
-  if (key === "medium") return "中等";
-  if (key === "low") return "较低";
-  return "中等";
+  if (key === "high") return t("高", "High");
+  if (key === "medium") return t("中等", "Medium");
+  if (key === "low") return t("较低", "Low");
+  return t("中等", "Medium");
 }
 function formatSalaryBasisNote(data) {
   const locationSource = String(data.matched_location_source || "").toLowerCase();
   const market = locationSource === "explicit"
-    ? `${data.matched_location || "United States"} 地区`
-    : "全美市场";
-  return `基于此方向与${market}估算。`;
+    ? `${data.matched_location || "United States"} ${t("地区", "area")}`
+    : t("全美市场", "the US market");
+  return t(`基于此方向与${market}估算。`, `Estimated from this direction and ${market}.`);
 }
 function salarySourceDisplayNote() {
-  return "数据来源：美国官方职业薪资资料（BLS/O*NET），按相近岗位赛道估算。";
+  return t("数据来源：美国官方职业薪资资料（BLS/O*NET），按相近岗位赛道估算。", "Source: US official salary data (BLS/O*NET), estimated from adjacent role tracks.");
 }
 function salaryUnavailableRows() {
   return [
-    { k:"薪资成长潜力", v:"待校准", note:"暂未匹配到足够明确的岗位赛道，薪资成长区间需要进一步校准。" },
-    { k:"展示原则", v:"不使用 mock 薪资", note:"不会把 $120K/$200K 这类示例数字当作真实薪资或长期上限。" },
+    { k:t("薪资成长潜力", "Salary growth potential"), v:t("待校准", "Calibrating"), note:t("暂未匹配到足够明确的岗位赛道，薪资成长区间需要进一步校准。", "The role track is not clear enough yet, so the salary-growth range needs further calibration.") },
+    { k:t("展示原则", "Display principle"), v:t("不使用 mock 薪资", "No mock salary"), note:t("不会把 $120K/$200K 这类示例数字当作真实薪资或长期上限。", "Example numbers such as $120K/$200K are not shown as real salary or long-term upside.") },
   ];
 }
 (async function loadSalaryTrajectory() {
@@ -1690,8 +1931,8 @@ function salaryUnavailableRows() {
   const targetRole = getSalaryTargetRole();
   const salaryDetailEl = document.getElementById("salaryDetail");
   const showSalaryFallback = () => {
-    if (salaryRangeEl) salaryRangeEl.textContent = "待校准";
-    if (salaryTopEl) salaryTopEl.textContent = "需补充";
+    if (salaryRangeEl) salaryRangeEl.textContent = t("待校准", "Calibrating");
+    if (salaryTopEl) salaryTopEl.textContent = t("需补充", "Needs more data");
     if (salaryDetailEl) salaryDetailEl.innerHTML = renderRows(salaryUnavailableRows());
   };
   if (!jobTitle && !jdText) {
@@ -1710,8 +1951,8 @@ function salaryUnavailableRows() {
     }
     const data = await resp.json();
     if (data.trajectory_source !== "benchmark" || !data.three_year_range || !data.five_year_range) {
-      if (salaryRangeEl) salaryRangeEl.textContent = "待校准";
-      if (salaryTopEl) salaryTopEl.textContent = "需补充";
+      if (salaryRangeEl) salaryRangeEl.textContent = t("待校准", "Calibrating");
+      if (salaryTopEl) salaryTopEl.textContent = t("需补充", "Needs more data");
       if (salaryDetailEl) salaryDetailEl.innerHTML = renderRows(salaryUnavailableRows());
       return;
     }
@@ -1721,29 +1962,29 @@ function salaryUnavailableRows() {
     const rows = [];
     if (data.jd_salary) {
       rows.push({
-        k:"JD 标注薪资",
+        k:t("JD 标注薪资", "Salary stated in JD"),
         v:data.jd_salary,
-        note:"这是 JD 中写明的薪资，不等同于长期成长上限。",
+        note:t("这是 JD 中写明的薪资，不等同于长期成长上限。", "This is the salary stated in the JD, not the same as long-term growth upside."),
       });
     }
     rows.push(
       {
-        k:"当前赛道参考",
-        v:data.current_range || "待校准",
+        k:t("当前赛道参考", "Current track benchmark"),
+        v:data.current_range || t("待校准", "Calibrating"),
         note:formatSalaryBasisNote(data),
       },
       {
-        k:"3 年成长区间",
+        k:t("3 年成长区间", "3-year growth range"),
         v:data.three_year_range,
-        note:"若持续积累目标岗位相关经验和可验证成果，3 年内可参考这个区间。",
+        note:t("若持续积累目标岗位相关经验和可验证成果，3 年内可参考这个区间。", "If you keep building target-role experience and verifiable outcomes, this is a reasonable 3-year reference range."),
       },
       {
-        k:"5 年成长区间",
+        k:t("5 年成长区间", "5-year growth range"),
         v:data.five_year_range,
-        note:"代表同类岗位中经验更成熟、职责更完整时的市场参考。",
+        note:t("代表同类岗位中经验更成熟、职责更完整时的市场参考。", "A market reference for similar roles with more mature experience and broader ownership."),
       },
       {
-        k:"同赛道高分位",
+        k:t("同赛道高分位", "High percentile in this track"),
         v:data.top_range || data.five_year_range,
         note:salarySourceDisplayNote(),
       }
@@ -1757,14 +1998,14 @@ function salaryUnavailableRows() {
 
 // ── 5. Skills ────────────────────────────────────────────────────
 const labelMap = {
-  have: `<span class="pill pill-good"><span class="dot"></span>已具备</span>`,
-  weak: `<span class="pill pill-warn"><span class="dot"></span>待补强</span>`
+  have: `<span class="pill pill-good"><span class="dot"></span>${t("已具备", "Covered")}</span>`,
+  weak: `<span class="pill pill-warn"><span class="dot"></span>${t("待补强", "Needs work")}</span>`
 };
 const KEYWORD_CATEGORY_CONFIG = {
-  skill_tool: { label: "技能/工具", sourceKeys: ["core_skills", "tools"] },
-  responsibility_scene: { label: "职责/场景", sourceKeys: ["action_verbs", "nice_to_have"] },
-  domain_business: { label: "行业/业务词", sourceKeys: ["domain_keywords"] },
-  soft_collab: { label: "软技能/协作词", sourceKeys: [] },
+  skill_tool: { label: t("技能/工具", "Skills/tools"), sourceKeys: ["core_skills", "tools"] },
+  responsibility_scene: { label: t("职责/场景", "Responsibilities/context"), sourceKeys: ["action_verbs", "nice_to_have"] },
+  domain_business: { label: t("行业/业务词", "Domain/business terms"), sourceKeys: ["domain_keywords"] },
+  soft_collab: { label: t("软技能/协作词", "Soft skills/collaboration"), sourceKeys: [] },
 };
 var CATEGORY_LABEL_TO_GROUP = {
   "核心技能": "skill_tool",
@@ -1789,21 +2030,21 @@ function categoryGroupForTerm(term, sourceKey = "", sourceLabel = "") {
 function placementForKeyword(term, group, sourceKey = "") {
   const text = String(term || "").toLowerCase();
   if (/(title|岗位|职位|summary|定位|目标)/i.test(term) && !/(工具|系统|数据)/i.test(term)) {
-    return { label: "放 Summary", className: "keyword-use--summary" };
+    return { label: t("放 Summary", "Add to Summary"), className: "keyword-use--summary" };
   }
   if (group === "skill_tool" || ["core_skills", "tools"].includes(sourceKey)) {
-    return { label: "放 Skills", className: "keyword-use--skills" };
+    return { label: t("放 Skills", "Add to Skills"), className: "keyword-use--skills" };
   }
   if (group === "responsibility_scene" || /(负责|创建|指派|调度|监控|优化|协同|值班|应急|support|manage|analyze|coordinate|report|track)/i.test(term)) {
-    return { label: "写进经历要点", className: "keyword-use--experience" };
+    return { label: t("写进经历要点", "Add to Experience"), className: "keyword-use--experience" };
   }
   if (group === "soft_collab") {
-    return { label: "写进经历要点", className: "keyword-use--experience" };
+    return { label: t("写进经历要点", "Add to Experience"), className: "keyword-use--experience" };
   }
   if (/(公司|福利|地点|城市|全职|兼职|remote|onsite)/i.test(text)) {
-    return { label: "按需放入", className: "keyword-use--reference" };
+    return { label: t("按需放入", "Use if relevant"), className: "keyword-use--reference" };
   }
-  return { label: "按需放入", className: "keyword-use--reference" };
+  return { label: t("按需放入", "Use if relevant"), className: "keyword-use--reference" };
 }
 function keywordItemKey(item) {
   return String(item?.name || "").trim().toLowerCase();
@@ -1853,12 +2094,12 @@ function primaryKeywordItems(items) {
 }
 function keywordTypeLabel(group) {
   const labels = {
-    skill_tool: "工具",
-    responsibility_scene: "职责",
-    domain_business: "业务词",
-    soft_collab: "协作",
+    skill_tool: t("工具", "Tools"),
+    responsibility_scene: t("职责", "Responsibilities"),
+    domain_business: t("业务词", "Business terms"),
+    soft_collab: t("协作", "Collaboration"),
   };
-  return labels[group] || "关键词";
+  return labels[group] || t("关键词", "Keyword");
 }
 function renderSkillRow(sk) {
   const placement = sk.placement || placementForKeyword(sk.name, sk.group, sk.sourceKey);
@@ -1917,12 +2158,18 @@ function renderSkillSection(skills) {
   const paywallTextEl = document.querySelector("#skillPaywall .skill-paywall-overlay .text");
   if (paywallTextEl) {
     paywallTextEl.innerHTML = lockedKeywordCount > 0
-      ? `还有 <b style="color:var(--jade)">${lockedKeywordCount}</b> 个 keyword 等你解锁加强简历竞争力<br/><span style="color:var(--ink-soft);font-weight:500">包含关键词放置建议和完整改写报告</span>`
-      : `完整 JD Keyword 清单会随下方完整诊断一起解锁<br/><span style="color:var(--ink-soft);font-weight:500">包含关键词放置建议和改写报告</span>`;
+      ? t(
+        `还有 <b style="color:var(--jade)">${lockedKeywordCount}</b> 个 keyword 等你解锁加强简历竞争力<br/><span style="color:var(--ink-soft);font-weight:500">包含关键词放置建议和完整改写报告</span>`,
+        `<b style="color:var(--jade)">${lockedKeywordCount}</b> more keywords are locked to help strengthen your resume<br/><span style="color:var(--ink-soft);font-weight:500">Includes keyword placement guidance and the full rewrite report</span>`
+      )
+      : t(
+        `完整 JD Keyword 清单会随下方完整诊断一起解锁<br/><span style="color:var(--ink-soft);font-weight:500">包含关键词放置建议和改写报告</span>`,
+        `The full JD keyword checklist unlocks with the complete diagnosis<br/><span style="color:var(--ink-soft);font-weight:500">Includes keyword placement guidance and rewrite report</span>`
+      );
   }
   if (expandBtn && hiddenSkills.length) {
     expandBtn.hidden = false;
-    expandBtn.innerHTML = "查看更多 ↓";
+    expandBtn.innerHTML = t("查看更多 ↓", "View more ↓");
   } else if (expandBtn) {
     expandBtn.hidden = true;
   }
@@ -1935,8 +2182,9 @@ function renderSkillSection(skills) {
   const sectionTitleEl = document.getElementById("skillSectionTitle");
   const sectionDescEl = document.getElementById("skillSectionDesc");
   if (sectionTitleEl) sectionTitleEl.textContent = "JD Keyword 清单";
+  if (sectionTitleEl && isEnglishResult()) sectionTitleEl.textContent = "JD keyword checklist";
   if (sectionDescEl) {
-    sectionDescEl.textContent = "这些是系统从 JD 中识别出的关键词。优先把待补强项写进 Summary、Skills 或 Experience。";
+    sectionDescEl.textContent = t("这些是系统从 JD 中识别出的关键词。优先把待补强项写进 Summary、Skills 或 Experience。", "These are keywords detected from the JD. Prioritize missing items in Summary, Skills, or Experience.");
   }
   if (previewItems.length === 0 && !getJdKeywordCount(atsResult)) return;
   renderSkillSection(keywordItems.map(function(sk, i) {
@@ -1952,7 +2200,7 @@ if (expandBtn && paywallEl) {
   expandBtn.addEventListener("click", () => {
     open = !open;
     paywallEl.hidden = !open;
-    expandBtn.innerHTML = open ? "收起 ↑" : "查看更多 ↓";
+    expandBtn.innerHTML = open ? t("收起 ↑", "Collapse ↑") : t("查看更多 ↓", "View more ↓");
   });
 }
 
@@ -1968,7 +2216,7 @@ function formatAdvice(text) {
 function copyExample(btn) {
   const raw = btn.getAttribute("data-content").replace(/&apos;/g,"'").replace(/&quot;/g,'"');
   if (navigator.clipboard) navigator.clipboard.writeText(raw).then(
-    () => { btn.innerHTML = "✓ 已复制"; setTimeout(() => btn.innerHTML = "📋 复制", 2000); }
+    () => { btn.innerHTML = t("✓ 已复制", "✓ Copied"); setTimeout(() => btn.innerHTML = t("📋 复制", "Copy"), 2000); }
   );
 }
 window.copyExample = copyExample;
@@ -1980,20 +2228,20 @@ function priorityBadge(p) {
   const lv = (p === "high" || p === "critical" || p === "P0") ? "high"
            : (p === "medium" || p === "P1") ? "medium" : "low";
   const cfg = {
-    high:   { dot:"#DC2626", bg:"#FFF1F1", color:"#991B1B", border:"#FCA5A5", label:"必改" },
-    medium: { dot:"#EA580C", bg:"#FFF7ED", color:"#9A3412", border:"#FDBA74", label:"建议改" },
-    low:    { dot:"#8B82A8", bg:"#F7F3FC", color:"#5F567A", border:"#E6DEF2", label:"补充" },
+    high:   { dot:"#DC2626", bg:"#FFF1F1", color:"#991B1B", border:"#FCA5A5", label:t("必改", "Must fix") },
+    medium: { dot:"#EA580C", bg:"#FFF7ED", color:"#9A3412", border:"#FDBA74", label:t("建议改", "Recommended") },
+    low:    { dot:"#8B82A8", bg:"#F7F3FC", color:"#5F567A", border:"#E6DEF2", label:t("补充", "Bonus") },
   };
   const c = cfg[lv] || cfg.medium;
   return `<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:${c.bg};color:${c.color};border:1px solid ${c.border};letter-spacing:.01em;"><span style="width:5px;height:5px;border-radius:50%;background:${c.dot};flex-shrink:0;"></span>${c.label}</span>`;
 }
 
 const FIT_TYPE_CONFIG = {
-  same_role:                { label:"同职位导师",  bg:"#F0E8FA", color:"#5333A6", border:"#E6DEF2" },
-  same_industry:            { label:"同产业导师",  bg:"#F0FDF4", color:"#15803D", border:"#BBF7D0" },
-  same_function:            { label:"同职能导师",  bg:"#F0FDF4", color:"#166534", border:"#BBF7D0" },
-  cross_domain_high_relevance: { label:"跨领域高相关", bg:"#FFF7ED", color:"#92400E", border:"#FDE68A" },
-  ats_universal:            { label:"ATS 通用建议", bg:"#F5F3FF", color:"#5B21B6", border:"#DDD6FE" },
+  same_role:                { label:t("同职位导师", "Same-role mentor"),  bg:"#F0E8FA", color:"#5333A6", border:"#E6DEF2" },
+  same_industry:            { label:t("同产业导师", "Same-industry mentor"),  bg:"#F0FDF4", color:"#15803D", border:"#BBF7D0" },
+  same_function:            { label:t("同职能导师", "Same-function mentor"),  bg:"#F0FDF4", color:"#166534", border:"#BBF7D0" },
+  cross_domain_high_relevance: { label:t("跨领域高相关", "Cross-domain fit"), bg:"#FFF7ED", color:"#92400E", border:"#FDE68A" },
+  ats_universal:            { label:t("ATS 通用建议", "ATS general advice"), bg:"#F5F3FF", color:"#5B21B6", border:"#DDD6FE" },
   recruiter_perspective:    { label:"HR",          bg:"#FFF1F2", color:"#9F1239", border:"#FECDD3" },
 };
 
@@ -2037,16 +2285,19 @@ function truncateAtSentence(value = "", maxLength = 120) {
 function fallbackHrPerspective(item = {}) {
   const tags = item.relatedProblemTags || [];
   if (tags.includes("missing_summary")) {
-    return "HR 会先看简历开头是否说明投递方向；缺少 Summary 时，后面的技能和经历更容易被读散。";
+    return t("HR 会先看简历开头是否说明投递方向；缺少 Summary 时，后面的技能和经历更容易被读散。", "HR first checks whether the resume opening states the target direction. Without a Summary, later skills and experience are easier to miss.");
   }
   if (tags.some(tag => /education|coursework|gpa/.test(tag))) {
-    return "HR 会把教育背景当作 junior 候选人的快速筛选信号；相关课程和训练需要完整、靠前、可识别。";
+    return t("HR 会把教育背景当作 junior 候选人的快速筛选信号；相关课程和训练需要完整、靠前、可识别。", "HR treats education as a fast screening signal for junior candidates; relevant coursework and training should be complete, visible, and easy to identify.");
   }
   if (tags.some(tag => /keyword|jd|hard_skill/.test(tag))) {
-    return "HR 会用 JD 技能词快速确认候选人是否匹配；关键词缺少经历证据时，可信度会下降。";
+    return t("HR 会用 JD 技能词快速确认候选人是否匹配；关键词缺少经历证据时，可信度会下降。", "HR uses JD skill terms to quickly confirm fit. Keywords are less credible when they are not backed by experience evidence.");
   }
-  const action = truncateAtSentence(item.action || item.actionSummary || item.title || "这条修改建议", 64);
-  return `HR 会把这里当作快速筛选信号；建议优先处理「${action.replace(/[。.!?！？]$/g, "")}」。`;
+  const action = truncateAtSentence(localField(item, "action", localField(item, "actionSummary", localField(item, "title", t("这条修改建议", "this recommendation")))), 64);
+  return t(
+    `HR 会把这里当作快速筛选信号；建议优先处理「${action.replace(/[。.!?！？]$/g, "")}」。`,
+    `HR treats this as a fast screening signal. Prioritize "${displayText(action).replace(/[。.!?！？]$/g, "")}".`
+  );
 }
 
 function hasMissingSummarySignal() {
@@ -2070,17 +2321,20 @@ function normalizeMissingSummaryAdviceItem(item = {}) {
   const text = [item.title, item.action, item.actionSummary, item.currentDiagnosis, item.problemSummary].filter(Boolean).join(" ");
   const talksAboutSummaryKeyword = /summary/i.test(text) && /岗位原词|目标岗位原词|exact (?:target )?(?:job )?title|target title|job title|keyword|关键词/i.test(text);
   if (!tags.includes("missing_summary") && !(hasMissingSummarySignal() && talksAboutSummaryKeyword)) return item;
-  const targetRole = s.jobTitle || atsResult.jobTitle || atsResult.profile?.targetRole || atsResult.raw?.jobTitle || "目标岗位";
-  const action = `新增 2-3 行 Summary：第一句写目标岗位 ${targetRole}，第二句连接你最相关的经历、技能和可量化成果；先把段落搭起来，再补具体关键词。`;
+  const targetRole = s.jobTitle || atsResult.jobTitle || atsResult.profile?.targetRole || atsResult.raw?.jobTitle || t("目标岗位", "target role");
+  const action = t(
+    `新增 2-3 行 Summary：第一句写目标岗位 ${targetRole}，第二句连接你最相关的经历、技能和可量化成果；先把段落搭起来，再补具体关键词。`,
+    `Add a 2-3 line Summary: first state the target role (${targetRole}), then connect your most relevant experience, skills, and measurable outcomes. Build the section first, then add specific keywords.`
+  );
   return {
     ...item,
-    title: "补上 Summary 段落",
-    currentDiagnosis: "原简历目前缺少 Summary 段落；需要先有一个岗位定位入口，再谈把 JD 关键词放进 Summary。",
-    problemSummary: "原简历目前缺少 Summary 段落；需要先有一个岗位定位入口，再谈把 JD 关键词放进 Summary。",
+    title: t("补上 Summary 段落", "Add a Summary section"),
+    currentDiagnosis: t("原简历目前缺少 Summary 段落；需要先有一个岗位定位入口，再谈把 JD 关键词放进 Summary。", "The resume is currently missing a Summary section. You need a target-role positioning entry point before placing JD keywords into Summary."),
+    problemSummary: t("原简历目前缺少 Summary 段落；需要先有一个岗位定位入口，再谈把 JD 关键词放进 Summary。", "The resume is currently missing a Summary section. You need a target-role positioning entry point before placing JD keywords into Summary."),
     action,
     actionSummary: action,
-    mentorLens: "没有 Summary 时，简历开头缺少岗位定位入口；先搭出这一段，后续目标岗位原词和 JD 关键词才有自然承载位置。",
-    hrPerspective: "HR 会先看简历开头是否说明投递方向；缺少 Summary 时，后面的技能和经历更容易被读散。",
+    mentorLens: t("没有 Summary 时，简历开头缺少岗位定位入口；先搭出这一段，后续目标岗位原词和 JD 关键词才有自然承载位置。", "Without a Summary, the resume opening lacks a target-role entry point. Build this section first so target-role wording and JD keywords have a natural place to live."),
+    hrPerspective: t("HR 会先看简历开头是否说明投递方向；缺少 Summary 时，后面的技能和经历更容易被读散。", "HR first checks whether the resume opening states the target direction. Without a Summary, later skills and experience are easier to miss."),
     relatedProblemTags: [...new Set(["missing_summary", ...tags.filter((tag) => tag !== "missing_exact_job_title")])],
     canonicalActionFamily: "summary_creation",
     targetSection: "summary",
@@ -2136,25 +2390,36 @@ function actionMatchedHumanTitle(item = {}) {
 }
 
 function displayAdviceTitle(item = {}) {
-  const title = String(item.title || "").trim();
+  const title = (isEnglishResult()
+    ? firstText(item.titleEn, item.title_en, item.advice_card_title_en, item.canonical_title_en, item.canonicalTitleEn, item.title, item.canonicalTitle)
+    : firstText(item.title, item.canonicalTitle, item.titleEn, item.title_en, item.advice_card_title_en)
+  ).trim();
   const actionTitle = actionMatchedHumanTitle(item);
-  if (!actionTitle) return title || "优化这条简历建议";
+  if (!actionTitle) return displayText(title) || t("优化这条简历建议", "Improve this resume recommendation");
   const titleIntent = adviceTitleIntent(title);
   const actionIntent = adviceTitleIntent(actionTitle);
   const badTitle = !title || /先|简历优化建议\s*\d+|当前报告可用的导师建议不足|优化简历与目标岗位的匹配度/.test(title) || title.length > 80;
-  return badTitle || !titleIntent || titleIntent !== actionIntent ? actionTitle : title;
+  return displayText(badTitle || !titleIntent || titleIntent !== actionIntent ? actionTitle : title);
 }
 
 function renderApiAdviceItem(item, i) {
   item = normalizeMissingSummaryAdviceItem(item);
   const title = displayAdviceTitle(item);
-  const diagnosis   = item.currentDiagnosis || item.problemSummary || "";
-  const action      = item.action || item.actionSummary || "";
-  const insight     = item.mentorInsight || item.mentorLens || item.reason || item.I_insight || item.P_mentor || "";
-  const hrPov       = truncateAtSentence(item.hrPerspective || item.HR_os || item.hrPov || item.recruiterPerspective || HR_PERSPECTIVE_LOOKUP.get(String(item.adviceId || "")) || HR_PERSPECTIVE_LOOKUP.get(resultAdviceIdentity(item)) || fallbackHrPerspective(item), 150);
-  const matchReason = item.matchReason || "";
+  const diagnosis   = displayText(isEnglishResult()
+    ? firstText(item.currentDiagnosisEn, item.currentDiagnosis_en, item.current_diagnosis_en, item.problemSummaryEn, item.problemSummary_en, item.problem_summary_en, item.user_problem_summary_en, item.currentDiagnosis, item.problemSummary)
+    : firstText(item.currentDiagnosis, item.problemSummary, item.currentDiagnosisEn, item.problemSummaryEn, item.user_problem_summary_en));
+  const action      = displayText(isEnglishResult()
+    ? firstText(item.actionEn, item.action_en, item.actionSummaryEn, item.actionSummary_en, item.action_summary_en, item.action, item.actionSummary)
+    : firstText(item.action, item.actionSummary, item.actionEn, item.actionSummaryEn, item.action_summary_en));
+  const insight     = displayText(isEnglishResult()
+    ? firstText(item.mentorInsightEn, item.mentorInsight_en, item.mentor_insight_en, item.mentorLensEn, item.mentorLens_en, item.mentor_lens_en, item.humanized_mentor_insight_en, item.humanizedMentorInsightEn, item.mentorInsight, item.mentorLens, item.reason, item.I_insight, item.P_mentor, item.humanizedMentorInsight)
+    : firstText(item.mentorInsight, item.mentorLens, item.reason, item.I_insight, item.P_mentor, item.humanizedMentorInsight, item.mentorInsightEn, item.humanized_mentor_insight_en));
+  const hrPov       = displayText(truncateAtSentence(isEnglishResult()
+    ? firstText(item.hrPerspectiveEn, item.hrPerspective_en, item.hr_perspective_en, item.recruiterPerspectiveEn, item.recruiterPerspective_en, item.recruiter_perspective_en, item.humanized_hr_perspective_en, item.humanizedHrPerspectiveEn, item.HR_os_en, item.hrPerspective, item.HR_os, item.hrPov, item.recruiterPerspective, item.humanizedHrPerspective, HR_PERSPECTIVE_LOOKUP.get(String(item.adviceId || "")), HR_PERSPECTIVE_LOOKUP.get(resultAdviceIdentity(item)), fallbackHrPerspective(item))
+    : firstText(item.hrPerspective, item.HR_os, item.hrPov, item.recruiterPerspective, item.humanizedHrPerspective, HR_PERSPECTIVE_LOOKUP.get(String(item.adviceId || "")), HR_PERSPECTIVE_LOOKUP.get(resultAdviceIdentity(item)), fallbackHrPerspective(item)), 150));
+  const matchReason = displayText(localField(item, "matchReason"));
   const fitType     = item.mentorFitType || "";
-  const topicCluster = item.displayAdviceType || item.topicCluster || sectionLabel(item.targetSection);
+  const topicCluster = displayText(localField(item, "displayAdviceType", localField(item, "topicCluster", sectionLabel(item.targetSection))));
 
   const fitCfg = FIT_TYPE_CONFIG[fitType];
   const fitChip = fitCfg
@@ -2175,21 +2440,21 @@ function renderApiAdviceItem(item, i) {
       ${diagnosis ? `<div style="margin-bottom:11px;">
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
           <span style="width:3px;height:14px;background:#D4A574;border-radius:2px;flex-shrink:0;"></span>
-          <span style="font-size:11px;font-weight:700;color:#92400E;letter-spacing:.02em;">你的现状</span>
+          <span style="font-size:11px;font-weight:700;color:#92400E;letter-spacing:.02em;">${t("你的现状", "Current state")}</span>
         </div>
         <p style="margin:0 0 0 9px;font-size:13px;line-height:1.65;color:#44403C;">${escapeHtml(diagnosis)}</p>
       </div>` : ""}
       ${action ? `<div style="background:#F6FEF9;border:1px solid #D1FAE5;border-radius:12px;padding:12px 14px;margin-bottom:10px;">
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
           <span style="width:18px;height:18px;border-radius:50%;background:#059669;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;color:#fff;font-weight:700;">✓</span>
-          <span style="font-size:11px;font-weight:700;color:#065F46;letter-spacing:.02em;">建议你做</span>
+          <span style="font-size:11px;font-weight:700;color:#065F46;letter-spacing:.02em;">${t("建议你做", "Recommended action")}</span>
         </div>
         <p style="margin:0;font-size:13px;line-height:1.65;color:#065F46;font-weight:600;">${escapeHtml(action)}</p>
       </div>` : ""}
       ${(insight || hrPov) ? `<div style="background:#FAFAF9;border:1px solid rgba(0,0,0,0.05);border-radius:10px;padding:11px 13px;margin-top:8px;">
-        <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase;">补充视角</div>
+        <div style="font-size:10.5px;font-weight:700;color:#9CA3AF;margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase;">${t("补充视角", "Additional perspective")}</div>
         ${insight ? `<div style="display:flex;align-items:flex-start;gap:8px;${hrPov ? "margin-bottom:8px;" : ""}">
-          <span style="display:inline-flex;align-items:center;justify-content:center;min-width:42px;font-size:11px;font-weight:600;color:#6D28D9;background:#F5F3FF;padding:2px 7px;border-radius:99px;flex-shrink:0;">导师</span>
+          <span style="display:inline-flex;align-items:center;justify-content:center;min-width:42px;font-size:11px;font-weight:600;color:#6D28D9;background:#F5F3FF;padding:2px 7px;border-radius:99px;flex-shrink:0;">${t("导师", "Mentor")}</span>
           <span style="flex:1;min-width:0;font-size:12.5px;line-height:1.6;color:#374151;">${escapeHtml(insight)}</span>
         </div>` : ""}
         ${hrPov ? `<div style="display:flex;align-items:flex-start;gap:8px;">
@@ -2234,11 +2499,11 @@ function fallbackFreeAdviceItems() {
       adviceId: "free_fallback_jd_keyword",
       priority: "high",
       displayAdviceType: "JD Keyword",
-      title: "把目标岗位关键词写进经历证据",
-      currentDiagnosis: "现在的经历描述容易停留在职责层，和目标岗位 JD 的关键词连接不够明确。",
-      action: "挑 2 到 3 段最相关经历，把 JD 里的核心技能词改写成项目动作、工具和结果，而不是只放在技能列表。",
-      mentorLens: "导师会先看关键词有没有被真实项目承接；只有出现在经历证据里，才像是你真的做过。",
-      hrPerspective: "HR 快速扫简历时，会优先匹配岗位关键词和最近经历；关键词只堆在技能栏，可信度会比较弱。",
+      title: t("把目标岗位关键词写进经历证据", "Put target-role keywords into experience evidence"),
+      currentDiagnosis: t("现在的经历描述容易停留在职责层，和目标岗位 JD 的关键词连接不够明确。", "Current experience bullets stay too close to responsibilities and do not clearly connect to target JD keywords."),
+      action: t("挑 2 到 3 段最相关经历，把 JD 里的核心技能词改写成项目动作、工具和结果，而不是只放在技能列表。", "Pick 2-3 of the most relevant experiences and turn core JD skills into project actions, tools, and outcomes instead of leaving them only in Skills."),
+      mentorLens: t("导师会先看关键词有没有被真实项目承接；只有出现在经历证据里，才像是你真的做过。", "Mentors first check whether keywords are backed by real project evidence; keywords feel credible only when they appear in experience bullets."),
+      hrPerspective: t("HR 快速扫简历时，会优先匹配岗位关键词和最近经历；关键词只堆在技能栏，可信度会比较弱。", "When HR scans quickly, they match role keywords against recent experience; keywords only stacked in Skills feel less credible."),
       relatedProblemTags: ["jd_keyword_gap"],
       canonicalActionFamily: "keyword_evidence",
       targetSection: "experience",
@@ -2247,11 +2512,11 @@ function fallbackFreeAdviceItems() {
       adviceId: "free_fallback_impact",
       priority: "mid",
       displayAdviceType: "Impact",
-      title: "把成果写成可判断的业务影响",
-      currentDiagnosis: "部分 bullet 目前能看出你做了什么，但还不够容易判断影响范围、质量或结果。",
-      action: "每段重点经历至少补一个结果指标：规模、转化、效率、准确率、成本、用户量或上线影响都可以。",
-      mentorLens: "大厂导师会用结果判断候选人的 ownership；没有量化结果时，很难判断你只是参与还是主导。",
-      hrPerspective: "HR 会把结果数字当作筛选信号，它能让你的经历从普通执行描述里跳出来。",
+      title: t("把成果写成可判断的业务影响", "Write outcomes as clear business impact"),
+      currentDiagnosis: t("部分 bullet 目前能看出你做了什么，但还不够容易判断影响范围、质量或结果。", "Some bullets show what you did, but the scope, quality, or result is still hard to judge."),
+      action: t("每段重点经历至少补一个结果指标：规模、转化、效率、准确率、成本、用户量或上线影响都可以。", "Add at least one outcome metric to each key experience: scale, conversion, efficiency, accuracy, cost, users, or launch impact."),
+      mentorLens: t("大厂导师会用结果判断候选人的 ownership；没有量化结果时，很难判断你只是参与还是主导。", "Industry mentors use outcomes to judge ownership; without quantified results, it is hard to tell whether you participated or led."),
+      hrPerspective: t("HR 会把结果数字当作筛选信号，它能让你的经历从普通执行描述里跳出来。", "HR treats result numbers as screening signals; they help your experience stand out from routine task descriptions."),
       relatedProblemTags: ["impact_missing"],
       canonicalActionFamily: "impact_quantification",
       targetSection: "experience",
@@ -2260,11 +2525,11 @@ function fallbackFreeAdviceItems() {
       adviceId: "free_fallback_structure",
       priority: "mid",
       displayAdviceType: "Structure",
-      title: "重排首屏信息，让岗位定位更快被读到",
-      currentDiagnosis: "简历开头需要更快说明你是谁、投什么岗位、最强的匹配证据是什么。",
-      action: "把 Summary、核心技能和最近一段最相关经历放在前半页，并删除和目标岗位弱相关的低信号内容。",
-      mentorLens: "导师通常会先帮你整理叙事顺序；顺序对了，后面的经历才不会被误读成散点。",
-      hrPerspective: "HR 的初筛时间很短，首屏没有清楚定位时，后面再好的项目也可能来不及被看到。",
+      title: t("重排首屏信息，让岗位定位更快被读到", "Reorder the opening section so the target role is clear faster"),
+      currentDiagnosis: t("简历开头需要更快说明你是谁、投什么岗位、最强的匹配证据是什么。", "The resume opening should state who you are, what role you are targeting, and your strongest matching evidence faster."),
+      action: t("把 Summary、核心技能和最近一段最相关经历放在前半页，并删除和目标岗位弱相关的低信号内容。", "Move Summary, core skills, and the most relevant recent experience into the first half page, and remove low-signal content weakly related to the target role."),
+      mentorLens: t("导师通常会先帮你整理叙事顺序；顺序对了，后面的经历才不会被误读成散点。", "Mentors usually help organize the narrative order first; when the order is right, later experience is less likely to read as scattered points."),
+      hrPerspective: t("HR 的初筛时间很短，首屏没有清楚定位时，后面再好的项目也可能来不及被看到。", "HR's first-pass screening time is short; without clear positioning at the top, even strong projects later may not get noticed."),
       relatedProblemTags: ["structure"],
       canonicalActionFamily: "resume_structure",
       targetSection: "summary",
@@ -2287,18 +2552,18 @@ function ensureThreeFreeAdviceItems(items = []) {
 
 function mentorInitials(name) {
   const clean = String(name || "").replace(/[导师]/g, "").trim();
-  return clean.slice(0, 2) || (name || "M").slice(0, 1);
+  return clean.slice(0, 2) || (name || t("导师", "M")).slice(0, 1);
 }
 
 function renderFreeMentor(m) {
   const mentorFreeEl = document.getElementById("mentorFree");
   if (!mentorFreeEl || !m) return;
 
-  const name = m.mentorName || "导师";
+  const name = localField(m, "mentorName", t("导师", "Mentor"));
   const initials = mentorInitials(name);
   const company = m.company || "";
-  const title = m.mentorTitle || "";
-  const careerPath = m.careerPathDisplay || "";
+  const title = localField(m, "mentorTitle");
+  const careerPath = localField(m, "careerPathDisplay");
   const companyMeta = [company, title].filter(Boolean).join(" · ");
   const adviceHtml = ensureThreeFreeAdviceItems(m.adviceItems || []).map(renderApiAdviceItem).join("");
 
@@ -2309,10 +2574,10 @@ function renderFreeMentor(m) {
         <div style="flex:1;min-width:0;">
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
             <span style="font-size:18px;font-weight:700;color:#111827;line-height:1.2;">${escapeHtml(name)}</span>
-            <span style="flex-shrink:0;font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:#FEF9C3;color:#713F12;border:1px solid #FDE68A;">免费试读</span>
+            <span style="flex-shrink:0;font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:#FEF9C3;color:#713F12;border:1px solid #FDE68A;">${t("免费试读", "Free preview")}</span>
           </div>
           ${companyMeta ? `<div style="font-size:12px;color:#6B7280;margin-top:3px;">${escapeHtml(companyMeta)}</div>` : ""}
-          ${careerPath ? `<div style="font-size:11.5px;color:#9CA3AF;margin-top:2px;"><span style="font-weight:600;color:#A8A29E;">职业路径</span> · ${escapeHtml(careerPath)}</div>` : ""}
+          ${careerPath ? `<div style="font-size:11.5px;color:#9CA3AF;margin-top:2px;"><span style="font-weight:600;color:#A8A29E;">${t("职业路径", "Career path")}</span> · ${escapeHtml(careerPath)}</div>` : ""}
         </div>
       </div>
       <div style="height:1px;background:rgba(0,0,0,0.05);margin:0 0 18px;"></div>
@@ -2347,9 +2612,9 @@ function renderResultPageAdvicePreview(items) {
   const numEl = section?.querySelector(".section-num");
   const titleEl = section?.querySelector(".section-title");
   const descEl = section?.querySelector(".section-desc");
-  if (numEl) numEl.textContent = "免费试读 · 3 个优先修改点";
-  if (titleEl) titleEl.textContent = "这 3 件事最值得改";
-  if (descEl) descEl.textContent = "系统从完整导师建议中挑出最值得处理的三个修改动作，覆盖不同简历部位。";
+  if (numEl) numEl.textContent = t("免费试读 · 3 个优先修改点", "Free preview - 3 priority fixes");
+  if (titleEl) titleEl.textContent = t("这 3 件事最值得改", "These 3 fixes matter most");
+  if (descEl) descEl.textContent = t("系统从完整导师建议中挑出最值得处理的三个修改动作，覆盖不同简历部位。", "The system selected the three highest-priority actions from the full mentor recommendations, covering different resume sections.");
   if (titleEl && !document.getElementById("mentorLogoIntro")) {
     titleEl.insertAdjacentHTML("afterend", renderMentorLogoIntro());
   }
@@ -2359,10 +2624,10 @@ function renderResultPageAdvicePreview(items) {
 function renderLockedAdvicePreview(preview) {
   const areaEl = document.getElementById("lockedMentorsArea");
   if (!areaEl || !preview) return;
-  const topics = (preview.topics || []).slice(0, 4).map(t => `<span class="cred-pill">${escapeHtml(t)}</span>`).join("");
+  const topics = (preview.topics || []).slice(0, 4).map(topic => `<span class="cred-pill">${escapeHtml(displayText(topic))}</span>`).join("");
   areaEl.innerHTML = `
     <article class="locked-mentor-v2" style="position:relative;overflow:hidden;min-height:190px;">
-      <div style="font-size:12px;font-weight:600;color:var(--ink-soft);font-family:var(--mono);margin:0 0 8px;">${preview.lockedAdviceCount || 9} 条付费深度建议</div>
+      <div style="font-size:12px;font-weight:600;color:var(--ink-soft);font-family:var(--mono);margin:0 0 8px;">${t(`${preview.lockedAdviceCount || 9} 条付费深度建议`, `${preview.lockedAdviceCount || 9} paid deep-dive recommendations`)}</div>
       <div class="cred-pills" style="margin-bottom:10px;">${topics}</div>
       <div class="locked-preview-overlay">${renderUnlockMiniCta({ showButton: false })}</div>
     </article>`;
@@ -2390,10 +2655,10 @@ function renderLockedAdvicePreview(preview) {
 function renderLockedAdvicePreviewClean(preview) {
   const areaEl = document.getElementById("lockedMentorsArea");
   if (!areaEl || !preview) return;
-  const topics = (preview.topics || []).slice(0, 4).map(t => `<span class="cred-pill">${escapeHtml(t)}</span>`).join("");
+  const topics = (preview.topics || []).slice(0, 4).map(topic => `<span class="cred-pill">${escapeHtml(displayText(topic))}</span>`).join("");
   areaEl.innerHTML = `
     <article class="locked-mentor-v2" style="position:relative;overflow:hidden;min-height:190px;">
-      <div style="font-size:12px;font-weight:600;color:var(--ink-soft);font-family:var(--mono);margin:0 0 8px;">${preview.lockedAdviceCount || 9} 条付费深度建议</div>
+      <div style="font-size:12px;font-weight:600;color:var(--ink-soft);font-family:var(--mono);margin:0 0 8px;">${t(`${preview.lockedAdviceCount || 9} 条付费深度建议`, `${preview.lockedAdviceCount || 9} paid deep-dive recommendations`)}</div>
       <div class="cred-pills" style="margin-bottom:10px;">${topics}</div>
       <div class="locked-preview-overlay">${renderUnlockMiniCta({ showButton: false })}</div>
     </article>`;
@@ -2414,7 +2679,7 @@ function renderLockedAdvicePreviewClean(preview) {
     return;
   }
   const mentorFreeEl = document.getElementById("mentorFree");
-  if (mentorFreeEl) mentorFreeEl.innerHTML = `<p style="color:var(--ink-soft);font-size:14px;padding:16px 0;">暂无导师建议，请返回首页重新提交简历。</p>`;
+  if (mentorFreeEl) mentorFreeEl.innerHTML = `<p style="color:var(--ink-soft);font-size:14px;padding:16px 0;">${t("暂无导师建议，请返回首页重新提交简历。", "No mentor recommendations yet. Please return to the home page and submit again.")}</p>`;
 })();
 
 // ── 7. ATS 评分详情 ────────────────────────────────────────────
@@ -2438,12 +2703,12 @@ if (atsResult && atsResult.atsScore) {
     const jdCount = getJdKeywordCount(atsResult);
     const coverageRatio = jdCount && jdCount.total ? jdCount.matched / jdCount.total : null;
     const coverageNote = coverageRatio !== null && coverageRatio >= 0.65
-      ? "关键词覆盖良好。建议重点检查下方关键词是否有足够的经历证据支撑。"
-      : "覆盖偏低。先看下方关键词。";
+      ? t("关键词覆盖良好。建议重点检查下方关键词是否有足够的经历证据支撑。", "Keyword coverage is solid. Next, check whether the keywords below are backed by enough experience evidence.")
+      : t("覆盖偏低。先看下方关键词。", "Coverage is low. Start with the keywords below.");
     sysSummaryEl.innerHTML = [
-      jdKeywordCount !== "--" ? `<div><b>JD 关键词覆盖：</b>${jdKeywordCount}</div>` : "",
+      jdKeywordCount !== "--" ? `<div><b>${t("JD 关键词覆盖：", "JD keyword coverage: ")}</b>${jdKeywordCount}</div>` : "",
       jdKeywordCount !== "--" ? `<div>${coverageNote}</div>` : "",
-      atsResult.formatPenaltyTriggered ? `<div style="color:var(--bad);"><b>格式处罚：</b>${(atsResult.formatPenaltyReason || []).join("；")}</div>` : "",
+      atsResult.formatPenaltyTriggered ? `<div style="color:var(--bad);"><b>${t("格式处罚：", "Format penalty: ")}</b>${(atsResult.formatPenaltyReason || []).map(displayText).join(t("；", "; "))}</div>` : "",
     ].filter(Boolean).join("");
   }
 
@@ -2451,12 +2716,19 @@ if (atsResult && atsResult.atsScore) {
   (function renderRadar() {
     const svgEl = document.getElementById("atsRadarChart");
     if (!svgEl) return;
-    svgEl.setAttribute("viewBox", "0 0 360 320");
-    svgEl.setAttribute("width", "360");
-    svgEl.setAttribute("height", "320");
-    const cx = 180, cy = 150, R = 88;
+    svgEl.setAttribute("viewBox", "-58 0 476 340");
+    svgEl.setAttribute("width", "100%");
+    svgEl.setAttribute("height", "340");
+    const cx = 180, cy = 162, R = 92;
     const dimKeys = ["A","B","C","D","E","F"];
-    const dimLabels = { A:"格式规范", B:"基本资料", C:"内容质量", D:"技能匹配", E:"市场适配", F:"经验匹配" };
+    const dimLabels = {
+      A:t("格式规范", "Format"),
+      B:t("基本资料", "Profile"),
+      C:t("内容质量", "Content quality"),
+      D:t("技能匹配", "Skill match"),
+      E:t("市场适配", "Market fit"),
+      F:t("经验匹配", "Experience match"),
+    };
     const raw = atsResult.raw?.dimensions || atsResult.dimensions || {};
     const dims = dimKeys.map(k => {
       const d = raw[k];
@@ -2476,12 +2748,18 @@ if (atsResult && atsResult.atsScore) {
     svg += `<polygon points="${dataPts}" fill="rgba(83,51,166,.16)" stroke="var(--jade,#5333A6)" stroke-width="2"/>`;
     dims.forEach((d, i) => {
       const [dx, dy] = pt(i, R * d.pct / 100);
-      const [lx, ly] = pt(i, R + 26);
+      const [lx, ly] = pt(i, R + 34);
       const anchor = lx < cx - 4 ? "end" : lx > cx + 4 ? "start" : "middle";
       const color = d.pct >= 70 ? "var(--good,#1F7A4D)" : d.pct >= 45 ? "var(--warn,#B25E00)" : "var(--bad,#B3261E)";
       svg += `<circle cx="${dx}" cy="${dy}" r="4" fill="${color}"/>`;
-      svg += `<text x="${lx}" y="${ly}" text-anchor="${anchor}" font-size="11" font-weight="600" fill="var(--ink-soft)" font-family="var(--sans)">${dimLabels[dimKeys[i]]}</text>`;
-      svg += `<text x="${lx}" y="${ly + 13}" text-anchor="${anchor}" font-size="12" font-weight="800" fill="${color}" font-family="var(--sans)">${d.score}/${d.max}</text>`;
+      const labelParts = String(dimLabels[dimKeys[i]]).split(" ");
+      const labelLines = labelParts.length > 1 && String(dimLabels[dimKeys[i]]).length > 10
+        ? [labelParts.slice(0, -1).join(" "), labelParts.slice(-1).join(" ")]
+        : [String(dimLabels[dimKeys[i]])];
+      labelLines.forEach((line, lineIndex) => {
+        svg += `<text x="${lx}" y="${ly + lineIndex * 11}" text-anchor="${anchor}" font-size="10" font-weight="600" fill="var(--ink-soft)" font-family="var(--sans)">${line}</text>`;
+      });
+      svg += `<text x="${lx}" y="${ly + labelLines.length * 11 + 2}" text-anchor="${anchor}" font-size="11" font-weight="800" fill="${color}" font-family="var(--sans)">${d.score}/${d.max}</text>`;
     });
     svgEl.innerHTML = svg;
 
@@ -2492,11 +2770,11 @@ if (atsResult && atsResult.atsScore) {
       totalEl.innerHTML = `<span style="color:${scoreColor};">${sc}</span><span style="font-size:13px;color:var(--ink-soft);font-weight:500;">/100</span>`;
     }
     const riskMap = {
-      "低": { label:"低风险", bg:"#d4f0de", color:"#2d7a4a", border:"#2d7a4a" },
-      "中": { label:"中风险", bg:"#fde8c8", color:"#b05e00", border:"#b05e00" },
-      "高": { label:"高风险", bg:"#fdd8d8", color:"#b02020", border:"#b02020" },
+      "低": { label:t("低风险", "Low risk"), bg:"#d4f0de", color:"#2d7a4a", border:"#2d7a4a" },
+      "中": { label:t("中风险", "Medium risk"), bg:"#fde8c8", color:"#b05e00", border:"#b05e00" },
+      "高": { label:t("高风险", "High risk"), bg:"#fdd8d8", color:"#b02020", border:"#b02020" },
     };
-    const r = riskMap[atsResult.riskLevel] || { label: atsResult.riskLevel || "未知", bg:"#eee", color:"#666", border:"#999" };
+    const r = riskMap[atsResult.riskLevel] || { label: atsRiskText(atsResult.riskLevel) || t("未知", "Unknown"), bg:"#eee", color:"#666", border:"#999" };
     const badgeEl = document.getElementById("atsRiskBadge");
     if (badgeEl) { badgeEl.textContent = r.label; badgeEl.style.background = r.bg; badgeEl.style.color = r.color; badgeEl.style.border = `1.5px solid ${r.border}`; }
   })();
@@ -2522,7 +2800,7 @@ if (atsResult && atsResult.atsScore) {
     const expanded = el.classList.contains("is-expanded");
     if (chev) chev.style.transform = expanded ? "rotate(180deg)" : "rotate(0deg)";
     el.querySelectorAll(".ats-preview-more").forEach(btn => {
-      btn.textContent = expanded ? "收起" : "查看更多";
+      btn.textContent = expanded ? t("收起", "Collapse") : t("查看更多", "View more");
     });
   }
   ["atsProblemsDetails", "atsSuggestionsDetails"].forEach(id => {
@@ -2548,12 +2826,12 @@ if (atsResult && atsResult.atsScore) {
     });
     const chev = document.getElementById(chevId);
     if (chev) chev.style.transform = "rotate(0deg)";
-    el.querySelectorAll(".ats-preview-more").forEach(btn => { btn.textContent = "查看更多"; });
+    el.querySelectorAll(".ats-preview-more").forEach(btn => { btn.textContent = t("查看更多", "View more"); });
   });
 
   // ATS tile detail（覆盖前面的预设）
   if (atsDetailEl) atsDetailEl.innerHTML = renderRows([
-    { k:"ATS 总分", v:`${atsResult.atsScore}/100`, note: atsRiskText(atsResult.riskLevel) },
-    { k:"JD 关键词匹配", v: formatDisplayJdKeywordCount(), note:"已覆盖 / JD 关键词总数" },
+    { k:t("ATS 总分", "ATS total score"), v:`${atsResult.atsScore}/100`, note: atsRiskText(atsResult.riskLevel) },
+    { k:t("JD 关键词匹配", "JD keyword match"), v: formatDisplayJdKeywordCount(), note:t("已覆盖 / JD 关键词总数", "Covered / total JD keywords") },
   ]);
 }
