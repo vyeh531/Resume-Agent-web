@@ -118,7 +118,22 @@ const SEMANTIC_MATCH_MAP = {
   "aws": ["amazon web services"],
   "debugging": ["troubleshooting", "diagnosed", "debugged", "root cause analysis"],
   "data structures": ["data structure"],
-  "algorithms": ["algorithm"]
+  "algorithms": ["algorithm"],
+  "lab experience": ["laboratory experience", "research experience", "research assistant", "laboratory technician intern", "undergraduate researcher"],
+  "research projects": ["research experience", "research project", "research assistant", "undergraduate researcher"],
+  "sample prep": ["sample preparation", "prepared lab reagents", "prepared lab reagents and buffers", "solution preparation", "buffer formulation", "buffer preparation", "media preparation", "buffer/media preparation", "dissolution profiling"],
+  "sample handling": ["sample preparation", "drug dissolution experiments", "dissolution datasets", "dissolution profiling", "flow cytometry data", "lab reagents", "buffers"],
+  "sample management": ["inventory tracking", "inventory analytics", "drug database", "managed drug inventory", "maintained solution inventory", "batch data logs", "batch data"],
+  "record keeping": ["lab reporting", "protocol documentation", "technical reports", "compiled formatted datasets", "formatted datasets", "data logs", "database entries", "drug database entries", "batch data logs"],
+  "equipment upkeep": ["instrument calibration", "calibration and maintenance", "calibrated", "maintained"],
+  "quality assurance": ["quality control", "qc", "validated", "accuracy checks", "contamination control"],
+  "data accuracy": ["accuracy checks", "validated", "data cleaning", "quality control", "qc review"],
+  "clinical laboratory": ["laboratory experience", "lab operations", "research laboratory", "laboratory technician"],
+  "laboratory operations": ["lab operations", "lab reporting", "protocol documentation", "instrument calibration", "solution preparation"],
+  "pipetting": ["buffer formulation", "solution preparation", "buffer preparation", "media preparation", "buffer/media preparation", "lab reagents"],
+  "patient data entry": ["data entry", "database entries", "drug database entries", "database"],
+  "lis": ["laboratory information system", "lims"],
+  "laboratory information system": ["lis", "lims"]
 };
 
 const DIMENSION_MAX = {
@@ -164,6 +179,7 @@ const ROLE_DISPLAY_NAMES = {
   product_manager:      "产品经理",
   financial_analyst:    "金融/财务分析师",
   marketing:            "市场营销",
+  life_science_lab:     "生命科学/实验室",
   general:              "通用岗位"
 };
 
@@ -212,6 +228,7 @@ const ROLE_FAMILIES = [
   { role: "data_scientist", terms: ["data scientist", "machine learning", "ml", "modeling", "experiment", "statistics", "python", "pandas"] },
   { role: "product_manager", terms: ["product manager", "pm", "roadmap", "user research", "stakeholder", "metrics", "launch"] },
   { role: "financial_analyst", terms: ["financial analyst", "finance", "valuation", "forecast", "investment", "portfolio", "excel"] },
+  { role: "life_science_lab", terms: ["laboratory assistant", "lab assistant", "laboratory technician", "lab technician", "clinical laboratory", "clinical lab", "sample accessioning", "accessioning", "lis", "sample prep", "pipetting", "toxicology", "pcr", "pgx", "quality assurance", "quality control", "pharmaceutical", "biomedical research", "pharmacology"] },
   { role: "marketing", terms: ["marketing", "campaign", "brand", "content", "seo", "growth", "social media"] }
 ];
 
@@ -281,6 +298,8 @@ const CATEGORY_PHRASES = {
     "aspen plus", "aspen hysys", "chemcad", "hysys",
     // Healthcare / Clinical EHR tools
     "meditech", "allscripts", "athenahealth", "nextgen",
+    // Laboratory information systems
+    "lis", "laboratory information system", "lims",
     // Education / LMS tools
     "canvas lms", "blackboard", "moodle", "google classroom",
     // Additional SW Engineering — languages & frameworks
@@ -345,7 +364,9 @@ const CATEGORY_PHRASES = {
     "irb", "hipaa", "protocol development", "biostatistics", "lab techniques",
     "pcr", "elisa", "cell culture", "western blot", "next generation sequencing",
     "medical writing", "regulatory affairs", "pharmacovigilance",
-    "data integrity", "drug development", "formulation",
+    "data integrity", "drug development", "formulation", "sample management",
+    "sample handling", "sample prep", "pre-accessioning", "accessioning",
+    "quality assurance", "quality control", "patient data entry", "pipetting",
     // Marketing / Communications
     "seo", "sem", "content marketing", "social media marketing",
     "email marketing", "digital marketing", "paid advertising", "ppc",
@@ -521,6 +542,10 @@ const CATEGORY_PHRASES = {
     "healthcare compliance", "life sciences", "biopharma", "genomics",
     "proteomics", "clinical operations", "translational research",
     "preclinical", "biomarker", "therapeutic", "drug discovery",
+    "clinical laboratory", "laboratory operations", "toxicology",
+    "sample accessioning", "sample sorting", "specimen handling",
+    "laboratory information system", "lis", "patient data", "lab records",
+    "equipment upkeep", "clean workspace",
     // Marketing / Communications
     "brand awareness", "engagement", "impressions", "reach",
     "click-through rate", "ctr", "roi", "cost per acquisition", "cpa",
@@ -766,7 +791,8 @@ const CATEGORY_PHRASES = {
     "hsk", "delf", "goethe", "jlpt",
     // Research
     "published research", "peer-reviewed publication", "conference presentation",
-    "research fellowship", "grant recipient",
+    "research fellowship", "grant recipient", "scientific field",
+    "bachelor's degree", "lab experience", "research projects",
     // General Nice-to-Have Experience
     "startup experience", "nonprofit experience", "government experience",
     "international internship", "study abroad", "exchange program",
@@ -790,6 +816,21 @@ const FALLBACK_ROLE_LEXICON = {
     action_verbs: ["analyze", "build", "report", "visualize"],
     domain_keywords: ["kpi", "customer analytics", "stakeholder communication"],
     nice_to_have: ["statistics", "etl"]
+  },
+  "laboratory assistant": {
+    target_role: ["laboratory assistant", "lab assistant"],
+    core_skills: [
+      "sample management", "sample handling", "sample prep", "accessioning",
+      "pre-accessioning", "quality assurance", "data accuracy", "patient data entry",
+      "record keeping", "pipetting"
+    ],
+    tools: ["lis", "laboratory information system", "lims", "pcr"],
+    action_verbs: ["sort", "enter", "check", "assist", "maintain", "document", "prepare"],
+    domain_keywords: [
+      "clinical laboratory", "laboratory operations", "toxicology", "pgx",
+      "sample accessioning", "lab records", "equipment upkeep"
+    ],
+    nice_to_have: ["bachelor's degree", "scientific field", "lab experience", "research projects"]
   }
 };
 
@@ -834,7 +875,11 @@ function extractKeywords(text) {
     "cloud native architectures", "technical documentation",
     "operational excellence", "distributed systems", "microservices",
     "game development", "quantum computing", "embedded systems",
-    "communicate effectively", "data extraction", "data ingestion", "data pipeline"
+    "communicate effectively", "data extraction", "data ingestion", "data pipeline",
+    "laboratory assistant", "sample management", "sample handling", "sample prep",
+    "pre-accessioning", "accessioning", "quality assurance", "patient data entry",
+    "laboratory information system", "record keeping", "clinical laboratory",
+    "laboratory operations", "lab experience", "research projects", "pipetting"
   ];
   for (const phrase of knownPhrases) {
     if (lower.includes(phrase)) phrases.push(phrase);
@@ -856,12 +901,12 @@ function buildKeywordProfile(jdText = "", jobTitle = "") {
   const hasChineseStructuredRole = /\u5c97\u4f4d[^\uff1a:\n]*[\uff1a:]\s*[^\n]*[\u4e00-\u9fff]/.test(normalizeText(jdText));
   const shouldUseDictionary = Boolean(jobTitle && /[a-z]/i.test(jobTitle)) || (!explicitChineseRole && !hasChineseStructuredRole);
   const roleEntry = shouldUseDictionary ? findRoleDictionaryEntry(jobTitle, jdText) : null;
-  const roleProfile = roleToProfile(roleEntry);
+  const roleProfile = roleToProfile(roleEntry) || (jobTitle ? fallbackRoleProfile(jobTitle) : null);
 
   if (jdText && jdText.trim()) {
     const jdProfile = extractJdProfile(jdText, jobTitle);
     return normalizeProfile({
-      source: roleEntry ? "jd+role_dictionary" : "jd",
+      source: roleEntry ? "jd+role_dictionary" : (roleProfile?.source ? `jd+${roleProfile.source}` : "jd"),
       role_id: roleEntry?.role_id || null,
       canonical_role: roleEntry?.canonical_role || null,
       target_role: unique([...(roleProfile?.target_role || []), explicitChineseRole, ...jdProfile.target_role].filter(Boolean)),
@@ -1641,6 +1686,9 @@ function matchTermWithCredit(resumeText, term, category = "") {
     if (re.test(lower)) {
       return { term: clean, category, type: "normalized", credit: 0.8, matchedBy: clean };
     }
+    if (category === "action_verbs" && hasMergedActionVerbMatch(lower, clean)) {
+      return { term: clean, category, type: "normalized", credit: 0.6, matchedBy: `${clean}*` };
+    }
   }
 
   const synonyms = unique([...(SKILL_VERB_MAP[clean] || []), ...(SEMANTIC_MATCH_MAP[clean] || [])]);
@@ -1719,6 +1767,19 @@ function phraseOrWordMatch(lowerText, cleanTerm) {
   return cleanTerm.includes(" ")
     ? hasNormalizedPhrase(lowerText, cleanTerm)
     : new RegExp(`\\b${escapeRegExp(cleanTerm)}(?:s|es|ed|ing)?\\b`, "i").test(lowerText);
+}
+
+function hasMergedActionVerbMatch(lowerText, cleanTerm) {
+  const forms = unique([
+    cleanTerm,
+    `${cleanTerm}s`,
+    `${cleanTerm}es`,
+    `${cleanTerm}ed`,
+    `${cleanTerm}ing`,
+    cleanTerm.endsWith("e") ? `${cleanTerm.slice(0, -1)}ed` : "",
+    cleanTerm.endsWith("e") ? `${cleanTerm.slice(0, -1)}ing` : ""
+  ].filter(Boolean));
+  return forms.some((form) => new RegExp(`(^|[^a-z0-9])${escapeRegExp(form)}[a-z]{4,}`, "i").test(lowerText));
 }
 
 function matchEvidencePattern(lowerText, cleanTerm) {

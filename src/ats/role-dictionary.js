@@ -23,6 +23,9 @@ function findRoleDictionaryEntry(jobTitle = "", jdText = "") {
   const roles = loadRoleDictionary();
   if (!roles.length) return null;
 
+  const titleText = normalize(jobTitle);
+  if (inferCanonicalRoleFamily(titleText) === "life_science_lab") return null;
+
   const target = normalize(`${jobTitle} ${jdText}`).slice(0, 5000);
   let best = null;
   let bestScore = 0;
@@ -38,7 +41,8 @@ function findRoleDictionaryEntry(jobTitle = "", jdText = "") {
     for (const alias of aliases) {
       const cleanAlias = normalize(alias);
       if (!cleanAlias) continue;
-      if (target.includes(cleanAlias)) score += 8 + cleanAlias.split(/\s+/).length;
+      if (titleText && titleText.includes(cleanAlias)) score += 20 + cleanAlias.split(/\s+/).length;
+      else if (target.includes(cleanAlias)) score += 8 + cleanAlias.split(/\s+/).length;
       else {
         const overlap = tokenOverlap(cleanAlias, target);
         score += overlap * 4;
@@ -93,6 +97,7 @@ function inferCanonicalRoleFamily(jobTitle = "", jdText = "") {
     { family: "accounting", pattern: /\b(accountant|accounting|bookkeeper|bookkeeping|audit associate|tax associate|controller|cpa|accounts payable|accounts receivable)\b/ },
     { family: "financial_analyst", pattern: /\b(financial analyst|finance analyst|investment analyst|fp&a|valuation analyst|treasury analyst|risk analyst)\b/ },
     { family: "marketing", pattern: /\b(marketing|growth marketer|campaign manager|seo specialist|content strategist|brand manager)\b/ },
+    { family: "life_science_lab", pattern: /\b(laboratory assistant|lab assistant|laboratory technician|lab technician|clinical laboratory|clinical lab|sample accessioning|accessioning|toxicology lab|pharmaceutical research|biomedical research)\b/ },
   ];
 
   if (hasFullStackSignal(`${jobTitle} ${jdText}`)) return "software_engineer";

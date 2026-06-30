@@ -4,6 +4,12 @@ MentorX resume diagnosis MVP. This app lets a user upload or paste a resume, cho
 
 The current version is a Next.js App Router application with backend API routes, hosted ATS integration, local ATS fallback, Postgres-backed report storage, mentor advice retrieval, and bilingual report hydration.
 
+## Product Requirements
+
+The current product scope, user flows, feature requirements, free/paid report boundaries, success metrics, launch checklist, and roadmap are captured in [docs/product-requirements-document.md](docs/product-requirements-document.md).
+
+Use the PRD for product decisions and MVP acceptance criteria. Use this README for setup, architecture orientation, and implementation notes.
+
 ## What It Does
 
 - Upload or paste resume text from the landing page.
@@ -223,9 +229,9 @@ Before deploying a paid/public flow, verify:
 
 ## Related Docs
 
+- [Product requirements document](docs/product-requirements-document.md)
 - [ATS system mapping](docs/ats_system_mvp_mapping.md)
 - [Problem tag contract](docs/problem_tag_contract.md)
 - [Mentor advice DB schema](docs/mentor_advice_db_schema.md)
 - [Database agent notes](docs/database_agent.md)
 - [Salary benchmark pipeline](docs/salary-benchmark-pipeline.md)
-

@@ -174,7 +174,7 @@ export default function AnalyzingPage() {
             analysisFallbackReason: reason || "job_unavailable",
             analysisJobStatus: "fallback_running",
           });
-          currentStageText = "æ­£åœ¨ç”¨å¤‡ç”¨é€šé“å®ŒæˆæŠ¥å‘Šã€‚";
+          currentStageText = "正在用备用通道完成报告。";
           targetPct = Math.max(targetPct, 92);
           const publicReport = await scoreResumeAPI(store.resumeText, store.jobTitle || null, store.jdText || null, null, store.resumeName || "");
           storeCompletedReport({
@@ -184,7 +184,7 @@ export default function AnalyzingPage() {
             reportAccessToken: publicReport.reportAccessToken || null,
             locale: store.locale || publicReport.locale || "zh-CN",
           });
-          currentStageText = "è¯Šæ–­å®Œæˆï¼";
+          currentStageText = "诊断完成！";
           targetPct = 100;
           visualPct = 100;
           applyProgress(visualPct);
